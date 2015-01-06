@@ -24,37 +24,46 @@ class PurchaseOrderDetail extends Eloquent {
 		return $result;
 	}
 
-	public static function updateSKUs($data = array(), $po_id) 
+	public static function updateSKUs($data = array(), $po_id)
 	{
+		// echo '<pre>'; print_r($data); die();
 		if(! CommonHelper::hasValue($po_id) ) throw new Exception( 'PO id is missing from parameter.');
-		if(!isset($data['sku'])) throw new Exception( 'Sku is missing from data parameter.');
-		if(!isset($data['quantity_delivered'])) throw new Exception( 'Quantity is missing from data parameter.');
+		if(! isset($data['sku'])) throw new Exception( 'Sku is missing from data parameter.');
+		if(! isset($data['quantity_delivered'])) throw new Exception( 'Quantity is missing from data parameter.');
 
 		$query = PurchaseOrderDetail::where('sku', '=', $data['sku'])->where('po_id', '=', $po_id);
 
-		PurchaseOrderDetail::isSKUExist($query);
+		$data['po_id'] = $po_id;
+		$checkSku = PurchaseOrderDetail::isSKUExist($query, $data);
 		PurchaseOrderDetail::checkIfQtyExceeds($query, $data['quantity_delivered']);
 
-		$array_params = array(
-			'quantity_delivered' => $data['quantity_delivered'],
-			'updated_at' => date('Y-m-d H:i:s')
-		);
+		if ($checkSku) {
+			$array_params = array(
+				'quantity_delivered' => $data['quantity_delivered'],
+				'updated_at' => date('Y-m-d H:i:s')
+			);
 
-		$result = $query->update($array_params);
-		DebugHelper::log(__METHOD__, $result);
-		return $result;
+			$result = $query->update($array_params);
+			DebugHelper::log(__METHOD__, $result);
+			return $result;
+		}
 	}
 
-	public static function isSKUExist($query) 
+	public static function isSKUExist($query, $data)
 	{
 		$isExists = $query->first();
 		DebugHelper::log(__METHOD__, $isExists);
 
-		if( is_null($isExists) ) throw new Exception( 'SKU not found in the database.');
-		return;
+		// throw new Exception( 'SKU not found in the database.');
+		if( is_null($isExists) ) {
+			Unlisted::createUpdate($data);
+
+			return false;
+		}
+		return true;
 	}
 
-	public static function checkIfQtyExceeds($query, $qty_delivered) 
+	public static function checkIfQtyExceeds($query, $qty_delivered)
 	{
 		$row = $query->first();
 
@@ -75,7 +84,7 @@ class PurchaseOrderDetail extends Eloquent {
 			if ($data['sort']=='short_name') $data['sort'] = 'product_lists.short_description';
 			if ($data['sort']=='expected_quantity') $data['sort'] = 'purchase_order_details.quantity_ordered';
 			if ($data['sort']=='received_quantity') $data['sort'] = 'purchase_order_details.quantity_delivered';
-			
+
 			$query->orderBy($data['sort'], $data['order']);
 		}
 
@@ -85,7 +94,7 @@ class PurchaseOrderDetail extends Eloquent {
 		}
 
 		$result = $query->get();
-		
+
 		return $result;
 	}
 
@@ -95,20 +104,20 @@ class PurchaseOrderDetail extends Eloquent {
 					->join('product_lists', 'purchase_order_details.sku', '=', 'product_lists.upc')
 					->where('purchase_order_details.po_id', '=', $po_id)
 					->where('quantity_delivered' , '>', 0);
-					
+
 		$result = $query->get();
-		
+
 		return $result;
 	}
 
-	
+
 	public static function getCountPODetails($po_id) {
 		$query = DB::table('purchase_order_lists')
 					->join('purchase_order_details', 'purchase_order_lists.id', '=', 'purchase_order_details.po_id', 'RIGHT')
 					->join('product_lists', 'purchase_order_details.sku', '=', 'product_lists.upc')
 					->where('purchase_order_details.po_id', '=', $po_id);
-		
-		return $query->count();			
+
+		return $query->count();
 	}
 
 	public static function getUpcWithStatusDone($data = array()) {
@@ -124,7 +133,7 @@ class PurchaseOrderDetail extends Eloquent {
 		if( CommonHelper::hasValue($data['limit']) && CommonHelper::hasValue($data['page']))  {
 			$query->skip($data['limit'] * ($data['page'] - 1))
 		          ->take($data['limit']);
-		}														
+		}
 
 		return $query->get(array(
 				'purchase_order_details.*'
@@ -137,7 +146,7 @@ class PurchaseOrderDetail extends Eloquent {
 		//get status done
 		$arrParams = array('data_code' => 'PO_STATUS_TYPE', 'data_value'=> 'done');
 		$po_status = Dataset::getType($arrParams)->toArray();
-		
+
 		$query = DB::table('purchase_order_details')->join('purchase_order_lists', 'purchase_order_details.po_id', '=', 'purchase_order_lists.id', 'LEFT')
 													->where('purchase_order_lists.po_status', '=', $po_status['id'])
 													->where('purchase_order_details.quantity_delivered', '>', 0)
@@ -146,7 +155,7 @@ class PurchaseOrderDetail extends Eloquent {
 		if( CommonHelper::hasValue($data['limit']) && CommonHelper::hasValue($data['page']))  {
 			$query->skip($data['limit'] * ($data['page'] - 1))
 		          ->take($data['limit']);
-		}	
+		}
 
 		return $query->count();
 	}

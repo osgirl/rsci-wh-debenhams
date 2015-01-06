@@ -15,23 +15,23 @@ class ApiPurchaseOrder extends BaseController {
 	* @param  piler_id  int    Stock piler id
 	* @throws Some_Exception_Class If something interesting cannot happen
 	* @return json encoded paginated purchase order list
-	*/ 
+	*/
 	public function index($piler_id) {
 
 		try {
-			
+
 			if(! CommonHelper::hasValue($piler_id) ) throw new Exception( 'Missing stockpiler id parameter.');
 
 			$arrParams = array('stock_piler_id' => $piler_id);
 			$purchaseOrder = PurchaseOrder::getAPIPoLists($arrParams);
-			
+
 			DebugHelper::log(__METHOD__, $purchaseOrder->toArray());
 			$items 		= $purchaseOrder->toArray();
 			$totalItems = PurchaseOrder::getAPICount($arrParams);
 			$perPage 	= 10;
 
 			$purchaseOrder = Paginator::make($items, $totalItems, $perPage);
-			
+
 			return CommonHelper::return_success_message($purchaseOrder->toArray());
 		}catch(Exception $e) {
 			Log::error(__METHOD__ .' Something went wrong: '.print_r($e->getMessage(),true));
@@ -46,7 +46,7 @@ class ApiPurchaseOrder extends BaseController {
 	*
 	* @param  po_id    int    Purchase Order Id
 	* @return json encoded array of purchase order details
-	*/ 
+	*/
 	public function getDetails($po_id) {
 		try {
 			if(! CommonHelper::hasValue($po_id) ) throw new Exception( 'Missing purchase order id parameter.');
@@ -59,9 +59,9 @@ class ApiPurchaseOrder extends BaseController {
 		}catch(Exception $e) {
 			Log::error(__METHOD__ .' Something went wrong: '.print_r($e->getMessage(),true));
 			return CommonHelper::return_fail($e->getMessage());
-		}	
+		}
 	}
-	
+
 	/**
 	* Change purchase order status to closed and changes purchase order quantities
 	*
@@ -73,7 +73,7 @@ class ApiPurchaseOrder extends BaseController {
 	* @param  datetime_done  datetime        Date and time the purchase order was done (YYYY-MM-DD HH:MM:SS) (note: this is the time when the PO was marked done in the app, which is not the same with current time when the api call was done)
 	* @param  po_id          int             Purchase order id
 	* @return Status
-	*/ 
+	*/
 	public function savedReceivedPO($po_order_no) {
 		try {
 			if(! CommonHelper::hasValue($po_order_no) ) throw new Exception( 'Missing purchase order number parameter.');
@@ -85,7 +85,7 @@ class ApiPurchaseOrder extends BaseController {
 			if(empty($data)) {
 				throw new Exception("Empty data parameter");
 			}
-		
+
 			DebugHelper::log(__METHOD__, $data);
 			$po_status 	= "done";
 			$date_done 	= Request::get('datetime_done');
@@ -95,17 +95,17 @@ class ApiPurchaseOrder extends BaseController {
 			//check if user has the right to this PO
 			PurchaseOrder::isPOAssignedToThisUser($user_id, $po_id);
 
+
 			//save purcase order detail
 			foreach($data as $row) {
-				PurchaseOrderDetail::updateSKUs($row, $po_id); //update po_detail table for the received qty 
-
+				$row['po_order_no'] = $po_order_no;
+				PurchaseOrderDetail::updateSKUs($row, $po_id); //update po_detail table for the received qty
 			}
-			
-			self::validatePassedPODetails($po_id, $po_order_no);
+			/*self::validatePassedPODetails($po_id, $po_order_no);
 
 			//update po status
 			PurchaseOrder::updatePOStatus($po_order_no, $po_status, $date_done); //update po_list status to done
-			
+
 			//add audit trail
 			self::savedReceivedPOAuditTrail($po_order_no, $user_id);
 
@@ -114,24 +114,24 @@ class ApiPurchaseOrder extends BaseController {
 				'module' 		=> Config::get('transactions.module_purchase_order'),
 				'jda_action'	=> Config::get('transactions.jda_action_po_receiving'),
 				'reference'		=> $po_order_no
-			));
-		
+			));*/
+
 			DB::commit();
 			return CommonHelper::return_success();
 		}catch(Exception $e) {
 			DB::rollback();
 			Log::error(__METHOD__ .' Something went wrong: '.print_r($e->getMessage(),true));
 			return CommonHelper::return_fail($e->getMessage());
-		}	
+		}
 	}
 
 	/**
 	* Add audit trail for saving received PO
 	*
 	* @param  po_id    integer  purchase order id
-	* @param  user_id  integer  stock piler assigned to the PO  
+	* @param  user_id  integer  stock piler assigned to the PO
 	* @return true
-	*/ 
+	*/
 	private static function savedReceivedPOAuditTrail($po_id, $user_id)
 	{
 		$data_after = 'Purchase Order #' . $po_id . ' was received by Stock Piler #' . $user_id  . '.';
@@ -153,7 +153,7 @@ class ApiPurchaseOrder extends BaseController {
 		$poInfo = PurchaseOrder::getPOInfo($poId);
 		if(empty($poInfo)) throw new Exception("Purchase order does not exist");
 		if((int)$poInfo->purchase_order_no !== (int)$poNumber) throw new Exception("Passed purchase order number does not match purchase order id.");
-		
+
 	}
 
 
@@ -168,7 +168,7 @@ class ApiPurchaseOrder extends BaseController {
 	* @param  clerk_id  int    Document Clerk Id
 	* @param  piler_id  int    Stock Piler Id
 	* @return Status if fail or successfull
-	*/ 
+	*/
 	/*public function assignToPiler($id, $clerk_id, $piler_id) {
 		try {
 			if(! CommonHelper::hasValue($id) ) throw new Exception( 'Missing id parameter.');
@@ -215,7 +215,7 @@ class ApiPurchaseOrder extends BaseController {
 	* @param  po_order_no    int    Purchase order number
 	* @param  po_status      int    Purchase order status
 	* @return Status
-	*/ 
+	*/
 	/*public function updateStatus($po_order_no) {
 		try {
 
@@ -224,7 +224,7 @@ class ApiPurchaseOrder extends BaseController {
 
 			$status_value = Request::get('po_status');
 			$status_options = Dataset::where("data_code", "=", "PO_STATUS_TYPE")->get()->lists("id", "data_value");
-			
+
 			if(! CommonHelper::arrayHasValue($status_options[$status_value]) ) throw new Exception( 'Invalid status value.');
 
 			$po = DB::table('purchase_order_lists')
@@ -249,7 +249,7 @@ class ApiPurchaseOrder extends BaseController {
 				"result" => $e->getMessage()),
 				400
 			);
-		}	
+		}
 	}*/
 
 	/**
@@ -259,14 +259,14 @@ class ApiPurchaseOrder extends BaseController {
 	*
 	* @param  po_id    int    Purchase order id
 	* @param  sku      string SKU/UPC of product
-	* @return 
-	*/ 
+	* @return
+	*/
 	/*public function updateDetail($po_id, $sku) {
 		try {
 			if(! CommonHelper::hasValue($po_id) ) throw new Exception( 'Missing id parameter.');
 			if(! CommonHelper::hasValue($sku) ) throw new Exception( 'Missing sku/upc parameter.');
 			if(! CommonHelper::numericHasValue(Request::get("quantity_delivered")) ) throw new Exception( 'Missing quantity.');
-			
+
 			$quantity_delivered = Request::get("quantity_delivered");
 			DB::beginTransaction();
 			$po_detail = DB::table('purchase_order_details')
@@ -294,7 +294,7 @@ class ApiPurchaseOrder extends BaseController {
 				"result" => $e->getMessage()),
 				400
 			);
-		}	
+		}
 	}*/
 
 }
