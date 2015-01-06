@@ -7,7 +7,7 @@ function mysql_credentials() {
 	    "hostname" => "localhost",
 	    "user"     => "root",
 	    "password" => 'root',
-	    "db_name"  => "ssi"
+	    "db_name"  => "ccri"
 	);
 }
 

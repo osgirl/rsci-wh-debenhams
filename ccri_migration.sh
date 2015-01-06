@@ -7,8 +7,9 @@ php artisan migrate:refresh
 echo "Dump autoload. \n";
 php app/cron/ewms_cron_dump.php
 echo "Refreshed database. \n";
-#php artisan migrate --package="lucadegasperi/oauth2-server-laravel"
-#echo "Migrated Oauth tables. \n";
-#php artisan db:seed --class=OauthclientSeeder
-#php artisan db:seed --class=OauthscopeSeeder
+php artisan config:publish lucadegasperi/oauth2-server-laravel
+echo "Migrated Oauth tables. \n";
+php artisan oauth2-server:migrations
+php artisan db:seed --class=OauthclientSeeder
+php artisan db:seed --class=OauthscopeSeeder
 echo "Seeded oauth tables. \n";

@@ -30,19 +30,9 @@ class CreateTablePicklistDetails extends Migration {
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 			$table->timestamp('updated_at')->default('0000-00-00 00:00:00');
 			$table->timestamp('deleted_at')->default('0000-00-00 00:00:00');
+			$table->unique(array('move_doc_number', 'sku', 'store_code', 'so_no', 'from_slot_code'), 'my_uniques');
+			$table->index(array('move_doc_number', 'move_to_shipping_area', 'sku', 'store_code', 'assigned_user_id'), 'my_index');
 			$table->engine = 'InnoDB';
-		});
-
-		Schema::table('picklist_details', function($table)
-		{
-			if ((Schema::hasColumn('picklist_details', 'move_doc_number')) && (Schema::hasColumn('picklist_details', 'move_to_shipping_area')) && (Schema::hasColumn('picklist_details', 'sku'))&& (Schema::hasColumn('picklist_details', 'assigned_user_id'))&& (Schema::hasColumn('picklist_details', 'store_code')))
-			{
-			    DB::statement('ALTER TABLE `wms_picklist_details` ADD INDEX( `move_doc_number`, `move_to_shipping_area`, `sku`, `assigned_user_id`)');
-			    DB::statement('ALTER TABLE `wms_picklist_details` ADD INDEX( `move_doc_number`, `move_to_shipping_area`, `store_code`, `assigned_user_id`)');
-			}
-			//add unique indexes
-			DB::statement('ALTER TABLE `wms_picklist_details` ADD UNIQUE( `move_doc_number`, `sku`, `store_code`, `so_no`, `from_slot_code`)');
-
 		});
 	}
 

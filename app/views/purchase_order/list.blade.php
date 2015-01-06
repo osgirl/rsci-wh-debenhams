@@ -68,17 +68,17 @@
             </div>
             {{ Form::hidden('sort', $sort) }}
 		    {{ Form::hidden('order', $order) }}
-            
+
             {{ Form::close() }}
           </div>
       	</div>
-          
-	</div> <!-- /controls -->	
+
+	</div> <!-- /controls -->
 </div> <!-- /control-group -->
 
 <div class="clear">
 	<div class="div-paginate">
-		@if(CommonHelper::arrayHasValue($purchase_orders) ) 
+		@if(CommonHelper::arrayHasValue($purchase_orders) )
 		    <h6 class="paginate">
 				<span>{{ $purchase_orders->appends($arrFilters)->links() }}&nbsp;</span>
 			</h6>
@@ -94,7 +94,7 @@
 		<a class="btn btn-info" id="exportList">{{ $button_export }}</a>
 		@endif
 		@if ( CommonHelper::valueInArray('CanSyncPurchaseOrders', $permissions) )
-		<a class="btn btn-info">{{ $button_jda }}</a> 
+		<a class="btn btn-info">{{ $button_jda }}</a>
 		@endif
 	</div>
 </div>
@@ -125,9 +125,9 @@
 						<th class="align-center">{{ $col_action }}</th>
 					</tr>
 				</thead>
-				@if( !CommonHelper::arrayHasValue($purchase_orders) ) 
+				@if( !CommonHelper::arrayHasValue($purchase_orders) )
 				<tr class="font-size-13">
-					<td colspan="9" style="text-align: center;">{{ $text_empty_results }}</td>
+					<td colspan="11" style="text-align: center;">{{ $text_empty_results }}</td>
 				</tr>
 				@else
 					@foreach( $purchase_orders as $po )
@@ -150,15 +150,15 @@
 						<td>{{ $po->data_display }}</td>
 						<td class="align-center">
 							@if ( CommonHelper::valueInArray('CanClosePurchaseOrders', $permissions) )
-								@if($po->data_display === 'Closed') 
+								@if($po->data_display === 'Closed')
 									<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_closed_po }}</a>
-								@elseif ($po->data_display === 'Done')  
+								@elseif ($po->data_display === 'Done')
 									<a style="width: 70px;" class="btn btn-success closePO" data-id="{{ $po->purchase_order_no }}">{{ $button_close_po }}</a>
-								@else  
+								@else
 									<a style="width: 70px;" disabled="disabled" class="btn">{{ $button_close_po }}</a>
-								
+
 								@endif
-							 
+
 								{{ Form::open(array('url'=>'purchase_order/close_po', 'id' => 'closePO_' . $po->purchase_order_no, 'style' => 'margin: 0px;')) }}
 									{{ Form::hidden('po_no', $po->purchase_order_no) }}
 									{{ Form::hidden('invoice_no') }}
@@ -175,7 +175,7 @@
 									{{ Form::hidden('module', 'purchase_order') }}
 									{{ Form::hidden('id', $po->id) }}
 						  		{{ Form::close() }}
-					  		
+
 					  		@endif
 						</td>
 					</tr>
@@ -184,8 +184,8 @@
 			</table>
 		</div>
 	</div>
-	
-	@if( CommonHelper::arrayHasValue($purchase_orders) ) 
+
+	@if( CommonHelper::arrayHasValue($purchase_orders) )
     <h6 class="paginate">
 		<span>{{ $purchase_orders->appends($arrFilters)->links() }}</span>
 	</h6>
@@ -193,7 +193,7 @@
 
 	<!-- Button to trigger modal -->
 	<!-- Modal -->
-	@if( CommonHelper::arrayHasValue($purchase_orders) ) 
+	@if( CommonHelper::arrayHasValue($purchase_orders) )
 	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		{{ Form::open(array('url'=>'purchase_order/assign_to_piler', 'id'=>"form-assign", 'class'=>'form-horizontal', 'style' => 'margin: 0px;', 'role'=>'form')) }}
 		<div class="modal-header">
@@ -202,18 +202,18 @@
   		</div>
   		<div class="modal-body">
   			<fieldset>
-				<div class="control-group">											
+				<div class="control-group">
 					<label class="control-label" for="stock_piler">{{ $entry_stock_piler }}</label>
 					<div class="controls">
 						{{ Form::select('stock_piler', $stock_piler_list, $po->assigned_to_user_id) }}
-					</div> <!-- /controls -->				
+					</div> <!-- /controls -->
 				</div> <!-- /control-group -->
-				
-				<div class="control-group">											
+
+				<div class="control-group">
 					<label class="control-label" for="po_no">{{ $entry_purchase_no }}</label>
 					<div class="controls">
 						{{ Form::text('po_no', '', array('id' => 'po_no', 'readonly' => 'readonly')) }}
-					</div> <!-- /controls -->				
+					</div> <!-- /controls -->
 				</div> <!-- /control-group -->
 			</fieldset>
   		</div>
@@ -231,11 +231,11 @@
 		{{ Form::hidden('order', $order) }}
 		{{ Form::hidden('page', $page) }}
 		{{ Form::hidden('module', 'purchase_order') }}
-  		
+
   		{{ Form::close() }}
 	</div>
 	@endif
-	<!-- /widget-content --> 
+	<!-- /widget-content -->
 </div>
 
 <!--modal for close po-->
@@ -275,20 +275,20 @@ $(document).ready(function() {
     $('.date').datepicker({
       format: 'yyyy-mm-dd'
     });
-    
+
     // Assign PO
     $('.assignPO').click(function() {
     	var count = $("[name='selected[]']:checked").length;
-		
+
 		if (count>0) {
 			var answer = confirm('{{ $text_confirm_assign }}')
-			
+
 			if (answer) {
 				var purchase_no = new Array();
 				$.each($("input[name='selected[]']:checked"), function() {
 					purchase_no.push($(this).val());
 				});
-    	
+
     			$('#po_no').val(purchase_no.join(','));
 			} else {
 				return false;
@@ -298,7 +298,7 @@ $(document).ready(function() {
 			return false;
 		}
     });
-    
+
     // Close PO
     $('.closePO').click(function() {
     	var purchase_no = $(this).data('id');
@@ -336,7 +336,7 @@ $(document).ready(function() {
     // Submit Assign PO
     $('#btn-assign').click(function() {
     	stockpiler = $('select[name=\'stock_piler\']').val();
-    	
+
     	if (stockpiler == '') {
     		alert('{{ $error_assign_po }}');
     		return false;
@@ -360,43 +360,43 @@ $(document).ready(function() {
     $('#clearForm').click(function() {
     	$('#filter_po_no, #filter_receiver_no, #filter_supplier').val('');
 		$('#filter_entry_date').val('');
-		
+
 		$('select').val('');
 		$('#form-purchase-order').submit();
     });
-	
+
 	// Export List
     $('#exportList').click(function() {
     	url = '';
-    	
+
 		var filter_po_no = $('#filter_po_no').val();
 		url += '?filter_po_no=' + encodeURIComponent(filter_po_no);
-		
+
 		var filter_receiver_no = $('#filter_receiver_no').val();
 		url += '&filter_receiver_no=' + encodeURIComponent(filter_receiver_no);
-		
+
 		var filter_supplier = $('#filter_supplier').val();
 		url += '&filter_supplier=' + encodeURIComponent(filter_supplier);
-		
+
 		var filter_entry_date = $('#filter_entry_date').val();
 		url += '&filter_entry_date=' + encodeURIComponent(filter_entry_date);
-		
+
 		var filter_stock_piler = $('select[name=\'filter_stock_piler\']').val();
 		url += '&filter_stock_piler=' + encodeURIComponent(filter_stock_piler);
-		
+
 		var filter_status = $('select[name=\'filter_status\']').val();
 		url += '&filter_status=' + encodeURIComponent(filter_status);
-		
+
 		url += '&sort=' + encodeURIComponent('{{ $sort }}');
 		url += '&order=' + encodeURIComponent('{{ $order }}');
-		
+
       	location = "{{ $url_export }}" + url;
     });
-    
+
     // Select
     $('.tblrow').click(function() {
     	var rowid = $(this).data('id');
-    	
+
     	if ($('#selected-' + rowid).length>0) {
 	    	if ($('#selected-' + rowid).is(':checked')) {
 	    		$('#selected-' + rowid).prop('checked', false);
@@ -409,10 +409,10 @@ $(document).ready(function() {
     		$(this).children('td').removeClass('tblrow-active');
     	}
     });
-    
+
     $('.item-selected').click(function() {
     	var rowid = $(this).data('id');
-    	
+
     	if ($(this).is(':checked')) {
     		$(this).prop('checked', false);
     		$(this).children('td').removeClass('tblrow-active');
@@ -421,7 +421,7 @@ $(document).ready(function() {
     		$(this).children('td').addClass('tblrow-active');
     	}
     });
-    
+
     $('#main-selected').click(function() {
     	if ($('#main-selected').is(':checked')) {
     		$('input[name*=\'selected\']').prop('checked', true);
@@ -431,5 +431,5 @@ $(document).ready(function() {
     		$('.table tbody tr > td').removeClass('tblrow-active');
     	}
    	});
-});	
+});
 </script>

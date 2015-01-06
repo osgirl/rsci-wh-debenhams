@@ -136,7 +136,8 @@ Route::group(array('prefix'=>'api/v1'), function()
 {
 	Route::post('oauth/access_token', function()
 	{
-	    return AuthorizationServer::performAccessTokenFlow();
+	    // return AuthorizationServer::performAccessTokenFlow();
+	    return Response::json(Authorizer::issueAccessToken());
 	});
 });
 Route::group(array('prefix'=>'api/v1', 'before'=>'oauth|auth.piler'), function()

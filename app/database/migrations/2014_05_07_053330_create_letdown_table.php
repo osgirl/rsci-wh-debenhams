@@ -21,16 +21,17 @@ class CreateLetdownTable extends Migration {
 			$table->timestamp('updated_at')->default('0000-00-00 00:00:00');
 			// $table->unique(array('move_doc_number', 'created_at'));
 			$table->unique(array('move_doc_number'));
+			$table->index('lt_status');
 			$table->engine = 'InnoDB';
 		});
 
-		Schema::table('letdown', function($table)
+		/*Schema::table('letdown', function($table)
 		{
 		   if (Schema::hasColumn('letdown', 'lt_status'))
 		   {
 			    $table->index('lt_status');
 		   }
-		});
+		});*/
 	}
 
 	/**

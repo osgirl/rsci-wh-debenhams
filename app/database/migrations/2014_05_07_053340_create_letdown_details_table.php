@@ -29,18 +29,9 @@ class CreateLetdownDetailsTable extends Migration {
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 			$table->timestamp('updated_at')->default('0000-00-00 00:00:00');
 			$table->timestamp('deleted_at')->default('0000-00-00 00:00:00');
+			$table->unique(array('move_doc_number', 'sku', 'from_slot_code', 'store_code'), 'my_uniques');
+			$table->index(array('move_doc_number', 'sku', 'move_to_picking_area', 'assigned_user_id', 'from_slot_code'), 'my_index');
 			$table->engine = 'InnoDB';
-		});
-
-		Schema::table('letdown_details', function($table)
-		{
-			
-			//add unique indexes
-			DB::statement('ALTER TABLE `wms_letdown_details` ADD UNIQUE( `move_doc_number`, `sku`, `from_slot_code`, `store_code`)');
-			if ((Schema::hasColumn('letdown_details', 'from_slot_code')) && (Schema::hasColumn('letdown_details', 'move_to_picking_area')) && (Schema::hasColumn('letdown_details', 'sku')) && (Schema::hasColumn('letdown_details', 'move_doc_number')) && (Schema::hasColumn('letdown_details', 'assigned_user_id')))
-			{
-				DB::statement('ALTER TABLE `wms_letdown_details` ADD INDEX( `move_doc_number`, `sku`, `move_to_picking_area`, `assigned_user_id`, `from_slot_code`)');
-			}
 		});
 	}
 

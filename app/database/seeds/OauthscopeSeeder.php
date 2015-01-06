@@ -13,13 +13,11 @@ class OauthscopeSeeder extends Seeder {
 
         $scopes = array(
 
-            array(  'scope'        => 'basic',
-                    'name'         => 'basic',
+            array(  'id'        => 'basic',
                     'description'  => 'basic scope initial testing',
                 ),
 
-            array(  'scope'        => 'generic',
-                    'name'         => 'generic',
+            array(  'id'        => 'generic',
                     'description'  => 'generic scope initial testing',
                 )
 
