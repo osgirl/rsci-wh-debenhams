@@ -11,7 +11,18 @@ class DatabaseSeeder extends Seeder {
 	{
 		Eloquent::unguard();
 
-		// $this->call('UserTableSeeder');
+		#$this->call('ProductListsSeeder');
+		#$this->call('PurchaseOrderSeeder');
+		#$this->call('PurchaseOrderDetailSeeder');
+		$this->call('SettingsSeeder');
+		#$this->call('SlotSeeder');
+		#$this->call('SlotDetailsSeeder');
+		#$this->call('VendorSeeder');
+		#$this->call('LetdownSeeder');
+		#$this->call('StoreOrderSeeder');
+		#$this->call('StoreOrderDetailSeeder');
+		#$this->call('StoresSeeder');
+		#$this->call('BoxManifestSeeder');
 	}
 
 }

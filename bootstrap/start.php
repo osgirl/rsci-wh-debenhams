@@ -24,11 +24,32 @@ $app = new Illuminate\Foundation\Application;
 |
 */
 
-$env = $app->detectEnvironment(array(
+$env = $app->detectEnvironment(function() {
 
-	'local' => array('homestead'),
+	// 'local' => array('homestead'),
+    //Prioritize production and use hostname so it will use production config on local and console environtment
+    // if (strstr(gethostname(),'VMGRMAPD')) return 'production';
 
-));
+    // if (strstr(gethostname(),'VMGRMADV01')) return 'development';
+
+    if(isset($_SERVER['HTTP_HOST'])) {
+        if (preg_match("/localhost*/",$_SERVER['HTTP_HOST'])) return 'local';
+        switch($_SERVER['HTTP_HOST']) {
+        case '10.243.52.137':
+        case '46.51.220.95':
+        case '10.243.55.244':
+        case 'accountsdev-business.globe.com.ph':
+            return 'development';
+            break;
+        default:
+            return 'production';
+            break;
+        }
+    }
+
+    return 'local';
+
+});
 
 /*
 |--------------------------------------------------------------------------
