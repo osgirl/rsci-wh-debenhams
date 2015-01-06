@@ -101,7 +101,7 @@ class ApiPurchaseOrder extends BaseController {
 				$row['po_order_no'] = $po_order_no;
 				PurchaseOrderDetail::updateSKUs($row, $po_id); //update po_detail table for the received qty
 			}
-			/*self::validatePassedPODetails($po_id, $po_order_no);
+			self::validatePassedPODetails($po_id, $po_order_no);
 
 			//update po status
 			PurchaseOrder::updatePOStatus($po_order_no, $po_status, $date_done); //update po_list status to done
@@ -114,7 +114,7 @@ class ApiPurchaseOrder extends BaseController {
 				'module' 		=> Config::get('transactions.module_purchase_order'),
 				'jda_action'	=> Config::get('transactions.jda_action_po_receiving'),
 				'reference'		=> $po_order_no
-			));*/
+			));
 
 			DB::commit();
 			return CommonHelper::return_success();
