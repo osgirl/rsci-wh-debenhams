@@ -141,7 +141,7 @@ class ApiPurchaseOrder extends BaseController {
 			'reference'		=> 'Purchase Order #' . $po_id,
 			'data_before'	=> '',
 			'data_after'	=> $data_after,
-			'user_id'		=> ResourceServer::getOwnerId(),
+			'user_id'		=> Authorizer::getResourceOwnerId(),// ResourceServer::getOwnerId(),
 			'created_at'	=> date('Y-m-d H:i:s'),
 			'updated_at'	=> date('Y-m-d H:i:s')
 		);
