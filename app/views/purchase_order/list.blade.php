@@ -62,7 +62,7 @@
 				        </div>
 			      	</div>
 			      	<div class="span11 control-group collapse-border-top">
-			      		<a class="btn btn-success" id="submitForm">{{ $button_search }}</a>
+			      		<a class="btn btn-success btn-darkblue" id="submitForm">{{ $button_search }}</a>
 		      			<a class="btn" id="clearForm">{{ $button_clear }}</a>
 			      	</div>
             </div>
@@ -88,13 +88,13 @@
 	</div>
 	<div class="div-buttons">
 		@if ( CommonHelper::valueInArray('CanAssignPurchaseOrders', $permissions) )
-			<a href="#myModal" role="button" class="btn btn-info assignPO" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a>
+			<a href="#myModal" role="button" class="btn btn-info btn-darkblue assignPO" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a>
 		@endif
 		@if ( CommonHelper::valueInArray('CanExportPurchaseOrders', $permissions) )
-		<a class="btn btn-info" id="exportList">{{ $button_export }}</a>
+		<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
 		@endif
 		@if ( CommonHelper::valueInArray('CanSyncPurchaseOrders', $permissions) )
-		<a class="btn btn-info">{{ $button_jda }}</a>
+		<a class="btn btn-info btn-darkblue">{{ $button_jda }}</a>
 		@endif
 	</div>
 </div>

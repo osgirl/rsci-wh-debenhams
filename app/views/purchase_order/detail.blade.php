@@ -1,32 +1,32 @@
 <div class="control-group">
-	<a href="{{ $url_back }}" class="btn btn-info"> <i class="icon-chevron-left"></i> {{ $button_back }}</a>
-	
+	<a href="{{ $url_back }}" class="btn btn-info btn-darkblue"> <i class="icon-chevron-left"></i> {{ $button_back }}</a>
+
 	@if ( CommonHelper::valueInArray('CanSyncPurchaseOrderDetails', $permissions) && $po_info->data_display != 'Closed')
 	<!-- <a class="btn btn-info">{{ $button_jda }}</a> -->
 	@endif
-	
+
 	@if ( CommonHelper::valueInArray('CanExportPurchaseOrderDetails', $permissions) )
-	<a class="btn btn-info" id="exportList">{{ $button_export }}</a>
+	<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
 	@endif
-	
+
 	@if ( CommonHelper::valueInArray('CanAssignPurchaseOrderDetails', $permissions) )
-		@if($po_info->data_display !== 'Open') 
+		@if($po_info->data_display !== 'Open')
 			<a style="width: 145px;" class="btn" title="{{ $text_assigned }}" disabled="disabled">{{ $text_assigned }}</a>
-		@else 
+		@else
 			<a style="width: 145px;" href="#myModal" role="button" class="btn btn-success assignPO" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal" data-id="{{ $po_info->purchase_order_no }}">{{ $button_assign_to_stock_piler }}</a>
 		@endif
 	@endif
-	
+
 	@if ( CommonHelper::valueInArray('CanClosePurchaseOrderDetails', $permissions) )
-		@if($po_info->data_display === 'Closed') 
+		@if($po_info->data_display === 'Closed')
 			<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_closed_po }}</a>
-		@elseif ($po_info->data_display === 'Done')  
+		@elseif ($po_info->data_display === 'Done')
 			<a style="width: 70px;" class="btn btn-success closePO" data-id="{{ $po_info->purchase_order_no }}">{{ $button_close_po }}</a>
-		@else  
+		@else
 			<a style="width: 70px;" disabled="disabled" class="btn">{{ $button_close_po }}</a>
-		
+
 		@endif
-	 
+
 		{{ Form::open(array('url'=>'purchase_order/close_po', 'id' => 'closePO_' . $po_info->purchase_order_no, 'style' => 'margin: 0px;')) }}
 			{{ Form::hidden('po_no', $po_info->purchase_order_no) }}
 			{{ Form::hidden('invoice_no') }}
@@ -46,7 +46,7 @@
 			{{ Form::hidden('module', 'purchase_order_detail') }}
 			{{ Form::hidden('id', $po_info->id) }}
   		{{ Form::close() }}
-	
+
 	@endif
 </div>
 
@@ -72,7 +72,7 @@
 		        	<span class="right-pane">{{ Form::text('vendor_name', $po_info->vendor_name, array('readonly' => 'readonly')) }}</span>
 		        </div>
 	      	</div>
-	      
+
 	      	<div class="span4">
 	      		<div>
 		        	<span class="left-pane">{{ $label_entry_date }}</span>
@@ -87,7 +87,7 @@
 		        	<span class="right-pane">{{ Form::text('name', $po_info->firstname . ' ' . $po_info->lastname, array('readonly' => 'readonly')) }}</span>
 		        </div>
 	      </div>
-	      
+
 	      <div class="span4">
 
 		        <div>
@@ -101,7 +101,7 @@
 
 <div class="clear">
 	<div class="div-paginate">
-		@if(CommonHelper::arrayHasValue($purchase_orders) ) 
+		@if(CommonHelper::arrayHasValue($purchase_orders) )
 		    <h6 class="paginate">
 				<span>{{ $purchase_orders->appends($arrFilters)->links() }}&nbsp;</span>
 			</h6>
@@ -130,7 +130,7 @@
 						<th><a href="{{ $sort_received_quantity }}" class="@if( $sort_detail=='received_quantity' ) {{ $order_detail }} @endif">{{ $col_received_quantity }}</a></th>
 					</tr>
 				</thead>
-				@if( !CommonHelper::arrayHasValue($purchase_orders) ) 
+				@if( !CommonHelper::arrayHasValue($purchase_orders) )
 				<tr class="font-size-13">
 					<td colspan="6" class="align-center">{{ $text_empty_results }}</td>
 				</tr>
@@ -145,19 +145,19 @@
 						<td>{{ $po->quantity_delivered }}</td>
 					</tr>
 					@endforeach
-				@endif				
+				@endif
 			</table>
 		</div>
 	</div>
-	
-	@if( CommonHelper::arrayHasValue($purchase_orders) ) 
+
+	@if( CommonHelper::arrayHasValue($purchase_orders) )
     <h6 class="paginate">
 		<span>{{ $purchase_orders->appends($arrFilters)->links() }}</span>
 	</h6>
 	@endif
-	
+
 	<!-- Button to trigger modal -->
-	<!-- Modal --> 
+	<!-- Modal -->
 	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		{{ Form::open(array('url'=>'purchase_order/assign_to_piler', 'id'=>'form-assign', 'class'=>'form-horizontal', 'style' => 'margin: 0px;', 'role'=>'form')) }}
 		<div class="modal-header">
@@ -166,18 +166,18 @@
   		</div>
   		<div class="modal-body">
   			<fieldset>
-				<div class="control-group">											
+				<div class="control-group">
 					<label class="control-label" for="stock_piler">{{ $entry_stock_piler }}</label>
 					<div class="controls">
 						{{ Form::select('stock_piler', $stock_piler_list, $po_info->assigned_to_user_id) }}
-					</div> <!-- /controls -->				
+					</div> <!-- /controls -->
 				</div> <!-- /control-group -->
-				
-				<div class="control-group">											
+
+				<div class="control-group">
 					<label class="control-label" for="po_no">{{ $entry_purchase_no }}</label>
 					<div class="controls">
 						{{ Form::text('po_no', '', array('id' => 'po_no', 'readonly' => 'readonly')) }}
-					</div> <!-- /controls -->				
+					</div> <!-- /controls -->
 				</div> <!-- /control-group -->
 			</fieldset>
   		</div>
@@ -194,13 +194,13 @@
   		{{ Form::hidden('sort_back', $sort_back) }}
 		{{ Form::hidden('order_back', $order_back) }}
 		{{ Form::hidden('page_back', $page_back) }}
-		
+
 		{{ Form::hidden('sort', $sort_detail) }}
 		{{ Form::hidden('order', $order_detail) }}
 		{{ Form::hidden('page', $page_detail) }}
 		{{ Form::hidden('module', 'purchase_order_detail') }}
 		{{ Form::hidden('id', $po_info->id) }}
-		  		
+
   		{{ Form::close() }}
 	</div>
 
@@ -214,7 +214,7 @@
 	      <div class="modal-body">
 	        {{ Form::open(array('role'=> 'form', "class"=> "form-horizontal"))}}
 	        <div class="form-group">
-	        	{{ Form::label('invoice_no',$label_invoice_number, array("style" => "margin-right:10px","class" => "col-sm-2 control-label"))}} 
+	        	{{ Form::label('invoice_no',$label_invoice_number, array("style" => "margin-right:10px","class" => "col-sm-2 control-label"))}}
 	        	<div class="col-sm-10">
 	        		{{ Form::text('invoice_no', '', array('id'=>'invoiceNoInput','class'=> "form-control"))}}
 	        	</div>
@@ -235,8 +235,8 @@
 	</div>
 
 	<!-- end of modal for close po-->
-	
-	<!-- /widget-content --> 
+
+	<!-- /widget-content -->
 </div>
 
 <script type="text/javascript">
@@ -244,10 +244,10 @@ $(document).ready(function() {
     // Assign PO
     $('.assignPO').click(function() {
     	var purchase_no = $(this).data('id');
-    	
+
     	$('#po_no').val(purchase_no);
     });
-    
+
     // Close PO
     $('.closePO').click(function() {
     	var purchase_no = $(this).data('id');
@@ -280,11 +280,11 @@ $(document).ready(function() {
     $('#closePoModal .close').click(function(){
     	$("#closePoModal").attr('data-id', '');
     });
-    
+
     // Submit Assign PO
     $('#btn-assign').click(function() {
     	stockpiler = $('select[name=\'stock_piler\']').val();
-    	
+
     	if (stockpiler == '') {
     		alert('{{ $error_assign_po }}');
     		return false;
@@ -292,16 +292,16 @@ $(document).ready(function() {
     		$('#form-assign').submit();
     	}
     });
-	
+
 	// Export List
     $('#exportList').click(function() {
     	url = '';
-    	
-    	url += '?id=' + encodeURIComponent('{{ $po_info->id }}');		
+
+    	url += '?id=' + encodeURIComponent('{{ $po_info->id }}');
 		url += '&sort=' + encodeURIComponent('{{ $sort_detail }}');
 		url += '&order=' + encodeURIComponent('{{ $order_detail }}');
-		
+
       	location = "{{ $url_export }}" + url;
     });
-});	
+});
 </script>

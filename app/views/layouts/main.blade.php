@@ -32,6 +32,7 @@
         <span class="icon-bar"></span>
       </a>
       <a class="navbar-brand" id="logo" href="{{ URL::to('/') }}"></a>
+      <a class="navbar-brand" id="oldnavy" href="{{ URL::to('/') }}"></a>
       <a class="brand" href="{{ URL::to('/') }}">{{ $title_brand }}</a>
       <div class="nav-collapse">
         <ul class="nav pull-right">
@@ -194,7 +195,7 @@
   <!-- /main-inner -->
 </div>
 <!-- /main -->
-<div class="footer">
+<div class="footer collapse">
   <div class="footer-inner">
     <div class="container">
       <div class="row">

@@ -9,7 +9,7 @@ Bootstrap Admin Template by EGrappler.com
 */
 
 body {
-	background: #f9f6f1;
+	background: #FFF;
 	font: 13px/1.7em 'Open Sans';
 }
 
@@ -72,11 +72,23 @@ textarea {
 .navbar-inner {
 	padding: 7px 0;
 
-	/*background: #00ba8b !important;*/
+	/* IE10 Consumer Preview */
+	background-image: -ms-linear-gradient(bottom, #DBDBDB 0%, #B8B8B8 100%);
 
-	-moz-border-radius: 0;
-	-webkit-border-radius: 0;
-	border-radius: 0;
+	/* Mozilla Firefox */
+	background-image: -moz-linear-gradient(bottom, #DBDBDB 0%, #B8B8B8 100%);
+
+	/* Opera */
+	background-image: -o-linear-gradient(bottom, #DBDBDB 0%, #B8B8B8 100%);
+
+	/* Webkit (Safari/Chrome 10) */
+	background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #DBDBDB), color-stop(1, #B8B8B8));
+
+	/* Webkit (Chrome 11+) */
+	background-image: -webkit-linear-gradient(bottom, #DBDBDB 0%, #B8B8B8 100%);
+
+	/* W3C Markup, IE10 Release Preview */
+	background-image: linear-gradient(to top, #DBDBDB 0%, #B8B8B8 100%);
 }
 
 .navbar-fixed-top {
@@ -91,7 +103,7 @@ textarea {
 	font-weight: 600;
 	position: relative;
 	top: 2px;
-	margin-left: 35px !important;
+	margin-left: 85px !important;
 }
 
 .navbar .search-query {
@@ -185,8 +197,8 @@ textarea {
 
 .subnavbar .container > ul > li.active > a {
 
-	border-bottom:3px solid #00BA8B;
-	color: #383838;
+	border-bottom:3px solid #00436E;
+	color: #00436E;
 }
 
 
@@ -1428,9 +1440,24 @@ color: #333;
 #logo {
   width: 40px;
   height: 40px;
-  background: url('../img/logo_FamilyMart.JPG');
+  background: url('../img/gap_416x416.jpg');
   background-repeat: no-repeat;
   background-size: 40px 40px;
   position: absolute;
   display: inline-table;
+}
+
+#oldnavy {
+  width: 40px;
+  height: 40px;
+  margin-left: 50px;
+  background: url('../img/old-navy.jpg');
+  background-repeat: no-repeat;
+  background-size: 40px 40px;
+  position: absolute;
+  display: inline-table;
+}
+
+.btn-darkblue {
+	background-color: #00436E;
 }
