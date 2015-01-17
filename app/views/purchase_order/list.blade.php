@@ -218,7 +218,7 @@
 				<label class="control-label" for="stock_piler">{{ $entry_stock_piler }}</label>
 				<div class="controls">
 					{{ Form::select('stock_piler[]', $stock_piler_list, $po->assigned_to_user_id) }}
-					<a class="add-piler-btn"><i class="icon-plus-sign"></i></a>
+					<a class="add-piler-btn"><i class="icon-plus-sign" style="font-size: 1.5em;"></i></a>
 				</div> <!-- /controls -->
 			</div> <!-- /control-group -->
   		</div>
