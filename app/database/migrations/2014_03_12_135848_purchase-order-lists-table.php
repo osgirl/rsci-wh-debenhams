@@ -17,10 +17,11 @@ class PurchaseOrderListsTable extends Migration {
 			$table->increments('id');
 			// $table->integer('user_id');
 			$table->integer('assigned_by');
-			$table->integer('assigned_to_user_id');
+			$table->string('assigned_to_user_id', 30)->default(0);
 			$table->integer('vendor_id');
 			$table->integer('receiver_no');
 			$table->integer('purchase_order_no');
+			$table->string('back_order', 30)->default("0");
 			$table->string('destination', 10);
 			$table->tinyInteger('po_status')->default(1);
 			$table->string('invoice_no', 30)->default("0");

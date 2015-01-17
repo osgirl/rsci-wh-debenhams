@@ -114,12 +114,13 @@
 						<th style="width: 20px;" class="align-center"><input type="checkbox" id="main-selected" /></th>
 						@endif
 						<th>{{ $col_id }}</th>
+						<th>{{ $col_back_order }}</th>
 						<th><a href="{{ $sort_po_no }}" class="@if( $sort=='po_no' ) {{ $order }} @endif">{{ $col_po_no }}</a></th>
 						<th><a href="{{ $sort_receiver_no }}" class="@if( $sort=='receiver_no' ) {{ $order }} @endif">{{ $col_receiver_no }}</a></th>
-						<th>{{ $col_supplier }}</th>
+						<!-- <th>{{ $col_supplier }}</th> -->
 						<th>{{ $col_receiving_stock_piler }}</th>
-						<th>{{ $col_invoice_number }}</th>
-						<th>{{ $col_invoice_amount }}</th>
+						<!-- <th>{{ $col_invoice_number }}</th> -->
+						<!-- <th>{{ $col_invoice_amount }}</th> -->
 						<th><a href="{{ $sort_entry_date }}" class="@if( $sort=='entry_date' ) {{ $order }} @endif">{{ $col_entry_date }}</a></th>
 						<th>{{ $col_status }}</th>
 						<th class="align-center">{{ $col_action }}</th>
@@ -140,12 +141,13 @@
 						</td>
 						@endif
 						<td>{{ $counter++ }}</td>
+						<td>{{ $po->back_order }}</td>
 						<td><a href="{{ $url_detail . '&id=' . $po->id }}">{{ $po->purchase_order_no }}</a></td>
 						<td><a href="{{ $url_detail . '&id=' . $po->id }}">{{$po->receiver_no}}</a></td>
-						<td>{{ $po->vendor_name }}</td>
-						<td>{{ $po->firstname . ' ' . $po->lastname }}</td>
-						<td>{{ $po->invoice_no }}</td>
-						<td>{{ $po->invoice_amount }}</td>
+						<!-- <td>{{ $po->vendor_name }}</td> -->
+						<td>{{ $po->fullname }}</td>
+						<!-- <td>{{ $po->invoice_no }}</td> -->
+						<!-- <td>{{ $po->invoice_amount }}</td> -->
 						<td>{{ date("M d, Y", strtotime($po->created_at)) }}</td>
 						<td>{{ $po->data_display }}</td>
 						<td class="align-center">
@@ -154,9 +156,9 @@
 									<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_closed_po }}</a>
 								@elseif ($po->data_display === 'Done')
 									<a style="width: 70px;" class="btn btn-success closePO" data-id="{{ $po->purchase_order_no }}">{{ $button_close_po }}</a>
+									<a style="width: 70px;" id="reopen" data-id="{{ $po->purchase_order_no }}" class="btn btn-primary">Reopen</a>
 								@else
 									<a style="width: 70px;" disabled="disabled" class="btn">{{ $button_close_po }}</a>
-
 								@endif
 
 								{{ Form::open(array('url'=>'purchase_order/close_po', 'id' => 'closePO_' . $po->purchase_order_no, 'style' => 'margin: 0px;')) }}
@@ -174,6 +176,10 @@
 									{{ Form::hidden('page', $page) }}
 									{{ Form::hidden('module', 'purchase_order') }}
 									{{ Form::hidden('id', $po->id) }}
+						  		{{ Form::close() }}
+
+						  		{{ Form::open(array('url'=>'purchase_order/reopen', 'id' => 'reopenForm', 'style' => 'margin: 0px;')) }}
+									{{ Form::hidden('purchase_order_no', '', array('id' => 'reopenPoNo')) }}
 						  		{{ Form::close() }}
 
 					  		@endif
@@ -200,22 +206,21 @@
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			<h3 id="myModalLabel">{{ $heading_title_assign_po }}</h3>
   		</div>
-  		<div class="modal-body">
-  			<fieldset>
-				<div class="control-group">
-					<label class="control-label" for="stock_piler">{{ $entry_stock_piler }}</label>
-					<div class="controls">
-						{{ Form::select('stock_piler', $stock_piler_list, $po->assigned_to_user_id) }}
-					</div> <!-- /controls -->
-				</div> <!-- /control-group -->
+  		<div class="modal-body add-piler-wrapper">
+			<div class="control-group">
+				<label class="control-label" for="po_no">{{ $entry_purchase_no }}</label>
+				<div class="controls">
+					{{ Form::text('po_no', '', array('id' => 'po_no', 'readonly' => 'readonly')) }}
+				</div> <!-- /controls -->
+			</div> <!-- /control-group -->
 
-				<div class="control-group">
-					<label class="control-label" for="po_no">{{ $entry_purchase_no }}</label>
-					<div class="controls">
-						{{ Form::text('po_no', '', array('id' => 'po_no', 'readonly' => 'readonly')) }}
-					</div> <!-- /controls -->
-				</div> <!-- /control-group -->
-			</fieldset>
+			<div class="control-group piler-block">
+				<label class="control-label" for="stock_piler">{{ $entry_stock_piler }}</label>
+				<div class="controls">
+					{{ Form::select('stock_piler[]', $stock_piler_list, $po->assigned_to_user_id) }}
+					<a class="add-piler-btn"><i class="icon-plus-sign"></i></a>
+				</div> <!-- /controls -->
+			</div> <!-- /control-group -->
   		</div>
   		<div class="modal-footer">
   			<button class="btn btn-primary" id="btn-assign">{{ $button_assign }}</button>
@@ -272,6 +277,19 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+	$('.add-piler-btn').unbind('click').click(function(e) {
+		// $('.piler-block').clone().appendTo(".add-piler-wrapper");
+		var html = '';
+		html += '<div class="control-group piler-block">'
+					+ '<label class="control-label" for="stock_piler">{{ $entry_stock_piler }}</label>'
+						+ '<div class="controls">'
+							+ '{{ Form::select('stock_piler[]', $stock_piler_list, $po->assigned_to_user_id) }}'
+							// + '<a class="add-piler-btn"><i class="icon-plus-sign"></i></a>'
+						+ '</div>'
+				+ '</div>';
+		$(".add-piler-wrapper").append(html);
+	});
+
     $('.date').datepicker({
       format: 'yyyy-mm-dd'
     });
@@ -431,5 +449,42 @@ $(document).ready(function() {
     		$('.table tbody tr > td').removeClass('tblrow-active');
     	}
    	});
+
+
+   	$('#reopen').click(function() {
+   		var answer = confirm('{{ $text_confirm_reopen }}')
+   		if (answer) {
+	    	var docNo = $(this).data('id');
+   			// alert(docNo);
+	    	$("#reopenPoNo").val(docNo);
+	    	$('#reopenForm').submit();
+    	} else {
+			return false;
+		}
+    	/*url = '';
+
+		var filter_po_no = $('#filter_po_no').val();
+		url += '?filter_po_no=' + encodeURIComponent(filter_po_no);
+
+		var filter_receiver_no = $('#filter_receiver_no').val();
+		url += '&filter_receiver_no=' + encodeURIComponent(filter_receiver_no);
+
+		var filter_supplier = $('#filter_supplier').val();
+		url += '&filter_supplier=' + encodeURIComponent(filter_supplier);
+
+		var filter_entry_date = $('#filter_entry_date').val();
+		url += '&filter_entry_date=' + encodeURIComponent(filter_entry_date);
+
+		var filter_stock_piler = $('select[name=\'filter_stock_piler\']').val();
+		url += '&filter_stock_piler=' + encodeURIComponent(filter_stock_piler);
+
+		var filter_status = $('select[name=\'filter_status\']').val();
+		url += '&filter_status=' + encodeURIComponent(filter_status);
+
+		url += '&sort=' + encodeURIComponent('{{ $sort }}');
+		url += '&order=' + encodeURIComponent('{{ $order }}');
+
+      	location = "{{ $url_reopen }}" + url;*/
+    });
 });
 </script>

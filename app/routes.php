@@ -36,6 +36,7 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::get('purchase_order/detail', 'PurchaseOrderController@getPODetails');
 	Route::get('purchase_order/export', 'PurchaseOrderController@exportCSV');
 	Route::get('purchase_order/export_detail', 'PurchaseOrderController@exportDetailsCSV');
+	Route::post('purchase_order/reopen', 'PurchaseOrderController@reopen');
 
 	Route::get('store_order', 'StoreOrderController@showIndex');
 	Route::get('store_order/detail', 'StoreOrderController@getSODetails');

@@ -33,12 +33,11 @@ $env = $app->detectEnvironment(function() {
     // if (strstr(gethostname(),'VMGRMADV01')) return 'development';
 
     if(isset($_SERVER['HTTP_HOST'])) {
-        if (preg_match("/localhost*/",$_SERVER['HTTP_HOST'])) return 'local';
+        if (preg_match("/localhost*/",$_SERVER['HTTP_HOST']) || preg_match("/local.*/",$_SERVER['HTTP_HOST'])) return 'local';
         switch($_SERVER['HTTP_HOST']) {
-        case '10.243.52.137':
-        case '46.51.220.95':
-        case '10.243.55.244':
-        case 'accountsdev-business.globe.com.ph':
+        case '104.236.76.57':
+        // case '10.243.55.244':
+        // case 'accountsdev-business.globe.com.ph':
             return 'development';
             break;
         default:

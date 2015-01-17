@@ -20,7 +20,7 @@ class PurchaseOrderController extends BaseController {
 	* @example  www.example.com/purchase_order
 	*
 	* @return View of Purchase order list
-	*/ 
+	*/
 	public function showIndex() {
 		// Check Permissions
 		if (Session::has('permissions')) {
@@ -30,11 +30,11 @@ class PurchaseOrderController extends BaseController {
 	    		} else {
 	    			return Redirect::to('user/profile');
 	    		}
-			} 
+			}
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		$this->getList();
 	}
 
@@ -46,7 +46,7 @@ class PurchaseOrderController extends BaseController {
 	* @param  po_no         int    Purchase order number
 	* @param  stock_piler   int    Stock piler id
 	* @return Status
-	*/ 
+	*/
 	public function assignToStockPiler() {
 		// Check Permissions
 		if (Session::has('permissions')) {
@@ -56,28 +56,34 @@ class PurchaseOrderController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
+		$pilers = implode(',' , Input::get('stock_piler'));
+
+
 		//get moved_to_reserve id
 		$arrParams = array('data_code' => 'PO_STATUS_TYPE', 'data_value'=> 'in_process');
 		$po_status = Dataset::getType($arrParams)->toArray();
-		
+
 		$arrPO = explode(',', Input::get("po_no"));
-		
+
 		foreach ($arrPO as $purchase_order_no) {
 			$arrParams = array(
 								'assigned_by' 			=> Auth::user()->id,
-								'assigned_to_user_id' 	=> Input::get('stock_piler'),
+								'assigned_to_user_id' 	=> $pilers, //Input::get('stock_piler'),
 								'po_status' 			=> $po_status['id'], //in_process
 								'updated_at' 			=> date('Y-m-d H:i:s')
 							);
 			PurchaseOrder::assignToStockPiler($purchase_order_no, $arrParams);
-			
+
 			// AuditTrail
-			$user = User::find(Input::get('stock_piler'));
-			
+			$users = User::getUsersFullname(Input::get('stock_piler'));
+
+			$fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $users));
+			// $user = User::find(Input::get('stock_piler'));
+
 			$data_before = '';
-			$data_after = 'PO No: ' . $purchase_order_no . ' assigned to ' . $user->username;
-			
+			$data_after = 'PO No: ' . $purchase_order_no . ' assigned to ' . $fullname;
+
 			$arrParams = array(
 							'module'		=> 'Purchase Order',
 							'action'		=> 'Assigned PO',
@@ -96,14 +102,14 @@ class PurchaseOrderController extends BaseController {
 			$url = $this->setURL();
 			$url .= '&id=' . Input::get('id');
 			$url .= '&sort_back=' . Input::get('sort_back').'&order_back=' . Input::get('order_back') . '&page_back=' . Input::get('page_back');
-			
+
 			return Redirect::to('purchase_order/detail' . $url)->with('message', Lang::get('purchase_order.text_success_assign'));
 		} else {
-			return Redirect::to('purchase_order' . $this->setURL())->with('message', Lang::get('purchase_order.text_success_assign'));	
-		}		
+			return Redirect::to('purchase_order' . $this->setURL())->with('message', Lang::get('purchase_order.text_success_assign'));
+		}
 	}
-	
-	public function closePO() 
+
+	public function closePO()
 	{
 		// Check Permissions
 		if (Session::has('permissions')) {
@@ -113,7 +119,7 @@ class PurchaseOrderController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		$po_id = Input::get("id");
 		$purchase_order_no = Input::get("po_no");
 		$invoice_no = Input::get("invoice_no");
@@ -122,9 +128,9 @@ class PurchaseOrderController extends BaseController {
 		$date_updated = date('Y-m-d H:i:s');
 
 		PurchaseOrder::updatePOStatus($purchase_order_no, $status, $date_updated, $invoice_no, $invoice_amount);
-		
+
 		$skus = PurchaseOrderDetail::getScannedPODetails($po_id);
-		
+
 		foreach($skus as $sku){
 			$data = array(
 				'sku' => $sku->upc,
@@ -136,10 +142,10 @@ class PurchaseOrderController extends BaseController {
 
 		// AuditTrail
 		$user = User::find(Auth::user()->id);
-		
+
 		$data_before = '';
 		$data_after = 'PO No: ' . $purchase_order_no . ' closed by ' . $user->username;
-		
+
 		$arrParams = array(
 						'module'		=> 'Purchase Order',
 						'action'		=> 'Closed PO',
@@ -152,7 +158,7 @@ class PurchaseOrderController extends BaseController {
 						);
 		AuditTrail::addAuditTrail($arrParams);
 		// AuditTrail
-		
+
 		// Add transaction for jda syncing
 		$isSuccess = JdaTransaction::insert(array(
 			'module' 		=> Config::get('transactions.module_purchase_order'),
@@ -161,7 +167,7 @@ class PurchaseOrderController extends BaseController {
 		));
 
 		// run daemon command: php app/cron/jda/classes/receive_po.php
-		if( $isSuccess ) 
+		if( $isSuccess )
 		{
 			$daemonReceivingClosingPo = "classes/receive_po.php {$purchase_order_no}";
 			CommonHelper::execInBackground($daemonReceivingClosingPo);
@@ -171,10 +177,10 @@ class PurchaseOrderController extends BaseController {
 			$url = $this->setURL();
 			$url .= '&id=' . Input::get('id');
 			$url .= '&sort_back=' . Input::get('sort_back').'&order_back=' . Input::get('order_back') . '&page_back=' . Input::get('page_back');
-			
+
 			return Redirect::to('purchase_order/detail' . $url)->with('message', Lang::get('purchase_order.text_success_close_po'));
 		} else {
-			return Redirect::to('purchase_order' . $this->setURL())->with('message', Lang::get('purchase_order.text_success_close_po'));	
+			return Redirect::to('purchase_order' . $this->setURL())->with('message', Lang::get('purchase_order.text_success_close_po'));
 		}
 	}
 
@@ -188,7 +194,7 @@ class PurchaseOrderController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		$arrParams = array(
 							'filter_po_no' 			=> Input::get('filter_po_no', NULL),
 							'filter_receiver_no' 	=> Input::get('filter_receiver_no', NULL),
@@ -215,20 +221,20 @@ class PurchaseOrderController extends BaseController {
 
 	    foreach ($results as $key => $value) {
 	    	$exportData = array(
-	    						'"' . $value->purchase_order_no . '"', 
-	    						'"' . $value->receiver_no . '"', 
-	    						'"' . $value->vendor_name . '"', 
-	    						'"' . $value->firstname . ' ' . $value->lastname . '"', 
-	    						'"' . $value->invoice_no . '"', 
-	    						'"' . $value->invoice_amount . '"', 
-	    						'"' . date("M d, Y", strtotime($value->created_at)) . '"', 
+	    						'"' . $value->purchase_order_no . '"',
+	    						'"' . $value->receiver_no . '"',
+	    						'"' . $value->vendor_name . '"',
+	    						'"' . $value->firstname . ' ' . $value->lastname . '"',
+	    						'"' . $value->invoice_no . '"',
+	    						'"' . $value->invoice_amount . '"',
+	    						'"' . date("M d, Y", strtotime($value->created_at)) . '"',
 	    						'"' . $value->data_display . '"'
 	    					);
-	  		
+
 	      	$output .= implode(",", $exportData);
 	      	$output .= "\n";
 	  	}
-	  	
+
 		$headers = array(
 			'Content-Type' => 'text/csv',
 			'Content-Disposition' => 'attachment; filename="purchase_order_' . date('Ymd')  . '_' . time() . '.csv"',
@@ -236,7 +242,7 @@ class PurchaseOrderController extends BaseController {
 
 		return Response::make(rtrim($output, "\n"), 200, $headers);
 	}
-	
+
 	public function exportDetailsCSV() {
 		///Check Permissions
 		if (Session::has('permissions')) {
@@ -246,48 +252,48 @@ class PurchaseOrderController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		if (PurchaseOrder::find(Input::get('id', NULL))!=NULL) {
 			$po_id = Input::get('id', NULL);
-			
+
 			$arrParams = array(
 							'sort'		=> Input::get('sort', 'sku'),
 							'order'		=> Input::get('order', 'ASC'),
 							'page'		=> NULL,
 							'limit'		=> NULL
 						);
-	
+
 			$po_info = PurchaseOrder::getPOInfo($po_id);
 			$results = PurchaseOrderDetail::getPODetails($po_id, $arrParams);
-				
+
 			$output = Lang::get('purchase_order.col_sku'). ',';
 			$output .= Lang::get('purchase_order.col_upc'). ',';
 			$output .= Lang::get('purchase_order.col_short_name'). ',';
 			$output .= Lang::get('purchase_order.col_expected_quantity'). ',';
 			$output .= Lang::get('purchase_order.col_received_quantity'). "\n";
-			
+
 		    foreach ($results as $key => $value) {
 		    	$exportData = array(
-		    						'"' . $value->sku . '"', 
-		    						'"' . $value->upc . '"', 
-		    						'"' . $value->short_description . '"', 
-		    						'"' . $value->quantity_ordered . '"', 
+		    						'"' . $value->sku . '"',
+		    						'"' . $value->upc . '"',
+		    						'"' . $value->short_description . '"',
+		    						'"' . $value->quantity_ordered . '"',
 		    						'"' . $value->quantity_delivered . '"'
 		    					);
-		  		
+
 		      	$output .= implode(",", $exportData);
 		      	$output .= "\n";
 		  	}
-		  	
+
 			$headers = array(
 				'Content-Type' => 'text/csv',
 				'Content-Disposition' => 'attachment; filename="purchase_order_details_' . $po_info->purchase_order_no . '_' . date('Ymd')  . '_' . time() . '.csv"',
 			);
-	
+
 			return Response::make(rtrim($output, "\n"), 200, $headers);
 		}
 	}
-	
+
 	public function getPODetails() {
 		// Check Permissions
 		if (Session::has('permissions')) {
@@ -299,18 +305,18 @@ class PurchaseOrderController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		$this->data['heading_title_po_details'] = Lang::get('purchase_order.heading_title_po_details');
 		$this->data['heading_title_po_contents'] = Lang::get('purchase_order.heading_title_po_contents');
 		$this->data['heading_title_assign_po'] = Lang::get('purchase_order.heading_title_assign_po');
-		
+
 		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 		$this->data['text_total'] = Lang::get('general.text_total');
 		$this->data['text_select'] = Lang::get('general.text_select');
 		$this->data['text_assigned'] = Lang::get('purchase_order.text_assigned');
 		$this->data['text_closed_po'] = Lang::get('purchase_order.text_closed_po');
 		$this->data['text_warning'] = Lang::get('purchase_order.text_warning');
-		
+
 		$this->data['label_purchase_no'] = Lang::get('purchase_order.label_purchase_no');
 		$this->data['label_receiver_no'] = Lang::get('purchase_order.label_receiver_no');
 		$this->data['label_supplier'] = Lang::get('purchase_order.label_supplier');
@@ -321,18 +327,18 @@ class PurchaseOrderController extends BaseController {
 		$this->data['label_app_sync'] = Lang::get('purchase_order.label_app_sync');
 		$this->data['label_invoice_amount'] = Lang::get('purchase_order.label_invoice_amount');
 		$this->data['label_invoice_number'] = Lang::get('purchase_order.label_invoice_number');
-		
+
 		$this->data['entry_purchase_no'] = Lang::get('purchase_order.entry_purchase_no');
 		$this->data['entry_stock_piler'] = Lang::get('purchase_order.entry_stock_piler');
 		$this->data['entry_invoice'] = Lang::get('purchase_order.entry_invoice');
-		
+
 		$this->data['col_id'] = Lang::get('purchase_order.col_id');
 		$this->data['col_sku'] = Lang::get('purchase_order.col_sku');
 		$this->data['col_upc'] = Lang::get('purchase_order.col_upc');
 		$this->data['col_short_name'] = Lang::get('purchase_order.col_short_name');
 		$this->data['col_expected_quantity'] = Lang::get('purchase_order.col_expected_quantity');
 		$this->data['col_received_quantity'] = Lang::get('purchase_order.col_received_quantity');
-		
+
 		$this->data['button_back'] = Lang::get('general.button_back');
 		$this->data['button_jda'] = Lang::get('general.button_jda');
 		$this->data['button_export'] = Lang::get('general.button_export');
@@ -340,27 +346,27 @@ class PurchaseOrderController extends BaseController {
 		$this->data['button_assign_to_stock_piler'] = Lang::get('purchase_order.button_assign_to_stock_piler');
 		$this->data['button_assign'] = Lang::get('general.button_assign');
 		$this->data['button_cancel'] = Lang::get('general.button_cancel');
-		
+
 		$this->data['error_assign_po'] = Lang::get('purchase_order.error_assign_po');
-		
+
 		// URL
 		$this->data['url_export'] = URL::to('purchase_order/export_detail');
 		$this->data['url_back'] = URL::to('purchase_order' . $this->setURL(false, true));
-		
+
 		// Message
 		$this->data['error'] = '';
 		if (Session::has('error')) {
 			$this->data['error'] = Session::get('error');
 		}
-		
+
 		$this->data['success'] = '';
 		if (Session::has('success')) {
 			$this->data['success'] = Session::get('success');
 		}
-		
+
 		$this->data['stock_piler_list'] = $this->getStockPilers();
-		
-		
+
+
 		// Search Filters
 		// Main
 		$filter_po_no = Input::get('filter_po_no', NULL);
@@ -369,12 +375,12 @@ class PurchaseOrderController extends BaseController {
 		$filter_entry_date = Input::get('filter_entry_date', NULL);
 		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
 		$filter_status = Input::get('filter_status', NULL);
-		
+
 		$sort_back = Input::get('sort_back', 'po_no');
 		$order_back = Input::get('order_back', 'ASC');
 		$page_back = Input::get('page_back', 1);
 		$receiver_no = Input::get('receiver_no', 1);
-		
+
 		// Details
 		$sort_detail = Input::get('sort', 'sku');
 		$order_detail = Input::get('order', 'ASC');
@@ -383,7 +389,7 @@ class PurchaseOrderController extends BaseController {
 		//Data
 		$po_id = Input::get('id', NULL);
 		$this->data['po_info'] = PurchaseOrder::getPOInfo($po_id);
-		
+
 		$arrParams = array(
 						'sort'		=> $sort_detail,
 						'order'		=> $order_detail,
@@ -413,9 +419,9 @@ class PurchaseOrderController extends BaseController {
 
 		$this->data['purchase_orders'] = Paginator::make($results, $results_total, 30);
 		$this->data['purchase_orders_count'] = $results_total;
-		
+
 		$this->data['counter'] 	= $this->data['purchase_orders']->getFrom();
-		
+
 		// Main
 		$this->data['filter_po_no'] = $filter_po_no;
 		$this->data['filter_receiver_no'] = $filter_receiver_no;
@@ -423,11 +429,11 @@ class PurchaseOrderController extends BaseController {
 		$this->data['filter_entry_date'] = $filter_entry_date;
 		$this->data['filter_stock_piler'] = $filter_stock_piler;
 		$this->data['filter_status'] = $filter_status;
-		
+
 		$this->data['sort_back'] = $sort_back;
 		$this->data['order_back'] = $order_back;
 		$this->data['page_back'] = $page_back;
-		
+
 		// Details
 		$this->data['sort_detail'] = $sort_detail;
 		$this->data['order_detail'] = $order_detail;
@@ -451,24 +457,24 @@ class PurchaseOrderController extends BaseController {
 		$this->data['sort_short_name'] = URL::to('purchase_order/detail' . $url . '&sort=short_name&order=' . $order_short_name, NULL, FALSE);
 		$this->data['sort_expected_quantity'] = URL::to('purchase_order/detail' . $url . '&sort=expected_quantity&order=' . $order_expected_quantity, NULL, FALSE);
 		$this->data['sort_received_quantity'] = URL::to('purchase_order/detail' . $url . '&sort=received_quantity&order=' . $order_expected_quantity, NULL, FALSE);
-		
+
 		// Permissions
 		$this->data['permissions'] = unserialize(Session::get('permissions'));
 
 		$this->layout->content = View::make('purchase_order.detail', $this->data);
 	}
-	
+
 	/**
 	* Get Purchase order list view
 	*
 	* @example  $this->getList();
 	*
 	* @return Purchase order list view
-	*/ 
+	*/
 	protected function getList() {
 		$this->data['heading_title'] = Lang::get('purchase_order.heading_title');
 		$this->data['heading_title_assign_po'] = Lang::get('purchase_order.heading_title_assign_po');
-		
+
 		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 		$this->data['text_total'] = Lang::get('general.text_total');
 		$this->data['text_select'] = Lang::get('general.text_select');
@@ -476,7 +482,9 @@ class PurchaseOrderController extends BaseController {
 		$this->data['text_closed_po'] = Lang::get('purchase_order.text_closed_po');
 		$this->data['text_warning'] = Lang::get('purchase_order.text_warning');
 		$this->data['text_confirm_assign'] = Lang::get('purchase_order.text_confirm_assign');
-		
+		$this->data['text_confirm_reopen'] = Lang::get('purchase_order.text_confirm_reopen');
+
+
 		$this->data['label_purchase_no'] = Lang::get('purchase_order.label_purchase_no');
 		$this->data['label_receiver_no'] = Lang::get('purchase_order.label_receiver_no');
 		$this->data['label_supplier'] = Lang::get('purchase_order.label_supplier');
@@ -485,11 +493,11 @@ class PurchaseOrderController extends BaseController {
 		$this->data['label_status'] = Lang::get('purchase_order.label_status');
 		$this->data['label_invoice_amount'] = Lang::get('purchase_order.label_invoice_amount');
 		$this->data['label_invoice_number'] = Lang::get('purchase_order.label_invoice_number');
-		
+
 		$this->data['entry_purchase_no'] = Lang::get('purchase_order.entry_purchase_no');
 		$this->data['entry_stock_piler'] = Lang::get('purchase_order.entry_stock_piler');
 		$this->data['entry_invoice'] = Lang::get('purchase_order.entry_invoice');
-		
+
 		$this->data['col_id'] = Lang::get('purchase_order.col_id');
 		$this->data['col_po_no'] = Lang::get('purchase_order.col_po_no');
 		$this->data['col_receiver_no'] = Lang::get('purchase_order.col_receiver_no');
@@ -500,7 +508,8 @@ class PurchaseOrderController extends BaseController {
 		$this->data['col_entry_date'] = Lang::get('purchase_order.col_entry_date');
 		$this->data['col_status'] = Lang::get('purchase_order.col_status');
 		$this->data['col_action'] = Lang::get('purchase_order.col_action');
-		
+		$this->data['col_back_order'] = Lang::get('purchase_order.col_back_order');
+
 		$this->data['button_search'] = Lang::get('general.button_search');
 		$this->data['button_clear'] = Lang::get('general.button_clear');
 		$this->data['button_export'] = Lang::get('general.button_export');
@@ -509,30 +518,31 @@ class PurchaseOrderController extends BaseController {
 		$this->data['button_assign_to_stock_piler'] = Lang::get('purchase_order.button_assign_to_stock_piler');
 		$this->data['button_assign'] = Lang::get('general.button_assign');
 		$this->data['button_cancel'] = Lang::get('general.button_cancel');
-		
+
 		$this->data['error_assign'] = Lang::get('purchase_order.error_assign');
 		$this->data['error_assign_po'] = Lang::get('purchase_order.error_assign_po');
-		
+
 		// URL
 		$this->data['url_export'] = URL::to('purchase_order/export');
+		$this->data['url_reopen'] = URL::to('purchase_order/reopen');
 		$this->data['url_detail'] = URL::to('purchase_order/detail' . $this->setURL(true));
-		
+
 		// Message
 		$this->data['error'] = '';
 		if (Session::has('error')) {
 			$this->data['error'] = Session::get('error');
 		}
-		
+
 		$this->data['success'] = '';
 		if (Session::has('success')) {
 			$this->data['success'] = Session::get('success');
 		}
-		
+
 		// Search Options
 		$this->data['po_status_type'] = Dataset::getTypeInList("PO_STATUS_TYPE");
-		
+
 		$this->data['stock_piler_list'] = $this->getStockPilers();
-				
+
 		// Search Filters
 		$filter_po_no = Input::get('filter_po_no', NULL);
 		$filter_receiver_no = Input::get('filter_receiver_no', NULL);
@@ -540,7 +550,7 @@ class PurchaseOrderController extends BaseController {
 		$filter_entry_date = Input::get('filter_entry_date', NULL);
 		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
 		$filter_status = Input::get('filter_status', NULL);
-		
+
 		$sort = Input::get('sort', 'purchase_order_lists.created_at');
 		$order = Input::get('order', 'DESC');
 		$page = Input::get('page', 1);
@@ -576,7 +586,7 @@ class PurchaseOrderController extends BaseController {
 
 		$this->data['purchase_orders'] = Paginator::make($results, $results_total, 30);
 		$this->data['purchase_orders_count'] = $results_total;
-		
+
 		$this->data['counter'] 	= $this->data['purchase_orders']->getFrom();
 
 		$this->data['filter_po_no'] = $filter_po_no;
@@ -585,7 +595,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['filter_entry_date'] = $filter_entry_date;
 		$this->data['filter_stock_piler'] = $filter_stock_piler;
 		$this->data['filter_status'] = $filter_status;
-		
+
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
 		$this->data['page'] = $page;
@@ -631,10 +641,10 @@ class PurchaseOrderController extends BaseController {
 				$url .= '&order=' . Input::get('order', 'ASC');
 				$url .= '&page=' . Input::get('page', 1);
 			}
-			
+
 		}
-		
-		
+
+
 		return $url;
 	}
 
@@ -644,14 +654,48 @@ class PurchaseOrderController extends BaseController {
 	* @example  $this->getStockPilers();
 	*
 	* @return array of stock piler and drop down initial text;
-	*/ 
+	*/
 	private function getStockPilers()
 	{
-		$stock_pilers = array();		
+		$stock_pilers = array();
 		foreach (User::getStockPilerOptions() as $item) {
 			$stock_pilers[$item->id] = $item->firstname . ' ' . $item->lastname;
-		}	
+		}
 		return array('' => Lang::get('general.text_select')) + $stock_pilers;
+	}
+
+	/**
+	 * Clear/Reopen a purchase order
+	 * @return
+	 */
+	public function reopen()
+	{
+		CommonHelper::setRequiredFields(array('purchase_order_no'));
+
+		$purchase_order_no = Input::get('purchase_order_no');
+
+		PurchaseOrder::reopenPO(array('po_order_no'=>$purchase_order_no));
+		// AuditTrail
+		$user = User::find(Auth::user()->id);
+
+		$data_before = '';
+		$data_after = 'PO No: ' . $purchase_order_no . ' is reopened by ' . $user->username;
+
+		$arrParams = array(
+						'module'		=> 'Purchase Order',
+						'action'		=> 'Reopen PO',
+						'reference'		=> $purchase_order_no,
+						'data_before'	=> $data_before,
+						'data_after'	=> $data_after,
+						'user_id'		=> Auth::user()->id,
+						'created_at'	=> date('Y-m-d H:i:s'),
+						'updated_at'	=> date('Y-m-d H:i:s')
+						);
+		AuditTrail::addAuditTrail($arrParams);
+		// AuditTrail
+
+		return Redirect::to('purchase_order' . $this->setURL())
+			->with('message', Lang::get('purchase_order.text_success_reopen', array('purchaseOrderNo'=> $purchase_order_no)));
 	}
 
 

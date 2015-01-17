@@ -237,4 +237,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 		return $result;
 	}
+
+	public static function getUsersFullname($data = array()) {
+		// return User::whereIn('id', $data)->get(array('firstname', 'lastname'))->toArray();
+		return User::select(DB::raw('CONCAT(wms_users.firstname, \' \', wms_users.lastname) AS name'))
+			->whereIn('id', $data)
+			->get()->toArray();
+	}
 }
