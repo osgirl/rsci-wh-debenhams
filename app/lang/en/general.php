@@ -20,6 +20,7 @@ return array(
 	'menu_vendor_master_list'	=> 'Vendor Master List',
 	'menu_store_master_list'	=> 'Store Master List',
 	'menu_audit_trail'			=> 'Audit Trail',
+	'menu_unlisted_list'		=> 'Unlisted',
 
 	'menu_system'				=> 'System',
 	'menu_settings'				=> 'Settings',

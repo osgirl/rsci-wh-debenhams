@@ -117,7 +117,7 @@
 		@endif <!--end if drop down for store receiving-->
 
 		@if ( CommonHelper::valueInArray('CanAccessProductMasterList', $permissions) || CommonHelper::valueInArray('CanAccessSlotMasterList', $permissions) )
-        <!-- <li class="@if(Route::currentRouteUses('ProductListController@showIndex') || Route::currentRouteUses('SlotListController@showIndex') || Route::currentRouteUses('AuditTrailController@showIndex')) active @endif dropdown">
+        <li class="@if(Route::currentRouteUses('ProductListController@showIndex') || Route::currentRouteUses('SlotListController@showIndex') || Route::currentRouteUses('AuditTrailController@showIndex')) active @endif dropdown">
 			<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
 				<i class="icon-list-alt"></i>
 				<span>{{ $menu_reports }}</span>
@@ -134,13 +134,16 @@
         <li><a href="{{ URL::to('vendors') }}">{{ $menu_vendor_master_list }}</a></li>
         <li><a href="{{ URL::to('stores') }}">{{ $menu_store_master_list }}</a></li>
         @if ( CommonHelper::valueInArray('CanAccessInventory', $permissions) )
-          <li><a href="{{ URL::to('inventory') }}">{{ $menu_inventory }}</a></li>
+          <!-- <li><a href="{{ URL::to('inventory') }}">{{ $menu_inventory }}</a></li> -->
+        @endif
+        @if ( CommonHelper::valueInArray('CanAccessUnlisted', $permissions) )
+        <li><a href="{{ URL::to('unlisted') }}">{{ $menu_unlisted_list }}</a></li>
         @endif
 				@if ( CommonHelper::valueInArray('CanAccessAuditTrail', $permissions) )
 				<li><a href="{{ URL::to('audit_trail') }}">{{ $menu_audit_trail }}</a></li>
 				@endif
       </ul>
-		</li> -->
+		</li>
 		@endif
 
 		@if ( CommonHelper::valueInArray('CanAccessUsers', $permissions) || CommonHelper::valueInArray('CanAccessUserRoles', $permissions) || CommonHelper::valueInArray('CanAccessSettings', $permissions) )
