@@ -286,11 +286,19 @@ $(document).ready(function() {
 					+ '<label class="control-label" for="stock_piler">{{ $entry_stock_piler }}</label>'
 						+ '<div class="controls">'
 							+ '{{ Form::select('stock_piler[]', $stock_piler_list, '') }}'
-							// + '<a class="add-piler-btn"><i class="icon-plus-sign"></i></a>'
+							+ '<a class="remove-piler-btn" style="margin-left: 3px;"><i class="icon-minus-sign" style="font-size: 1.5em; color:#CB1212;"></i></a>'
 						+ '</div>'
 				+ '</div>';
 		$(".add-piler-wrapper").append(html);
+
+		$('.remove-piler-btn').click(function(e) {
+			console.log('ee');
+			$(this).parent().parent().remove();
+		});
+
 	});
+
+
 
     $('.date').datepicker({
       format: 'yyyy-mm-dd'
