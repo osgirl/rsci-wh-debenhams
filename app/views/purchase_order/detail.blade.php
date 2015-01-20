@@ -255,7 +255,7 @@ $(document).ready(function() {
     });
 
     // Close PO
-    $('.closePO').click(function() {
+    /*$('.closePO').click(function() {
     	var purchase_no = $(this).data('id');
 
     	$("#closePoModal").modal('show');
@@ -279,6 +279,18 @@ $(document).ready(function() {
     			alert('Invoice amount should be a valid number.');
     		}
     	}
+    });*/
+
+	$('.closePO').click(function() {
+    	var purchase_no = $(this).data('id');
+
+    	var answer = confirm('Are you sure you want to close this PO?');
+   		if (answer) {
+	    	$('#closePO_' + purchase_no).submit();
+    	} else {
+			return false;
+		}
+
     });
 
 
