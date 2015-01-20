@@ -78,7 +78,7 @@ class ApiPurchaseOrder extends BaseController {
 	public function savedReceivedPO($po_order_no) {
 		try {
 			if(! CommonHelper::hasValue($po_order_no) ) throw new Exception( 'Missing purchase order number parameter.');
-
+			// echo "<pre>"; print_r(json_decode(Request::get('data'), true)); die();
 			CommonHelper::setRequiredFields(array('data', 'user_id', 'datetime_done','po_id'));
 
 			$data 		= json_decode(Request::get('data'), true);

@@ -148,7 +148,8 @@ class PurchaseOrder extends Eloquent {
 
 	public static function isPOAssignedToThisUser($user_id, $po_id) {
 		$query = PurchaseOrder::where('id', '=', $po_id)
-									->where('assigned_to_user_id', '=', $user_id);
+								->whereRaw('find_in_set('. $user_id . ',assigned_to_user_id) > 0');
+									// ->where('assigned_to_user_id', '=', $user_id);
 
 		$isExists = $query->first();
 		DebugHelper::log(__METHOD__, $isExists);

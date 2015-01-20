@@ -40,6 +40,7 @@ class PurchaseOrderDetail extends Eloquent {
 			PurchaseOrderDetail::checkIfQtyExceeds($query, $data['quantity_delivered']);
 			$array_params = array(
 				'quantity_delivered' => $data['quantity_delivered'],
+				'expiry_date' => $data['expiry_date'],
 				'updated_at' => date('Y-m-d H:i:s')
 			);
 
