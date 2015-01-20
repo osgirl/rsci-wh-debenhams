@@ -13,6 +13,7 @@ return array(
 
 	'label_filter_reference_no'	=> 'Reference No.',
 	'label_filter_sku'			=> 'Sku No.',
+	'label_filter_upc'			=> 'Upc No.',
 
 	'button_close_po'				=> 'Close PO',
 	'button_assign_to_stock_piler' 	=> 'Assign to Stock Piler',
@@ -24,6 +25,7 @@ return array(
 
 	'col_id'					=> 'Id.',
 	'col_sku'					=> 'Sku',
+	'col_upc'					=> 'Upc',
 	'col_reference'				=> 'Reference No.',
 	'col_quantity_received'		=> 'Quantity Received',
 	'col_action'				=> 'Action',

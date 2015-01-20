@@ -12,7 +12,7 @@
 							</span>
 						</div>
 						<div>
-							<span class="search-po-left-pane">{{ $label_filter_sku }}</span>
+							<span class="search-po-left-pane">{{ $label_filter_upc }}</span>
 							<span class="search-po-right-pane">
 								{{ Form::text('filter_sku', $filter_sku, array('id'=>'filter_sku', 'placeholder'=>'')) }}
 							</span>
@@ -63,7 +63,7 @@
 				<thead>
 					<tr>
 						<th width="10%">{{ $col_id }}</th>
-						<th><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif">{{ $col_sku }}</a></th>
+						<th><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif"> {{ $col_upc }} </a></th>
 						<th><a href="{{ $sort_reference }}" class="@if( $sort=='reference_no' ) {{ $order }} @endif">{{ $col_reference }}</a></th>
 						<th>{{ $col_quantity_received }}</th>
 					</tr>
