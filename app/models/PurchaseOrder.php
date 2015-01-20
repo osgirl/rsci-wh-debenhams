@@ -34,7 +34,7 @@ class PurchaseOrder extends Eloquent {
 
 	public static function getPOInfo($po_id = NULL) {
 		$query = DB::table('purchase_order_lists')
-					->join('users', 'purchase_order_lists.assigned_to_user_id', '=', 'users.id', 'LEFT')
+					// ->join('users', 'purchase_order_lists.assigned_to_user_id', '=', 'users.id', 'LEFT')
 					->join('dataset', 'purchase_order_lists.po_status', '=', 'dataset.id', 'LEFT')
 					->join('vendors', 'purchase_order_lists.vendor_id', '=', 'vendors.id', 'LEFT')
 					->where('purchase_order_lists.id', '=', $po_id);
@@ -42,11 +42,18 @@ class PurchaseOrder extends Eloquent {
 		$result = $query->get(array(
 									'purchase_order_lists.*',
 									'vendors.vendor_name',
-									'dataset.data_display',
-									'users.firstname',
-									'users.lastname'
+									'dataset.data_display'
+									// 'users.firstname',
+									// 'users.lastname'
 								)
 							);
+
+		// get the multiple stock piler fullname
+		foreach ($result as $key => $po) {
+			$assignedToUserId       = explode(',', $po->assigned_to_user_id);
+			$getUsers               = User::getUsersFullname($assignedToUserId);
+			$result[$key]->fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $getUsers));
+		}
 
 		return $result[0];
 	}
@@ -62,7 +69,7 @@ class PurchaseOrder extends Eloquent {
 	*/
 	public static function getPoLists($data = array()) {
 		$query = PurchaseOrder::getPOQuery($data);
-
+		// echo "<pre>"; print_r($data); die();
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if ($data['sort']=='po_no') $data['sort'] = 'purchase_order_no';
 			if ($data['sort']=='receiver_no') $data['sort'] = 'receiver_no';
@@ -128,7 +135,8 @@ class PurchaseOrder extends Eloquent {
 		if( CommonHelper::hasValue($data['filter_receiver_no']) ) $query->where('receiver_no', 'LIKE', '%'.$data['filter_receiver_no'].'%');
 		if( CommonHelper::hasValue($data['filter_supplier']) ) $query->where('vendors.vendor_name', 'LIKE', '%'.$data['filter_supplier'].'%');
 		if( CommonHelper::hasValue($data['filter_entry_date']) ) $query->where('purchase_order_lists.created_at', 'LIKE', '%'.$data['filter_entry_date'].'%');
-		if( CommonHelper::hasValue($data['filter_stock_piler']) ) $query->where('assigned_to_user_id', '=', $data['filter_stock_piler']);
+		// if( CommonHelper::hasValue($data['filter_stock_piler']) ) $query->where('assigned_to_user_id', '=', $data['filter_stock_piler']);
+		if( CommonHelper::hasValue($data['filter_stock_piler']) ) $query->whereRaw('find_in_set('. $data['filter_stock_piler'] . ',assigned_to_user_id) > 0');
 		if( CommonHelper::hasValue($data['filter_status']) && $data['filter_status'] !== 'default' ) $query->where('po_status', '=', $data['filter_status']);
 		return $query;
 	}

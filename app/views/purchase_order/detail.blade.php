@@ -84,7 +84,7 @@
 		        </div>
 		        <div>
 		        	<span class="left-pane">{{ $label_stock_piler }}</span>
-		        	<span class="right-pane">{{ Form::text('name', $po_info->firstname . ' ' . $po_info->lastname, array('readonly' => 'readonly')) }}</span>
+		        	<span class="right-pane">{{ Form::text('name', $po_info->fullname, array('readonly' => 'readonly')) }}</span>
 		        </div>
 	      </div>
 

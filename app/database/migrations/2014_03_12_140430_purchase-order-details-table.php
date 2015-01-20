@@ -22,6 +22,7 @@ class PurchaseOrderDetailsTable extends Migration {
 			$table->integer('quantity_ordered');
 			$table->float('unit_price')->default(0);
 			$table->integer('quantity_delivered');
+			$table->timestamp('expiry_date')->default('0000-00-00 00:00:00');
 			// $table->softDeletes();
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 			$table->timestamp('updated_at')->default('0000-00-00 00:00:00');
@@ -30,7 +31,7 @@ class PurchaseOrderDetailsTable extends Migration {
 			$table->engine = 'InnoDB';
 		});
 
-		
+
 		Schema::table('purchase_order_details', function($table)
 		{
 		    if ((Schema::hasColumn('purchase_order_details', 'po_id')) && (Schema::hasColumn('purchase_order_details', 'sku')))

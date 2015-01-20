@@ -47,6 +47,7 @@ return array(
 	'col_action'				=> 'Action',
 	'col_entry_date'			=> 'Entry Date',
 	'col_back_order'			=> 'Back Order',
+	'col_carton_id'				=> 'Carton Id',
 
 	'col_sku' 					=> 'SKU',
 	'col_upc' 					=> 'UPC',
