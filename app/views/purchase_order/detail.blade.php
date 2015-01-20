@@ -119,7 +119,7 @@
     <!-- /widget-header -->
     <div class="widget-content">
     	<div class="table-responsive">
-			<table class="table table-striped table-bordered">
+			<table class="table table-bordered">
 				<thead>
 					<tr>
 						<th>{{ $col_id }}</th>
@@ -128,21 +128,27 @@
 						<th><a href="{{ $sort_short_name }}" class="@if( $sort_detail=='short_name' ) {{ $order_detail }} @endif">{{ $col_short_name }}</a></th>
 						<th><a href="{{ $sort_expected_quantity }}" class="@if( $sort_detail=='expected_quantity' ) {{ $order_detail }} @endif">{{ $col_expected_quantity }}</a></th>
 						<th><a href="{{ $sort_received_quantity }}" class="@if( $sort_detail=='received_quantity' ) {{ $order_detail }} @endif">{{ $col_received_quantity }}</a></th>
+						<th> VARIANCE </th>
 					</tr>
 				</thead>
 				@if( !CommonHelper::arrayHasValue($purchase_orders) )
 				<tr class="font-size-13">
-					<td colspan="6" class="align-center">{{ $text_empty_results }}</td>
+					<td colspan="7" class="align-center">{{ $text_empty_results }}</td>
 				</tr>
 				@else
 					@foreach( $purchase_orders as $po )
-					<tr class="font-size-13">
+					<tr class="font-size-13"
+					@if ( ($po->quantity_ordered - $po->quantity_delivered) > 0 )
+						style="background-color:#F29F9F"
+					@endif
+					>
 						<td>{{ $counter++ }}</td>
 						<td>{{ $po->sku }}</td>
 						<td>{{ $po->upc }}</td>
 						<td>{{ $po->short_description }}</td>
 						<td>{{ $po->quantity_ordered }}</td>
 						<td>{{ $po->quantity_delivered }}</td>
+						<td>{{ $po->quantity_ordered- $po->quantity_delivered }}</td>
 					</tr>
 					@endforeach
 				@endif
