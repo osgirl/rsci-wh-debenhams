@@ -62,4 +62,8 @@ class Unlisted extends Eloquent {
 
     }
 
+    public static function deleteByReference($reference_no) {
+        return Unlisted::where('reference_no', '=', $reference_no)->delete();
+    }
+
 }

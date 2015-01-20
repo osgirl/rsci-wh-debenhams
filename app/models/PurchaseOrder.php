@@ -198,6 +198,8 @@ class PurchaseOrder extends Eloquent {
 					'updated_at' => date('Y-m-d H:i:s')
 				));
 
+			Unlisted::deleteByReference($data['po_order_no']);
+
 			return true;
 		} else {
 			return false;
