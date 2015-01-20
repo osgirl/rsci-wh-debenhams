@@ -129,7 +129,7 @@ class PurchaseOrderController extends BaseController {
 
 		PurchaseOrder::updatePOStatus($purchase_order_no, $status, $date_updated, $invoice_no, $invoice_amount);
 
-		$skus = PurchaseOrderDetail::getScannedPODetails($po_id);
+		/*$skus = PurchaseOrderDetail::getScannedPODetails($po_id);
 
 		foreach($skus as $sku){
 			$data = array(
@@ -138,7 +138,7 @@ class PurchaseOrderController extends BaseController {
 				'quantity_remaining' => $sku->quantity_delivered
 			);
 			SkuOnDock::insertData($data);
-		}
+		}*/
 
 		// AuditTrail
 		$user = User::find(Auth::user()->id);
@@ -483,7 +483,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['text_warning'] = Lang::get('purchase_order.text_warning');
 		$this->data['text_confirm_assign'] = Lang::get('purchase_order.text_confirm_assign');
 		$this->data['text_confirm_reopen'] = Lang::get('purchase_order.text_confirm_reopen');
-
+		$this->data['text_posted_po'] = Lang::get('purchase_order.text_posted_po');
 
 		$this->data['label_purchase_no'] = Lang::get('purchase_order.label_purchase_no');
 		$this->data['label_receiver_no'] = Lang::get('purchase_order.label_receiver_no');

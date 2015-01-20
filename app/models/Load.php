@@ -2,7 +2,7 @@
 
 class Load extends Eloquent {
 
-	protected $guarded = array(); 
+	protected $guarded = array();
 	/**
      * The database table used by the model.
      *
@@ -22,17 +22,17 @@ class Load extends Eloquent {
             ->join('load_details', 'load_details.load_code', '=', 'load.load_code')
             ->join('pallet', 'pallet.pallet_code', '=', 'load_details.pallet_code')
             ->groupBy('load.load_code');
-        
+
         if( CommonHelper::hasValue($data['filter_load_code']) ) $query->where('load_code', 'LIKE', '%'. $data['filter_load_code'] . '%');
 
         if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
             if ($data['sort'] == 'load_code') $data['sort'] = 'load_code';
             if ($data['sort'] == 'status') $data['sort'] = 'is_shipped';
-            
+
             $query->orderBy($data['sort'], $data['order']);
         }
 
-        
+
         if( CommonHelper::hasValue($data['limit']) && CommonHelper::hasValue($data['page']) && !$getCount)  {
             $query->skip($data['limit'] * ($data['page'] - 1))
                   ->take($data['limit']);
@@ -44,7 +44,7 @@ class Load extends Eloquent {
         }
         DebugHelper::log(__METHOD__, $result);
         return $result;
-        
+
     }
 
     public static function shipLoad($data = array())
@@ -64,7 +64,7 @@ class Load extends Eloquent {
         $rs = DB::table('load')
                     ->select(DB::raw("date_format(created_at,'%m/%d/%y') as load_date "))
                     ->where('load_code', '=', $loadCode)
-                    ->first();             
+                    ->first();
         $data['load_date'] = $rs->load_date;
 
         // get box codes and details based on pallet code
@@ -79,16 +79,16 @@ class Load extends Eloquent {
                             'picklist_details.sku as upc','picklist_details.store_code','picklist_details.so_no','picklist_details.store_code',
                             'product_lists.description')
                     ->join('picklist_details','picklist_details.id','=','box_details.picklist_detail_id','LEFT')
-                    ->join('product_lists','product_lists.upc','=','picklist_details.sku','LEFT')                                    
+                    ->join('product_lists','product_lists.upc','=','picklist_details.sku','LEFT')
                     ->where('box_details.box_code','=', $val->box_code)
-                    ->get();                
+                    ->get();
 
 
 
-            if(!empty($box)){                                
-                $data['StoreOrder'][$box[0]->so_no]['store_code'] = $box[0]->store_code;                
+            if(!empty($box)){
+                $data['StoreOrder'][$box[0]->so_no]['store_code'] = $box[0]->store_code;
                 $data['StoreOrder'][$box[0]->so_no]['items'][$val->box_code] = $box;
-            }                        
+            }
         }
         // echo '<pre>'; dd($data);
         foreach ($data['StoreOrder'] as $soNo => $value) {
@@ -97,7 +97,7 @@ class Load extends Eloquent {
                 ->where('store_code','=', $value['store_code'])
                 ->first();
             $data['StoreOrder'][$soNo]['store_name'] = $store->store_name;
-            
+
             // get so date created
             // echo '<pre>'; dd($soNo);
             $so = DB::table('store_order')
@@ -126,7 +126,7 @@ class Load extends Eloquent {
     /*public static function getCountLoadList($data = array(), $getCount = false)
     {
         $query = DB::table('loads');
-        
+
         if( CommonHelper::hasValue($data['filter_load_code']) ) $query->where('load_code', 'LIKE', '%'. $data['filter_load_code'] . '%');
 
         if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
@@ -136,7 +136,7 @@ class Load extends Eloquent {
             $query->orderBy($data['sort'], $data['order']);
         }
 
-        
+
         if( CommonHelper::hasValue($data['limit']) && CommonHelper::hasValue($data['page']) && !$getCount)  {
             $query->skip($data['limit'] * ($data['page'] - 1))
                   ->take($data['limit']);
@@ -145,8 +145,8 @@ class Load extends Eloquent {
         if($getCount) {
             $result = count($result);
         }
-        
+
         return $result;
-        
+
     }*/
 }

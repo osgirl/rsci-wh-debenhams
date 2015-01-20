@@ -11,6 +11,7 @@ return array(
 	'text_success_reopen'		=> 'Successfully reopen Purchase Order # :purchaseOrderNo.',
 	'text_assigned'				=> 'Assigned',
 	'text_closed_po'			=> 'Closed',
+	'text_posted_po'			=> 'Posted',
 	'text_warning'				=> 'Close PO?',
 	'text_confirm_assign'		=> 'Assign selected items?',
 	'text_confirm_reopen'		=> 'Are you sure you want to reopen this PO?',

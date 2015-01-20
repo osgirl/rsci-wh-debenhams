@@ -154,8 +154,8 @@
 						<td>{{ $po->data_display }}</td>
 						<td class="align-center">
 							@if ( CommonHelper::valueInArray('CanClosePurchaseOrders', $permissions) )
-								@if($po->data_display === 'Closed')
-									<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_closed_po }}</a>
+								@if($po->data_display === 'Posted')
+									<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_posted_po }}</a>
 								@elseif ($po->data_display === 'Done')
 									<a style="width: 70px;" class="btn btn-success closePO" data-id="{{ $po->purchase_order_no }}">{{ $button_close_po }}</a>
 									<a style="width: 70px;" id="reopen" data-id="{{ $po->purchase_order_no }}" class="btn btn-primary">Reopen</a>
@@ -320,7 +320,7 @@ $(document).ready(function() {
     });
 
     // Close PO
-    $('.closePO').click(function() {
+    /*$('.closePO').click(function() {
     	var purchase_no = $(this).data('id');
 
     	$("#closePoModal").modal('show');
@@ -345,6 +345,18 @@ $(document).ready(function() {
     			alert('Invoice amount should be a valid number.');
     		}
     	}
+    });*/
+
+	$('.closePO').click(function() {
+    	var purchase_no = $(this).data('id');
+
+    	var answer = confirm('Are you sure you want to close this PO?');
+   		if (answer) {
+	    	$('#closePO_' + purchase_no).submit();
+    	} else {
+			return false;
+		}
+
     });
 
     //clear data id of closePOModal
