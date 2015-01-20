@@ -11,7 +11,7 @@ class AddDatasetEntriesTable extends Migration {
 	 * @return void
 	 */
 	public function up()
-	{		
+	{
 		/* Purchase order status type */
 		DB::table('dataset')->insert(array(
 			'data_code' => 'PO_STATUS_TYPE',
@@ -40,7 +40,7 @@ class AddDatasetEntriesTable extends Migration {
 		DB::table('dataset')->insert(array(
 			'data_code' => 'PO_STATUS_TYPE',
 			'data_value' => 'closed',
-			'data_display' => 'Closed',
+			'data_display' => 'Posted',
 			'description' => 'Purchase order status is now closed',
 			'created_at' => date('Y-m-d H:i:s')
 		));

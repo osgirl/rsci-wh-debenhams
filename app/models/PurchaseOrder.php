@@ -11,27 +11,25 @@ class PurchaseOrder extends Eloquent {
 
 	public static function getAPIPoLists($data = array()) {
 		$arrParams = array('data_code' => 'PO_STATUS_TYPE', 'data_value'=> 'closed');
+		$piler_id  = (int) $data['stock_piler_id'];
 		$po_status = Dataset::getType($arrParams)->toArray();
 
-		$query = PurchaseOrder::where('assigned_to_user_id', '=', $data['stock_piler_id'])
-					->join('vendors', 'purchase_order_lists.vendor_id', '=', 'vendors.id', 'LEFT')
-					->where("po_status", "<>", $po_status['id']);
 
-		return $query->get(array(
-				"purchase_order_lists.*",
-				"vendors.vendor_name"
-			)
-		);
+		$query = DB::select(DB::raw("SELECT wms_purchase_order_lists.*, wms_vendors.vendor_name FROM wms_purchase_order_lists LEFT join wms_vendors on wms_purchase_order_lists.vendor_id = wms_vendors.id WHERE find_in_set($piler_id,assigned_to_user_id) > 0"));
+
+		return $query;
 	}
 
 	public static function getAPICount($data = array()) {
 		$arrParams = array('data_code' => 'PO_STATUS_TYPE', 'data_value'=> 'closed');
+		$piler_id  = (int) $data['stock_piler_id'];
 		$po_status = Dataset::getType($arrParams)->toArray();
 
-		$query = PurchaseOrder::where('assigned_to_user_id', '=', $data['stock_piler_id'])
-					->where("po_status", "<>", $po_status['id']);
+		// $query = PurchaseOrder::where('assigned_to_user_id', '=', $data['stock_piler_id'])
+		// 			->where("po_status", "<>", $po_status['id']);
+		$query = DB::select(DB::raw("SELECT wms_purchase_order_lists.*, wms_vendors.vendor_name FROM wms_purchase_order_lists LEFT join wms_vendors on wms_purchase_order_lists.vendor_id = wms_vendors.id WHERE find_in_set($piler_id,assigned_to_user_id) > 0"));
 
-		return $query->count();
+		return count($query);
 	}
 
 	public static function getPOInfo($po_id = NULL) {

@@ -25,14 +25,15 @@ class ApiPurchaseOrder extends BaseController {
 			$arrParams = array('stock_piler_id' => $piler_id);
 			$purchaseOrder = PurchaseOrder::getAPIPoLists($arrParams);
 
-			DebugHelper::log(__METHOD__, $purchaseOrder->toArray());
-			$items 		= $purchaseOrder->toArray();
-			$totalItems = PurchaseOrder::getAPICount($arrParams);
-			$perPage 	= 10;
+			DebugHelper::log(__METHOD__, $purchaseOrder);
 
-			$purchaseOrder = Paginator::make($items, $totalItems, $perPage);
+			// $items 		= $purchaseOrder;
+			// $totalItems = PurchaseOrder::getAPICount($arrParams);
+			// $perPage 	= 10;
 
-			return CommonHelper::return_success_message($purchaseOrder->toArray());
+			// $purchaseOrder = Paginator::make($items, count($items), $perPage);
+
+			return CommonHelper::return_success_message($purchaseOrder);
 		}catch(Exception $e) {
 			Log::error(__METHOD__ .' Something went wrong: '.print_r($e->getMessage(),true));
 			return CommonHelper::return_fail($e->getMessage());
