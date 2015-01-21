@@ -126,6 +126,7 @@
 						<th><a href="{{ $sort_sku }}" class="@if( $sort_detail=='sku' ) {{ $order_detail }} @endif">{{ $col_sku }}</a></th>
 						<th><a href="{{ $sort_upc }}" class="@if( $sort_detail=='upc' ) {{ $order_detail }} @endif">{{ $col_upc }}</a></th>
 						<th><a href="{{ $sort_short_name }}" class="@if( $sort_detail=='short_name' ) {{ $order_detail }} @endif">{{ $col_short_name }}</a></th>
+						<th>{{ $col_expiry_date }}</th>
 						<th><a href="{{ $sort_expected_quantity }}" class="@if( $sort_detail=='expected_quantity' ) {{ $order_detail }} @endif">{{ $col_expected_quantity }}</a></th>
 						<th><a href="{{ $sort_received_quantity }}" class="@if( $sort_detail=='received_quantity' ) {{ $order_detail }} @endif">{{ $col_received_quantity }}</a></th>
 						<th> VARIANCE </th>
@@ -146,6 +147,13 @@
 						<td>{{ $po->sku }}</td>
 						<td>{{ $po->upc }}</td>
 						<td>{{ $po->short_description }}</td>
+						<td>
+							@if ($po->expiry_date == '0000-00-00 00:00:00' )
+								N/A
+							@else
+								{{ date('M d, Y', strtotime($po->expiry_date)) }}
+							@endif
+						</td>
 						<td>{{ $po->quantity_ordered }}</td>
 						<td>{{ $po->quantity_delivered }}</td>
 						<td>{{ $po->quantity_ordered- $po->quantity_delivered }}</td>

@@ -348,6 +348,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['button_cancel'] = Lang::get('general.button_cancel');
 
 		$this->data['error_assign_po'] = Lang::get('purchase_order.error_assign_po');
+		$this->data['col_expiry_date'] = Lang::get('purchase_order.col_expiry_date');
 
 		// URL
 		$this->data['url_export'] = URL::to('purchase_order/export_detail');
