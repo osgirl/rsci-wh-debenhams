@@ -41,7 +41,7 @@ return array(
 	'button_clear'				=> 'Clear Filters',
 	'button_export'				=> 'Export to CSV',
 	'button_archive'			=> 'Archive Logs',
-	'button_jda'				=> 'Sync With JDA',
+	'button_jda'				=> 'Pull Data (JDA)',
 	'button_submit'				=> 'Submit',
 	'button_cancel'				=> 'Cancel',
 	'button_back'				=> 'Back to List',
