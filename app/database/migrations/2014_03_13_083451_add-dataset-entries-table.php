@@ -23,6 +23,14 @@ class AddDatasetEntriesTable extends Migration {
 
 		DB::table('dataset')->insert(array(
 			'data_code' => 'PO_STATUS_TYPE',
+			'data_value' => 'assigned',
+			'data_display' => 'Assigned',
+			'description' => 'Purchase order status is assigned to stock piler/s',
+			'created_at' => date('Y-m-d H:i:s')
+		));
+
+		DB::table('dataset')->insert(array(
+			'data_code' => 'PO_STATUS_TYPE',
 			'data_value' => 'in_process',
 			'data_display' => 'In Process',
 			'description' => 'Purchase order status is In-process',
