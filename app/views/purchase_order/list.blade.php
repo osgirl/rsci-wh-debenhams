@@ -160,7 +160,7 @@
 									<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_posted_po }}</a>
 								@elseif ($po->data_display === 'Done')
 									<a style="width: 70px;" class="btn btn-success closePO" data-id="{{ $po->purchase_order_no }}">{{ $button_close_po }}</a>
-									<a style="width: 70px;" id="reopen" data-id="{{ $po->purchase_order_no }}" class="btn btn-primary">Reopen</a>
+									<!-- <a style="width: 70px;" id="reopen" data-id="{{ $po->purchase_order_no }}" class="btn btn-primary">Reopen</a> -->
 								@else
 									<a style="width: 70px;" disabled="disabled" class="btn">{{ $button_close_po }}</a>
 								@endif
