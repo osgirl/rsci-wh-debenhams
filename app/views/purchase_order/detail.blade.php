@@ -33,7 +33,7 @@
 			{{ Form::hidden('invoice_amount') }}
 			{{ Form::hidden('filter_po_no', $filter_po_no) }}
 			{{ Form::hidden('filter_receiver_no', $filter_receiver_no) }}
-			{{ Form::hidden('filter_supplier', $filter_supplier) }}
+			{{-- Form::hidden('filter_supplier', $filter_supplier) --}}
 			{{ Form::hidden('filter_entry_date', $filter_entry_date) }}
 			{{ Form::hidden('filter_stock_piler', $filter_stock_piler) }}
 			{{ Form::hidden('filter_status', $filter_status) }}
@@ -67,10 +67,10 @@
 		        	<span class="left-pane">{{ $label_receiver_no }}</span>
 		        	<span class="right-pane">{{ Form::text('receiver_no', $po_info->receiver_no, array('readonly' => 'readonly')) }}</span>
 		        </div>
-		        <div>
+		        <!-- <div>
 		        	<span class="left-pane">{{ $label_supplier }}</span>
 		        	<span class="right-pane">{{ Form::text('vendor_name', $po_info->vendor_name, array('readonly' => 'readonly')) }}</span>
-		        </div>
+		        </div> -->
 	      	</div>
 
 	      	<div class="span4">
@@ -201,7 +201,7 @@
   		</div>
   		{{ Form::hidden('filter_po_no', $filter_po_no) }}
 		{{ Form::hidden('filter_receiver_no', $filter_receiver_no) }}
-		{{ Form::hidden('filter_supplier', $filter_supplier) }}
+		{{-- Form::hidden('filter_supplier', $filter_supplier) --}}
 		{{ Form::hidden('filter_entry_date', $filter_entry_date) }}
 		{{ Form::hidden('filter_stock_piler', $filter_stock_piler) }}
 		{{ Form::hidden('filter_status', $filter_status) }}

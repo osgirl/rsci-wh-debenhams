@@ -33,12 +33,12 @@
 				        </div>
 			      	</div>
 			      	<div class="span4">
-			      		<div>
+			      		<!-- <div>
 				        	<span class="search-po-left-pane">{{ $label_supplier }}</span>
 				        	<span class="search-po-right-pane">
-				        		{{ Form::text('filter_supplier', $filter_supplier, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_supplier")) }}
+				        		{{-- Form::text('filter_supplier', $filter_supplier, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_supplier")) --}}
 				        	</span>
-				        </div>
+				        </div> -->
 			      		<div>
 				        	<span class="search-po-left-pane">{{ $label_entry_date }}</span>
 				        	<div class="search-po-right-pane input-append date">
@@ -171,7 +171,7 @@
 									{{ Form::hidden('invoice_amount') }}
 									{{ Form::hidden('filter_po_no', $filter_po_no) }}
 									{{ Form::hidden('filter_receiver_no', $filter_receiver_no) }}
-									{{ Form::hidden('filter_supplier', $filter_supplier) }}
+									{{-- Form::hidden('filter_supplier', $filter_supplier) --}}
 									{{ Form::hidden('filter_entry_date', $filter_entry_date) }}
 									{{ Form::hidden('filter_stock_piler', $filter_stock_piler) }}
 									{{ Form::hidden('filter_status', $filter_status) }}
@@ -232,7 +232,7 @@
   		</div>
   		{{ Form::hidden('filter_po_no', $filter_po_no) }}
 		{{ Form::hidden('filter_receiver_no', $filter_receiver_no) }}
-		{{ Form::hidden('filter_supplier', $filter_supplier) }}
+		{{-- Form::hidden('filter_supplier', $filter_supplier) --}}
 		{{ Form::hidden('filter_entry_date', $filter_entry_date) }}
 		{{ Form::hidden('filter_stock_piler', $filter_stock_piler) }}
 		{{ Form::hidden('filter_status', $filter_status) }}
@@ -417,8 +417,8 @@ $(document).ready(function() {
 		var filter_receiver_no = $('#filter_receiver_no').val();
 		url += '&filter_receiver_no=' + encodeURIComponent(filter_receiver_no);
 
-		var filter_supplier = $('#filter_supplier').val();
-		url += '&filter_supplier=' + encodeURIComponent(filter_supplier);
+		// var filter_supplier = $('#filter_supplier').val();
+		// url += '&filter_supplier=' + encodeURIComponent(filter_supplier);
 
 		var filter_entry_date = $('#filter_entry_date').val();
 		url += '&filter_entry_date=' + encodeURIComponent(filter_entry_date);

@@ -133,7 +133,7 @@ class PurchaseOrder extends Eloquent {
 
 		if( CommonHelper::hasValue($data['filter_po_no']) ) $query->where('purchase_order_no', 'LIKE', '%'.$data['filter_po_no'].'%');
 		if( CommonHelper::hasValue($data['filter_receiver_no']) ) $query->where('receiver_no', 'LIKE', '%'.$data['filter_receiver_no'].'%');
-		if( CommonHelper::hasValue($data['filter_supplier']) ) $query->where('vendors.vendor_name', 'LIKE', '%'.$data['filter_supplier'].'%');
+		// if( CommonHelper::hasValue($data['filter_supplier']) ) $query->where('vendors.vendor_name', 'LIKE', '%'.$data['filter_supplier'].'%');
 		if( CommonHelper::hasValue($data['filter_entry_date']) ) $query->where('purchase_order_lists.created_at', 'LIKE', '%'.$data['filter_entry_date'].'%');
 		// if( CommonHelper::hasValue($data['filter_stock_piler']) ) $query->where('assigned_to_user_id', '=', $data['filter_stock_piler']);
 		if( CommonHelper::hasValue($data['filter_stock_piler']) ) $query->whereRaw('find_in_set('. $data['filter_stock_piler'] . ',assigned_to_user_id) > 0');

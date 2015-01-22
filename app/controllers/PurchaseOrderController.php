@@ -198,7 +198,7 @@ class PurchaseOrderController extends BaseController {
 		$arrParams = array(
 							'filter_po_no' 			=> Input::get('filter_po_no', NULL),
 							'filter_receiver_no' 	=> Input::get('filter_receiver_no', NULL),
-							'filter_supplier' 		=> Input::get('filter_supplier', NULL),
+							// 'filter_supplier' 		=> Input::get('filter_supplier', NULL),
 							'filter_entry_date' 	=> Input::get('filter_entry_date',NULL),
 							'filter_stock_piler' 	=> Input::get('filter_stock_piler', NULL),
 							'filter_status' 		=> Input::get('filter_status', NULL),
@@ -212,7 +212,7 @@ class PurchaseOrderController extends BaseController {
 
 		$output = Lang::get('purchase_order.col_po_no'). ',';
 		$output .= Lang::get('purchase_order.col_receiver_no'). ',';
-		$output .= Lang::get('purchase_order.col_supplier'). ',';
+		// $output .= Lang::get('purchase_order.col_supplier'). ',';
 		$output .= Lang::get('purchase_order.col_receiving_stock_piler'). ',';
 		$output .= Lang::get('purchase_order.col_invoice_number'). ',';
 		$output .= Lang::get('purchase_order.col_invoice_amount'). ',';
@@ -372,7 +372,7 @@ class PurchaseOrderController extends BaseController {
 		// Main
 		$filter_po_no = Input::get('filter_po_no', NULL);
 		$filter_receiver_no = Input::get('filter_receiver_no', NULL);
-		$filter_supplier = Input::get('filter_supplier', NULL);
+		// $filter_supplier = Input::get('filter_supplier', NULL);
 		$filter_entry_date = Input::get('filter_entry_date', NULL);
 		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
 		$filter_status = Input::get('filter_status', NULL);
@@ -411,7 +411,7 @@ class PurchaseOrderController extends BaseController {
 									'id'					=> $po_id,
 									'filter_po_no'			=> $filter_po_no,
 									'filter_receiver_no'	=> $filter_receiver_no,
-									'filter_supplier'		=> $filter_supplier,
+									// 'filter_supplier'		=> $filter_supplier,
 									'filter_entry_date'		=> $filter_entry_date,
 									'filter_stock_piler'	=> $filter_stock_piler,
 									'filter_status'			=> $filter_status,
@@ -426,7 +426,7 @@ class PurchaseOrderController extends BaseController {
 		// Main
 		$this->data['filter_po_no'] = $filter_po_no;
 		$this->data['filter_receiver_no'] = $filter_receiver_no;
-		$this->data['filter_supplier'] = $filter_supplier;
+		// $this->data['filter_supplier'] = $filter_supplier;
 		$this->data['filter_entry_date'] = $filter_entry_date;
 		$this->data['filter_stock_piler'] = $filter_stock_piler;
 		$this->data['filter_status'] = $filter_status;
@@ -442,7 +442,7 @@ class PurchaseOrderController extends BaseController {
 
 
 		$url = '?filter_po_no=' . $filter_po_no . '&filter_receiver_no=' . $filter_receiver_no;
-		$url .= '&filter_supplier=' . $filter_supplier . '&filter_entry_date=' . $filter_entry_date;
+		// $url .= '&filter_supplier=' . $filter_supplier . '&filter_entry_date=' . $filter_entry_date;
 		$url .= '&filter_stock_piler=' . $filter_stock_piler . '&filter_status=' . $filter_status;
 		$url .= '&page_back=' . $page_back . '&order_back=' . $order_back . '&sort_back=' . $sort_back. '&id=' . $po_id;
 		$url .= '&receiver_no=' . $receiver_no . '&page=' . $page_detail;
@@ -549,7 +549,7 @@ class PurchaseOrderController extends BaseController {
 		// Search Filters
 		$filter_po_no = Input::get('filter_po_no', NULL);
 		$filter_receiver_no = Input::get('filter_receiver_no', NULL);
-		$filter_supplier = Input::get('filter_supplier', NULL);
+		// $filter_supplier = Input::get('filter_supplier', NULL);
 		$filter_entry_date = Input::get('filter_entry_date', NULL);
 		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
 		$filter_status = Input::get('filter_status', NULL);
@@ -562,7 +562,7 @@ class PurchaseOrderController extends BaseController {
 		$arrParams = array(
 						'filter_po_no' 			=> $filter_po_no,
 						'filter_receiver_no' 	=> $filter_receiver_no,
-						'filter_supplier' 		=> $filter_supplier,
+						// 'filter_supplier' 		=> $filter_supplier,
 						'filter_entry_date' 	=> $filter_entry_date,
 						'filter_stock_piler' 	=> $filter_stock_piler,
 						'filter_status' 		=> $filter_status,
@@ -579,7 +579,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['arrFilters'] = array(
 									'filter_po_no' 			=> $filter_po_no,
 									'filter_receiver_no' 	=> $filter_receiver_no,
-									'filter_supplier' 		=> $filter_supplier,
+									// 'filter_supplier' 		=> $filter_supplier,
 									'filter_entry_date' 	=> $filter_entry_date,
 									'filter_stock_piler' 	=> $filter_stock_piler,
 									'filter_status' 		=> $filter_status,
@@ -594,7 +594,7 @@ class PurchaseOrderController extends BaseController {
 
 		$this->data['filter_po_no'] = $filter_po_no;
 		$this->data['filter_receiver_no'] = $filter_receiver_no;
-		$this->data['filter_supplier'] = $filter_supplier;
+		// $this->data['filter_supplier'] = $filter_supplier;
 		$this->data['filter_entry_date'] = $filter_entry_date;
 		$this->data['filter_stock_piler'] = $filter_stock_piler;
 		$this->data['filter_status'] = $filter_status;
@@ -604,7 +604,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['page'] = $page;
 
 		$url = '?filter_po_no=' . $filter_po_no . '&filter_receiver_no=' . $filter_receiver_no;
-		$url .= '&filter_supplier=' . $filter_supplier . '&filter_entry_date=' . $filter_entry_date;
+		$url .= '&filter_entry_date=' . $filter_entry_date;
 		$url .= '&filter_stock_piler=' . $filter_stock_piler . '&filter_status=' . $filter_status;
 		$url .= '&page=' . $page;
 
@@ -626,7 +626,7 @@ class PurchaseOrderController extends BaseController {
 		// Search Filters
 		$url = '?filter_po_no=' . Input::get('filter_po_no', NULL);
 		$url .= '&filter_receiver_no=' . Input::get('filter_receiver_no', NULL);
-		$url .= '&filter_supplier=' . Input::get('filter_supplier', NULL);
+		// $url .= '&filter_supplier=' . Input::get('filter_supplier', NULL);
 		$url .= '&filter_entry_date=' . Input::get('filter_entry_date', NULL);
 		$url .= '&filter_stock_piler=' . Input::get('filter_stock_piler', NULL);
 		$url .= '&filter_status=' . Input::get('filter_status', NULL);
