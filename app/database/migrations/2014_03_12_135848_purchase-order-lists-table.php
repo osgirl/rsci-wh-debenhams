@@ -21,9 +21,12 @@ class PurchaseOrderListsTable extends Migration {
 			$table->integer('vendor_id');
 			$table->integer('receiver_no');
 			$table->integer('purchase_order_no');
+			$table->string('shipment_reference_no', 20)->default("0");
+			$table->string('container_id', 20)->default("0");
 			$table->string('back_order', 30)->default("0");
 			$table->string('carton_id', 30)->default("0");
 			$table->string('destination', 10);
+			$table->integer('total_qty');
 			$table->tinyInteger('po_status')->default(1);
 			$table->string('invoice_no', 30)->default("0");
 			$table->string('invoice_amount')->default(0);

@@ -39,6 +39,7 @@ return array(
 	'col_id' 					=> 'No.',
 	'col_po_no'					=> 'PO No.',
 	'col_receiver_no'			=> 'Receiver No.',
+	'col_total_qty'				=> 'Total Qty.',
 	'col_supplier'				=> 'Supplier',
 	'col_receiving_stock_piler'	=> 'Receiving Stock Piler',
 	'col_delivery_date'			=> 'Delivery Date',

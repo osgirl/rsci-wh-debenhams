@@ -115,10 +115,11 @@
 						@endif
 						<th>{{ $col_id }}</th>
 						<th>{{ $col_back_order }}</th>
+						<th>{{ $col_carton_id }}</th>
 						<th><a href="{{ $sort_po_no }}" class="@if( $sort=='po_no' ) {{ $order }} @endif">{{ $col_po_no }}</a></th>
 						<th><a href="{{ $sort_receiver_no }}" class="@if( $sort=='receiver_no' ) {{ $order }} @endif">{{ $col_receiver_no }}</a></th>
+						<th>{{ $col_total_qty }}</th>
 						<!-- <th>{{ $col_supplier }}</th> -->
-						<th>{{ $col_carton_id }}</th>
 						<th>{{ $col_receiving_stock_piler }}</th>
 						<!-- <th>{{ $col_invoice_number }}</th> -->
 						<!-- <th>{{ $col_invoice_amount }}</th> -->
@@ -143,9 +144,10 @@
 						@endif
 						<td>{{ $counter++ }}</td>
 						<td>{{ $po->back_order }}</td>
+						<td>{{ $po->carton_id }}</td>
 						<td><a href="{{ $url_detail . '&id=' . $po->id }}">{{ $po->purchase_order_no }}</a></td>
 						<td><a href="{{ $url_detail . '&id=' . $po->id }}">{{$po->receiver_no}}</a></td>
-						<td>{{ $po->carton_id }}</td>
+						<td>{{ $po->total_qty }}</td>
 						<!-- <td>{{ $po->vendor_name }}</td> -->
 						<td>{{ $po->fullname }}</td>
 						<!-- <td>{{ $po->invoice_no }}</td> -->

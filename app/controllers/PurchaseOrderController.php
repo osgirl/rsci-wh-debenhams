@@ -511,6 +511,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['col_action'] = Lang::get('purchase_order.col_action');
 		$this->data['col_back_order'] = Lang::get('purchase_order.col_back_order');
 		$this->data['col_carton_id'] = Lang::get('purchase_order.col_carton_id');
+		$this->data['col_total_qty'] = Lang::get('purchase_order.col_total_qty');
 
 		$this->data['button_search'] = Lang::get('general.button_search');
 		$this->data['button_clear'] = Lang::get('general.button_clear');
