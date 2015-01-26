@@ -6,7 +6,8 @@
 	"type": "project",
 	"require": {
 		"laravel/framework": "4.2.*",
-		"lucadegasperi/oauth2-server-laravel": "3.*"
+		"lucadegasperi/oauth2-server-laravel": "3.*",
+		"barryvdh/laravel-dompdf": "0.4.*"
 	},
 	"autoload": {
 		"classmap": [

@@ -123,6 +123,7 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider',
 		'LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider',
+		'Barryvdh\DomPDF\ServiceProvider',
 	),
 
 	/*
@@ -190,6 +191,7 @@ return array(
 		'Validator'         => 'Illuminate\Support\Facades\Validator',
 		'View'              => 'Illuminate\Support\Facades\View',
 		'Authorizer' 		=> 'LucaDegasperi\OAuth2Server\Facades\AuthorizerFacade',
+		'PDF'				=> 'Barryvdh\DomPDF\Facade',
 	),
 
 );
