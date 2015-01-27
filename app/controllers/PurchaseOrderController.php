@@ -61,7 +61,7 @@ class PurchaseOrderController extends BaseController {
 
 
 		//get moved_to_reserve id
-		$arrParams = array('data_code' => 'PO_STATUS_TYPE', 'data_value'=> 'in_process');
+		$arrParams = array('data_code' => 'PO_STATUS_TYPE', 'data_value'=> 'assigned');
 		$po_status = Dataset::getType($arrParams)->toArray();
 
 		$arrPO = explode(',', Input::get("po_no"));
@@ -70,7 +70,7 @@ class PurchaseOrderController extends BaseController {
 			$arrParams = array(
 								'assigned_by' 			=> Auth::user()->id,
 								'assigned_to_user_id' 	=> $pilers, //Input::get('stock_piler'),
-								'po_status' 			=> $po_status['id'], //in_process
+								'po_status' 			=> $po_status['id'], //assigned
 								'updated_at' 			=> date('Y-m-d H:i:s')
 							);
 			PurchaseOrder::assignToStockPiler($purchase_order_no, $arrParams);
@@ -398,8 +398,8 @@ class PurchaseOrderController extends BaseController {
 						'limit'		=> 30
 					);
 
-		$results 		= PurchaseOrderDetail::getPODetails($po_id, $arrParams);
-		$results_total 	= PurchaseOrderDetail::getCountPODetails($po_id, $arrParams);
+		$results       = PurchaseOrderDetail::getPODetails($po_id, $arrParams);
+		$results_total = PurchaseOrderDetail::getCountPODetails($po_id, $arrParams);
 
 		// Pagination
 		$this->data['arrFilters'] = array(
@@ -528,6 +528,7 @@ class PurchaseOrderController extends BaseController {
 		// URL
 		$this->data['url_export'] = URL::to('purchase_order/export');
 		$this->data['url_reopen'] = URL::to('purchase_order/reopen');
+		$this->data['url_assign'] = URL::to('purchase_order/assign');
 		$this->data['url_detail'] = URL::to('purchase_order/detail' . $this->setURL(true));
 
 		// Message
@@ -651,6 +652,7 @@ class PurchaseOrderController extends BaseController {
 		return $url;
 	}
 
+
 	/**
 	* Gets stock piler for drop down
 	*
@@ -699,6 +701,30 @@ class PurchaseOrderController extends BaseController {
 
 		return Redirect::to('purchase_order' . $this->setURL())
 			->with('message', Lang::get('purchase_order.text_success_reopen', array('purchaseOrderNo'=> $purchase_order_no)));
+	}
+
+	public function assignPilerForm() {
+		/*if (Session::has('permissions')) {
+	    	if (!in_array('CanAssignPurchaseOrders', unserialize(Session::get('permissions')))) {
+				return Redirect::to('purchase_order');
+			}
+    	} else {
+			return Redirect::to('users/logout');
+		}*/
+		// Search Filters
+		$this->data['po_no']                   = Input::get('po_no');
+		$this->data['heading_title_assign_po'] = Lang::get('purchase_order.heading_title_assign_po');
+		$this->data['entry_purchase_no']       = Lang::get('purchase_order.entry_purchase_no');
+		$this->data['entry_stock_piler']       = Lang::get('purchase_order.entry_stock_piler');
+		$this->data['stock_piler_list']        = $this->getStockPilers();
+		$this->data['button_assign']           = Lang::get('general.button_assign');
+		$this->data['button_cancel']           = Lang::get('general.button_cancel');
+		$this->data['url_back']                = URL::to('purchase_order');
+		$this->data['error_assign_po']         = Lang::get('purchase_order.error_assign_po');
+		$this->data['params']                  = explode(',', Input::get('po_no'));
+		$this->data['po_info']                 = PurchaseOrder::getPOInfoByPoNos($this->data['params']);
+
+		$this->layout->content                 = View::make('purchase_order.assign_piler_form', $this->data);
 	}
 
 

@@ -142,8 +142,7 @@ class PurchaseOrder extends Eloquent {
 	}
 
 	public static function assignToStockPiler($purchase_order_no = '', $data = array()) {
-		$query = DB::table('purchase_order_lists')
-							->where('purchase_order_no', '=', $purchase_order_no)->update($data);
+		$query = DB::table('purchase_order_lists')->where('purchase_order_no', '=', $purchase_order_no)->update($data);
 	}
 
 	public static function isPOAssignedToThisUser($user_id, $po_id) {
@@ -204,6 +203,12 @@ class PurchaseOrder extends Eloquent {
 		} else {
 			return false;
 		}
+	}
+
+	public static function getPOInfoByPoNos($data) {
+
+		return PurchaseOrder::whereIn('purchase_order_no', $data)->get()->toArray();
+
 	}
 
 }

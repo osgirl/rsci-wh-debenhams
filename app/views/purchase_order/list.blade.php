@@ -88,7 +88,8 @@
 	</div>
 	<div class="div-buttons">
 		@if ( CommonHelper::valueInArray('CanAssignPurchaseOrders', $permissions) )
-			<a href="#myModal" role="button" class="btn btn-info btn-darkblue assignPO" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a>
+			<!-- <a href="#myModal" role="button" class="btn btn-info btn-darkblue assignPO" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a> -->
+			<a role="button" class="btn btn-info btn-darkblue assignPO" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a>
 		@endif
 		@if ( CommonHelper::valueInArray('CanExportPurchaseOrders', $permissions) )
 		<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
@@ -137,7 +138,7 @@
 					<tr class="font-size-13 tblrow" data-id="{{ $po->purchase_order_no }}">
 						@if ( CommonHelper::valueInArray('CanAssignPurchaseOrders', $permissions) )
 						<td class="align-center">
-							@if($po->data_display == 'Open')
+							@if($po->data_display == 'Open' || $po->data_display == 'Assigned')
 							<input type="checkbox" class="checkbox item-selected" name="selected[]" id="selected-{{ $po->purchase_order_no }}" value="{{ $po->purchase_order_no }}" />
 							@endif
 						</td>
@@ -320,6 +321,9 @@ $(document).ready(function() {
 				});
 
     			$('#po_no').val(purchase_no.join(','));
+
+    			// http://local.ccri.com/purchase_order/assign
+    			location = "{{ $url_assign }}" + '?po_no=' + encodeURIComponent(purchase_no.join(','));
 			} else {
 				return false;
 			}
