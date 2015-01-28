@@ -217,29 +217,43 @@ class ApiPurchaseOrder extends BaseController {
 	* @param  po_status      int    Purchase order status
 	* @return Status
 	*/
-	/*public function updateStatus($po_order_no) {
+	public function updateStatus($po_order_no) {
 		try {
 
 			if(! CommonHelper::hasValue($po_order_no) ) throw new Exception( 'Missing purchase order number parameter.');
 			if(! CommonHelper::hasValue(Request::get('po_status')) ) throw new Exception( 'Missing status parameter.');
-
 			$status_value = Request::get('po_status');
 			$status_options = Dataset::where("data_code", "=", "PO_STATUS_TYPE")->get()->lists("id", "data_value");
 
 			if(! CommonHelper::arrayHasValue($status_options[$status_value]) ) throw new Exception( 'Invalid status value.');
 
-			$po = DB::table('purchase_order_lists')
-					->where('purchase_order_no', '=', $po_order_no)
+			$po = PurchaseOrder::where('purchase_order_no', '=', $po_order_no)
 					->update(array(
 						"po_status" => $status_options[$status_value],
 						"updated_at" => date('Y-m-d H:i:s')
 					));
 
-			DebugHelper::log(__METHOD__, $po->toArray());
+			//Audit trail
+			$user_id = Authorizer::getResourceOwnerId();
+			$date_before = 'PO No #' . $po_order_no . ' status was Assigned.';
+			$data_after = 'PO No #' . $po_order_no . ' status is now ' .$status_options[$status_value]. ' and was changed by Stock Piler #' . $user_id  . '.';
+			$arrParams = array(
+				'module'		=> Config::get("audit_trail_modules.purchaseorder"),
+				'action'		=> Config::get("audit_trail.modify_po_status"),
+				'reference'		=> 'Purchase Order #' . $po_order_no,
+				'data_before'	=> $date_before,
+				'data_after'	=> $data_after,
+				'user_id'		=> Authorizer::getResourceOwnerId(),// ResourceServer::getOwnerId(),
+				'created_at'	=> date('Y-m-d H:i:s'),
+				'updated_at'	=> date('Y-m-d H:i:s')
+			);
+			AuditTrail::addAuditTrail($arrParams);
+
+			DebugHelper::log(__METHOD__, $po);
 			return Response::json(array(
 				'error' => false,
-				'message' => 'Success changed status to '.$status_value,
-				'result' => $po->toArray()),
+				'message' => 'Successfully changed status to '.$status_value,
+				'result' => $po),
 				200
 			);
 
@@ -251,7 +265,7 @@ class ApiPurchaseOrder extends BaseController {
 				400
 			);
 		}
-	}*/
+	}
 
 	/**
 	* Update a particular PO Detail
