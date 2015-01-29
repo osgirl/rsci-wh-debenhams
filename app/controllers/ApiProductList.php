@@ -1,7 +1,7 @@
 <?php
 
 class ApiProductList extends BaseController {
-	
+
 	/**
 	 * Display a product listing of the resource.
 	 *
@@ -11,7 +11,7 @@ class ApiProductList extends BaseController {
 
 		try {
 			$products = ProductList::all();
-			
+
 			/*$items = $products->toArray();
 			$totalItems = ProductLists::count();
 			$perPage = 10;
@@ -33,5 +33,20 @@ class ApiProductList extends BaseController {
 			);
 		}
 	}
-	
+
+	public function checkUpc() {
+		try {
+			CommonHelper::setRequiredFields(array('upc'));
+
+			$upc     = Request::get('upc');
+
+			ProductList::checkIfUpcExist($upc);
+
+			return CommonHelper::return_success();
+
+		}catch(Exception $e) {
+			Log::error(__METHOD__ .' Something went wrong: '.print_r($e->getMessage(),true));
+			return CommonHelper::return_fail($e->getMessage());
+		}
+	}
 }

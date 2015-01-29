@@ -149,6 +149,7 @@ Route::group(array('prefix'=>'api/v1', 'before'=>'oauth|auth.piler'), function()
 {
 
 	Route::get('products', 'ApiProductList@index');
+	Route::get('products/upc_exist', 'ApiProductList@checkUpc');
 	//purchase order apis
 	Route::get('purchase_order/{piler_id}', 'ApiPurchaseOrder@index');
 	Route::post('purchase_order/{po_order_no}', 'ApiPurchaseOrder@savedReceivedPO');
