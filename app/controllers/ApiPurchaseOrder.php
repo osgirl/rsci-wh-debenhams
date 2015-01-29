@@ -268,6 +268,110 @@ class ApiPurchaseOrder extends BaseController {
 	}
 
 	/**
+	 * Items in master file but not in PO will be inserted to PO
+	 * @param  int		 $po_order_no 	Purchase order no
+	 * @return boolean
+	 */
+	public function notInPo($po_order_no) {
+		try {
+			DB::beginTransaction();
+			CommonHelper::setRequiredFields(array('data'));
+			if(! CommonHelper::hasValue($po_order_no) ) throw new Exception( 'Missing purchase order number parameter.');
+
+			$data = json_decode(Request::get('data'), true);
+
+			foreach ($data as $value) {
+				$po = PurchaseOrderDetail::firstOrNew(array('sku'=>$value['upc'], 'receiver_no'=>$value['receiver_no']));
+				$po->sku                = $value['upc'];
+				$po->receiver_no        = $value['receiver_no'];
+				$po->quantity_delivered = ($po->exists) ? ($po->quantity_delivered + 1) : $value['quantity_delivered'];
+				$po->expiry_date		= $value['expiry_date'];
+				$po->save();
+			}
+			DebugHelper::log(__METHOD__, $po);
+
+
+			//Audit trail
+			$user_id              = Authorizer::getResourceOwnerId();
+			$arr                  = array_map(function($el){ return $el['upc']; }, $data);
+			$comma_separated_skus = implode(',', $arr);
+			$data_after           = 'PO No #' . $po_order_no . ' skus ' .$comma_separated_skus. ' with quantity 1 has been added by Stock Piler #' . $user_id  . '.';
+
+			$arrParams = array(
+				'module'		=> Config::get("audit_trail_modules.purchaseorder"),
+				'action'		=> Config::get("audit_trail.save_not_in_po"),
+				'reference'		=> 'Purchase Order #' . $po_order_no,
+				'data_before'	=> '',
+				'data_after'	=> $data_after,
+				'user_id'		=> $user_id,
+				'created_at'	=> date('Y-m-d H:i:s'),
+				'updated_at'	=> date('Y-m-d H:i:s')
+			);
+			AuditTrail::addAuditTrail($arrParams);
+
+			DB::commit();
+			return CommonHelper::return_success();
+
+		}catch(Exception $e) {
+			Log::error(__METHOD__ .' Something went wrong: '.print_r($e->getMessage(),true));
+			DB::rollback();
+			return CommonHelper::return_fail($e->getMessage());
+		}
+	}
+
+	/**
+	 * Items not in master file and not in PO will be consider as unlisted
+	 * @param  int		 $po_order_no 	Purchase order no
+	 * @return boolean
+	 */
+	public function unlisted($po_order_no) {
+		try {
+			DB::beginTransaction();
+			CommonHelper::setRequiredFields(array('data'));
+			if(! CommonHelper::hasValue($po_order_no) ) throw new Exception( 'Missing purchase order number parameter.');
+
+			$data = json_decode(Request::get('data'), true);
+
+			foreach ($data as $value) {
+				$unlisted = Unlisted::firstOrNew(array('sku'=>$value['upc'], 'reference_no'=>$po_order_no));
+				$unlisted->sku               = $value['upc'];
+				$unlisted->reference_no      = $po_order_no;
+				$unlisted->quantity_received = ($unlisted->exists) ? ($unlisted->quantity_received + 1) : $value['quantity_received'];
+				$unlisted->updated_at        = date('Y-m-d H:i:s');
+				$unlisted->save();
+			}
+			DebugHelper::log(__METHOD__, $unlisted);
+
+
+			//Audit trail
+			$user_id              = Authorizer::getResourceOwnerId();
+			$arr                  = array_map(function($el){ return $el['upc']; }, $data);
+			$comma_separated_skus = implode(',', $arr);
+			$data_after           = 'PO No #' . $po_order_no . ' skus ' .$comma_separated_skus. ' with quantity 1 has been added by Stock Piler #' . $user_id  . '.';
+
+			$arrParams = array(
+				'module'		=> Config::get("audit_trail_modules.purchaseorder"),
+				'action'		=> Config::get("audit_trail.unlisted"),
+				'reference'		=> 'Purchase Order #' . $po_order_no,
+				'data_before'	=> '',
+				'data_after'	=> $data_after,
+				'user_id'		=> $user_id,
+				'created_at'	=> date('Y-m-d H:i:s'),
+				'updated_at'	=> date('Y-m-d H:i:s')
+			);
+			AuditTrail::addAuditTrail($arrParams);
+
+			DB::commit();
+			return CommonHelper::return_success();
+
+		}catch(Exception $e) {
+			Log::error(__METHOD__ .' Something went wrong: '.print_r($e->getMessage(),true));
+			DB::rollback();
+			return CommonHelper::return_fail($e->getMessage());
+		}
+	}
+
+	/**
 	* Update a particular PO Detail
 	*
 	* @example  www.example.com/sample url

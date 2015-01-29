@@ -8,6 +8,7 @@ class PurchaseOrderDetail extends Eloquent {
 	 * @var string
 	 */
 	protected $table = 'purchase_order_details';
+	protected $fillable = array('sku', 'receiver_no');
 
 	public static function getAPIPoDetail($data = array())
 	{

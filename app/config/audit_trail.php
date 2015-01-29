@@ -17,6 +17,8 @@ return array(
 	"assign_to_piler"	=> 'Assign to Stock Piler',
 	"modify_po_status"	=> "Update Purchase Order Status",
 	"update_po_detail"	=> "Update Purchase Order Detail",
+	"save_not_in_po"	=> "Added sku/s that are not in purchase order",
+	"unlisted"			=> "Unlisted",
 	"save_po"			=> "Save Received PO",
 	"post_letdown"		=> 'Put away to picking zone',
 	"post_letdown_done"	=> 'Change status of letdown document to done',

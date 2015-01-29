@@ -15,13 +15,13 @@ class PurchaseOrderDetailsTable extends Migration {
 		Schema::create('purchase_order_details', function($table)
 		{
 			$table->increments('id');
-			$table->integer('po_id');
+			$table->integer('po_id')->default(0);
 			// $table->integer('sku');
 			$table->string('sku', 30); //revert this to bigInteger()
 			$table->integer('receiver_no');
-			$table->integer('brand');
-			$table->integer('division');
-			$table->integer('quantity_ordered');
+			$table->integer('brand')->default(0);
+			$table->integer('division')->default(0);
+			$table->integer('quantity_ordered')->default(0);
 			$table->float('unit_price')->default(0);
 			$table->integer('quantity_delivered');
 			$table->timestamp('expiry_date')->default('0000-00-00 00:00:00');
@@ -36,9 +36,9 @@ class PurchaseOrderDetailsTable extends Migration {
 
 		Schema::table('purchase_order_details', function($table)
 		{
-		    if ((Schema::hasColumn('purchase_order_details', 'po_id')) && (Schema::hasColumn('purchase_order_details', 'sku')))
+		    if ((Schema::hasColumn('purchase_order_details', 'receiver_no')) && (Schema::hasColumn('purchase_order_details', 'sku')))
 			{
-			    $table->index(array('po_id', 'sku'));
+			    $table->index(array('receiver_no', 'sku'));
 			}
 
 		});

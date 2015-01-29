@@ -3,6 +3,7 @@
 class Unlisted extends Eloquent {
 
 	protected $table = 'unlisted';
+    protected $fillable = array('sku', 'reference_no');
 
     public static function createUpdate($data = array()) {
         $query = Unlisted::where('sku', '=', $data['sku'])

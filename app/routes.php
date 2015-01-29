@@ -154,6 +154,8 @@ Route::group(array('prefix'=>'api/v1', 'before'=>'oauth|auth.piler'), function()
 	Route::post('purchase_order/{po_order_no}', 'ApiPurchaseOrder@savedReceivedPO');
 	Route::get('purchase_order/details/{po_id}', 'ApiPurchaseOrder@getDetails');
 	Route::post('purchase_order/change_status/{po_order_no}', 'ApiPurchaseOrder@updateStatus');
+	Route::post('purchase_order/not_in_po/{po_order_no}', 'ApiPurchaseOrder@notInPo');
+	Route::post('purchase_order/unlisted/{po_order_no}', 'ApiPurchaseOrder@unlisted');
 
 	//reserved zone
 	Route::get('upc', 'ApiReserveZone@index');
