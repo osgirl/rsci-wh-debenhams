@@ -25,7 +25,7 @@ class ApiDepartment extends BaseController {
 	}
 
 	/**
-	* Get Brands
+	* Get Divisions
 	*
 	* @example  www.example.com/api/{version}/department/divisions
 	* @return array of brands

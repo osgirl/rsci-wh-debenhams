@@ -186,6 +186,9 @@ Route::group(array('prefix'=>'api/v1', 'before'=>'oauth|auth.piler'), function()
 	//department
 	Route::get('department/brands', 'ApiDepartment@getBrands');
 	Route::get('department/divisions', 'ApiDepartment@getDivisions');
+
+	//audit trail
+	Route::post('audittrail/insert', 'ApiAuditTrail@insertRecord');
 });
 
 Route::group(array('prefix'=>'api/v1', 'before'=>'oauth'), function()
