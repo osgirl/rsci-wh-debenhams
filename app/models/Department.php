@@ -32,7 +32,7 @@ class Department extends Eloquent {
 			->where('sub_dept', '=', 0)
 			->where('class', '=', 0)
 			->where('sub_class', '=', 0)
-			->get(array('id', 'description'))
+			->get(array('id', 'dept_code', 'description'))
 			->toArray();
 	}
 
@@ -41,7 +41,7 @@ class Department extends Eloquent {
 			->where('sub_dept', '<>', 0)
 			->where('class', '=', 0)
 			->where('sub_class', '=', 0)
-			->get(array('id', 'description'))
+			->get(array('id', 'sub_dept', 'description'))
 			->toArray();
 	}
 }

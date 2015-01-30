@@ -332,16 +332,23 @@ class ApiPurchaseOrder extends BaseController {
 
 			$data = json_decode(Request::get('data'), true);
 
-			foreach ($data as $value) {
+			foreach ($data as $value)
+			{
 				$unlisted = Unlisted::firstOrNew(array('sku'=>$value['upc'], 'reference_no'=>$po_order_no));
+
+				if (array_key_exists('brand', $value)) $unlisted->brand = $value['brand'];
+				if (array_key_exists('division', $value)) $unlisted->division = $value['division'];
+				if (array_key_exists('description', $value)) $unlisted->division = $value['description'];
+				if (array_key_exists('style_no', $value)) $unlisted->division = $value['style_no'];
+
 				$unlisted->sku               = $value['upc'];
 				$unlisted->reference_no      = $po_order_no;
 				$unlisted->quantity_received = ($unlisted->exists) ? ($unlisted->quantity_received + 1) : $value['quantity_received'];
 				$unlisted->updated_at        = date('Y-m-d H:i:s');
 				$unlisted->save();
 			}
-			DebugHelper::log(__METHOD__, $unlisted);
 
+			DebugHelper::log(__METHOD__, $unlisted);
 
 			//Audit trail
 			$user_id              = Authorizer::getResourceOwnerId();
