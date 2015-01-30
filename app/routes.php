@@ -183,6 +183,9 @@ Route::group(array('prefix'=>'api/v1', 'before'=>'oauth|auth.piler'), function()
 	//get status types
 	Route::get('status/values', 'HomeController@getStatusValues');
 
+	//department
+	Route::get('department/brands', 'ApiDepartment@getBrands');
+	Route::get('department/divisions', 'ApiDepartment@getDivisions');
 });
 
 Route::group(array('prefix'=>'api/v1', 'before'=>'oauth'), function()

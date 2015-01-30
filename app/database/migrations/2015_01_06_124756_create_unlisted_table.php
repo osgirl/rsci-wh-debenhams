@@ -15,9 +15,12 @@ class CreateUnlistedTable extends Migration {
 		Schema::create('unlisted', function($table)
 		{
 			$table->increments('id');
+			$table->integer('dept_id')->default(0);
 			$table->string('sku', 30); //revert this to bigInteger()
 			$table->integer('reference_no');
 			$table->integer('quantity_received');
+			$table->longText('description');
+			$table->string('style_no', 30);
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 			$table->timestamp('updated_at')->default('0000-00-00 00:00:00');
 			$table->timestamp('deleted_at')->default('0000-00-00 00:00:00');
