@@ -12,9 +12,9 @@ class PurchaseOrderDetail extends Eloquent {
 
 	public static function getAPIPoDetail($data = array())
 	{
-		$query = PurchaseOrderDetail::join('purchase_order_lists', 'purchase_order_details.po_id', '=', 'purchase_order_lists.id', 'LEFT')
+		$query = PurchaseOrderDetail::join('purchase_order_lists', 'purchase_order_details.receiver_no', '=', 'purchase_order_lists.receiver_no', 'LEFT')
 						->join('product_lists', 'purchase_order_details.sku', '=', 'product_lists.upc', 'LEFT')
-						->where('purchase_order_details.po_id', '=', $data['po_id']);
+						->where('purchase_order_details.receiver_no', '=', $data['receiver_no']);
 
 		$result = $query->get(array(
 							"purchase_order_details.*",
@@ -25,16 +25,16 @@ class PurchaseOrderDetail extends Eloquent {
 		return $result;
 	}
 
-	public static function updateSKUs($data = array(), $po_id)
+	public static function updateSKUs($data = array(), $receiver_no)
 	{
 		// echo '<pre>'; print_r($data); die();
-		if(! CommonHelper::hasValue($po_id) ) throw new Exception( 'PO id is missing from parameter.');
+		if(! CommonHelper::hasValue($receiver_no) ) throw new Exception( 'Receiver number is missing from parameter.');
 		if(! isset($data['sku'])) throw new Exception( 'Sku is missing from data parameter.');
 		if(! isset($data['quantity_delivered'])) throw new Exception( 'Quantity is missing from data parameter.');
 
-		$query = PurchaseOrderDetail::where('sku', '=', $data['sku'])->where('po_id', '=', $po_id);
+		$query = PurchaseOrderDetail::where('sku', '=', $data['sku'])->where('receiver_no', '=', $receiver_no);
 
-		$data['po_id'] = $po_id;
+		$data['receiver_no'] = $receiver_no;
 		$checkSku = PurchaseOrderDetail::isSKUExist($query, $data);
 
 		if ($checkSku) {
@@ -74,11 +74,11 @@ class PurchaseOrderDetail extends Eloquent {
 		return;
 	}
 
-	public static function getPODetails($po_id = NULL, $data = array()) {
+	public static function getPODetails($receiver_no = NULL, $data = array()) {
 		$query = DB::table('purchase_order_lists')
-					->join('purchase_order_details', 'purchase_order_lists.id', '=', 'purchase_order_details.po_id', 'RIGHT')
+					->join('purchase_order_details', 'purchase_order_lists.receiver_no', '=', 'purchase_order_details.receiver_no', 'RIGHT')
 					->join('product_lists', 'purchase_order_details.sku', '=', 'product_lists.upc')
-					->where('purchase_order_details.po_id', '=', $po_id);
+					->where('purchase_order_details.receiver_no', '=', $receiver_no);
 
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if ($data['sort']=='sku') $data['sort'] = 'product_lists.sku';
@@ -100,11 +100,11 @@ class PurchaseOrderDetail extends Eloquent {
 		return $result;
 	}
 
-	public static function getScannedPODetails($po_id = NULL) {
+	public static function getScannedPODetails($receiver_no = NULL) {
 		$query = DB::table('purchase_order_lists')
-					->join('purchase_order_details', 'purchase_order_lists.id', '=', 'purchase_order_details.po_id', 'RIGHT')
+					->join('purchase_order_details', 'purchase_order_lists.receiver_no', '=', 'purchase_order_details.receiver_no', 'RIGHT')
 					->join('product_lists', 'purchase_order_details.sku', '=', 'product_lists.upc')
-					->where('purchase_order_details.po_id', '=', $po_id)
+					->where('purchase_order_details.receiver_no', '=', $receiver_no)
 					->where('quantity_delivered' , '>', 0);
 
 		$result = $query->get();
@@ -113,11 +113,11 @@ class PurchaseOrderDetail extends Eloquent {
 	}
 
 
-	public static function getCountPODetails($po_id) {
+	public static function getCountPODetails($receiver_no) {
 		$query = DB::table('purchase_order_lists')
-					->join('purchase_order_details', 'purchase_order_lists.id', '=', 'purchase_order_details.po_id', 'RIGHT')
+					->join('purchase_order_details', 'purchase_order_lists.receiver_no', '=', 'purchase_order_details.receiver_no', 'RIGHT')
 					->join('product_lists', 'purchase_order_details.sku', '=', 'product_lists.upc')
-					->where('purchase_order_details.po_id', '=', $po_id);
+					->where('purchase_order_details.receiver_no', '=', $receiver_no);
 
 		return $query->count();
 	}
@@ -127,7 +127,7 @@ class PurchaseOrderDetail extends Eloquent {
 		$arrParams = array('data_code' => 'PO_STATUS_TYPE', 'data_value'=> 'done');
 		$po_status = Dataset::getType($arrParams)->toArray();
 
-		$query = DB::table('purchase_order_details')->join('purchase_order_lists', 'purchase_order_details.po_id', '=', 'purchase_order_lists.id', 'LEFT')
+		$query = DB::table('purchase_order_details')->join('purchase_order_lists', 'purchase_order_details.receiver_no', '=', 'purchase_order_lists.receiver_no', 'LEFT')
 													->where('purchase_order_lists.po_status', '=', $po_status['id'])
 													->where('purchase_order_details.quantity_delivered', '>', 0)
 													->where('purchase_order_details.deleted_at', '=', '0000-00-00 00:00:00');
@@ -149,7 +149,7 @@ class PurchaseOrderDetail extends Eloquent {
 		$arrParams = array('data_code' => 'PO_STATUS_TYPE', 'data_value'=> 'done');
 		$po_status = Dataset::getType($arrParams)->toArray();
 
-		$query = DB::table('purchase_order_details')->join('purchase_order_lists', 'purchase_order_details.po_id', '=', 'purchase_order_lists.id', 'LEFT')
+		$query = DB::table('purchase_order_details')->join('purchase_order_lists', 'purchase_order_details.receiver_no', '=', 'purchase_order_lists.receiver_no', 'LEFT')
 													->where('purchase_order_lists.po_status', '=', $po_status['id'])
 													->where('purchase_order_details.quantity_delivered', '>', 0)
 													->where('purchase_order_details.deleted_at', '=', '0000-00-00 00:00:00');
@@ -164,7 +164,7 @@ class PurchaseOrderDetail extends Eloquent {
 
 	public static function getSku($data = array()) {
 		$query = DB::table('purchase_order_details')->where('sku', '=', $data['sku'])
-													->where('po_id', '=', $data['po_id']);
+													->where('receiver_no', '=', $data['receiver_no']);
 
 		return $query->first();
 	}

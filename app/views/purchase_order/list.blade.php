@@ -146,8 +146,8 @@
 						<td>{{ $counter++ }}</td>
 						<td>{{ $po->back_order }}</td>
 						<td>{{ $po->carton_id }}</td>
-						<td><a href="{{ $url_detail . '&id=' . $po->id }}">{{ $po->purchase_order_no }}</a></td>
-						<td><a href="{{ $url_detail . '&id=' . $po->id }}">{{$po->receiver_no}}</a></td>
+						<td><a href="{{ $url_detail . '&receiver_no=' . $po->receiver_no }}">{{ $po->purchase_order_no }}</a></td>
+						<td><a href="{{ $url_detail . '&receiver_no=' . $po->receiver_no }}">{{$po->receiver_no}}</a></td>
 						<td>{{ $po->total_qty }}</td>
 						<!-- <td>{{ $po->vendor_name }}</td> -->
 						<td>{{ $po->fullname }}</td>
@@ -180,7 +180,7 @@
 									{{ Form::hidden('order', $order) }}
 									{{ Form::hidden('page', $page) }}
 									{{ Form::hidden('module', 'purchase_order') }}
-									{{ Form::hidden('id', $po->id) }}
+									{{ Form::hidden('receiver_no', $po->receiver_no) }}
 						  		{{ Form::close() }}
 
 						  		{{ Form::open(array('url'=>'purchase_order/reopen', 'id' => 'reopenForm', 'style' => 'margin: 0px;')) }}

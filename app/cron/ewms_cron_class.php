@@ -167,7 +167,7 @@ class cronEWMS {
 		$csvLocation = $this->instance->getLatestCsv($csvfile_pattern);
 
 		$result = $this->instance->import($csvLocation, $eWMSTable, $columns);
-		$this->instance->_setPoIds(self::$purchaseOrder, $result);
+		// $this->instance->_setPoIds(self::$purchaseOrder, $result);
 	}
 
 	//blank

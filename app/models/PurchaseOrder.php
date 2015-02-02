@@ -32,12 +32,12 @@ class PurchaseOrder extends Eloquent {
 		return count($query);
 	}
 
-	public static function getPOInfo($po_id = NULL) {
+	public static function getPOInfo($receiver_no = NULL) {
 		$query = DB::table('purchase_order_lists')
 					// ->join('users', 'purchase_order_lists.assigned_to_user_id', '=', 'users.id', 'LEFT')
 					->join('dataset', 'purchase_order_lists.po_status', '=', 'dataset.id', 'LEFT')
 					->join('vendors', 'purchase_order_lists.vendor_id', '=', 'vendors.id', 'LEFT')
-					->where('purchase_order_lists.id', '=', $po_id);
+					->where('purchase_order_lists.receiver_no', '=', $receiver_no);
 
 		$result = $query->get(array(
 									'purchase_order_lists.*',
@@ -132,12 +132,13 @@ class PurchaseOrder extends Eloquent {
 					->join('vendors', 'purchase_order_lists.vendor_id', '=', 'vendors.id', 'LEFT');
 
 		if( CommonHelper::hasValue($data['filter_po_no']) ) $query->where('purchase_order_no', 'LIKE', '%'.$data['filter_po_no'].'%');
-		if( CommonHelper::hasValue($data['filter_receiver_no']) ) $query->where('receiver_no', 'LIKE', '%'.$data['filter_receiver_no'].'%');
+		if( CommonHelper::hasValue($data['filter_receiver_no']) ) $query->where('receiver_no', '=', $data['filter_receiver_no']);
 		// if( CommonHelper::hasValue($data['filter_supplier']) ) $query->where('vendors.vendor_name', 'LIKE', '%'.$data['filter_supplier'].'%');
 		if( CommonHelper::hasValue($data['filter_entry_date']) ) $query->where('purchase_order_lists.created_at', 'LIKE', '%'.$data['filter_entry_date'].'%');
 		// if( CommonHelper::hasValue($data['filter_stock_piler']) ) $query->where('assigned_to_user_id', '=', $data['filter_stock_piler']);
 		if( CommonHelper::hasValue($data['filter_stock_piler']) ) $query->whereRaw('find_in_set('. $data['filter_stock_piler'] . ',assigned_to_user_id) > 0');
 		if( CommonHelper::hasValue($data['filter_status']) && $data['filter_status'] !== 'default' ) $query->where('po_status', '=', $data['filter_status']);
+		DebugHelper::log(__METHOD__, $query);
 		return $query;
 	}
 
@@ -145,8 +146,8 @@ class PurchaseOrder extends Eloquent {
 		$query = DB::table('purchase_order_lists')->where('purchase_order_no', '=', $purchase_order_no)->update($data);
 	}
 
-	public static function isPOAssignedToThisUser($user_id, $po_id) {
-		$query = PurchaseOrder::where('id', '=', $po_id)
+	public static function isPOAssignedToThisUser($user_id, $receiver_no) {
+		$query = PurchaseOrder::where('receiver_no', '=', $receiver_no)
 								->whereRaw('find_in_set('. $user_id . ',assigned_to_user_id) > 0');
 									// ->where('assigned_to_user_id', '=', $user_id);
 
@@ -209,6 +210,10 @@ class PurchaseOrder extends Eloquent {
 
 		return PurchaseOrder::whereIn('purchase_order_no', $data)->get()->toArray();
 
+	}
+
+	public static function getPOInfoByReceiverNo($receiver_no) {
+		return PurchaseOrder::where('receiver_no', '=', $receiver_no)->first();
 	}
 
 }

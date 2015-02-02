@@ -100,7 +100,7 @@ class PurchaseOrderController extends BaseController {
 
 		if (Input::get('module') == 'purchase_order_detail') {
 			$url = $this->setURL();
-			$url .= '&id=' . Input::get('id');
+			$url .= '&receiver_no=' . Input::get('receiver_no');
 			$url .= '&sort_back=' . Input::get('sort_back').'&order_back=' . Input::get('order_back') . '&page_back=' . Input::get('page_back');
 
 			return Redirect::to('purchase_order/detail' . $url)->with('message', Lang::get('purchase_order.text_success_assign'));
@@ -120,12 +120,12 @@ class PurchaseOrderController extends BaseController {
 			return Redirect::to('users/logout');
 		}
 
-		$po_id = Input::get("id");
+		$receiver_no       = Input::get("receiver_no");
 		$purchase_order_no = Input::get("po_no");
-		$invoice_no = Input::get("invoice_no");
-		$invoice_amount = Input::get("invoice_amount");
-		$status = 'closed'; // closed
-		$date_updated = date('Y-m-d H:i:s');
+		$invoice_no        = Input::get("invoice_no");
+		$invoice_amount    = Input::get("invoice_amount");
+		$status            = 'closed'; // closed
+		$date_updated      = date('Y-m-d H:i:s');
 
 		PurchaseOrder::updatePOStatus($purchase_order_no, $status, $date_updated, $invoice_no, $invoice_amount);
 
@@ -175,7 +175,7 @@ class PurchaseOrderController extends BaseController {
 
 		if (Input::get('module') == 'purchase_order_detail') {
 			$url = $this->setURL();
-			$url .= '&id=' . Input::get('id');
+			$url .= '&receiver_no=' . Input::get('receiver_no');
 			$url .= '&sort_back=' . Input::get('sort_back').'&order_back=' . Input::get('order_back') . '&page_back=' . Input::get('page_back');
 
 			return Redirect::to('purchase_order/detail' . $url)->with('message', Lang::get('purchase_order.text_success_close_po'));
@@ -184,7 +184,7 @@ class PurchaseOrderController extends BaseController {
 		}
 	}
 
-
+	/*
 	public function exportCSV() {
 		// Check Permissions
 		if (Session::has('permissions')) {
@@ -242,6 +242,69 @@ class PurchaseOrderController extends BaseController {
 
 		return Response::make(rtrim($output, "\n"), 200, $headers);
 	}
+	*/
+
+	public function exportCSV() {
+		// Check Permissions
+		if (Session::has('permissions')) {
+	    	if (!in_array('CanExportPurchaseOrders', unserialize(Session::get('permissions'))))  {
+				return Redirect::to('purchase_order' . $this->setURL());
+			}
+    	} else {
+			return Redirect::to('users/logout');
+		}
+
+		$this->data['col_id'] = Lang::get('purchase_order.col_id');
+		$this->data['col_po_no'] = Lang::get('purchase_order.col_po_no');
+		$this->data['col_receiver_no'] = Lang::get('purchase_order.col_receiver_no');
+		$this->data['col_supplier'] = Lang::get('purchase_order.col_supplier');
+		$this->data['col_receiving_stock_piler'] = Lang::get('purchase_order.col_receiving_stock_piler');
+		$this->data['col_invoice_number'] = Lang::get('purchase_order.col_invoice_number');
+		$this->data['col_invoice_amount'] = Lang::get('purchase_order.col_invoice_amount');
+		$this->data['col_entry_date'] = Lang::get('purchase_order.col_entry_date');
+		$this->data['col_status'] = Lang::get('purchase_order.col_status');
+		$this->data['col_action'] = Lang::get('purchase_order.col_action');
+		$this->data['col_back_order'] = Lang::get('purchase_order.col_back_order');
+		$this->data['col_carton_id'] = Lang::get('purchase_order.col_carton_id');
+		$this->data['col_total_qty'] = Lang::get('purchase_order.col_total_qty');
+		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
+		$this->data['text_posted_po'] = Lang::get('purchase_order.text_posted_po');
+
+		$arrParams = array(
+							'filter_po_no' 			=> Input::get('filter_po_no', NULL),
+							'filter_receiver_no' 	=> Input::get('filter_receiver_no', NULL),
+							// 'filter_supplier' 		=> Input::get('filter_supplier', NULL),
+							'filter_entry_date' 	=> Input::get('filter_entry_date',NULL),
+							'filter_stock_piler' 	=> Input::get('filter_stock_piler', NULL),
+							'filter_status' 		=> Input::get('filter_status', NULL),
+							'sort'					=> Input::get('sort', 'po_no'),
+							'order'					=> Input::get('order', 'ASC'),
+							'page'					=> NULL,
+							'limit'					=> NULL
+						);
+
+		$results = PurchaseOrder::getPoLists($arrParams);
+
+		// $output = Lang::get('purchase_order.col_po_no'). ',';
+		// $output .= Lang::get('purchase_order.col_receiver_no'). ',';
+		// // $output .= Lang::get('purchase_order.col_supplier'). ',';
+		// $output .= Lang::get('purchase_order.col_receiving_stock_piler'). ',';
+		// $output .= Lang::get('purchase_order.col_invoice_number'). ',';
+		// $output .= Lang::get('purchase_order.col_invoice_amount'). ',';
+		// $output .= Lang::get('purchase_order.col_entry_date'). ',';
+		// $output .= Lang::get('purchase_order.col_status'). "\n";
+
+		// echo "<pre>"; print_r($results); die();
+		//
+		$this->data['results'] = $results;
+
+		$pdf = App::make('dompdf');
+		// $pdf->loadHTML('<h1>Test</h1>')->setPaper('a4')->setOrientation('landscape');
+		$pdf->loadView('purchase_order.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
+		return $pdf->stream();
+	}
+
+
 
 	public function exportDetailsCSV() {
 		///Check Permissions
@@ -253,8 +316,8 @@ class PurchaseOrderController extends BaseController {
 			return Redirect::to('users/logout');
 		}
 
-		if (PurchaseOrder::find(Input::get('id', NULL))!=NULL) {
-			$po_id = Input::get('id', NULL);
+		if (PurchaseOrder::getPOInfoByReceiverNo(Input::get('receiver_no', NULL))!=NULL) {
+			$receiver_no = Input::get('receiver_no', NULL);
 
 			$arrParams = array(
 							'sort'		=> Input::get('sort', 'sku'),
@@ -263,8 +326,8 @@ class PurchaseOrderController extends BaseController {
 							'limit'		=> NULL
 						);
 
-			$po_info = PurchaseOrder::getPOInfo($po_id);
-			$results = PurchaseOrderDetail::getPODetails($po_id, $arrParams);
+			$po_info = PurchaseOrder::getPOInfo($receiver_no);
+			$results = PurchaseOrderDetail::getPODetails($receiver_no, $arrParams);
 
 			$output = Lang::get('purchase_order.col_sku'). ',';
 			$output .= Lang::get('purchase_order.col_upc'). ',';
@@ -299,7 +362,7 @@ class PurchaseOrderController extends BaseController {
 		if (Session::has('permissions')) {
 	    	if (!in_array('CanAccessPurchaseOrderDetails', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('purchase_order');
-			} elseif (PurchaseOrder::find(Input::get('id', NULL))==NULL) {
+			} elseif (PurchaseOrder::getPOInfoByReceiverNo(Input::get('receiver_no', NULL))==NULL) {
 				return Redirect::to('purchase_order')->with('error', Lang::get('purchase_order.error_po_details'));
 			}
     	} else {
@@ -346,6 +409,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['button_assign_to_stock_piler'] = Lang::get('purchase_order.button_assign_to_stock_piler');
 		$this->data['button_assign'] = Lang::get('general.button_assign');
 		$this->data['button_cancel'] = Lang::get('general.button_cancel');
+		$this->data['text_posted_po'] = Lang::get('purchase_order.text_posted_po');
 
 		$this->data['error_assign_po'] = Lang::get('purchase_order.error_assign_po');
 		$this->data['col_expiry_date'] = Lang::get('purchase_order.col_expiry_date');
@@ -380,7 +444,7 @@ class PurchaseOrderController extends BaseController {
 		$sort_back = Input::get('sort_back', 'po_no');
 		$order_back = Input::get('order_back', 'ASC');
 		$page_back = Input::get('page_back', 1);
-		$receiver_no = Input::get('receiver_no', 1);
+		// $receiver_no = Input::get('receiver_no', 1);
 
 		// Details
 		$sort_detail = Input::get('sort', 'sku');
@@ -388,8 +452,8 @@ class PurchaseOrderController extends BaseController {
 		$page_detail = Input::get('page', 1);
 
 		//Data
-		$po_id = Input::get('id', NULL);
-		$this->data['po_info'] = PurchaseOrder::getPOInfo($po_id);
+		$receiver_no = Input::get('receiver_no', NULL);
+		$this->data['po_info'] = PurchaseOrder::getPOInfo($receiver_no);
 
 		$arrParams = array(
 						'sort'		=> $sort_detail,
@@ -398,8 +462,8 @@ class PurchaseOrderController extends BaseController {
 						'limit'		=> 30
 					);
 
-		$results       = PurchaseOrderDetail::getPODetails($po_id, $arrParams);
-		$results_total = PurchaseOrderDetail::getCountPODetails($po_id, $arrParams);
+		$results       = PurchaseOrderDetail::getPODetails($receiver_no, $arrParams);
+		$results_total = PurchaseOrderDetail::getCountPODetails($receiver_no, $arrParams);
 
 		// Pagination
 		$this->data['arrFilters'] = array(
@@ -408,7 +472,7 @@ class PurchaseOrderController extends BaseController {
 									'page_back'				=> $page_back,
 									'sort_back'				=> $sort_back,
 									'order_back'			=> $order_back,
-									'id'					=> $po_id,
+									'receiver_no'			=> $receiver_no,
 									'filter_po_no'			=> $filter_po_no,
 									'filter_receiver_no'	=> $filter_receiver_no,
 									// 'filter_supplier'		=> $filter_supplier,
@@ -444,7 +508,7 @@ class PurchaseOrderController extends BaseController {
 		$url = '?filter_po_no=' . $filter_po_no . '&filter_receiver_no=' . $filter_receiver_no;
 		// $url .= '&filter_supplier=' . $filter_supplier . '&filter_entry_date=' . $filter_entry_date;
 		$url .= '&filter_stock_piler=' . $filter_stock_piler . '&filter_status=' . $filter_status;
-		$url .= '&page_back=' . $page_back . '&order_back=' . $order_back . '&sort_back=' . $sort_back. '&id=' . $po_id;
+		$url .= '&page_back=' . $page_back . '&order_back=' . $order_back . '&sort_back=' . $sort_back. '&receiver_no=' . $receiver_no;
 		$url .= '&receiver_no=' . $receiver_no . '&page=' . $page_detail;
 
 		$order_sku = ($sort_detail=='sku' && $order_detail=='ASC') ? 'DESC' : 'ASC';

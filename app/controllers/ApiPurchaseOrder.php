@@ -43,16 +43,16 @@ class ApiPurchaseOrder extends BaseController {
 	/**
 	* Get Purchase Order Details
 	*
-	* @example  www.example.com/api/{version}/purchase_order/details/{po_id}
+	* @example  www.example.com/api/{version}/purchase_order/details/{receiver_no}
 	*
-	* @param  po_id    int    Purchase Order Id
+	* @param  receiver_no    int    Receiver number
 	* @return json encoded array of purchase order details
 	*/
-	public function getDetails($po_id) {
+	public function getDetails($receiver_no) {
 		try {
-			if(! CommonHelper::hasValue($po_id) ) throw new Exception( 'Missing purchase order id parameter.');
+			if(! CommonHelper::hasValue($receiver_no) ) throw new Exception( 'Missing receiver number parameter.');
 
-			$arrParams = array('po_id' => $po_id);
+			$arrParams = array('receiver_no' => $receiver_no);
 			$po_details = PurchaseOrderDetail::getAPIPoDetail($arrParams);
 
 			DebugHelper::log(__METHOD__, $po_details);
@@ -72,14 +72,14 @@ class ApiPurchaseOrder extends BaseController {
 	* @param  data           json string     json encoded array of skus and correspoinding moved quantity
 	* @param  user_id        int             Stock Piler Id
 	* @param  datetime_done  datetime        Date and time the purchase order was done (YYYY-MM-DD HH:MM:SS) (note: this is the time when the PO was marked done in the app, which is not the same with current time when the api call was done)
-	* @param  po_id          int             Purchase order id
+	* @param  receiver_no          int       Receiver number
 	* @return Status
 	*/
 	public function savedReceivedPO($po_order_no) {
 		try {
 			if(! CommonHelper::hasValue($po_order_no) ) throw new Exception( 'Missing purchase order number parameter.');
 			// echo "<pre>"; print_r(json_decode(Request::get('data'), true)); die();
-			CommonHelper::setRequiredFields(array('data', 'user_id', 'datetime_done','po_id'));
+			CommonHelper::setRequiredFields(array('data', 'user_id', 'datetime_done','receiver_no'));
 
 			$data 		= json_decode(Request::get('data'), true);
 
@@ -88,21 +88,21 @@ class ApiPurchaseOrder extends BaseController {
 			}
 
 			DebugHelper::log(__METHOD__, $data);
-			$po_status 	= "done";
-			$date_done 	= Request::get('datetime_done');
-			$user_id 	= Request::get('user_id');
-			$po_id 		= Request::get('po_id');
+			$po_status   = "done";
+			$date_done   = Request::get('datetime_done');
+			$user_id     = Request::get('user_id');
+			$receiver_no = Request::get('receiver_no');
 			DB::beginTransaction();
 			//check if user has the right to this PO
-			PurchaseOrder::isPOAssignedToThisUser($user_id, $po_id);
+			PurchaseOrder::isPOAssignedToThisUser($user_id, $receiver_no);
 
 
 			//save purcase order detail
 			foreach($data as $row) {
 				$row['po_order_no'] = $po_order_no;
-				PurchaseOrderDetail::updateSKUs($row, $po_id); //update po_detail table for the received qty
+				PurchaseOrderDetail::updateSKUs($row, $receiver_no); //update po_detail table for the received qty
 			}
-			self::validatePassedPODetails($po_id, $po_order_no);
+			self::validatePassedPODetails($receiver_no, $po_order_no);
 
 			//update po status
 			PurchaseOrder::updatePOStatus($po_order_no, $po_status, $date_done); //update po_list status to done
@@ -129,17 +129,17 @@ class ApiPurchaseOrder extends BaseController {
 	/**
 	* Add audit trail for saving received PO
 	*
-	* @param  po_id    integer  purchase order id
+	* @param  receiver_no    integer  Receiver number
 	* @param  user_id  integer  stock piler assigned to the PO
 	* @return true
 	*/
-	private static function savedReceivedPOAuditTrail($po_id, $user_id)
+	private static function savedReceivedPOAuditTrail($receiver_no, $user_id)
 	{
-		$data_after = 'Purchase Order #' . $po_id . ' was received by Stock Piler #' . $user_id  . '.';
+		$data_after = 'Receiver #' . $receiver_no . ' was received by Stock Piler #' . $user_id  . '.';
 		$arrParams = array(
 			'module'		=> Config::get("audit_trail_modules.purchaseorder"),
 			'action'		=> Config::get("audit_trail.save_po"),
-			'reference'		=> 'Purchase Order #' . $po_id,
+			'reference'		=> 'Receiver #' . $receiver_no,
 			'data_before'	=> '',
 			'data_after'	=> $data_after,
 			'user_id'		=> Authorizer::getResourceOwnerId(),// ResourceServer::getOwnerId(),

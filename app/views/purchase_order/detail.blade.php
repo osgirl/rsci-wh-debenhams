@@ -18,8 +18,8 @@
 	@endif
 
 	@if ( CommonHelper::valueInArray('CanClosePurchaseOrderDetails', $permissions) )
-		@if($po_info->data_display === 'Closed')
-			<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_closed_po }}</a>
+		@if($po_info->data_display === 'Posted')
+			<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_posted_po }}</a>
 		@elseif ($po_info->data_display === 'Done')
 			<a style="width: 70px;" class="btn btn-success closePO" data-id="{{ $po_info->purchase_order_no }}">{{ $button_close_po }}</a>
 		@else
@@ -44,7 +44,7 @@
 			{{ Form::hidden('order', $order_detail) }}
 			{{ Form::hidden('page', $page_detail) }}
 			{{ Form::hidden('module', 'purchase_order_detail') }}
-			{{ Form::hidden('id', $po_info->id) }}
+			{{ Form::hidden('receiver_no', $po_info->receiver_no) }}
   		{{ Form::close() }}
 
 	@endif
@@ -213,7 +213,7 @@
 		{{ Form::hidden('order', $order_detail) }}
 		{{ Form::hidden('page', $page_detail) }}
 		{{ Form::hidden('module', 'purchase_order_detail') }}
-		{{ Form::hidden('id', $po_info->id) }}
+		{{ Form::hidden('receiver_no', $po_info->receiver_no) }}
 
   		{{ Form::close() }}
 	</div>
@@ -323,7 +323,7 @@ $(document).ready(function() {
     $('#exportList').click(function() {
     	url = '';
 
-    	url += '?id=' + encodeURIComponent('{{ $po_info->id }}');
+    	url += '?receiver_no=' + encodeURIComponent('{{ $po_info->receiver_no }}');
 		url += '&sort=' + encodeURIComponent('{{ $sort_detail }}');
 		url += '&order=' + encodeURIComponent('{{ $order_detail }}');
 
