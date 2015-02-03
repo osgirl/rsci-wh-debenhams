@@ -10,20 +10,20 @@ class LetDownController extends BaseController {
 		$this->apiUrl = Config::get('constant.api_url');
 		date_default_timezone_set('Asia/Manila');
 	}
-	
+
 	public function showIndex() {
 		// Check Permissions
 		if (Session::has('permissions')) {
 	    	if (!in_array('CanAccessLetDowns', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('purchase_order');
-			} 
+			}
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		$this->getList();
 	}
-	
+
 	public function closeLetdown() {
 		// Check Permissions
 		if (Session::has('permissions')) {
@@ -33,7 +33,7 @@ class LetDownController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		$docNo = Input::get("doc_no");
 		$status = Config::get('letdown_statuses.closed');
 
@@ -47,7 +47,7 @@ class LetDownController extends BaseController {
 		));
 
 		//if success run daemon command: php app/cron/jda/daemon_closing_letdown.php
-		if( $isSuccess ) 
+		if( $isSuccess )
 		{
 			// $letdown = 'daemon_closing_letdown.php';
 			$letdown  = "classes/letdown.php {$docNo}";
@@ -57,7 +57,7 @@ class LetDownController extends BaseController {
 		return $this->redirectCloseLetdown( Input::get('module', NULL),  Input::get('page_back', 1),Input::get('sort_back', 'doc_no'),Input::get('order_back', 'ASC'), Input::get('filter_sku', NULL),Input::get('filter_store', NULL),  Input::get('filter_slot', NULL), Input::get('sort', 'doc_no'), Input::get('order', 'ASC'), Input::get('page', 1),Input::get('filter_doc_no', NULL),$docNo, Input::get("id"), Lang::get('letdown.text_success_close_letdown'));
 	}
 
-	public function exportCSV() {
+	/*public function exportCSV() {
 		// Check Permissions
 		if (Session::has('permissions')) {
 	    	if (!in_array('CanExportLetDowns', unserialize(Session::get('permissions'))))  {
@@ -66,7 +66,7 @@ class LetDownController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		$arrParams = array(
 							'filter_doc_no' 		=> Input::get('filter_doc_no', NULL),
 							'sort'					=> Input::get('sort', 'doc_no'),
@@ -84,24 +84,53 @@ class LetDownController extends BaseController {
 	    foreach ($results as $key => $value) {
 
 	    	$exportData = array(
-	    						'"' . $value->id . '"', 
-	    						'"' . $value->move_doc_number . '"', 
+	    						'"' . $value->id . '"',
+	    						'"' . $value->move_doc_number . '"',
 	    						'"' . $value->lt_status . '"'
 	    					);
-	  		
+
 	      	$output .= implode(",", $exportData);
 	      	$output .= "\n";
 	  	}
-	  	
+
 		$headers = array(
 			'Content-Type' => 'text/csv',
 			'Content-Disposition' => 'attachment; filename="letdown_' . date('Ymd')  . '_' . time() . '.csv"',
 		);
 
 		return Response::make(rtrim($output, "\n"), 200, $headers);
+	}*/
+
+	public function exportCSV() {
+		// Check Permissions
+		if (Session::has('permissions')) {
+	    	if (!in_array('CanExportLetDowns', unserialize(Session::get('permissions'))))  {
+				return Redirect::to('letdown' . $this->setURL());
+			}
+    	} else {
+			return Redirect::to('users/logout');
+		}
+		$this->data['col_doc_number'] = Lang::get('letdown.col_doc_number');
+		$this->data['col_action']     = Lang::get('letdown.col_action');
+
+		$arrParams = array(
+							'filter_doc_no' 		=> Input::get('filter_doc_no', NULL),
+							'sort'					=> Input::get('sort', 'doc_no'),
+							'order'					=> Input::get('order', 'ASC'),
+							'page'					=> NULL,
+							'limit'					=> NULL
+						);
+
+		$results = Letdown::getLetDownList($arrParams);
+		$this->data['results'] = $results;
+
+		$pdf = App::make('dompdf');
+		$pdf->loadView('letdown.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
+		// return $pdf->stream();
+		return $pdf->download('letdown_' . date('Ymd') . '.pdf');
 	}
-	
-	public function exportDetailsCSV() {
+
+	/*public function exportDetailsCSV() {
 		//TODO
 		///Check Permissions
 		if (Session::has('permissions')) {
@@ -111,10 +140,10 @@ class LetDownController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		if (Letdown::find(Input::get('id', NULL))!=NULL) {
 			$ld_id = Input::get('id', NULL);
-			
+
 			$arrParams = array(
 							'sort'			=> Input::get('sort', 'sku'),
 							'order'			=> Input::get('order', 'ASC'),
@@ -125,51 +154,91 @@ class LetDownController extends BaseController {
 							'page'			=> NULL,
 							'limit'			=> NULL
 						);
-	
+
 			$ld_info = Letdown::getLetDownInfo($ld_id);
 			$results = LetdownDetails::getLetdownDetails($ld_info->move_doc_number, $arrParams);
-				
+
 			$output = Lang::get('letdown.col_upc'). ',';
 			$output .= Lang::get('letdown.col_store'). ',';
 			$output .= Lang::get('letdown.col_slot'). ',';
 			$output .= Lang::get('letdown.col_quantity_to_pick'). ',';
 			$output .= Lang::get('letdown.col_picked_quantity'). ',';
 			$output .= Lang::get('letdown.col_status'). "\n";
-		
+
 
 		    foreach ($results as $key => $value) {
 		    	$lt_status = "";
 		    	if($value->move_to_picking_area == 0) {
 		    		$lt_status = Lang::get('letdown.status_not_in_picking');
 		    	} else {
-		    		$lt_status = Lang::get('letdown.status_in_picking'); 
+		    		$lt_status = Lang::get('letdown.status_in_picking');
 		    	}
 		    	$exportData = array(
-		    						'"' . $value->sku . '"', 
-		    						'"' . $value->store_name . '"', 
-		    						'"' . $value->from_slot_code . '"', 
-		    						'"' . $value->quantity_to_letdown . '"', 
+		    						'"' . $value->sku . '"',
+		    						'"' . $value->store_name . '"',
+		    						'"' . $value->from_slot_code . '"',
+		    						'"' . $value->quantity_to_letdown . '"',
 		    						'"' . $value->moved_qty . '"',
 		    						'"' . $lt_status . '"'
 		    					);
-		  		
+
 		      	$output .= implode(",", $exportData);
 		      	$output .= "\n";
 		  	}
 
-		  	
+
 			$headers = array(
 				'Content-Type' => 'text/csv',
 				'Content-Disposition' => 'attachment; filename="letdown_details_' . $ld_info->move_doc_number . '_' . date('Ymd')  . '_' . time() . '.csv"',
 			);
-	
+
 			return Response::make(rtrim($output, "\n"), 200, $headers);
-		} 
+		}
+
+		return;
+	}*/
+
+	public function exportDetailsCSV() {
+		//TODO
+		///Check Permissions
+		if (Session::has('permissions')) {
+	    	if (!in_array('CanExportLetDownDetails', unserialize(Session::get('permissions'))))  {
+				return Redirect::to('letdown' . $this->setURL());
+			}
+    	} else {
+			return Redirect::to('users/logout');
+		}
+
+		if (Letdown::find(Input::get('id', NULL))!=NULL) {
+			$ld_id = Input::get('id', NULL);
+
+			$arrParams = array(
+							'sort'			=> Input::get('sort', 'sku'),
+							'order'			=> Input::get('order', 'ASC'),
+							'filter_sku' 	=> NULL,
+							'filter_store' 	=> NULL,
+							'filter_slot' 	=> NULL,
+							'filter_status' => NULL,
+							'page'			=> NULL,
+							'limit'			=> NULL
+						);
+
+			$ld_info = Letdown::getLetDownInfo($ld_id);
+			$results = LetdownDetails::getLetdownDetails($ld_info->move_doc_number, $arrParams);
+
+			$this->data['results'] = $results;
+
+			$pdf = App::make('dompdf');
+			$pdf->loadView('letdown.report_detail', $this->data)->setPaper('a4')->setOrientation('landscape');
+			return $pdf->stream();
+			// return $pdf->download('letdown_detail' . date('Ymd') . '.pdf');
+
+		}
 
 		return;
 	}
 
-	
+
 	public function getLetDownDetails() {
 		// Check Permissions
 		if (Session::has('permissions')) {
@@ -181,21 +250,21 @@ class LetDownController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		$this->data['heading_title_letdown_details'] = Lang::get('letdown.heading_title_letdown_details');
 		$this->data['heading_title_letdown_contents'] = Lang::get('letdown.heading_title_letdown_contents');
-		
+
 		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 		$this->data['text_total'] = Lang::get('general.text_total');
 		$this->data['text_closed_letdown'] = Lang::get('letdown.text_closed_letdown');
 		$this->data['text_warning'] = Lang::get('letdown.text_warning');
-		
-		
+
+
 		$this->data['label_upc'] = Lang::get('letdown.label_upc');
 		$this->data['label_slot'] = Lang::get('letdown.label_slot');
 		$this->data['label_store'] = Lang::get('letdown.label_store');
 		$this->data['label_status'] = Lang::get('letdown.label_status');
-		
+
 		$this->data['col_id'] = Lang::get('letdown.col_id');
 		$this->data['col_upc'] = Lang::get('letdown.col_upc');
 		$this->data['col_store'] = Lang::get('letdown.col_store');
@@ -205,9 +274,9 @@ class LetDownController extends BaseController {
 		$this->data['col_status'] = Lang::get('letdown.col_status');
 
 		//letdown detail statuses
-		$this->data['status_in_picking'] =Lang::get('letdown.status_in_picking'); 
-		$this->data['status_not_in_picking'] =Lang::get('letdown.status_not_in_picking'); 
-		
+		$this->data['status_in_picking'] =Lang::get('letdown.status_in_picking');
+		$this->data['status_not_in_picking'] =Lang::get('letdown.status_not_in_picking');
+
 		$this->data['button_back'] = Lang::get('general.button_back');
 		$this->data['button_jda'] = Lang::get('general.button_jda');
 		$this->data['button_export'] = Lang::get('general.button_export');
@@ -222,13 +291,13 @@ class LetDownController extends BaseController {
 		// URL
 		$this->data['url_export'] = URL::to('letdown/export_detail');
 		$this->data['url_back'] = URL::to('letdown' . $this->setURL(false, true));
-		
+
 		// Message
 		$this->data['error'] = '';
 		if (Session::has('error')) {
 			$this->data['error'] = Session::get('error');
 		}
-		
+
 		$this->data['success'] = '';
 		if (Session::has('success')) {
 			$this->data['success'] = Session::get('success');
@@ -243,7 +312,7 @@ class LetDownController extends BaseController {
 		$sort_back = Input::get('sort_back', 'sku');
 		$order_back = Input::get('order_back', 'ASC');
 		$page_back = Input::get('page_back', 1);
-		
+
 		// Details
 		$sort_detail = Input::get('sort', 'sku');
 		$order_detail = Input::get('order', 'ASC');
@@ -266,8 +335,8 @@ class LetDownController extends BaseController {
 
 
 		$results 		= LetdownDetails::getLetdownDetails($move_doc_number, $arrParams);
-		$results_total 	= LetdownDetails::getLetdownDetails($move_doc_number, $arrParams, true); 
-		// Pagination 
+		$results_total 	= LetdownDetails::getLetdownDetails($move_doc_number, $arrParams, true);
+		// Pagination
 		$this->data['arrFilters'] = array(
 									'filter_doc_no' => $filter_doc_no,
 									'page_back'		=> $page_back,
@@ -284,19 +353,19 @@ class LetDownController extends BaseController {
 
 		$this->data['letdowns'] = Paginator::make($results, $results_total, 30);
 		$this->data['letdowns_count'] = $results_total;
-		
+
 		$this->data['counter'] 	= $this->data['letdowns']->getFrom();
 		$this->data['letdown_id'] = $letdown_id;
-		
+
 		// Main
 		$this->data['filter_sku'] = $filter_sku;
 		$this->data['filter_store'] = $filter_store;
 		$this->data['filter_slot'] = $filter_slot;
-		
+
 		$this->data['sort'] = $sort_detail;
 		$this->data['order'] = $order_detail;
 		$this->data['page'] = $page_detail;
-		
+
 		// Details
 		$this->data['sort_back'] 	= $sort_back;
 		$this->data['order_back'] 	= $order_back;
@@ -310,7 +379,7 @@ class LetDownController extends BaseController {
 		$order_sku = ($sort_detail=='sku' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		$order_store = ($sort_detail=='store' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		$order_slot = ($sort_detail=='slot' && $order_detail=='ASC') ? 'DESC' : 'ASC';
-		
+
 
 		$this->data['sort_sku'] = URL::to('letdown/detail' . $url . '&sort=sku&order=' . $order_sku, NULL, FALSE);
 		$this->data['sort_slot'] = URL::to('letdown/detail' . $url . '&sort=slot&order=' . $order_slot, NULL, FALSE);
@@ -322,65 +391,65 @@ class LetDownController extends BaseController {
 
 		$this->layout->content = View::make('letdown.detail', $this->data);
 	}
-	
+
 	protected function getList() {
 		$this->data['heading_title'] = Lang::get('letdown.heading_title');
-		
+
 		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 		$this->data['text_total'] = Lang::get('general.text_total');
 		$this->data['text_closed_letdown'] = Lang::get('letdown.text_closed_letdown');
 		$this->data['text_warning'] = Lang::get('letdown.text_warning');
 
-		
+
 		$this->data['label_doc_no'] = Lang::get('letdown.label_doc_no');
-		
+
 		$this->data['col_id'] = Lang::get('letdown.col_id');
 		$this->data['col_doc_number'] = Lang::get('letdown.col_doc_number');
 		$this->data['col_action'] = Lang::get('letdown.col_action');
-		
+
 		$this->data['button_search'] = Lang::get('general.button_search');
 		$this->data['button_clear'] = Lang::get('general.button_clear');
 		$this->data['button_export'] = Lang::get('general.button_export');
 		$this->data['button_close_letdown'] = Lang::get('letdown.button_close_letdown');
 		$this->data['button_lock_tags'] = Lang::get('letdown.button_lock_tags');
-		
-		
-		
+
+
+
 		// URL
 		$this->data['url_export']   = URL::to('letdown/export' . $this->setURL());
 		$this->data['url_detail']   = URL::to('letdown/detail' . $this->setURL(true));
 		$this->data['url_locktags'] = URL::to('letdown/locktags' . $this->setURL(true));
-		
+
 		// Message
 		$this->data['error'] = '';
 		if (Session::has('error')) {
 			$this->data['error'] = Session::get('error');
 		}
-		
+
 		$this->data['success'] = '';
 		if (Session::has('success')) {
 			$this->data['success'] = Session::get('success');
 		}
-		
+
 		// Search Filters
 		$filter_doc_no = Input::get('filter_doc_no', NULL);
-		
+
 		$sort = Input::get('sort', 'doc_no');
 		$order = Input::get('order', 'ASC');
 		$page = Input::get('page', 1);
 
 		//Data
-		
+
 		$arrParams = array(
-						'filter_doc_no' 		=> $filter_doc_no,			
+						'filter_doc_no' 		=> $filter_doc_no,
 						'sort'					=> $sort,
 						'order'					=> $order,
 						'page'					=> $page,
 						'limit'					=> 30
 					);
-		
+
 		$results 		= Letdown::getLetDownList($arrParams);
-		$results_total 	= Letdown::getLetDownList($arrParams, true); 
+		$results_total 	= Letdown::getLetDownList($arrParams, true);
 
 		// Pagination
 		$this->data['arrFilters'] = array(
@@ -391,22 +460,22 @@ class LetDownController extends BaseController {
 
 		$this->data['letdowns'] = Paginator::make($results, $results_total, 30);
 		$this->data['letdowns_count'] = $results_total;
-		
+
 		$this->data['counter'] 	= $this->data['letdowns']->getFrom();
 
-		
+
 		$this->data['filter_doc_no'] = $filter_doc_no;
-		
+
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
 		$this->data['page'] = $page;
-		
+
 		$url = '?filter_doc_no=' . $filter_doc_no;
 		$url .= '&page=' . $page;
 
 		$order_sku = ($sort=='sku' && $order=='ASC') ? 'DESC' : 'ASC';
 		$order_doc_no = ($sort=='doc_no' && $order=='ASC') ? 'DESC' : 'ASC';
-		
+
 		$this->data['sort_doc_no'] = URL::to('letdown' . $url . '&sort=doc_no&order=' . $order_doc_no, NULL, FALSE);
 
 		// Permissions
@@ -420,7 +489,7 @@ class LetDownController extends BaseController {
 		$this->checkPermissions('CanViewLetdownLockTags', false);
 
 		$this->data['heading_title_letdown_lock_tags'] = Lang::get('letdown.heading_title_letdown_lock_tags');
-		
+
 		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 		$this->data['text_total'] = Lang::get('general.text_total');
 		$this->data['text_select'] = Lang::get('general.text_select');
@@ -452,14 +521,14 @@ class LetDownController extends BaseController {
 		if (Session::has('error')) {
 			$this->data['error'] = Session::get('error');
 		}
-		
+
 		$this->data['success'] = '';
 		if (Session::has('success')) {
 			$this->data['success'] = Session::get('success');
 		}
-		
+
 		$this->data['stock_piler_list'] = $this->getStockPilers();
-		
+
 		$this->data['error_no_lock_tag'] = Lang::get('letdown.error_no_lock_tag');
 
 		// Search Filters
@@ -496,7 +565,7 @@ class LetDownController extends BaseController {
 
 		$this->data['lock_tag'] = Paginator::make($results, $results_total, 30);
 		$this->data['lock_tag_count'] = $results_total;
-		
+
 		$this->data['counter'] 	= $this->data['lock_tag']->getFrom();
 
 
@@ -510,13 +579,13 @@ class LetDownController extends BaseController {
 
 		$url = '?filter_stock_piler=' . $filter_stock_piler . '&filter_doc_no=' .$filter_doc_no . '&filter_sku=' . $filter_sku. '&page=' . $page ;
 		$order_lock_tag = ($sort=='lock_tag' && $order=='ASC') ? 'DESC' : 'ASC';
-		
+
 		$this->data['sort_lock_tag'] = URL::to('letdown/locktags' . $url . '&sort=lock_tag&order=' . $order_lock_tag, NULL, FALSE);
 		// Permissions
 		$this->data['permissions'] = unserialize(Session::get('permissions'));
 
 		$this->layout->content = View::make('letdown.locklist', $this->data);
-		
+
 	}
 
 	public function getLockTagDetail()
@@ -524,7 +593,7 @@ class LetDownController extends BaseController {
 		$this->checkPermissions('CanViewLetdownLockTags', false);
 
 		$this->data['heading_title_letdown_lock_tags'] = Lang::get('letdown.heading_title_letdown_lock_tags');
-		
+
 		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 		$this->data['text_total'] = Lang::get('general.text_total');
 		$this->data['text_select'] = Lang::get('general.text_select');
@@ -541,14 +610,14 @@ class LetDownController extends BaseController {
 
 		$this->data['url_back']= 	URL::to('letdown/locktags'. $this->setURLLock(false, true));
 		$this->data['url_unlock']= 	URL::to('letdown/unlock');
-		
+
 
 		// Message
 		$this->data['error'] = '';
 		if (Session::has('error')) {
 			$this->data['error'] = Session::get('error');
 		}
-		
+
 		$this->data['success'] = '';
 		if (Session::has('success')) {
 			$this->data['success'] = Session::get('success');
@@ -570,7 +639,7 @@ class LetDownController extends BaseController {
 
 		$this->data['lock_tag_details'] = $results['details'];
 		$this->data['sum_moved']= $results['sum_moved'];
-		$this->data['lock_tag_details_count'] = $resultsTotal; 
+		$this->data['lock_tag_details_count'] = $resultsTotal;
 		// Permissions
 		$this->data['permissions'] = unserialize(Session::get('permissions'));
 
@@ -578,7 +647,7 @@ class LetDownController extends BaseController {
 	}
 
 	public function unlockLetdownTag()
-	{	
+	{
 		try {
 			$data = Input::all();
 			if(!isset($data['lock_tag'])) throw new Exception("Lock tag empty.");
@@ -593,7 +662,7 @@ class LetDownController extends BaseController {
 			DB::rollback();
 			return Redirect::to('letdown/locktags'. $this->setURLLock())->withErrors(Lang::get('letdown.text_fail_unlock'));
 		}
-		
+
 	}
 
 	protected function setURL($forDetail = false, $forBackToList = false) {
@@ -649,7 +718,7 @@ class LetDownController extends BaseController {
 		$user = User::find(Auth::user()->id);
 		$data_before = '';
 		$data_after = 'Letdown Document No: ' . $docNo . ' closed by ' . $user->username;
-		
+
 		$arrParams = array(
 						'module'		=> Config::get('audit_trail_modules.letdown'),
 						'action'		=> Config::get('audit_trail.post_letdown_close'),
@@ -670,13 +739,13 @@ class LetDownController extends BaseController {
 	*
 	* @param  lockTags      Where something interesting takes place
 	* @return void
-	*/ 
+	*/
 	private function unlockLetdownTagAuditTrail($lockTags)
 	{
 
 		$lockTags = implode(',', $lockTags);
 		$data_after = 'Locktags# '.$lockTags . ' unlocked by' . Auth::user()->username;
-		
+
 		$arrParams = array(
 						'module'		=> Config::get('audit_trail_modules.letdown'),
 						'action'		=> Config::get('audit_trail.unlock_letdown_tag'),
@@ -696,8 +765,8 @@ class LetDownController extends BaseController {
 			$url = '?page_back=' .$pageBack. '&order_back=' . $orderBack .'&sort_back=' . $sortBack . '&filter_sku=' . $filter_sku . '&filter_store=' . $filter_store . '&filter_slot='. $filter_slot . '&filter_doc_no='. $filter_doc_no;
 			$url .= '&sort=' . $sort . '&order=' . $order . '&page=' . $page;
 			$url .= '&id=' . $id . '&doc_no= '.$docNo;
-			
-			return Redirect::to('letdown/detail' . $url)->with('message', $successMessage);	
+
+			return Redirect::to('letdown/detail' . $url)->with('message', $successMessage);
 		} else {
 			return Redirect::to('letdown' . $this->setURL())->with('message', $successMessage);
 		}
@@ -713,7 +782,7 @@ class LetDownController extends BaseController {
 				if($withId) {
 					return Redirect::to('letdown')->with('error', Lang::get('letdown.error_letdown_details'));
 				}
-				
+
 			}
     	} else {
 			return Redirect::to('users/logout');
@@ -726,13 +795,13 @@ class LetDownController extends BaseController {
 	* @example  $this->getStockPilers();
 	*
 	* @return array of stock piler and drop down initial text;
-	*/ 
+	*/
 	private function getStockPilers()
 	{
-		$stock_pilers = array();		
+		$stock_pilers = array();
 		foreach (User::getStockPilerOptions() as $item) {
 			$stock_pilers[$item->id] = $item->firstname . ' ' . $item->lastname;
-		}	
+		}
 		return array('' => Lang::get('general.text_select')) + $stock_pilers;
 	}
 
