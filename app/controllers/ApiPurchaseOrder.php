@@ -338,8 +338,8 @@ class ApiPurchaseOrder extends BaseController {
 
 				if (array_key_exists('brand', $value)) $unlisted->brand = $value['brand'];
 				if (array_key_exists('division', $value)) $unlisted->division = $value['division'];
-				if (array_key_exists('description', $value)) $unlisted->division = $value['description'];
-				if (array_key_exists('style_no', $value)) $unlisted->division = $value['style_no'];
+				if (array_key_exists('description', $value)) $unlisted->description = $value['description'];
+				if (array_key_exists('style_no', $value)) $unlisted->style_no = $value['style_no'];
 
 				$unlisted->sku               = $value['upc'];
 				$unlisted->reference_no      = $po_order_no;
