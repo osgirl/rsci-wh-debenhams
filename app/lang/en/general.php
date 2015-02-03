@@ -39,7 +39,7 @@ return array(
 	'button_signin'				=> 'Sign in',
 	'button_search'				=> 'Search Now',
 	'button_clear'				=> 'Clear Filters',
-	'button_export'				=> 'Export to CSV',
+	'button_export'				=> 'Export to PDF',
 	'button_archive'			=> 'Archive Logs',
 	'button_jda'				=> 'Pull Data (JDA)',
 	'button_submit'				=> 'Submit',
