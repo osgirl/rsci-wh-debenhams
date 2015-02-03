@@ -14,7 +14,8 @@
     <div class="widget-content">
     	{{ Form::open(array('url'=>'purchase_order/assign_to_piler', 'id'=>"form-assign", 'class'=>'form-horizontal', 'style' => 'margin: 0px;', 'role'=>'form')) }}
 		<!-- <div class="span3">&nbsp;</div> -->
-		<div class="span11 add-piler-wrapper">
+		<div class="span3">&nbsp;</div>
+		<div class="span7 add-piler-wrapper">
 			<div class="control-group">
 				<label class="control-label">{{ $entry_purchase_no }}</label>
 				<div class="controls">
@@ -48,11 +49,10 @@
 			</div> <!-- /control-group -->
 			@endforeach
 		@endif
-
-
         </div>
         <!-- <div class="span10">&nbsp;</div> -->
-        <div class="span11">
+        <div class="span3">&nbsp;</div>
+        <div class="span7">
         	<div class="control-group">
 				<label class="control-label" for=""></label>
 				<div class="controls">
@@ -61,7 +61,6 @@
 				</div> <!-- /controls -->
 			</div> <!-- /control-group -->
 		</div>
-        <div class="span2">&nbsp;</div>
         {{ Form::hidden('po_no', $po_no) }}
 		{{ Form::hidden('module', 'purchase_order') }}
 

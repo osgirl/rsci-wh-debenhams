@@ -10,10 +10,11 @@
 	@endif
 
 	@if ( CommonHelper::valueInArray('CanAssignPurchaseOrderDetails', $permissions) )
-		@if($po_info->data_display !== 'Open')
+		@if($po_info->data_display !== 'Open' && $po_info->data_display !== 'Assigned')
 			<a style="width: 145px;" class="btn" title="{{ $text_assigned }}" disabled="disabled">{{ $text_assigned }}</a>
 		@else
-			<a style="width: 145px;" href="#myModal" role="button" class="btn btn-success assignPO" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal" data-id="{{ $po_info->purchase_order_no }}">{{ $button_assign_to_stock_piler }}</a>
+			<!-- <a style="width: 145px;" href="#myModal" role="button" class="btn btn-success assignPO" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal" data-id="{{ $po_info->purchase_order_no }}">{{ $button_assign_to_stock_piler }}</a> -->
+			<a style="width: 145px;" role="button" class="btn btn-info btn-darkblue assignPO" title="{{ $button_assign_to_stock_piler }}" data-id="{{ $po_info->purchase_order_no }}">{{ $button_assign_to_stock_piler }}</a>
 		@endif
 	@endif
 
@@ -256,10 +257,17 @@
 <script type="text/javascript">
 $(document).ready(function() {
     // Assign PO
-    $('.assignPO').click(function() {
+    /*$('.assignPO').click(function() {
     	var purchase_no = $(this).data('id');
 
     	$('#po_no').val(purchase_no);
+    });*/
+
+	$('.assignPO').click(function() {
+
+		var po_no = $(this).data('id');
+		// http://local.ccri.com/purchase_order/assign
+		location = "{{ $url_assign }}" + '?po_no=' + po_no;
     });
 
     // Close PO

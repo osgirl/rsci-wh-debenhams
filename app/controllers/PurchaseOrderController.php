@@ -284,29 +284,17 @@ class PurchaseOrderController extends BaseController {
 						);
 
 		$results = PurchaseOrder::getPoLists($arrParams);
-
-		// $output = Lang::get('purchase_order.col_po_no'). ',';
-		// $output .= Lang::get('purchase_order.col_receiver_no'). ',';
-		// // $output .= Lang::get('purchase_order.col_supplier'). ',';
-		// $output .= Lang::get('purchase_order.col_receiving_stock_piler'). ',';
-		// $output .= Lang::get('purchase_order.col_invoice_number'). ',';
-		// $output .= Lang::get('purchase_order.col_invoice_amount'). ',';
-		// $output .= Lang::get('purchase_order.col_entry_date'). ',';
-		// $output .= Lang::get('purchase_order.col_status'). "\n";
-
-		// echo "<pre>"; print_r($results); die();
-		//
 		$this->data['results'] = $results;
 
 		$pdf = App::make('dompdf');
-		// $pdf->loadHTML('<h1>Test</h1>')->setPaper('a4')->setOrientation('landscape');
 		$pdf->loadView('purchase_order.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
-		return $pdf->stream();
+		/*return $pdf->stream();*/
+		return $pdf->download('purchase_order_' . date('Ymd') . '.pdf');
 	}
 
 
 
-	public function exportDetailsCSV() {
+	/*public function exportDetailsCSV() {
 		///Check Permissions
 		if (Session::has('permissions')) {
 	    	if (!in_array('CanExportPurchaseOrderDetails', unserialize(Session::get('permissions'))))  {
@@ -355,6 +343,46 @@ class PurchaseOrderController extends BaseController {
 
 			return Response::make(rtrim($output, "\n"), 200, $headers);
 		}
+	}*/
+
+	public function exportDetailsCSV() {
+		///Check Permissions
+		if (Session::has('permissions')) {
+	    	if (!in_array('CanExportPurchaseOrderDetails', unserialize(Session::get('permissions'))))  {
+				return Redirect::to('purchase_order' . $this->setURL());
+			}
+    	} else {
+			return Redirect::to('users/logout');
+		}
+
+		if (PurchaseOrder::getPOInfoByReceiverNo(Input::get('receiver_no', NULL))!=NULL) {
+			$this->data['col_id']                = Lang::get('purchase_order.col_id');
+			$this->data['col_sku']               = Lang::get('purchase_order.col_sku');
+			$this->data['col_upc']               = Lang::get('purchase_order.col_upc');
+			$this->data['col_short_name']        = Lang::get('purchase_order.col_short_name');
+			$this->data['col_expected_quantity'] = Lang::get('purchase_order.col_expected_quantity');
+			$this->data['col_received_quantity'] = Lang::get('purchase_order.col_received_quantity');
+			$this->data['col_expiry_date']       = Lang::get('purchase_order.col_expiry_date');
+
+			$receiver_no = Input::get('receiver_no', NULL);
+
+			$arrParams = array(
+							'sort'		=> Input::get('sort', 'sku'),
+							'order'		=> Input::get('order', 'ASC'),
+							'page'		=> NULL,
+							'limit'		=> NULL
+						);
+
+			$po_info = PurchaseOrder::getPOInfo($receiver_no);
+			$results = PurchaseOrderDetail::getPODetails($receiver_no, $arrParams);
+
+		    $this->data['results'] = $results;
+
+			$pdf = App::make('dompdf');
+			$pdf->loadView('purchase_order.report_detail', $this->data)->setPaper('a4')->setOrientation('landscape');
+			// return $pdf->stream();
+			return $pdf->download('purchase_order_detail_' . date('Ymd') . '.pdf');
+		}
 	}
 
 	public function getPODetails() {
@@ -369,54 +397,56 @@ class PurchaseOrderController extends BaseController {
 			return Redirect::to('users/logout');
 		}
 
-		$this->data['heading_title_po_details'] = Lang::get('purchase_order.heading_title_po_details');
-		$this->data['heading_title_po_contents'] = Lang::get('purchase_order.heading_title_po_contents');
-		$this->data['heading_title_assign_po'] = Lang::get('purchase_order.heading_title_assign_po');
+		$this->data['heading_title_po_details']     = Lang::get('purchase_order.heading_title_po_details');
+		$this->data['heading_title_po_contents']    = Lang::get('purchase_order.heading_title_po_contents');
+		$this->data['heading_title_assign_po']      = Lang::get('purchase_order.heading_title_assign_po');
 
-		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
-		$this->data['text_total'] = Lang::get('general.text_total');
-		$this->data['text_select'] = Lang::get('general.text_select');
-		$this->data['text_assigned'] = Lang::get('purchase_order.text_assigned');
-		$this->data['text_closed_po'] = Lang::get('purchase_order.text_closed_po');
-		$this->data['text_warning'] = Lang::get('purchase_order.text_warning');
+		$this->data['text_empty_results']           = Lang::get('general.text_empty_results');
+		$this->data['text_total']                   = Lang::get('general.text_total');
+		$this->data['text_select']                  = Lang::get('general.text_select');
+		$this->data['text_assigned']                = Lang::get('purchase_order.text_assigned');
+		$this->data['text_closed_po']               = Lang::get('purchase_order.text_closed_po');
+		$this->data['text_warning']                 = Lang::get('purchase_order.text_warning');
 
-		$this->data['label_purchase_no'] = Lang::get('purchase_order.label_purchase_no');
-		$this->data['label_receiver_no'] = Lang::get('purchase_order.label_receiver_no');
-		$this->data['label_supplier'] = Lang::get('purchase_order.label_supplier');
-		$this->data['label_entry_date'] = Lang::get('purchase_order.label_entry_date');
-		$this->data['label_status'] = Lang::get('purchase_order.label_status');
-		$this->data['label_stock_piler'] = Lang::get('purchase_order.label_stock_piler');
-		$this->data['label_jda_sync'] = Lang::get('purchase_order.label_jda_sync');
-		$this->data['label_app_sync'] = Lang::get('purchase_order.label_app_sync');
-		$this->data['label_invoice_amount'] = Lang::get('purchase_order.label_invoice_amount');
-		$this->data['label_invoice_number'] = Lang::get('purchase_order.label_invoice_number');
+		$this->data['label_purchase_no']            = Lang::get('purchase_order.label_purchase_no');
+		$this->data['label_receiver_no']            = Lang::get('purchase_order.label_receiver_no');
+		$this->data['label_supplier']               = Lang::get('purchase_order.label_supplier');
+		$this->data['label_entry_date']             = Lang::get('purchase_order.label_entry_date');
+		$this->data['label_status']                 = Lang::get('purchase_order.label_status');
+		$this->data['label_stock_piler']            = Lang::get('purchase_order.label_stock_piler');
+		$this->data['label_jda_sync']               = Lang::get('purchase_order.label_jda_sync');
+		$this->data['label_app_sync']               = Lang::get('purchase_order.label_app_sync');
+		$this->data['label_invoice_amount']         = Lang::get('purchase_order.label_invoice_amount');
+		$this->data['label_invoice_number']         = Lang::get('purchase_order.label_invoice_number');
 
-		$this->data['entry_purchase_no'] = Lang::get('purchase_order.entry_purchase_no');
-		$this->data['entry_stock_piler'] = Lang::get('purchase_order.entry_stock_piler');
-		$this->data['entry_invoice'] = Lang::get('purchase_order.entry_invoice');
+		$this->data['entry_purchase_no']            = Lang::get('purchase_order.entry_purchase_no');
+		$this->data['entry_stock_piler']            = Lang::get('purchase_order.entry_stock_piler');
+		$this->data['entry_invoice']                = Lang::get('purchase_order.entry_invoice');
 
-		$this->data['col_id'] = Lang::get('purchase_order.col_id');
-		$this->data['col_sku'] = Lang::get('purchase_order.col_sku');
-		$this->data['col_upc'] = Lang::get('purchase_order.col_upc');
-		$this->data['col_short_name'] = Lang::get('purchase_order.col_short_name');
-		$this->data['col_expected_quantity'] = Lang::get('purchase_order.col_expected_quantity');
-		$this->data['col_received_quantity'] = Lang::get('purchase_order.col_received_quantity');
+		$this->data['col_id']                       = Lang::get('purchase_order.col_id');
+		$this->data['col_sku']                      = Lang::get('purchase_order.col_sku');
+		$this->data['col_upc']                      = Lang::get('purchase_order.col_upc');
+		$this->data['col_short_name']               = Lang::get('purchase_order.col_short_name');
+		$this->data['col_expected_quantity']        = Lang::get('purchase_order.col_expected_quantity');
+		$this->data['col_received_quantity']        = Lang::get('purchase_order.col_received_quantity');
 
-		$this->data['button_back'] = Lang::get('general.button_back');
-		$this->data['button_jda'] = Lang::get('general.button_jda');
-		$this->data['button_export'] = Lang::get('general.button_export');
-		$this->data['button_close_po'] = Lang::get('purchase_order.button_close_po');
+		$this->data['button_back']                  = Lang::get('general.button_back');
+		$this->data['button_jda']                   = Lang::get('general.button_jda');
+		$this->data['button_export']                = Lang::get('general.button_export');
+		$this->data['button_close_po']              = Lang::get('purchase_order.button_close_po');
 		$this->data['button_assign_to_stock_piler'] = Lang::get('purchase_order.button_assign_to_stock_piler');
-		$this->data['button_assign'] = Lang::get('general.button_assign');
-		$this->data['button_cancel'] = Lang::get('general.button_cancel');
-		$this->data['text_posted_po'] = Lang::get('purchase_order.text_posted_po');
+		$this->data['button_assign']                = Lang::get('general.button_assign');
+		$this->data['button_cancel']                = Lang::get('general.button_cancel');
+		$this->data['text_posted_po']               = Lang::get('purchase_order.text_posted_po');
 
-		$this->data['error_assign_po'] = Lang::get('purchase_order.error_assign_po');
-		$this->data['col_expiry_date'] = Lang::get('purchase_order.col_expiry_date');
-
+		$this->data['error_assign_po']              = Lang::get('purchase_order.error_assign_po');
+		$this->data['col_expiry_date']              = Lang::get('purchase_order.col_expiry_date');
+		$this->data['text_confirm_assign']          = Lang::get('purchase_order.text_confirm_assign');
+		$this->data['error_assign']                 = Lang::get('purchase_order.error_assign');
 		// URL
-		$this->data['url_export'] = URL::to('purchase_order/export_detail');
-		$this->data['url_back'] = URL::to('purchase_order' . $this->setURL(false, true));
+		$this->data['url_export']                   = URL::to('purchase_order/export_detail');
+		$this->data['url_back']                     = URL::to('purchase_order' . $this->setURL(false, true));
+		$this->data['url_assign']                   = URL::to('purchase_order/assign');
 
 		// Message
 		$this->data['error'] = '';
@@ -434,22 +464,22 @@ class PurchaseOrderController extends BaseController {
 
 		// Search Filters
 		// Main
-		$filter_po_no = Input::get('filter_po_no', NULL);
+		$filter_po_no       = Input::get('filter_po_no', NULL);
 		$filter_receiver_no = Input::get('filter_receiver_no', NULL);
 		// $filter_supplier = Input::get('filter_supplier', NULL);
-		$filter_entry_date = Input::get('filter_entry_date', NULL);
+		$filter_entry_date  = Input::get('filter_entry_date', NULL);
 		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
-		$filter_status = Input::get('filter_status', NULL);
+		$filter_status      = Input::get('filter_status', NULL);
 
-		$sort_back = Input::get('sort_back', 'po_no');
-		$order_back = Input::get('order_back', 'ASC');
-		$page_back = Input::get('page_back', 1);
-		// $receiver_no = Input::get('receiver_no', 1);
+		$sort_back          = Input::get('sort_back', 'po_no');
+		$order_back         = Input::get('order_back', 'ASC');
+		$page_back          = Input::get('page_back', 1);
+		// $receiver_no     = Input::get('receiver_no', 1);
 
 		// Details
-		$sort_detail = Input::get('sort', 'sku');
-		$order_detail = Input::get('order', 'ASC');
-		$page_detail = Input::get('page', 1);
+		$sort_detail        = Input::get('sort', 'sku');
+		$order_detail       = Input::get('order', 'ASC');
+		$page_detail        = Input::get('page', 1);
 
 		//Data
 		$receiver_no = Input::get('receiver_no', NULL);
@@ -482,27 +512,27 @@ class PurchaseOrderController extends BaseController {
 									'receiver_no'			=> $receiver_no,
 								);
 
-		$this->data['purchase_orders'] = Paginator::make($results, $results_total, 30);
+		$this->data['purchase_orders']       = Paginator::make($results, $results_total, 30);
 		$this->data['purchase_orders_count'] = $results_total;
 
-		$this->data['counter'] 	= $this->data['purchase_orders']->getFrom();
+		$this->data['counter']               = $this->data['purchase_orders']->getFrom();
 
 		// Main
-		$this->data['filter_po_no'] = $filter_po_no;
-		$this->data['filter_receiver_no'] = $filter_receiver_no;
-		// $this->data['filter_supplier'] = $filter_supplier;
-		$this->data['filter_entry_date'] = $filter_entry_date;
-		$this->data['filter_stock_piler'] = $filter_stock_piler;
-		$this->data['filter_status'] = $filter_status;
+		$this->data['filter_po_no']          = $filter_po_no;
+		$this->data['filter_receiver_no']    = $filter_receiver_no;
+		// $this->data['filter_supplier']    = $filter_supplier;
+		$this->data['filter_entry_date']     = $filter_entry_date;
+		$this->data['filter_stock_piler']    = $filter_stock_piler;
+		$this->data['filter_status']         = $filter_status;
 
-		$this->data['sort_back'] = $sort_back;
-		$this->data['order_back'] = $order_back;
-		$this->data['page_back'] = $page_back;
+		$this->data['sort_back']             = $sort_back;
+		$this->data['order_back']            = $order_back;
+		$this->data['page_back']             = $page_back;
 
 		// Details
-		$this->data['sort_detail'] = $sort_detail;
-		$this->data['order_detail'] = $order_detail;
-		$this->data['page_detail'] = $page_detail;
+		$this->data['sort_detail']           = $sort_detail;
+		$this->data['order_detail']          = $order_detail;
+		$this->data['page_detail']           = $page_detail;
 
 
 		$url = '?filter_po_no=' . $filter_po_no . '&filter_receiver_no=' . $filter_receiver_no;
@@ -511,20 +541,20 @@ class PurchaseOrderController extends BaseController {
 		$url .= '&page_back=' . $page_back . '&order_back=' . $order_back . '&sort_back=' . $sort_back. '&receiver_no=' . $receiver_no;
 		$url .= '&receiver_no=' . $receiver_no . '&page=' . $page_detail;
 
-		$order_sku = ($sort_detail=='sku' && $order_detail=='ASC') ? 'DESC' : 'ASC';
-		$order_upc = ($sort_detail=='upc' && $order_detail=='ASC') ? 'DESC' : 'ASC';
-		$order_short_name = ($sort_detail=='short_name' && $order_detail=='ASC') ? 'DESC' : 'ASC';
-		$order_expected_quantity = ($sort_detail=='expected_quantity' && $order_detail=='ASC') ? 'DESC' : 'ASC';
-		$order_received_quantity = ($sort_detail=='received_quantity' && $order_detail=='ASC') ? 'DESC' : 'ASC';
+		$order_sku                            = ($sort_detail=='sku' && $order_detail=='ASC') ? 'DESC' : 'ASC';
+		$order_upc                            = ($sort_detail=='upc' && $order_detail=='ASC') ? 'DESC' : 'ASC';
+		$order_short_name                     = ($sort_detail=='short_name' && $order_detail=='ASC') ? 'DESC' : 'ASC';
+		$order_expected_quantity              = ($sort_detail=='expected_quantity' && $order_detail=='ASC') ? 'DESC' : 'ASC';
+		$order_received_quantity              = ($sort_detail=='received_quantity' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 
-		$this->data['sort_sku'] = URL::to('purchase_order/detail' . $url . '&sort=sku&order=' . $order_sku, NULL, FALSE);
-		$this->data['sort_upc'] = URL::to('purchase_order/detail' . $url . '&sort=upc&order=' . $order_upc, NULL, FALSE);
-		$this->data['sort_short_name'] = URL::to('purchase_order/detail' . $url . '&sort=short_name&order=' . $order_short_name, NULL, FALSE);
+		$this->data['sort_sku']               = URL::to('purchase_order/detail' . $url . '&sort=sku&order=' . $order_sku, NULL, FALSE);
+		$this->data['sort_upc']               = URL::to('purchase_order/detail' . $url . '&sort=upc&order=' . $order_upc, NULL, FALSE);
+		$this->data['sort_short_name']        = URL::to('purchase_order/detail' . $url . '&sort=short_name&order=' . $order_short_name, NULL, FALSE);
 		$this->data['sort_expected_quantity'] = URL::to('purchase_order/detail' . $url . '&sort=expected_quantity&order=' . $order_expected_quantity, NULL, FALSE);
 		$this->data['sort_received_quantity'] = URL::to('purchase_order/detail' . $url . '&sort=received_quantity&order=' . $order_expected_quantity, NULL, FALSE);
 
 		// Permissions
-		$this->data['permissions'] = unserialize(Session::get('permissions'));
+		$this->data['permissions']            = unserialize(Session::get('permissions'));
 
 		$this->layout->content = View::make('purchase_order.detail', $this->data);
 	}
@@ -537,63 +567,63 @@ class PurchaseOrderController extends BaseController {
 	* @return Purchase order list view
 	*/
 	protected function getList() {
-		$this->data['heading_title'] = Lang::get('purchase_order.heading_title');
-		$this->data['heading_title_assign_po'] = Lang::get('purchase_order.heading_title_assign_po');
+		$this->data['heading_title']                = Lang::get('purchase_order.heading_title');
+		$this->data['heading_title_assign_po']      = Lang::get('purchase_order.heading_title_assign_po');
 
-		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
-		$this->data['text_total'] = Lang::get('general.text_total');
-		$this->data['text_select'] = Lang::get('general.text_select');
-		$this->data['text_assigned'] = Lang::get('purchase_order.text_assigned');
-		$this->data['text_closed_po'] = Lang::get('purchase_order.text_closed_po');
-		$this->data['text_warning'] = Lang::get('purchase_order.text_warning');
-		$this->data['text_confirm_assign'] = Lang::get('purchase_order.text_confirm_assign');
-		$this->data['text_confirm_reopen'] = Lang::get('purchase_order.text_confirm_reopen');
-		$this->data['text_posted_po'] = Lang::get('purchase_order.text_posted_po');
+		$this->data['text_empty_results']           = Lang::get('general.text_empty_results');
+		$this->data['text_total']                   = Lang::get('general.text_total');
+		$this->data['text_select']                  = Lang::get('general.text_select');
+		$this->data['text_assigned']                = Lang::get('purchase_order.text_assigned');
+		$this->data['text_closed_po']               = Lang::get('purchase_order.text_closed_po');
+		$this->data['text_warning']                 = Lang::get('purchase_order.text_warning');
+		$this->data['text_confirm_assign']          = Lang::get('purchase_order.text_confirm_assign');
+		$this->data['text_confirm_reopen']          = Lang::get('purchase_order.text_confirm_reopen');
+		$this->data['text_posted_po']               = Lang::get('purchase_order.text_posted_po');
 
-		$this->data['label_purchase_no'] = Lang::get('purchase_order.label_purchase_no');
-		$this->data['label_receiver_no'] = Lang::get('purchase_order.label_receiver_no');
-		$this->data['label_supplier'] = Lang::get('purchase_order.label_supplier');
-		$this->data['label_entry_date'] = Lang::get('purchase_order.label_entry_date');
-		$this->data['label_receiver'] = Lang::get('purchase_order.label_receiver');
-		$this->data['label_status'] = Lang::get('purchase_order.label_status');
-		$this->data['label_invoice_amount'] = Lang::get('purchase_order.label_invoice_amount');
-		$this->data['label_invoice_number'] = Lang::get('purchase_order.label_invoice_number');
+		$this->data['label_purchase_no']            = Lang::get('purchase_order.label_purchase_no');
+		$this->data['label_receiver_no']            = Lang::get('purchase_order.label_receiver_no');
+		$this->data['label_supplier']               = Lang::get('purchase_order.label_supplier');
+		$this->data['label_entry_date']             = Lang::get('purchase_order.label_entry_date');
+		$this->data['label_receiver']               = Lang::get('purchase_order.label_receiver');
+		$this->data['label_status']                 = Lang::get('purchase_order.label_status');
+		$this->data['label_invoice_amount']         = Lang::get('purchase_order.label_invoice_amount');
+		$this->data['label_invoice_number']         = Lang::get('purchase_order.label_invoice_number');
 
-		$this->data['entry_purchase_no'] = Lang::get('purchase_order.entry_purchase_no');
-		$this->data['entry_stock_piler'] = Lang::get('purchase_order.entry_stock_piler');
-		$this->data['entry_invoice'] = Lang::get('purchase_order.entry_invoice');
+		$this->data['entry_purchase_no']            = Lang::get('purchase_order.entry_purchase_no');
+		$this->data['entry_stock_piler']            = Lang::get('purchase_order.entry_stock_piler');
+		$this->data['entry_invoice']                = Lang::get('purchase_order.entry_invoice');
 
-		$this->data['col_id'] = Lang::get('purchase_order.col_id');
-		$this->data['col_po_no'] = Lang::get('purchase_order.col_po_no');
-		$this->data['col_receiver_no'] = Lang::get('purchase_order.col_receiver_no');
-		$this->data['col_supplier'] = Lang::get('purchase_order.col_supplier');
-		$this->data['col_receiving_stock_piler'] = Lang::get('purchase_order.col_receiving_stock_piler');
-		$this->data['col_invoice_number'] = Lang::get('purchase_order.col_invoice_number');
-		$this->data['col_invoice_amount'] = Lang::get('purchase_order.col_invoice_amount');
-		$this->data['col_entry_date'] = Lang::get('purchase_order.col_entry_date');
-		$this->data['col_status'] = Lang::get('purchase_order.col_status');
-		$this->data['col_action'] = Lang::get('purchase_order.col_action');
-		$this->data['col_back_order'] = Lang::get('purchase_order.col_back_order');
-		$this->data['col_carton_id'] = Lang::get('purchase_order.col_carton_id');
-		$this->data['col_total_qty'] = Lang::get('purchase_order.col_total_qty');
+		$this->data['col_id']                       = Lang::get('purchase_order.col_id');
+		$this->data['col_po_no']                    = Lang::get('purchase_order.col_po_no');
+		$this->data['col_receiver_no']              = Lang::get('purchase_order.col_receiver_no');
+		$this->data['col_supplier']                 = Lang::get('purchase_order.col_supplier');
+		$this->data['col_receiving_stock_piler']    = Lang::get('purchase_order.col_receiving_stock_piler');
+		$this->data['col_invoice_number']           = Lang::get('purchase_order.col_invoice_number');
+		$this->data['col_invoice_amount']           = Lang::get('purchase_order.col_invoice_amount');
+		$this->data['col_entry_date']               = Lang::get('purchase_order.col_entry_date');
+		$this->data['col_status']                   = Lang::get('purchase_order.col_status');
+		$this->data['col_action']                   = Lang::get('purchase_order.col_action');
+		$this->data['col_back_order']               = Lang::get('purchase_order.col_back_order');
+		$this->data['col_carton_id']                = Lang::get('purchase_order.col_carton_id');
+		$this->data['col_total_qty']                = Lang::get('purchase_order.col_total_qty');
 
-		$this->data['button_search'] = Lang::get('general.button_search');
-		$this->data['button_clear'] = Lang::get('general.button_clear');
-		$this->data['button_export'] = Lang::get('general.button_export');
-		$this->data['button_jda'] = Lang::get('general.button_jda');
-		$this->data['button_close_po'] = Lang::get('purchase_order.button_close_po');
+		$this->data['button_search']                = Lang::get('general.button_search');
+		$this->data['button_clear']                 = Lang::get('general.button_clear');
+		$this->data['button_export']                = Lang::get('general.button_export');
+		$this->data['button_jda']                   = Lang::get('general.button_jda');
+		$this->data['button_close_po']              = Lang::get('purchase_order.button_close_po');
 		$this->data['button_assign_to_stock_piler'] = Lang::get('purchase_order.button_assign_to_stock_piler');
-		$this->data['button_assign'] = Lang::get('general.button_assign');
-		$this->data['button_cancel'] = Lang::get('general.button_cancel');
+		$this->data['button_assign']                = Lang::get('general.button_assign');
+		$this->data['button_cancel']                = Lang::get('general.button_cancel');
 
-		$this->data['error_assign'] = Lang::get('purchase_order.error_assign');
-		$this->data['error_assign_po'] = Lang::get('purchase_order.error_assign_po');
+		$this->data['error_assign']                 = Lang::get('purchase_order.error_assign');
+		$this->data['error_assign_po']              = Lang::get('purchase_order.error_assign_po');
 
 		// URL
-		$this->data['url_export'] = URL::to('purchase_order/export');
-		$this->data['url_reopen'] = URL::to('purchase_order/reopen');
-		$this->data['url_assign'] = URL::to('purchase_order/assign');
-		$this->data['url_detail'] = URL::to('purchase_order/detail' . $this->setURL(true));
+		$this->data['url_export']                   = URL::to('purchase_order/export');
+		$this->data['url_reopen']                   = URL::to('purchase_order/reopen');
+		$this->data['url_assign']                   = URL::to('purchase_order/assign');
+		$this->data['url_detail']                   = URL::to('purchase_order/detail' . $this->setURL(true));
 
 		// Message
 		$this->data['error'] = '';
@@ -607,21 +637,21 @@ class PurchaseOrderController extends BaseController {
 		}
 
 		// Search Options
-		$this->data['po_status_type'] = Dataset::getTypeInList("PO_STATUS_TYPE");
+		$this->data['po_status_type']   = Dataset::getTypeInList("PO_STATUS_TYPE");
 
 		$this->data['stock_piler_list'] = $this->getStockPilers();
 
 		// Search Filters
-		$filter_po_no = Input::get('filter_po_no', NULL);
-		$filter_receiver_no = Input::get('filter_receiver_no', NULL);
-		// $filter_supplier = Input::get('filter_supplier', NULL);
-		$filter_entry_date = Input::get('filter_entry_date', NULL);
-		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
-		$filter_status = Input::get('filter_status', NULL);
+		$filter_po_no                   = Input::get('filter_po_no', NULL);
+		$filter_receiver_no             = Input::get('filter_receiver_no', NULL);
+		// $filter_supplier             = Input::get('filter_supplier', NULL);
+		$filter_entry_date              = Input::get('filter_entry_date', NULL);
+		$filter_stock_piler             = Input::get('filter_stock_piler', NULL);
+		$filter_status                  = Input::get('filter_status', NULL);
 
-		$sort = Input::get('sort', 'purchase_order_lists.created_at');
-		$order = Input::get('order', 'DESC');
-		$page = Input::get('page', 1);
+		$sort                           = Input::get('sort', 'purchase_order_lists.created_at');
+		$order                          = Input::get('order', 'DESC');
+		$page                           = Input::get('page', 1);
 
 		//Data
 		$arrParams = array(
@@ -652,37 +682,37 @@ class PurchaseOrderController extends BaseController {
 									'order'					=> $order
 								);
 
-		$this->data['purchase_orders'] = Paginator::make($results, $results_total, 30);
+		$this->data['purchase_orders']       = Paginator::make($results, $results_total, 30);
 		$this->data['purchase_orders_count'] = $results_total;
 
-		$this->data['counter'] 	= $this->data['purchase_orders']->getFrom();
+		$this->data['counter']               = $this->data['purchase_orders']->getFrom();
 
-		$this->data['filter_po_no'] = $filter_po_no;
-		$this->data['filter_receiver_no'] = $filter_receiver_no;
-		// $this->data['filter_supplier'] = $filter_supplier;
-		$this->data['filter_entry_date'] = $filter_entry_date;
-		$this->data['filter_stock_piler'] = $filter_stock_piler;
-		$this->data['filter_status'] = $filter_status;
+		$this->data['filter_po_no']          = $filter_po_no;
+		$this->data['filter_receiver_no']    = $filter_receiver_no;
+		// $this->data['filter_supplier']    = $filter_supplier;
+		$this->data['filter_entry_date']     = $filter_entry_date;
+		$this->data['filter_stock_piler']    = $filter_stock_piler;
+		$this->data['filter_status']         = $filter_status;
 
-		$this->data['sort'] = $sort;
-		$this->data['order'] = $order;
-		$this->data['page'] = $page;
+		$this->data['sort']                  = $sort;
+		$this->data['order']                 = $order;
+		$this->data['page']                  = $page;
 
-		$url = '?filter_po_no=' . $filter_po_no . '&filter_receiver_no=' . $filter_receiver_no;
-		$url .= '&filter_entry_date=' . $filter_entry_date;
-		$url .= '&filter_stock_piler=' . $filter_stock_piler . '&filter_status=' . $filter_status;
-		$url .= '&page=' . $page;
+		$url                                 = '?filter_po_no=' . $filter_po_no . '&filter_receiver_no=' . $filter_receiver_no;
+		$url                                 .= '&filter_entry_date=' . $filter_entry_date;
+		$url                                 .= '&filter_stock_piler=' . $filter_stock_piler . '&filter_status=' . $filter_status;
+		$url                                 .= '&page=' . $page;
 
-		$order_po_no = ($sort=='po_no' && $order=='ASC') ? 'DESC' : 'ASC';
-		$order_receiver_no = ($sort=='receiver_no' && $order=='ASC') ? 'DESC' : 'ASC';
-		$order_entry_date = ($sort=='entry_date' && $order=='ASC') ? 'DESC' : 'ASC';
+		$order_po_no                         = ($sort=='po_no' && $order=='ASC') ? 'DESC' : 'ASC';
+		$order_receiver_no                   = ($sort=='receiver_no' && $order=='ASC') ? 'DESC' : 'ASC';
+		$order_entry_date                    = ($sort=='entry_date' && $order=='ASC') ? 'DESC' : 'ASC';
 
-		$this->data['sort_po_no'] = URL::to('purchase_order' . $url . '&sort=po_no&order=' . $order_po_no, NULL, FALSE);
-		$this->data['sort_receiver_no'] = URL::to('purchase_order' . $url . '&sort=receiver_no&order=' . $order_receiver_no, NULL, FALSE);
-		$this->data['sort_entry_date'] = URL::to('purchase_order' . $url . '&sort=entry_date&order=' . $order_entry_date, NULL, FALSE);
+		$this->data['sort_po_no']            = URL::to('purchase_order' . $url . '&sort=po_no&order=' . $order_po_no, NULL, FALSE);
+		$this->data['sort_receiver_no']      = URL::to('purchase_order' . $url . '&sort=receiver_no&order=' . $order_receiver_no, NULL, FALSE);
+		$this->data['sort_entry_date']       = URL::to('purchase_order' . $url . '&sort=entry_date&order=' . $order_entry_date, NULL, FALSE);
 
 		// Permissions
-		$this->data['permissions'] = unserialize(Session::get('permissions'));
+		$this->data['permissions']           = unserialize(Session::get('permissions'));
 
 		$this->layout->content = View::make('purchase_order.list', $this->data);
 	}
