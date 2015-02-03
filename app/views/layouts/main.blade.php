@@ -77,7 +77,7 @@
 		@endif
 
 
-		<!-- <li class="dropdown">
+		<li class="dropdown">
 			<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
 				<i class="icon-share"></i>
 				<span>{{ $menu_transfers }}</span>
@@ -88,17 +88,17 @@
           @if ( CommonHelper::valueInArray('CanAccessLetDowns', $permissions) )
             <li><a href="{{ URL::to('letdown') }}">{{ $menu_letdown }}</a></li>
           @endif
-          @if ( CommonHelper::valueInArray('CanAccessPicking', $permissions) )
+          <!-- @if ( CommonHelper::valueInArray('CanAccessPicking', $permissions) )
             <li><a href="{{ URL::to('picking/list') }}">{{ $menu_picking }}</a></li>
 			    @endif
           @if ( CommonHelper::valueInArray('CanAccessBoxCreation', $permissions) )
             <li><a href="{{ URL::to('box/list') }}">{{ $menu_carton }}</a></li>
           @endif
           @if ( CommonHelper::valueInArray('CanAccessLoad', $permissions) )
-            <li><a href="{{ URL::to('load/list') }}">{{ $menu_load }}</a></li>
+            <li><a href="{{ URL::to('load/list') }}">{{ $menu_load }}</a></li> -->
           @endif
       </ul>
-		</li> -->
+		</li>
 
     @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) )
 		<!-- <li class="dropdown">
