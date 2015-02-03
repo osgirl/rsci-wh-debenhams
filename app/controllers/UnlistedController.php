@@ -35,7 +35,7 @@ class UnlistedController extends BaseController {
 		$this->getList();
 	}
 
-	public function exportCSV() {
+	/*public function exportCSV() {
 		// Check Permissions
 		if (Session::has('permissions')) {
 	    	if (!in_array('CanExportUnlisted', unserialize(Session::get('permissions'))))  {
@@ -76,6 +76,34 @@ class UnlistedController extends BaseController {
 		);
 
 		return Response::make(rtrim($output, "\n"), 200, $headers);
+	}*/
+
+	public function exportCSV() {
+		// Check Permissions
+		if (Session::has('permissions')) {
+	    	if (!in_array('CanExportUnlisted', unserialize(Session::get('permissions'))))  {
+				return Redirect::to('unlisted');
+			}
+    	} else {
+			return Redirect::to('users/logout');
+		}
+		$this->data = Lang::get('unlisted');
+		$arrParams = array(
+							'filter_reference_no'	=> Input::get('filter_reference_no', NULL),
+							'filter_sku' 		=> Input::get('filter_sku', NULL),
+							'sort'				=> Input::get('sort', 'reference_no'),
+							'order'				=> Input::get('order', 'ASC'),
+							'page'				=> NULL,
+							'limit'				=> NULL
+						);
+
+		$results = Unlisted::getList($arrParams);
+		$this->data['results'] = $results;
+
+		$pdf = App::make('dompdf');
+		$pdf->loadView('unlisted.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
+		return $pdf->stream();
+		// return $pdf->download('unlisted_' . date('Ymd') . '.pdf');
 	}
 
 	protected function getList()

@@ -29,6 +29,10 @@ return array(
 	'col_reference'				=> 'Reference No.',
 	'col_quantity_received'		=> 'Quantity Received',
 	'col_action'				=> 'Action',
+	'col_description'			=> 'Description',
+	'col_style_no'				=> 'Style No.',
+	'col_brand'					=> 'Brand',
+	'col_division'				=> 'Division',
 
 	'error_cancel'		=> 'Canceled transaction.',
 

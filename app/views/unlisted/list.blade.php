@@ -20,7 +20,7 @@
 					</div>
 
 					<div class="span11 control-group collapse-border-top" style="margin-top: 6px;">
-						<a class="btn btn-success" id="submitForm">{{ $button_search }}</a>
+						<a class="btn btn-success  btn-darkblue" id="submitForm">{{ $button_search }}</a>
 						<a class="btn" id="clearForm">{{ $button_clear }}</a>
 					</div>
 				</div>
@@ -45,7 +45,7 @@
 	</div>
 	<div class="div-buttons">
 		@if ( CommonHelper::valueInArray('CanExportUnlisted', $permissions) )
-		<a class="btn btn-info" id="exportList">{{ $button_export }}</a>
+		<a class="btn btn-info  btn-darkblue" id="exportList">{{ $button_export }}</a>
 		@endif
 	</div>
 </div>
@@ -66,12 +66,16 @@
 						<th><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif"> {{ $col_upc }} </a></th>
 						<th><a href="{{ $sort_reference }}" class="@if( $sort=='reference_no' ) {{ $order }} @endif">{{ $col_reference }}</a></th>
 						<th>{{ $col_quantity_received }}</th>
+						<th>{{ $col_description }}</th>
+						<th>{{ $col_style_no }}</th>
+						<th>{{ $col_brand }}</th>
+						<th>{{ $col_division }}</th>
 					</tr>
 				</thead>
 				<tbody>
 				@if( !CommonHelper::arrayHasValue($unlisted) )
 					<tr class="font-size-13">
-						<td colspan="5" class="align-center">{{ $text_empty_results }}</td>
+						<td colspan="9" class="align-center">{{ $text_empty_results }}</td>
 					</tr>
 				@else
 					@foreach($unlisted as $unlist)
@@ -80,6 +84,10 @@
 						<td>{{ $unlist['sku'] }}</td>
 						<td>{{ $unlist['reference_no'] }}</td>
 						<td>{{ $unlist['quantity_received'] }}</td>
+						<td>{{ $unlist['description'] }}</td>
+						<td>{{ $unlist['style_no'] }}</td>
+						<td>{{ $unlist['brand'] }}</td>
+						<td>{{ $unlist['division'] }}</td>
 					</tr>
 					@endforeach
 				@endif
