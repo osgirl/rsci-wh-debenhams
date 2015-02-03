@@ -6,8 +6,8 @@ return array(
 	'menu_inventory'			=> 'Inventory',
 
 	'menu_transfers'			=> 'Transfers',
-	'menu_letdown'				=> 'Letdown',
-	'menu_picking'				=> 'Picking',
+	'menu_letdown'				=> 'Picking',
+	'menu_picking'				=> 'Packing',
 	'menu_carton'				=> 'Boxing/Loading',
 	'menu_load'					=> 'Shipping',
 

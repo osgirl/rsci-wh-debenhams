@@ -110,8 +110,16 @@ class LetDownController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
-		$this->data['col_doc_number'] = Lang::get('letdown.col_doc_number');
-		$this->data['col_action']     = Lang::get('letdown.col_action');
+
+		$this->data['col_upc']              = Lang::get('letdown.col_upc');
+		$this->data['col_store']            = Lang::get('letdown.col_store');
+		$this->data['col_slot']             = Lang::get('letdown.col_slot');
+		$this->data['col_quantity_to_pick'] = Lang::get('letdown.col_quantity_to_pick');
+		$this->data['col_picked_quantity']  = Lang::get('letdown.col_picked_quantity');
+		$this->data['col_status']           = Lang::get('letdown.col_status');
+
+		$this->data['col_doc_number']       = Lang::get('letdown.col_doc_number');
+		$this->data['col_action']           = Lang::get('letdown.col_action');
 
 		$arrParams = array(
 							'filter_doc_no' 		=> Input::get('filter_doc_no', NULL),
@@ -211,6 +219,16 @@ class LetDownController extends BaseController {
 
 		if (Letdown::find(Input::get('id', NULL))!=NULL) {
 			$ld_id = Input::get('id', NULL);
+
+			$this->data['col_upc']              = Lang::get('letdown.col_upc');
+			$this->data['col_store']            = Lang::get('letdown.col_store');
+			$this->data['col_slot']             = Lang::get('letdown.col_slot');
+			$this->data['col_quantity_to_pick'] = Lang::get('letdown.col_quantity_to_pick');
+			$this->data['col_picked_quantity']  = Lang::get('letdown.col_picked_quantity');
+			$this->data['col_status']           = Lang::get('letdown.col_status');
+			$this->data['text_empty_results']   = Lang::get('general.text_empty_results');
+			$this->data['status_not_in_picking'] =Lang::get('letdown.status_not_in_picking');
+			$this->data['status_in_picking'] =Lang::get('letdown.status_in_picking');
 
 			$arrParams = array(
 							'sort'			=> Input::get('sort', 'sku'),
