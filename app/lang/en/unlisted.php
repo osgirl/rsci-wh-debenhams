@@ -19,7 +19,7 @@ return array(
 	'button_assign_to_stock_piler' 	=> 'Assign to Stock Piler',
 	'button_search' 			=> 'Search',
 	'button_clear' 				=> 'Clear',
-	'button_export'				=> 'Export to CSV',
+	'button_export'				=> 'Export to PDF',
 	'button_ship'				=> 'Ship',
 	'button_shipped'			=> 'Shipped',
 
