@@ -90,6 +90,9 @@ return [
 
                 if (!$valid) {
                     $user = User::where('username', '=',$username)->first();
+
+                    if (is_null($user) ) return false;
+
                     $hashedUsernameBarcode = md5($username . $user->barcode);
                     if($hashedUsernameBarcode !== $password) {
                         return false;
@@ -99,6 +102,7 @@ return [
                         'barcode'   => $user->barcode
                         );
                 }
+
                 return Auth::getProvider()->retrieveByCredentials($credentials)->id;
             }
         )
