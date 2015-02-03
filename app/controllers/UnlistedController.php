@@ -102,8 +102,8 @@ class UnlistedController extends BaseController {
 
 		$pdf = App::make('dompdf');
 		$pdf->loadView('unlisted.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
-		return $pdf->stream();
-		// return $pdf->download('unlisted_' . date('Ymd') . '.pdf');
+		// return $pdf->stream();
+		return $pdf->download('unlisted_' . date('Ymd') . '.pdf');
 	}
 
 	protected function getList()
