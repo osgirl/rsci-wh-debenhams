@@ -241,7 +241,7 @@ class ApiLetdown extends BaseController {
 			DB::beginTransaction();
 
 			//assign letdown
-			LetdownDetails::checkAndAssignv2($move_doc_number, ResourceServer::getOwnerId());
+			LetdownDetails::checkAndAssignv2($move_doc_number, Authorizer::getResourceOwnerId());
 			$letdownDetail = LetdownDetails::getLetDownDetailByDocNo($move_doc_number);
 
 			$bench->end();
@@ -271,7 +271,7 @@ class ApiLetdown extends BaseController {
 			//parameters
 			$docNo   = Request::get('doc_no');
 			$data    = json_decode(Request::get('data'), true);
-			$user_id = ResourceServer::getOwnerId();
+			$user_id = Authorizer::getResourceOwnerId();
 			DebugHelper::logVar(__METHOD__, print_r($data, true));
 			if(empty($data)) throw new Exception("Parameter data does not have a valid format");
 
