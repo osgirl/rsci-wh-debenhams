@@ -4,6 +4,8 @@ php artisan dump-autoload
 
 echo "Dump autoload. \n";
 php artisan migrate:refresh
+echo "Seeding..";
+php artisan db:seed
 echo "Dump autoload. \n";
 php app/cron/ewms_cron_dump.php
 echo "Refreshed database. \n";

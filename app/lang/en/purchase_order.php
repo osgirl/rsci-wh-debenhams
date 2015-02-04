@@ -28,6 +28,7 @@ return array(
 	'label_invoice_amount'		=> 'Invoice Amount',
 	'label_invoice_number'		=> 'Invoice Number',
 	'label_entry_date'			=> 'Entry Date',
+	'label_back_order'			=> 'Back Order',
 
 	'entry_purchase_no'			=> 'PO No.:',
 	'entry_stock_piler'			=> 'Stock Piler:',

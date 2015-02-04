@@ -588,6 +588,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['label_status']                 = Lang::get('purchase_order.label_status');
 		$this->data['label_invoice_amount']         = Lang::get('purchase_order.label_invoice_amount');
 		$this->data['label_invoice_number']         = Lang::get('purchase_order.label_invoice_number');
+		$this->data['label_back_order']         = Lang::get('purchase_order.label_back_order');
 
 		$this->data['entry_purchase_no']            = Lang::get('purchase_order.entry_purchase_no');
 		$this->data['entry_stock_piler']            = Lang::get('purchase_order.entry_stock_piler');
@@ -648,6 +649,7 @@ class PurchaseOrderController extends BaseController {
 		$filter_entry_date              = Input::get('filter_entry_date', NULL);
 		$filter_stock_piler             = Input::get('filter_stock_piler', NULL);
 		$filter_status                  = Input::get('filter_status', NULL);
+		$filter_back_order              = Input::get('filter_back_order', NULL);
 
 		$sort                           = Input::get('sort', 'purchase_order_lists.created_at');
 		$order                          = Input::get('order', 'DESC');
@@ -660,6 +662,7 @@ class PurchaseOrderController extends BaseController {
 						// 'filter_supplier' 		=> $filter_supplier,
 						'filter_entry_date' 	=> $filter_entry_date,
 						'filter_stock_piler' 	=> $filter_stock_piler,
+						'filter_back_order'		=> $filter_back_order,
 						'filter_status' 		=> $filter_status,
 						'sort'					=> $sort,
 						'order'					=> $order,
@@ -677,6 +680,7 @@ class PurchaseOrderController extends BaseController {
 									// 'filter_supplier' 		=> $filter_supplier,
 									'filter_entry_date' 	=> $filter_entry_date,
 									'filter_stock_piler' 	=> $filter_stock_piler,
+									'filter_back_order'		=> $filter_back_order,
 									'filter_status' 		=> $filter_status,
 									'sort'					=> $sort,
 									'order'					=> $order
@@ -693,13 +697,14 @@ class PurchaseOrderController extends BaseController {
 		$this->data['filter_entry_date']     = $filter_entry_date;
 		$this->data['filter_stock_piler']    = $filter_stock_piler;
 		$this->data['filter_status']         = $filter_status;
+		$this->data['filter_back_order']	 = $filter_back_order;
 
 		$this->data['sort']                  = $sort;
 		$this->data['order']                 = $order;
 		$this->data['page']                  = $page;
 
 		$url                                 = '?filter_po_no=' . $filter_po_no . '&filter_receiver_no=' . $filter_receiver_no;
-		$url                                 .= '&filter_entry_date=' . $filter_entry_date;
+		$url                                 .= '&filter_entry_date=' . $filter_entry_date . '&filter_back_order=' . $filter_back_order;
 		$url                                 .= '&filter_stock_piler=' . $filter_stock_piler . '&filter_status=' . $filter_status;
 		$url                                 .= '&page=' . $page;
 
@@ -725,6 +730,7 @@ class PurchaseOrderController extends BaseController {
 		$url .= '&filter_entry_date=' . Input::get('filter_entry_date', NULL);
 		$url .= '&filter_stock_piler=' . Input::get('filter_stock_piler', NULL);
 		$url .= '&filter_status=' . Input::get('filter_status', NULL);
+		$url .= '&filter_back_order=' . Input::get('filter_back_order', NULL);
 		if($forDetail) {
 			$url .= '&sort_back=' . Input::get('sort', 'po_no');
 			$url .= '&order_back=' . Input::get('order', 'ASC');

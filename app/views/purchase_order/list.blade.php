@@ -46,6 +46,12 @@
 								<span class="add-on"><i class="icon-th"></i></span>
 				        	</div>
 				        </div>
+				        <div>
+				        	<span class="search-po-left-pane">{{ $label_back_order }}</span>
+				        	<span class="search-po-right-pane">
+				        		{{ Form::text('filter_back_order', $filter_back_order, array('class'=>'back-order', 'placeholder'=>'', 'id'=>"filter_back_order")) }}
+				        	</span>
+				        </div>
 			      	</div>
 			      	<div class="span3">
 			      		<div>
@@ -115,15 +121,12 @@
 						<th style="width: 20px;" class="align-center"><input type="checkbox" id="main-selected" /></th>
 						@endif
 						<th>{{ $col_id }}</th>
-						<th>{{ $col_back_order }}</th>
-						<th>{{ $col_carton_id }}</th>
 						<th><a href="{{ $sort_po_no }}" class="@if( $sort=='po_no' ) {{ $order }} @endif">{{ $col_po_no }}</a></th>
-						<th><a href="{{ $sort_receiver_no }}" class="@if( $sort=='receiver_no' ) {{ $order }} @endif">{{ $col_receiver_no }}</a></th>
+						<th>{{ $col_back_order }}</th>
 						<th>{{ $col_total_qty }}</th>
-						<!-- <th>{{ $col_supplier }}</th> -->
+						<th>{{ $col_carton_id }}</th>
+						<th><a href="{{ $sort_receiver_no }}" class="@if( $sort=='receiver_no' ) {{ $order }} @endif">{{ $col_receiver_no }}</a></th>
 						<th>{{ $col_receiving_stock_piler }}</th>
-						<!-- <th>{{ $col_invoice_number }}</th> -->
-						<!-- <th>{{ $col_invoice_amount }}</th> -->
 						<th><a href="{{ $sort_entry_date }}" class="@if( $sort=='entry_date' ) {{ $order }} @endif">{{ $col_entry_date }}</a></th>
 						<th>{{ $col_status }}</th>
 						<th class="align-center">{{ $col_action }}</th>
@@ -144,15 +147,12 @@
 						</td>
 						@endif
 						<td>{{ $counter++ }}</td>
-						<td>{{ $po->back_order }}</td>
-						<td>{{ $po->carton_id }}</td>
 						<td><a href="{{ $url_detail . '&receiver_no=' . $po->receiver_no }}">{{ $po->purchase_order_no }}</a></td>
-						<td><a href="{{ $url_detail . '&receiver_no=' . $po->receiver_no }}">{{$po->receiver_no}}</a></td>
+						<td>{{ $po->back_order }}</td>
 						<td>{{ $po->total_qty }}</td>
-						<!-- <td>{{ $po->vendor_name }}</td> -->
+						<td>{{ $po->carton_id }}</td>
+						<td><a href="{{ $url_detail . '&receiver_no=' . $po->receiver_no }}">{{$po->receiver_no}}</a></td>
 						<td>{{ $po->fullname }}</td>
-						<!-- <td>{{ $po->invoice_no }}</td> -->
-						<!-- <td>{{ $po->invoice_amount }}</td> -->
 						<td>{{ date("M d, Y", strtotime($po->created_at)) }}</td>
 						<td>{{ $po->data_display }}</td>
 						<td class="align-center">

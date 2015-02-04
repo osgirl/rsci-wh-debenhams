@@ -86,22 +86,24 @@
 
 			<ul class="dropdown-menu">
           @if ( CommonHelper::valueInArray('CanAccessLetDowns', $permissions) )
+            @if (Auth::user()->brand_id !== 2)
             <li><a href="{{ URL::to('letdown') }}">{{ $menu_letdown }}</a></li>
+            @endif
           @endif
-          <!-- @if ( CommonHelper::valueInArray('CanAccessPicking', $permissions) )
+          @if ( CommonHelper::valueInArray('CanAccessPicking', $permissions) )
             <li><a href="{{ URL::to('picking/list') }}">{{ $menu_picking }}</a></li>
 			    @endif
           @if ( CommonHelper::valueInArray('CanAccessBoxCreation', $permissions) )
             <li><a href="{{ URL::to('box/list') }}">{{ $menu_carton }}</a></li>
           @endif
           @if ( CommonHelper::valueInArray('CanAccessLoad', $permissions) )
-            <li><a href="{{ URL::to('load/list') }}">{{ $menu_load }}</a></li> -->
+            <li><a href="{{ URL::to('load/list') }}">{{ $menu_load }}</a></li>
           @endif
       </ul>
 		</li>
 
     @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) )
-		<!-- <li class="dropdown">
+		<li class="dropdown">
 			<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
 				<i class="icon-inbox"></i>
 				<span>{{ $menu_str_receiving }}</span>
@@ -113,7 +115,7 @@
             <li><a href="{{ URL::to('store_order') }}">{{ $menu_store_order }}</a></li>
           @endif
 			</ul>
-		</li> -->
+		</li>
 		@endif <!--end if drop down for store receiving-->
 
 		@if ( CommonHelper::valueInArray('CanAccessProductMasterList', $permissions) || CommonHelper::valueInArray('CanAccessSlotMasterList', $permissions) )
