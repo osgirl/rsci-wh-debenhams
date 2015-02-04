@@ -98,8 +98,9 @@ $(document).ready(function() {
 	// Submit Assign PO
     $('#btn-assign').click(function() {
     	stockpiler = $('select[name=\'stock_piler\']').val();
+    	console.log(stockpiler);
 
-    	if (stockpiler == '') {
+    	if (stockpiler == undefined) {
     		alert('{{ $error_assign_po }}');
     		return false;
     	} else {
