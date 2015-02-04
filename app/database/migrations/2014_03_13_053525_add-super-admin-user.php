@@ -27,6 +27,7 @@ class AddSuperAdminUser extends Migration {
 			'firstname' => 'Admin',
 			'lastname' => 'Admin',
 			'role_id' => 2,
+			'brand_id' => 2,
 			'created_at' => date('Y-m-d H:i:s')
 		));
 
@@ -36,6 +37,7 @@ class AddSuperAdminUser extends Migration {
 			'firstname' => 'Stock',
 			'lastname' => 'Piler',
 			'role_id' => 3,
+			'brand_id' => 2,
 			'created_at' => date('Y-m-d H:i:s'),
 			'barcode' 	=> 'NGM0001'
 		));
@@ -46,6 +48,7 @@ class AddSuperAdminUser extends Migration {
 			'firstname' => 'Stock',
 			'lastname' => 'Pilar',
 			'role_id' => 3,
+			'brand_id' => 2,
 			'created_at' => date('Y-m-d H:i:s'),
 			'barcode' 	=> 'NGM0002'
 		));
@@ -56,6 +59,7 @@ class AddSuperAdminUser extends Migration {
 			'firstname' => 'Box',
 			'lastname' => 'Creator',
 			'role_id' => 5,
+			'brand_id' => 2,
 			'created_at' => date('Y-m-d H:i:s')
 		));
 
@@ -65,6 +69,7 @@ class AddSuperAdminUser extends Migration {
 			'firstname' => 'Store',
 			'lastname' => 'Owner',
 			'role_id' => 4,
+			'brand_id' => 2,
 			'store_code'	=> 20,
 			'created_at' => date('Y-m-d H:i:s')
 		));
@@ -75,6 +80,7 @@ class AddSuperAdminUser extends Migration {
 			'firstname' => 'Store2',
 			'lastname' => 'Owner2',
 			'role_id' => 4,
+			'brand_id' => 2,
 			'store_code'	=> 26,
 			'created_at' => date('Y-m-d H:i:s')
 		));
