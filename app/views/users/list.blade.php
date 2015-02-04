@@ -26,7 +26,7 @@
 							</span>
 						</div>
 					</div>
-					
+
 					<div class="span3">
 						<div>
 							<span class="search-po-left-pane">{{ $label_filter_barcode }}</span>
@@ -35,7 +35,7 @@
 							</span>
 						</div>
 					</div>
-					
+
 					<div class="span3">
 						<div>
 							<span class="search-po-left-pane">{{ $label_filter_user_role }}</span>
@@ -44,24 +44,24 @@
 							</span>
 						</div>
 					</div>
-					
+
 					<div class="span11 control-group collapse-border-top">
-						<a class="btn btn-success" id="submitForm">{{ $button_search }}</a>
+						<a class="btn btn-success  btn-darkblue" id="submitForm">{{ $button_search }}</a>
 						<a class="btn" id="clearForm">{{ $button_clear }}</a>
 					</div>
 				</div>
 				{{ Form::hidden('sort', $sort) }}
 		        {{ Form::hidden('order', $order) }}
-				
+
 				{{ Form::close() }}
 			</div>
 		</div>
-	</div> <!-- /controls -->	
+	</div> <!-- /controls -->
 </div> <!-- /control-group -->
 
 <div class="clear">
 	<div class="div-paginate">
-		@if( CommonHelper::arrayHasValue($users) ) 
+		@if( CommonHelper::arrayHasValue($users) )
 	    	<h6 class="paginate">
 				<span>{{ $users->appends($arrFilters)->links() }}&nbsp;</span>
 			</h6>
@@ -71,10 +71,10 @@
 	</div>
 	<div class="div-buttons">
 		@if ( CommonHelper::valueInArray('CanInsertUsers', $permissions) )
-		<a class="btn btn-info" href="{{ $url_insert }}">{{ $button_insert }}</a>
+		<a class="btn btn-info  btn-darkblue" href="{{ $url_insert }}">{{ $button_insert }}</a>
 		@endif
 		@if ( CommonHelper::valueInArray('CanExportUsers', $permissions) )
-		<a class="btn btn-info" id="exportList">{{ $button_export }}</a>
+		<a class="btn btn-info  btn-darkblue" id="exportList">{{ $button_export }}</a>
 		@endif
 		@if ( CommonHelper::valueInArray('CanDeleteUsers', $permissions) )
 		<a class="btn btn-danger" id="removeData">{{ $button_delete }}</a>
@@ -88,7 +88,7 @@
       	<span class="pagination-totalItems">{{ $text_total }} {{ $users_count }}</span>
     </div>
     <!-- /widget-header -->
-    
+
     <div class="widget-content">
     	<div class="table-responsive">
 	    	{{ Form::open(array('url'=>'user/delete', 'class'=>'form-signin', 'id'=>'form', 'role'=>'form', 'method' => 'post', 'style' => 'margin-bottom: 0px;')) }}
@@ -111,7 +111,7 @@
 					</tr>
 				</thead>
 				<tbody>
-				@if( !CommonHelper::arrayHasValue($users) ) 
+				@if( !CommonHelper::arrayHasValue($users) )
 					<tr class="font-size-13">
 						<td colspan="9" class="align-center">{{ $text_empty_results }}</td>
 					</tr>
@@ -128,7 +128,7 @@
 						<td>{{ $counter++ }}</td>
 						<td>{{ $user->username }}</td>
 						<td>{{ $user->barcode }}</td>
-						<td>{{ $user->name }}</td>						
+						<td>{{ $user->name }}</td>
 						<td>{{ $user->role_name }}</td>
 						<td>{{ $user->brand_name }}</td>
 						<td>{{ date('M d, Y', strtotime($user->created_at)) }}</td>
@@ -150,12 +150,12 @@
 			{{ Form::hidden('sort', $sort) }}
 	        {{ Form::hidden('order', $order) }}
 	        {{ Form::hidden('page', $page) }}
-			
+
 			{{ Form::close() }}
 		</div>
 	</div>
-	
-	@if( CommonHelper::arrayHasValue($users) ) 
+
+	@if( CommonHelper::arrayHasValue($users) )
     <h6 class="paginate">
 		<span>{{ $users->appends($arrFilters)->links() }}</span>
 	</h6>
@@ -168,13 +168,13 @@ $(document).ready(function() {
     $('#submitForm').click(function() {
     	$('#form-users').submit();
     });
-    
+
     $('#form-users input').keydown(function(e) {
 		if (e.keyCode == 13) {
 			$('#form-users').submit();
 		}
 	});
-    
+
     // Clear Form
     $('#clearForm').click(function() {
     	$('#filter_username').val('');
@@ -182,33 +182,33 @@ $(document).ready(function() {
     	$('#filter_user_role').val('');
     	$('#form-users').submit();
     });
-    
+
     // Export List
     $('#exportList').click(function() {
     	url = '';
-    	
+
 		var filter_username = $('#filter_username').val();
 		url += '?filter_username=' + encodeURIComponent(filter_username);
-		
+
 		var filter_barcode = $('#filter_barcode').val();
 		url += '&filter_barcode=' + encodeURIComponent(filter_barcode);
-		
+
 		var filter_user_role = $('select[name=\'filter_user_role\']').val();
 		url += '&filter_user_role=' + encodeURIComponent(filter_user_role);
-		
+
 		url += '&sort=' + encodeURIComponent('{{ $sort }}');
 		url += '&order=' + encodeURIComponent('{{ $order }}');
-		
+
       	location = "{{ $url_export }}" + url;
     });
-    
+
     // Delete
     $('#removeData').click(function() {
     	var count = $("[name='selected[]']:checked").length;
-		
+
 		if (count>0) {
 			var answer = confirm('{{ $text_confirm }}')
-			
+
 			if (answer) {
 				$('#form').submit();
 			}
@@ -216,11 +216,11 @@ $(document).ready(function() {
 			alert('{{ $error_delete }}');
 		}
     });
-    
+
     // Select
     $('.tblrow').click(function() {
     	var rowid = $(this).data('id');
-    	
+
     	if ($('#selected-' + rowid).is(':checked')) {
     		$('#selected-' + rowid).prop('checked', false);
     		$(this).children('td').removeClass('tblrow-active');
@@ -229,10 +229,10 @@ $(document).ready(function() {
     		$(this).children('td').addClass('tblrow-active');
     	}
     });
-    
+
     $('.item-selected').click(function() {
     	var rowid = $(this).data('id');
-    	
+
     	if ($(this).is(':checked')) {
     		$(this).prop('checked', false);
     		$(this).children('td').removeClass('tblrow-active');
@@ -241,7 +241,7 @@ $(document).ready(function() {
     		$(this).children('td').addClass('tblrow-active');
     	}
     });
-    
+
     $('#main-selected').click(function() {
     	if ($('#main-selected').is(':checked')) {
     		$('input[name*=\'selected\']').prop('checked', true);
@@ -251,5 +251,5 @@ $(document).ready(function() {
     		$('.table tbody tr > td').removeClass('tblrow-active');
     	}
    	});
-});	
+});
 </script>

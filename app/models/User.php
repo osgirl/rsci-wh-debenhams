@@ -106,9 +106,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	public static function getUsers($data = array()) {
-		$query = DB::table('users')->select(DB::raw('wms_users.*, CONCAT(wms_users.firstname, \' \', wms_users.lastname) AS name, wms_user_roles.role_name, wms_settings.brand_name'))
+		$query = DB::table('users')->select(DB::raw('wms_users.*, CONCAT(wms_users.firstname, \' \', wms_users.lastname) AS name, wms_user_roles.role_name, brand_name'))
 								   ->join('user_roles', 'users.role_id', '=', 'user_roles.id', 'LEFT')
-								   ->join('settings', 'users.brand', '=', 'settings.id', 'LEFT')
+								   // ->join('settings', 'users.brand', '=', 'settings.id', 'LEFT')
+								   ->join('brands', 'users.brand_id', '=', 'brands.id', 'LEFT')
 								   ->where('users.id', '!=', 1)
 								   ->where(function($query_sub)
 							            {
@@ -123,7 +124,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if ($data['sort']=='name') $data['sort'] = 'users.firstname';
 			if ($data['sort']=='role') $data['sort'] = 'user_roles.role_name';
-			if ($data['sort']=='brand') $data['sort'] = 'settings.brand_name';
+			// if ($data['sort']=='brand') $data['sort'] = 'settings.brand_name';
 			if ($data['sort']=='date') $data['sort'] = 'users.created_at';
 
 			$query->orderBy($data['sort'], $data['order']);
@@ -140,9 +141,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	public static function getCountUsers($data = array()) {
-		$query = DB::table('users')->select(DB::raw('wms_users.*, CONCAT(wms_users.firstname, \' \', wms_users.lastname) AS name, wms_user_roles.role_name, wms_settings.brand_name'))
+		$query = DB::table('users')->select(DB::raw('wms_users.*, CONCAT(wms_users.firstname, \' \', wms_users.lastname) AS name, wms_user_roles.role_name, brand_name'))
 								   ->join('user_roles', 'users.role_id', '=', 'user_roles.id', 'LEFT')
-								   ->join('settings', 'users.brand', '=', 'settings.id', 'LEFT')
+								   // ->join('settings', 'users.brand', '=', 'settings.id', 'LEFT')
+								   ->join('brands', 'users.brand_id', '=', 'brands.id', 'LEFT')
 								   ->where('users.id', '!=', 1)
 								   ->where(function($query_sub)
 							            {
@@ -157,7 +159,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if ($data['sort']=='name') $data['sort'] = 'users.firstname';
 			if ($data['sort']=='role') $data['sort'] = 'user_roles.role_name';
-			if ($data['sort']=='brand') $data['sort'] = 'settings.brand_name';
+			// if ($data['sort']=='brand') $data['sort'] = 'settings.brand_name';
 			if ($data['sort']=='date') $data['sort'] = 'users.created_at';
 
 			$query->orderBy($data['sort'], $data['order']);
