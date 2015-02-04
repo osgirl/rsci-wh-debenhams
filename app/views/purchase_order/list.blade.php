@@ -33,12 +33,6 @@
 				        </div>
 			      	</div>
 			      	<div class="span4">
-			      		<!-- <div>
-				        	<span class="search-po-left-pane">{{ $label_supplier }}</span>
-				        	<span class="search-po-right-pane">
-				        		{{-- Form::text('filter_supplier', $filter_supplier, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_supplier")) --}}
-				        	</span>
-				        </div> -->
 			      		<div>
 				        	<span class="search-po-left-pane">{{ $label_entry_date }}</span>
 				        	<div class="search-po-right-pane input-append date">
@@ -64,6 +58,18 @@
 				        	<span class="search-po-left-pane">{{ $label_status }}</span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::select('filter_status', array('default' => $text_select) + $po_status_type, $filter_status, array('class'=>'select-width', 'id'=>"filter_status")) }}
+				        	</span>
+				        </div>
+				        <div>
+				        	<span class="search-po-left-pane">{{ $label_brand }}</span>
+				        	<span class="search-po-right-pane">
+				        		{{ Form::select('filter_brand', array('' => $text_select) + $brands_list, $filter_brand, array('class'=>'select-width', 'id'=>"filter_brand")) }}
+				        	</span>
+				        </div>
+				        <div>
+				        	<span class="search-po-left-pane">{{ $label_division }}</span>
+				        	<span class="search-po-right-pane">
+				        		{{ Form::select('filter_division', array('' => $text_select) + $divisions_list, $filter_division, array('class'=>'select-width', 'id'=>"filter_division")) }}
 				        	</span>
 				        </div>
 			      	</div>
@@ -98,6 +104,7 @@
 			<a role="button" class="btn btn-info btn-darkblue assignPO" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a>
 		@endif
 		@if ( CommonHelper::valueInArray('CanExportPurchaseOrders', $permissions) )
+		<a href= {{ $url_export_backorder }} class="btn btn-info btn-darkblue">{{ $button_generate_backorder }}</a>
 		<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
 		@endif
 		@if ( CommonHelper::valueInArray('CanSyncPurchaseOrders', $permissions) )

@@ -36,6 +36,7 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::get('purchase_order/detail', 'PurchaseOrderController@getPODetails');
 	Route::get('purchase_order/export', 'PurchaseOrderController@exportCSV');
 	Route::get('purchase_order/export_detail', 'PurchaseOrderController@exportDetailsCSV');
+	Route::get('purchase_order/export_backorder', 'PurchaseOrderController@exportBackorder');
 	Route::post('purchase_order/reopen', 'PurchaseOrderController@reopen');
 	Route::get('purchase_order/assign', 'PurchaseOrderController@assignPilerForm');
 

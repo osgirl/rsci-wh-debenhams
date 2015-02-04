@@ -29,6 +29,8 @@ return array(
 	'label_invoice_number'		=> 'Invoice Number',
 	'label_entry_date'			=> 'Entry Date',
 	'label_back_order'			=> 'Back Order',
+	'label_brand'				=> 'Brand',
+	'label_division'			=> 'Division',
 
 	'entry_purchase_no'			=> 'PO No.:',
 	'entry_stock_piler'			=> 'Stock Piler:',
@@ -36,6 +38,7 @@ return array(
 
 	'button_close_po'				=> 'Close PO',
 	'button_assign_to_stock_piler' 	=> 'Assign to Stock Piler',
+	'button_generate_backorder' => 'Back Order Report',
 
 	'col_id' 					=> 'No.',
 	'col_po_no'					=> 'PO No.',
