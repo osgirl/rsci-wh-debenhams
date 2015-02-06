@@ -38,12 +38,12 @@
 				    </div>
 
 				    <div class="span5">
-				        <div>
+				        <!-- <div>
 				        	<span class="search-po-left-pane">{{ $label_type }}</span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::select('filter_type', array('' => $text_select) + $pl_type, array('class'=>'select-width', 'id'=>"filter_type")) }}
 				        	</span>
-				        </div>
+				        </div> -->
 
 				    </div>
 			      	<div class="span11 control-group collapse-border-top">

@@ -60,7 +60,7 @@ class Picklist extends Eloquent {
 
 		if( CommonHelper::hasValue($data['filter_doc_no']) ) $query->where('picklist.move_doc_number', 'LIKE', '%'. $data['filter_doc_no'] . '%');
 		if( CommonHelper::hasValue($data['filter_type']) ) $query->where('type', '=',  $data['filter_type']);
-		if( CommonHelper::hasValue($data['filter_status']) ) $query->where('pl_status', '=', $data['filter_status']);
+		if( CommonHelper::hasValue($data['filter_status']) ) $query->where('data_value', '=', $data['filter_status'])->where('data_code', '=', 'PICKLIST_STATUS_TYPE');
 
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if($data['sort'] == 'doc_no') $data['sort'] = 'picklist.move_doc_number';

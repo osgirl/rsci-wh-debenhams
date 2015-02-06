@@ -81,15 +81,16 @@ class PicklistController extends BaseController {
 		$this->checkPermissions('CanExportPickingDocuments');
 		$this->data = Lang::get('picking');
 		$arrParams = array(
-							'filter_type' 		=> Input::get('filter_type', NULL),
-							'filter_doc_no' 	=> Input::get('filter_doc_no', NULL),
-							'filter_status' 		=> Input::get('filter_status', NULL),
-							'sort'					=> Input::get('sort', 'doc_no'),
-							'order'					=> Input::get('order', 'ASC'),
-							'page'					=> NULL,
-							'limit'					=> NULL
+							'filter_type'   => Input::get('filter_type', NULL),
+							'filter_doc_no' => Input::get('filter_doc_no', NULL),
+							'filter_status' => Input::get('filter_status', NULL),
+							'sort'          => Input::get('sort', 'doc_no'),
+							'order'         => Input::get('order', 'ASC'),
+							'page'          => NULL,
+							'limit'         => NULL
 						);
-		$results = Picklist::getPickingList($arrParams);
+
+		$results = Picklist::getPickingListv2($arrParams)->toArray();
 		$this->data['results'] = $results;
 
 		$pdf = App::make('dompdf');
@@ -167,7 +168,7 @@ class PicklistController extends BaseController {
 		$this->data['button_export']          = Lang::get('general.button_export');
 		$this->data['url_detail']             = URL::to('picking/detail' . $this->setURL(true));
 		$this->data['url_lock_tags']          = URL::to('picking/locktags');
-		$this->data['url_export']             = URL::to('picking/export');
+		$this->data['url_export']             = URL::to('picking/export'. $this->setURL(true));
 		$this->data['url_change_to_store']    = URL::to('picking/change_to_store');
 		$this->data['url_generate_load_code'] = URL::to('picking/new/load');
 		// $this->data['url_load']	= URL::to('picking/load');
@@ -210,8 +211,6 @@ class PicklistController extends BaseController {
 		$results 		= Picklist::getPickingListv2($arrParams)->toArray();
 		$results_total 	= Picklist::getPickingListCount($arrParams);
 
-		// echo "<pre>"; print_r($results_total);
-
 		// Pagination
 		$this->data['arrFilters'] = array(
 									'filter_type' 			=> $filter_type,
@@ -223,13 +222,10 @@ class PicklistController extends BaseController {
 
 		$this->data['picklist'] = Paginator::make($results, $results_total, 30);
 		$this->data['picklist_count'] = $results_total;
-
 		$this->data['counter'] 	= $this->data['picklist']->getFrom();
-
 		$this->data['filter_type'] = $filter_type;
 		$this->data['filter_doc_no'] = $filter_doc_no;
 		$this->data['filter_status'] = $filter_status;
-
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
 		$this->data['page'] = $page;
