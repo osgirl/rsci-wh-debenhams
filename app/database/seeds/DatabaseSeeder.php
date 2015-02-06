@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder {
 		#$this->call('PurchaseOrderDetailSeeder');
 		$this->call('SettingsSeeder');
 		$this->call('BrandsSeeder');
+		$this->call('DatasetSeeder');
 		#$this->call('SlotSeeder');
 		#$this->call('SlotDetailsSeeder');
 		#$this->call('VendorSeeder');
