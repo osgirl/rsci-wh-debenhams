@@ -1,7 +1,7 @@
 <div class="control-group">
-	<a href="{{ $url_back }}" class="btn btn-info"> <i class="icon-chevron-left"></i> {{ $button_back }}</a>
+	<a href="{{ $url_back }}" class="btn btn-info btn-darkblue"> <i class="icon-chevron-left"></i> {{ $button_back }}</a>
 	@if ( CommonHelper::valueInArray('CanExportPickingDetails', $permissions) )
-	<a href="{{$url_export_detail}}" class="btn btn-info"> {{ $button_export_detail }}</a>
+	<a href="{{$url_export_detail}}" class="btn btn-info btn-darkblue"> {{ $button_export_detail }}</a>
 	@endif
 
 </div>
@@ -46,10 +46,10 @@
 				        </div>
 			      	</div>
 
-			      	
+
 
 			      	<div class="span11 control-group collapse-border-top">
-			      		<a class="btn btn-success" id="submitForm">{{ $button_search }}</a>
+			      		<a class="btn btn-success btn-darkblue" id="submitForm">{{ $button_search }}</a>
 		      			<a class="btn" id="clearForm">{{ $button_clear }}</a>
 			      	</div>
             </div>
@@ -62,17 +62,17 @@
             {{ Form::hidden('sort', $sort) }}
 		    {{ Form::hidden('order', $order) }}
             {{ Form::hidden('picklist_doc',  $picklist_doc) }}
-          
+
             {{ Form::close() }}
           </div>
       	</div>
-          
-	</div> <!-- /controls -->	
+
+	</div> <!-- /controls -->
 </div> <!-- /control-group -->
 
 <div class="clear">
 	<div class="div-paginate">
-		@if(CommonHelper::arrayHasValue($picklist_detail) ) 
+		@if(CommonHelper::arrayHasValue($picklist_detail) )
 		    <h6 class="paginate">
 				<span>{{ $picklist_detail->appends($arrFilters)->links() }}&nbsp;</span>
 			</h6>
@@ -105,7 +105,7 @@
 						<th>{{ $col_status }}</th>
 					</tr>
 				</thead>
-				@if( !CommonHelper::arrayHasValue($picklist_detail) ) 
+				@if( !CommonHelper::arrayHasValue($picklist_detail) )
 				<tr class="font-size-13">
 					<td colspan="10" class="align-center">{{ $text_empty_results }}</td>
 				</tr>
@@ -129,17 +129,17 @@
 
 					</tr>
 					@endforeach
-				@endif				
+				@endif
 			</table>
 		</div>
 	</div>
-	
-	@if( CommonHelper::arrayHasValue($picklist_detail) ) 
+
+	@if( CommonHelper::arrayHasValue($picklist_detail) )
     <h6 class="paginate">
 		<span>{{ $picklist_detail->appends($arrFilters)->links() }}</span>
 	</h6>
 	@endif
-	
+
 </div>
 
 <script type="text/javascript">
@@ -158,9 +158,9 @@ $(document).ready(function() {
     // Clear Form
     $('#clearForm').click(function() {
     	$('#filter_sku, #filter_so, #filter_from_slot').val(''); //,#filter_to_slot
-		
+
 		$('select').val('');
 		$('#form-picking-detail').submit();
     });
-});	
+});
 </script>

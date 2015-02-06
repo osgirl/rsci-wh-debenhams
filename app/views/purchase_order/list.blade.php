@@ -390,7 +390,7 @@ $(document).ready(function() {
     $('#btn-assign').click(function() {
     	stockpiler = $('select[name=\'stock_piler\']').val();
 
-    	if (stockpiler == '') {
+    	if (stockpiler == undefined) {
     		alert('{{ $error_assign_po }}');
     		return false;
     	} else {

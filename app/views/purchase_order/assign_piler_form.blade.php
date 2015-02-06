@@ -27,7 +27,7 @@
 			<div class="control-group">
 				<label class="control-label">{{ $entry_stock_piler }}</label>
 				<div class="controls">
-					{{ Form::select('stock_piler[]', $stock_piler_list, '') }}
+					{{ Form::select('stock_piler[]', $stock_piler_list, '', array('id' => 'stock_piler_select') ) }}
 				<a class="add-piler-btn"><i class="icon-plus-sign" style="font-size: 1.5em;"></i></a>
 				</div> <!-- /controls -->
 			</div> <!-- /control-group -->
@@ -39,7 +39,7 @@
 			<div class="control-group">
 				<label class="control-label">{{ $entry_stock_piler }}</label>
 				<div class="controls">
-					{{ Form::select('stock_piler[]', $stock_piler_list, $piler) }}
+					{{ Form::select('stock_piler[]', $stock_piler_list, $piler, array('id' => 'stock_piler_select') ) }}
 				@if($key == 0)
 					<a class="add-piler-btn"><i class="icon-plus-sign" style="font-size: 1.5em;"></i></a>
 				@else
@@ -97,10 +97,11 @@ $(document).ready(function() {
 
 	// Submit Assign PO
     $('#btn-assign').click(function() {
-    	stockpiler = $('select[name=\'stock_piler\']').val();
+    	// stockpiler = $('select[name=\'stock_piler\']').val();
+    	var stockpiler = $('#stock_piler_select').val();
     	console.log(stockpiler);
 
-    	if (stockpiler == undefined) {
+    	if (stockpiler == '') {
     		alert('{{ $error_assign_po }}');
     		return false;
     	} else {
