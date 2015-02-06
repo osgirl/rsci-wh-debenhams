@@ -129,7 +129,7 @@ class PurchaseOrderController extends BaseController {
 
 		PurchaseOrder::updatePOStatus($purchase_order_no, $status, $date_updated, $invoice_no, $invoice_amount);
 
-		/*$skus = PurchaseOrderDetail::getScannedPODetails($po_id);
+		$skus = PurchaseOrderDetail::getScannedPODetails($receiver_no);
 
 		foreach($skus as $sku){
 			$data = array(
@@ -138,7 +138,7 @@ class PurchaseOrderController extends BaseController {
 				'quantity_remaining' => $sku->quantity_delivered
 			);
 			SkuOnDock::insertData($data);
-		}*/
+		}
 
 		// AuditTrail
 		$user = User::find(Auth::user()->id);
