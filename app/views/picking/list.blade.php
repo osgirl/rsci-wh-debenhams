@@ -19,7 +19,7 @@
           <div class="accordion-group" style="background-color: #FFFFFF;">
             {{ Form::open(array('url'=>'picking/list', 'class'=>'form-signin', 'id'=>'form-pick-list', 'role'=>'form', 'method' => 'get')) }}
             <div id="collapseOne" class="accordion-body collapse in" style="padding-top: 20px;">
-	                
+
 			      	<div class="span5">
 			      		<div>
 				        	<span class="search-po-left-pane">{{ $label_doc_no }}</span>
@@ -47,23 +47,23 @@
 
 				    </div>
 			      	<div class="span11 control-group collapse-border-top">
-			      		<a class="btn btn-success" id="submitForm">{{ $button_search }}</a>
+			      		<a class="btn btn-success btn-darkblue" id="submitForm">{{ $button_search }}</a>
 		      			<a class="btn" id="clearForm">{{ $button_clear }}</a>
 			      	</div>
             </div>
             {{ Form::hidden('sort', $sort) }}
 		    {{ Form::hidden('order', $order) }}
-            
+
             {{ Form::close() }}
           </div>
       	</div>
-          
-	</div> <!-- /controls -->	
+
+	</div> <!-- /controls -->
 </div> <!-- /control-group -->
 
 <div class="clear">
 	<div class="div-paginate">
-		@if(CommonHelper::arrayHasValue($picklist) ) 
+		@if(CommonHelper::arrayHasValue($picklist) )
 		    <h6 class="paginate">
 				<span>{{ $picklist->appends($arrFilters)->links() }}&nbsp;</span>
 			</h6>
@@ -78,13 +78,13 @@
 		<!-- @if ( CommonHelper::valueInArray('CanAddLoad', $permissions) ) -->
 		<!-- <a  class="btn btn-info" id="generate-load">{{ $button_add_store }}</a> -->
 		<!-- @endif -->
-		<a role="button" class="btn btn-info multi-change-to-store" title="{{ $button_change_to_store }}" data-toggle="modal">{{ $button_change_to_store }}</a>
+		<!-- <a role="button" class="btn btn-info multi-change-to-store" title="{{ $button_change_to_store }}" data-toggle="modal">{{ $button_change_to_store }}</a> -->
 		@if ( CommonHelper::valueInArray('CanExportPickingDocuments', $permissions) )
-		<a href="{{$url_export}}" class="btn btn-info">{{ $button_export }}</a> 
+		<a href="{{$url_export}}" class="btn btn-info btn-darkblue">{{ $button_export }}</a>
 		@endif
 
 		@if ( CommonHelper::valueInArray('CanViewPickingLockTags', $permissions) )
-		<a href="{{$url_lock_tags}}" class="btn btn-info">{{ $button_to_lock_tags }}</a> 
+		<a href="{{$url_lock_tags}}" class="btn btn-info btn-darkblue">{{ $button_to_lock_tags }}</a>
 		@endif
 	</div>
 </div>
@@ -114,13 +114,13 @@
 						<th style="width: 20px;" class="align-center"><input type="checkbox" id="main-selected" /></th>
 					@endif
 					<th>{{ $col_no }}</th>
-					<th>{{ $col_type }}</th>
+					<!-- <th>{{ $col_type }}</th> -->
 					<th><a href="{{ $sort_doc_no }}" class="@if( $sort=='doc_no' ) {{ $order }} @endif">{{ $col_doc_no }}</a></th>
 					<th>STORE</th>
 					<th>{{ $col_status }}</th>
 					<th>{{ $col_action }}</th>
 				</thead>
-				@if( !CommonHelper::arrayHasValue($picklist) ) 
+				@if( !CommonHelper::arrayHasValue($picklist) )
 					<tr class="font-size-13">
 						<td colspan="10" style="text-align: center;">{{ $text_empty_results }}</td>
 					</tr>
@@ -135,7 +135,7 @@
 							</td>
 							@endif
 							<td>{{ $counter++ }}</td>
-							<td>{{ $value['type'] }}</td>
+							<!-- <td>{{ $value['type'] }}</td> -->
 							<td>
       							@if( CommonHelper::valueInArray('CanAccessPickingDetails', $permissions))
 								<a href="{{$url_detail}}&picklist_doc={{$value['move_doc_number']}}">{{ $value['move_doc_number'] }}
@@ -144,21 +144,11 @@
 								@endif
 							</td>
 							<td>{{ Store::getStoreName($value['store_code']) }}</td>
-							@if($value['pl_status'] == Config::get('picking_statuses.closed'))
-								<td>{{ 'Document Closed' }}</td>
-							@elseif($value['pl_status'] == Config::get('picking_statuses.moved'))
-								<td>{{ 'In Dispatching Area' }}</td>
-							@else
-								<td>{{ 'In Picking Area' }}</td>
-							@endif
+							<td>{{ $value['data_display'] }}</td>
 							@if ( CommonHelper::valueInArray('CanLoadPicking', $permissions)  || CommonHelper::valueInArray('CanEditPicklist', $permissions))
 								<td class="align-center">
 								@if ( CommonHelper::valueInArray('CanEditPicklist', $permissions) )
-									@if((int)$value['sum_moved'] === 0 && (int)$value['sum_assigned'] === 0 && $value['type'] == 'upc')
-									<a role="button" data-id="{{$value['move_doc_number']}}" class="btn btn-info edit-picklist-single" title="{{ $button_change_to_store }}" data-toggle="modal">{{ $button_change_to_store }}</a>
-									@else
-									<a role="button" class="btn btn-danger" disabled=true data-toggle="modal">{{ $button_change_to_store }}</a>
-									@endif
+
 								@endif
 							@endif <!--End of checking if either of the permissions are present-->
 							</td>
@@ -168,8 +158,8 @@
 			</table>
 		</div>
 	</div>
-	
-	@if( CommonHelper::arrayHasValue($picklist) ) 
+
+	@if( CommonHelper::arrayHasValue($picklist) )
     <h6 class="paginate">
 		<span>{{ $picklist->appends($arrFilters)->links() }}</span>
 	</h6>
@@ -196,12 +186,12 @@ $(document).ready(function() {
     			alert('{{ $error_load }}');
 			return false;
 		}
-    	
+
     });*/
 
     /*$('.load-picklist-single').click(function(){
     	var picklist_doc_no= $(this).attr('data-id');
-    	
+
     	$('.picklist-ids-load').val(picklist_doc_no);
     	$('#load-picklist-modal').modal('show');
     });*/
@@ -228,7 +218,7 @@ $(document).ready(function() {
 				picklist.push($(this).val());
 			});
 			//form-picking-load
-			
+
 			$('#picklist-docnos-change').val(picklist.join(','));
 			console.log($('#picklist-docnos-change').val(picklist.join(',')));
 		} else {
@@ -241,16 +231,16 @@ $(document).ready(function() {
     	var count = $("[name='selected[]']:checked").length;
     	if (count>0) {
 			var answer = confirm('Are you sure you want to change type?')
-			
+
 			if (answer) {
 				var picklist = new Array();
 				$.each($("input[name='selected[]']:checked"), function() {
 					picklist.push($(this).val());
 				});
-    	
+
     			$('#picklist-docno-change').val(picklist.join(','));
     			$('#form-picking-change').submit();
-    			
+
 			} else {
 				return false;
 			}
@@ -280,7 +270,7 @@ $(document).ready(function() {
    		window.location.reload();
     });*/
 
-    
+
 	// Submit Form
     $('#submitForm').click(function() {
     	$('#form-pick-list').submit();
@@ -302,7 +292,7 @@ $(document).ready(function() {
 	 // Select
     $('.tblrow').click(function() {
     	var rowid = $(this).data('id');
-    	
+
     	if ($('#selected-' + rowid).length>0) {
 	    	if ($('#selected-' + rowid).is(':checked')) {
 	    		$('#selected-' + rowid).prop('checked', false);
@@ -315,10 +305,10 @@ $(document).ready(function() {
     		$(this).children('td').removeClass('tblrow-active');
     	}
     });
-    
+
     $('.item-selected').click(function() {
     	var rowid = $(this).data('id');
-    	
+
     	if ($(this).is(':checked')) {
     		$(this).prop('checked', false);
     		$(this).children('td').removeClass('tblrow-active');
@@ -327,7 +317,7 @@ $(document).ready(function() {
     		$(this).children('td').addClass('tblrow-active');
     	}
     });
-    
+
     $('#main-selected').click(function() {
     	if ($('#main-selected').is(':checked')) {
     		$('input[name*=\'selected\']').prop('checked', true);
@@ -337,5 +327,5 @@ $(document).ready(function() {
     		$('.table tbody tr > td').removeClass('tblrow-active');
     	}
    	});
-});	
+});
 </script>

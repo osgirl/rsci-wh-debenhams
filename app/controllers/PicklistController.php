@@ -1,7 +1,7 @@
 <?php
 
 class PicklistController extends BaseController {
-	
+
 	protected $layout = "layouts.main";
 
 	private $types = array('upc'=> 'UPC','store'=>'Store' );
@@ -14,26 +14,26 @@ class PicklistController extends BaseController {
 	}
 
 	/**
-	* Shows List of Picklist 
+	* Shows List of Picklist
 	*
 	* @example  www.example.com/picklist
 	*
 	* @return View of Picklist
-	*/ 
+	*/
 	public function showIndex() {
 		// Check Permissions
 		if (Session::has('permissions')) {
 	    	if (!in_array('CanAccessPicking', unserialize(Session::get('permissions'))))  {
 	    		return Redirect::to('purchase_order');
-			} 
+			}
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		$this->getList();
 	}
 
-	public function exportCSV()
+	/*public function exportCSV()
 	{
 		$this->checkPermissions('CanExportPickingDocuments');
 		$arrParams = array(
@@ -53,20 +53,20 @@ class PicklistController extends BaseController {
 		$output .= Lang::get('picking.col_status'). "\n";
 
 		$pl_status_type = Dataset::getTypeWithValue("PICKLIST_STATUS_TYPE");
-		
+
 		foreach ($results as $key => $value) {
-			
+
 	    	$exportData = array(
-	    						'"' . $value->id . '"', 
-	    						'"' . $value->type . '"', 
+	    						'"' . $value->id . '"',
+	    						'"' . $value->type . '"',
 	    						'"' . $value->move_doc_number . '"',
 	    						'"' . $pl_status_type[$value->pl_status] . '"'
 	    					);
-	  		
+
 	      	$output .= implode(",", $exportData);
 	      	$output .= "\n";
 	  	}
-	  	
+
 	  	$headers = array(
 			'Content-Type' => 'text/csv',
 			'Content-Disposition' => 'attachment; filename="picklist_' . date('Ymd')  . '_' . time() . '.csv"',
@@ -74,6 +74,28 @@ class PicklistController extends BaseController {
 
 		return Response::make(rtrim($output, "\n"), 200, $headers);
 
+	}*/
+
+	public function exportCSV()
+	{
+		$this->checkPermissions('CanExportPickingDocuments');
+		$this->data = Lang::get('picking');
+		$arrParams = array(
+							'filter_type' 		=> Input::get('filter_type', NULL),
+							'filter_doc_no' 	=> Input::get('filter_doc_no', NULL),
+							'filter_status' 		=> Input::get('filter_status', NULL),
+							'sort'					=> Input::get('sort', 'doc_no'),
+							'order'					=> Input::get('order', 'ASC'),
+							'page'					=> NULL,
+							'limit'					=> NULL
+						);
+		$results = Picklist::getPickingList($arrParams);
+		$this->data['results'] = $results;
+
+		$pdf = App::make('dompdf');
+		$pdf->loadView('picking.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
+		// return $pdf->stream();
+		return $pdf->download('picking_' . date('Ymd') . '.pdf');
 	}
 
 	public function exportDetailCSV()
@@ -107,19 +129,19 @@ class PicklistController extends BaseController {
 			$pl_status_type = Dataset::getTypeWithValue("PICKLIST_STATUS_TYPE");
 
 			foreach ($results as $key => $value) {
-		    	
+
 		    	$exportData = array(
-		    						'"' . $value->id . '"', 
-		    						'"' . $value->sku . '"', 
-		    						'"' . $value->store_code . '"', 
+		    						'"' . $value->id . '"',
+		    						'"' . $value->sku . '"',
+		    						'"' . $value->store_code . '"',
 		    						'"' . $value->so_no . '"',
-		    						'"' . $value->from_slot_code . '"', 
+		    						'"' . $value->from_slot_code . '"',
 		    						// '"' . $value->to_slot_code . '"',
-		    						'"' . $value->quantity_to_pick . '"', 
+		    						'"' . $value->quantity_to_pick . '"',
 		    						'"' . $value->moved_qty . '"',
 		    						'"' . $pl_status_type[$value->move_to_shipping_area] . '"'
 		    					);
-		  		
+
 		      	$output .= implode(",", $exportData);
 		      	$output .= "\n";
 		  	}
@@ -128,7 +150,7 @@ class PicklistController extends BaseController {
 				'Content-Type' => 'text/csv',
 				'Content-Disposition' => 'attachment; filename="pickilist_details_' . Input::get('picklist_doc', NULL) . '_' . date('Ymd')  . '_' . time() . '.csv"',
 			);
-	
+
 			return Response::make(rtrim($output, "\n"), 200, $headers);
 		}
 		return;
@@ -136,58 +158,26 @@ class PicklistController extends BaseController {
 
 	public function getList()
 	{
-		$this->data['heading_title'] = Lang::get('picking.heading_title');
-
-		$this->data['entry_load'] = Lang::get('picking.entry_load');
-		$this->data['entry_load_create'] = Lang::get('picking.entry_load_create');
-		
-
-		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
-		$this->data['text_total'] = Lang::get('general.text_total');
-		$this->data['text_select'] = Lang::get('general.text_select');
-		$this->data['text_confirm_load'] = Lang::get('picking.text_confirm_load');
-		$this->data['text_confirm_change'] = Lang::get('picking.text_confirm_change');
-
-		$this->data['label_type'] = Lang::get('picking.label_type');
-		$this->data['label_doc_no'] = Lang::get('picking.label_doc_no');
-		$this->data['label_status'] = Lang::get('picking.label_status');
-		$this->data['label_load_code'] = Lang::get('picking.label_load_code');
-		
-		$this->data['col_no'] = Lang::get('picking.col_no');
-		$this->data['col_type'] = Lang::get('picking.col_type');
-		$this->data['col_doc_no'] = Lang::get('picking.col_doc_no');
-		$this->data['col_status'] = Lang::get('picking.col_status');
-		$this->data['col_action'] = Lang::get('picking.col_action');
-
-		$this->data['button_search'] = Lang::get('general.button_search');
-		$this->data['button_clear'] = Lang::get('general.button_clear');
-		$this->data['button_export'] = Lang::get('general.button_export');
-		$this->data['button_load'] = Lang::get('picking.button_load');
-		$this->data['button_change_to_store'] = Lang::get('picking.button_change_to_store');
-		$this->data['button_to_lock_tags'] = Lang::get('picking.button_to_lock_tags');
-		$this->data['button_add_store'] = Lang::get('picking.button_add_store');
-
-		$this->data['error_load'] = Lang::get('picking.error_load');
-		$this->data['error_load_no_load_code'] = Lang::get('picking.error_load_no_load_code');
-		$this->data['error_change'] = Lang::get('picking.error_change');
-
-		$this->data['url_detail'] = URL::to('picking/detail' . $this->setURL(true));
-		$this->data['url_lock_tags'] = URL::to('picking/locktags');
-		$this->data['url_export'] = URL::to('picking/export');
-		$this->data['url_change_to_store'] = URL::to('picking/change_to_store');
-		$this->data['url_generate_load_code']	= URL::to('picking/new/load');
+		$this->data                           = Lang::get('picking');
+		$this->data['text_empty_results']     = Lang::get('general.text_empty_results');
+		$this->data['text_total']             = Lang::get('general.text_total');
+		$this->data['text_select']            = Lang::get('general.text_select');
+		$this->data['button_search']          = Lang::get('general.button_search');
+		$this->data['button_clear']           = Lang::get('general.button_clear');
+		$this->data['button_export']          = Lang::get('general.button_export');
+		$this->data['url_detail']             = URL::to('picking/detail' . $this->setURL(true));
+		$this->data['url_lock_tags']          = URL::to('picking/locktags');
+		$this->data['url_export']             = URL::to('picking/export');
+		$this->data['url_change_to_store']    = URL::to('picking/change_to_store');
+		$this->data['url_generate_load_code'] = URL::to('picking/new/load');
 		// $this->data['url_load']	= URL::to('picking/load');
-		//TODO::edit this
-		
-
-		//list
 
 		// Message
 		$this->data['error'] = '';
 		if (Session::has('error')) {
 			$this->data['error'] = Session::get('error');
 		}
-		
+
 		$this->data['success'] = '';
 		if (Session::has('success')) {
 			$this->data['success'] = Session::get('success');
@@ -217,8 +207,10 @@ class PicklistController extends BaseController {
 						'limit'					=> 30
 					);
 
-		$results 		= Picklist::getPickingList($arrParams)->toArray();
+		$results 		= Picklist::getPickingListv2($arrParams)->toArray();
 		$results_total 	= Picklist::getPickingListCount($arrParams);
+
+		// echo "<pre>"; print_r($results_total);
 
 		// Pagination
 		$this->data['arrFilters'] = array(
@@ -257,7 +249,7 @@ class PicklistController extends BaseController {
 	}
 
 	public function getPicklistDetails()
-	{	
+	{
 		$this->checkPermissions('CanAccessPickingDetails');
 		$picklistDoc = Input::get('picklist_doc', NULL);
 
@@ -305,7 +297,7 @@ class PicklistController extends BaseController {
 		if (Session::has('error')) {
 			$this->data['error'] = Session::get('error');
 		}
-		
+
 		$this->data['success'] = '';
 		if (Session::has('success')) {
 			$this->data['success'] = Session::get('success');
@@ -326,7 +318,7 @@ class PicklistController extends BaseController {
 		$sort_back = Input::get('sort_back', 'doc_no');
 		$order_back = Input::get('order_back', 'ASC');
 		$page_back = Input::get('page_back', 1);
-		
+
 		// Details
 		$sort_detail = Input::get('sort', 'sku');
 		$order_detail = Input::get('order', 'ASC');
@@ -367,7 +359,7 @@ class PicklistController extends BaseController {
 
 		$this->data['picklist_detail'] = Paginator::make($results->toArray(), $results_total, 30);
 		$this->data['picklist_detail_count'] = $results_total;
-		
+
 		$this->data['counter'] 	= $this->data['picklist_detail']->getFrom();
 
 		$this->data['picklist_doc'] = $picklistDoc;
@@ -385,7 +377,7 @@ class PicklistController extends BaseController {
 		$this->data['sort_back'] = $sort_back;
 		$this->data['order_back'] = $order_back;
 		$this->data['page_back'] = $page_back;
-		
+
 		// Details
 		$this->data['sort'] = $sort_detail;
 		$this->data['order'] = $order_detail;
@@ -451,14 +443,14 @@ class PicklistController extends BaseController {
 		if (Session::has('error')) {
 			$this->data['error'] = Session::get('error');
 		}
-		
+
 		$this->data['success'] = '';
 		if (Session::has('success')) {
 			$this->data['success'] = Session::get('success');
 		}
 
 		$this->data['stock_piler_list'] = $this->getStockPilers();
-		
+
 		$this->data['error_no_lock_tag'] = Lang::get('picking.error_no_lock_tag');
 
 		// Search Filters
@@ -494,7 +486,7 @@ class PicklistController extends BaseController {
 
 		$this->data['lock_tag'] = Paginator::make($results, $results_total, 30);
 		$this->data['lock_tag_count'] = $results_total;
-		
+
 		$this->data['counter'] 	= $this->data['lock_tag']->getFrom();
 
 
@@ -508,7 +500,7 @@ class PicklistController extends BaseController {
 
 		$url = '?filter_stock_piler=' . $filter_stock_piler . '&filter_doc_no=' .$filter_doc_no . '&filter_sku=' . $filter_sku. '&page=' . $page ;
 		$order_lock_tag = ($sort=='lock_tag' && $order=='ASC') ? 'DESC' : 'ASC';
-		
+
 		$this->data['sort_lock_tag'] = URL::to('picking/locktags' . $url . '&sort=lock_tag&order=' . $order_lock_tag, NULL, FALSE);
 		// Permissions
 		$this->data['permissions'] = unserialize(Session::get('permissions'));
@@ -522,7 +514,7 @@ class PicklistController extends BaseController {
 		$this->checkPermissions('CanViewPickingLockTags', false);
 
 		$this->data['heading_title_picking_lock_tags'] = Lang::get('picking.heading_title_picking_lock_tags');
-		
+
 		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 		$this->data['text_total'] = Lang::get('general.text_total');
 		$this->data['text_select'] = Lang::get('general.text_select');
@@ -539,14 +531,14 @@ class PicklistController extends BaseController {
 
 		$this->data['url_back']= 	URL::to('picking/locktags'. $this->setURLLock(false, true));
 		$this->data['url_unlock']= 	URL::to('picking/unlock');
-		
+
 
 		// Message
 		$this->data['error'] = '';
 		if (Session::has('error')) {
 			$this->data['error'] = Session::get('error');
 		}
-		
+
 		$this->data['success'] = '';
 		if (Session::has('success')) {
 			$this->data['success'] = Session::get('success');
@@ -569,7 +561,7 @@ class PicklistController extends BaseController {
 		$this->data['lock_tag_details'] = $results['details'];
 		$this->data['sum_moved']= $results['sum_moved'];
 		$this->data['sum_moved_qty']= $results['sum_moved_qty'];
-		$this->data['lock_tag_details_count'] = $resultsTotal; 
+		$this->data['lock_tag_details_count'] = $resultsTotal;
 		// Permissions
 		$this->data['permissions'] = unserialize(Session::get('permissions'));
 
@@ -583,9 +575,9 @@ class PicklistController extends BaseController {
 	*
 	* @param  lock_tag  lock tag
 	* @return void
-	*/ 
+	*/
 	public function unlockPicklistTag()
-	{	
+	{
 		try {
 			$data = Input::all();
 			if(!isset($data['lock_tag'])) throw new Exception("Lock tag empty.");
@@ -600,7 +592,7 @@ class PicklistController extends BaseController {
 			DB::rollback();
 			return Redirect::to('picking/locktags'. $this->setURLLock())->withErrors(Lang::get('picking.text_fail_unlock'));
 		}
-		
+
 	}
 
 	/**
@@ -610,8 +602,8 @@ class PicklistController extends BaseController {
 	*
 	* @param  picklist_doc_no      Picklist document number
 	* @return void
-	*/ 
-	public function changeToStore()		
+	*/
+	public function changeToStore()
 	{
 		try {
 			$data = Input::all();
@@ -622,7 +614,7 @@ class PicklistController extends BaseController {
 			self::changeToStoreAuditTrail($docNo);
 			DB::commit();
 			return Redirect::to('picking/list'. $this->setURL())->with('message', Lang::get('picking.text_success_change'));
-		} catch (Exception $e) { 
+		} catch (Exception $e) {
 			DB::rollback();
 			return Redirect::to('picking/list'. $this->setURL())->withErrors(Lang::get('picking.text_fail_change'));
 		}
@@ -633,13 +625,13 @@ class PicklistController extends BaseController {
 	{
 		try {
 			$data = Input::all();
-			
+
 			if(!isset($data['picklist_docs'])) throw new Exception("Document number empty.");
 			$picklistDocs = explode(',', $data['picklist_docs']);
 			$loadCode =$data['load_codes'];
 			DB::beginTransaction();
 			foreach ($picklistDocs as $picklist) {
-				
+
 				//get boxes for the picklist document
 				$picklistInfo = Picklist::getPickList($picklist);
 				if(empty($picklistInfo)) throw new Exception("Picklist does not exist");
@@ -680,12 +672,12 @@ class PicklistController extends BaseController {
 	* @example  www.example.com/picking/new/load
 	*
 	* @return load code
-	*/ 
+	*/
 	/*public function generateLoadCode()
 	{
 		$loadMax =  Load::select(DB::raw('max(id) as max_created, max(load_code) as load_code'))->first()->toArray();
 		;
-		
+
 		if($loadMax['max_created'] === null) {
 			$loadCode = 'LD0000001';
 		} else {
@@ -693,7 +685,7 @@ class PicklistController extends BaseController {
 			$loadCode = (int) $loadCode + 1;
 			$loadCode = 'LD' . sprintf("%07s", (int)$loadCode);
 		}
-		
+
 		Load::create(array(
 			'load_code'	=> $loadCode)
 			);
@@ -714,7 +706,7 @@ class PicklistController extends BaseController {
 		if (Session::has('permissions')) {
 	    	if (!in_array($permission, unserialize(Session::get('permissions'))))  {
 	    		return Redirect::to('picking/list');
-			} 
+			}
     	} else {
 			return Redirect::to('users/logout');
 		}
@@ -774,13 +766,13 @@ class PicklistController extends BaseController {
 	* @example  $this->getStockPilers();
 	*
 	* @return array of stock piler and drop down initial text;
-	*/ 
+	*/
 	private function getStockPilers()
 	{
-		$stock_pilers = array();		
+		$stock_pilers = array();
 		foreach (User::getStockPilerOptions() as $item) {
 			$stock_pilers[$item->id] = $item->firstname . ' ' . $item->lastname;
-		}	
+		}
 		return array('' => Lang::get('general.text_select')) + $stock_pilers;
 	}
 
@@ -791,7 +783,7 @@ class PicklistController extends BaseController {
 	*
 	* @param  $lockTags lock tags
 	* @return void
-	*/ 
+	*/
 	private function unlockPicklistTagAuditTrail($lockTags)
 	{
 		$lockTags = implode(',', $lockTags);
@@ -816,7 +808,7 @@ class PicklistController extends BaseController {
 	*
 	* @param  $loadCodeload code
 	* @return void
-	*/ 
+	*/
 	/*private function generateLoadCodeAuditTrail($loadCode)
 	{
 		$data_after = 'Load code # '.$loadCode . ' generated by' . Auth::user()->username;
@@ -841,7 +833,7 @@ class PicklistController extends BaseController {
 	*
 	* @param  $picklistDocNo picklist document number
 	* @return void
-	*/ 
+	*/
 	private function changeToStoreAuditTrail($picklistDocNo)
 	{
 		$picklistDocNo = implode(',', $picklistDocNo);
@@ -867,7 +859,7 @@ class PicklistController extends BaseController {
 	* @param  $picklistDocNos 	picklist document numbers
 	* @param  $loadCode 		load code
 	* @return void
-	*/ 
+	*/
 	/*private function loadPicklistDocumentsAuditTrail($picklistDocNos, $loadCode)
 	{
 		$picklistDocNos = implode(',', $picklistDocNos);

@@ -16,7 +16,7 @@ class CreateTablePicklist extends Migration {
 			$table->increments('id');
 			$table->string('type', 20)->default('upc');
 			$table->integer('move_doc_number')->default(0);
-			$table->tinyInteger('pl_status')->default(0);
+			$table->tinyInteger('pl_status')->default(14); //14(Open) meaning in dataset id
 			$table->timestamp('date_completed')->default('0000-00-00 00:00:00');
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 			$table->timestamp('updated_at')->default('0000-00-00 00:00:00');
