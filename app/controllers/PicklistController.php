@@ -104,12 +104,13 @@ class PicklistController extends BaseController {
 		$this->checkPermissions('CanExportPickingDetails');
 
 		if (Picklist::where('move_doc_number'== Input::get('picklist_doc', NULL))!=NULL) {
+			$this->data = Lang::get('picking');
+			$this->data['text_empty_results']     = Lang::get('general.text_empty_results');
 			$arrParams = array(
-						'filter_sku'			=> NULL,
-						'filter_so'				=> NULL,
-						'filter_from_slot'		=> NULL,
-						// 'filter_to_slot'		=> NULL,
-						'filter_status_detail'	=> NULL,
+						'filter_sku'			=> Input::get('filter_sku', NULL),
+						'filter_upc'			=> Input::get('filter_upc', NULL),
+						'filter_so'				=> Input::get('filter_so', NULL),
+						'filter_from_slot'		=> Input::get('filter_from_slot', NULL),
 						'sort'					=> Input::get('sort', 'sku'),
 						'order'					=> Input::get('order', 'ASC'),
 						'page'					=> NULL,
@@ -117,42 +118,13 @@ class PicklistController extends BaseController {
 						'limit'					=> NULL
 					);
 			$results = PicklistDetails::getFilteredPicklistDetail($arrParams);
-			$output = Lang::get('picking.col_id'). ',';
-			$output .= Lang::get('picking.col_upc'). ',';
-			$output .= Lang::get('picking.col_store_code'). ',';
-			$output .= Lang::get('picking.col_so_no'). ',';
-			$output .= Lang::get('picking.col_from_slot_code'). ',';
-			// $output .= Lang::get('picking.col_to_slot_code'). ',';
-			$output .= Lang::get('picking.col_qty_to_pick'). ',';
-			$output .= Lang::get('picking.col_to_move'). ',';
-			$output .= Lang::get('picking.col_status'). "\n";
 
-			$pl_status_type = Dataset::getTypeWithValue("PICKLIST_STATUS_TYPE");
+			$this->data['results'] = $results;
 
-			foreach ($results as $key => $value) {
-
-		    	$exportData = array(
-		    						'"' . $value->id . '"',
-		    						'"' . $value->sku . '"',
-		    						'"' . $value->store_code . '"',
-		    						'"' . $value->so_no . '"',
-		    						'"' . $value->from_slot_code . '"',
-		    						// '"' . $value->to_slot_code . '"',
-		    						'"' . $value->quantity_to_pick . '"',
-		    						'"' . $value->moved_qty . '"',
-		    						'"' . $pl_status_type[$value->move_to_shipping_area] . '"'
-		    					);
-
-		      	$output .= implode(",", $exportData);
-		      	$output .= "\n";
-		  	}
-
-			$headers = array(
-				'Content-Type' => 'text/csv',
-				'Content-Disposition' => 'attachment; filename="pickilist_details_' . Input::get('picklist_doc', NULL) . '_' . date('Ymd')  . '_' . time() . '.csv"',
-			);
-
-			return Response::make(rtrim($output, "\n"), 200, $headers);
+			$pdf = App::make('dompdf');
+			$pdf->loadView('picking.report_detail', $this->data)->setPaper('a4')->setOrientation('landscape');
+			return $pdf->stream();
+			// return $pdf->download('picking_detail_' . date('Ymd') . '.pdf');
 		}
 		return;
 	}
@@ -251,40 +223,16 @@ class PicklistController extends BaseController {
 
 		if($picklistDoc == NULL) return Redirect::to('picking/list')->withError(Lang::get('picking.error_not_exist'));
 
-		$this->data['heading_title_picking_details'] = Lang::get('picking.heading_title_picking_details');
-
+		$this->data                       = Lang::get('picking');
 		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
-		$this->data['text_total'] = Lang::get('general.text_total');
-		$this->data['text_select'] = Lang::get('general.text_select');
-		$this->data['text_in_picking'] = Lang::get('picking.text_in_picking');
-		$this->data['text_in_dispatching'] = Lang::get('picking.text_in_dispatching');
-
-		$this->data['entry_sku'] = Lang::get('picking.entry_sku');
-		$this->data['entry_so'] = Lang::get('picking.entry_so');
-		$this->data['entry_from_slot_code'] = Lang::get('picking.entry_from_slot_code');
-		// $this->data['entry_to_slot_code'] = Lang::get('picking.entry_to_slot_code');
-		$this->data['entry_status'] = Lang::get('picking.entry_status');
-
-		$this->data['col_no'] = Lang::get('picking.col_no');
-		$this->data['col_upc'] = Lang::get('picking.col_upc');
-		$this->data['col_store_code'] = Lang::get('picking.col_store_code');
-		$this->data['col_store_name'] = Lang::get('picking.col_store_name');
-		$this->data['col_so_no'] = Lang::get('picking.col_so_no');
-		$this->data['col_from_slot_code'] = Lang::get('picking.col_from_slot_code');
-		// $this->data['col_to_slot_code'] = Lang::get('picking.col_to_slot_code');
-		$this->data['col_qty_to_pick'] = Lang::get('picking.col_qty_to_pick');
-		$this->data['col_to_move'] = Lang::get('picking.col_to_move');
-		$this->data['col_status'] = Lang::get('picking.col_status');
-
-		$this->data['button_back'] = Lang::get('general.button_back');
-		$this->data['button_search'] = Lang::get('general.button_search');
-		$this->data['button_clear'] = Lang::get('general.button_clear');
-		$this->data['button_export_detail'] = Lang::get('picking.button_export_detail');
-
-		$this->data['url_back'] = URL::to('picking/list' . $this->setURL(false, true));
-		$this->data['url_detail'] = URL::to('picking/detail');
-
-		$this->data['pick_status_type'] = Dataset::getTypeWithValue("PICKLIST_STATUS_TYPE");
+		$this->data['text_total']         = Lang::get('general.text_total');
+		$this->data['text_select']        = Lang::get('general.text_select');
+		$this->data['button_back']        = Lang::get('general.button_back');
+		$this->data['button_search']      = Lang::get('general.button_search');
+		$this->data['button_clear']       = Lang::get('general.button_clear');
+		$this->data['url_back']           = URL::to('picking/list' . $this->setURL(false, true));
+		$this->data['url_detail']         = URL::to('picking/detail');
+		$this->data['pick_status_type']   = Dataset::getTypeWithValue("PICKLIST_STATUS_TYPE");
 		//added this because there is not closed in the detail
 		unset($this->data['pick_status_type'][2]);
 
@@ -300,32 +248,33 @@ class PicklistController extends BaseController {
 		}
 
 		// Search Filters
-		$filter_type = Input::get('filter_type', NULL);
-		$filter_doc_no = Input::get('filter_doc_no', NULL);
-		$filter_status = Input::get('filter_status', NULL);
-
-		$filter_sku = Input::get('filter_sku', NULL);
-		$filter_so = Input::get('filter_so', NULL);
-		$filter_from_slot = Input::get('filter_from_slot', NULL);
-		// $filter_to_slot = Input::get('filter_to_slot', NULL);
-		$filter_status_detail = Input::get('filter_status_detail', NULL);
+		$filter_type          = Input::get('filter_type', NULL);
+		$filter_doc_no        = Input::get('filter_doc_no', NULL);
+		$filter_status        = Input::get('filter_status', NULL);
+		$filter_sku           = Input::get('filter_sku', NULL);
+		$filter_upc           = Input::get('filter_upc', NULL);
+		$filter_so            = Input::get('filter_so', NULL);
+		$filter_from_slot     = Input::get('filter_from_slot', NULL);
+		// $filter_to_slot    = Input::get('filter_to_slot', NULL);
+		// $filter_status_detail = Input::get('filter_status_detail', NULL);
 
 		//for back
-		$sort_back = Input::get('sort_back', 'doc_no');
+		$sort_back  = Input::get('sort_back', 'doc_no');
 		$order_back = Input::get('order_back', 'ASC');
-		$page_back = Input::get('page_back', 1);
+		$page_back  = Input::get('page_back', 1);
 
 		// Details
-		$sort_detail = Input::get('sort', 'sku');
+		$sort_detail  = Input::get('sort', 'sku');
 		$order_detail = Input::get('order', 'ASC');
-		$page_detail = Input::get('page', 1);
+		$page_detail  = Input::get('page', 1);
 
 		$arrParams = array(
 						'filter_sku'			=> $filter_sku,
+						'filter_upc'			=> $filter_upc,
 						'filter_so'				=> $filter_so,
 						'filter_from_slot'		=> $filter_from_slot,
 						// 'filter_to_slot'		=> $filter_to_slot,
-						'filter_status_detail'	=> $filter_status_detail,
+						// 'filter_status_detail'	=> $filter_status_detail,
 						'sort'					=> $sort_detail,
 						'order'					=> $order_detail,
 						'page'					=> $page_detail,
@@ -334,14 +283,16 @@ class PicklistController extends BaseController {
 					);
 		$results 		= PicklistDetails::getFilteredPicklistDetail($arrParams);
 		$results_total 	= PicklistDetails::getFilteredPicklistDetail($arrParams, true);
+		// echo "<pre>"; print_r($results);die();
 
 		// Pagination
 		$this->data['arrFilters'] = array(
 									'filter_sku'			=> $filter_sku,
+									'filter_upc'			=> $filter_upc,
 									'filter_so'				=> $filter_so,
 									'filter_from_slot'		=> $filter_from_slot,
 									// 'filter_to_slot'		=> $filter_to_slot,
-									'filter_status_detail'	=> $filter_status_detail,
+									// 'filter_status_detail'	=> $filter_status_detail,
 									'filter_type'			=> $filter_type,
 									'filter_doc_no'			=> $filter_doc_no,
 									'filter_status'		=> $filter_status,
@@ -353,46 +304,43 @@ class PicklistController extends BaseController {
 									'picklist_doc'			=> $picklistDoc
 								);
 
-		$this->data['picklist_detail'] = Paginator::make($results->toArray(), $results_total, 30);
+		$this->data['picklist_detail']       = Paginator::make($results->toArray(), $results_total, 30);
 		$this->data['picklist_detail_count'] = $results_total;
-
-		$this->data['counter'] 	= $this->data['picklist_detail']->getFrom();
-
-		$this->data['picklist_doc'] = $picklistDoc;
-
-		$this->data['filter_type'] = $filter_type;
-		$this->data['filter_doc_no'] = $filter_doc_no;
-		$this->data['filter_status'] = $filter_status;
-
-		$this->data['filter_sku'] = $filter_sku;
-		$this->data['filter_so'] = $filter_so;
-		$this->data['filter_from_slot'] = $filter_from_slot;
-		// $this->data['filter_to_slot'] = $filter_to_slot;
-		$this->data['filter_status_detail'] = $filter_status_detail;
-
-		$this->data['sort_back'] = $sort_back;
-		$this->data['order_back'] = $order_back;
-		$this->data['page_back'] = $page_back;
+		$this->data['counter']               = $this->data['picklist_detail']->getFrom();
+		$this->data['picklist_doc']          = $picklistDoc;
+		$this->data['filter_type']           = $filter_type;
+		$this->data['filter_doc_no']         = $filter_doc_no;
+		$this->data['filter_status']         = $filter_status;
+		$this->data['filter_sku']            = $filter_sku;
+		$this->data['filter_upc']            = $filter_upc;
+		$this->data['filter_so']             = $filter_so;
+		$this->data['filter_from_slot']      = $filter_from_slot;
+		// $this->data['filter_status_detail']  = $filter_status_detail;
+		$this->data['sort_back']             = $sort_back;
+		$this->data['order_back']            = $order_back;
+		$this->data['page_back']             = $page_back;
 
 		// Details
-		$this->data['sort'] = $sort_detail;
+		$this->data['sort']  = $sort_detail;
 		$this->data['order'] = $order_detail;
-		$this->data['page'] = $page_detail;
+		$this->data['page']  = $page_detail;
 
-		$url = '?filter_sku=' . $filter_sku . '&filter_so=' . $filter_so;
-		// $url .= '&filter_from_slot=' . $filter_from_slot . '&filter_to_slot=' . $filter_to_slot . '&filter_status_detail=' . $filter_status_detail;
+		$url = '?filter_sku=' . $filter_sku . '&filter_upc=' . $filter_upc . '&filter_so=' . $filter_so;
+		$url .= '&filter_from_slot=' . $filter_from_slot;
 		$url .= '&page_back=' . $page_back . '&order_back=' . $order_back . '&sort_back=' . $sort_back;
 		$url .= '&picklist_doc=' . $picklistDoc . '&page=' . $page_detail;
 
 		$this->data['url_export_detail'] =  URL::to('picking/export_detail' . $url);
 
 		$order_sku = ($sort_detail=='sku' && $order_detail=='ASC') ? 'DESC' : 'ASC';
+		$order_upc = ($sort_detail=='upc' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		$order_so_no = ($sort_detail=='so_no' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		$order_from_slot_code = ($sort_detail=='from_slot_code' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		// $order_to_slot_code = ($sort_detail=='to_slot_code' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 
 
 		$this->data['sort_sku'] = URL::to('picking/detail' . $url . '&sort=sku&order=' . $order_sku, NULL, FALSE);
+		$this->data['sort_upc'] = URL::to('picking/detail' . $url . '&sort=upc&order=' . $order_upc, NULL, FALSE);
 		$this->data['sort_so_no'] = URL::to('picking/detail' . $url . '&sort=so_no&order=' . $order_so_no, NULL, FALSE);
 		$this->data['sort_from_slot_code'] = URL::to('picking/detail' . $url . '&sort=from_slot_code&order=' . $order_from_slot_code, NULL, FALSE);
 		// $this->data['sort_to_slot_code'] = URL::to('picking/detail' . $url . '&sort=to_slot_code&order=' . $order_to_slot_code, NULL, FALSE);
@@ -713,6 +661,8 @@ class PicklistController extends BaseController {
 		$url = '?filter_type=' . Input::get('filter_type', NULL);
 		$url .= '&filter_doc_no=' . Input::get('filter_doc_no', NULL);
 		$url .= '&filter_status=' . Input::get('filter_status', NULL);
+		$url .= '&filter_sku=' . Input::get('filter_sku', NULL);
+		$url .= '&filter_upc=' . Input::get('filter_upc', NULL);
 		if($forDetail) {
 			$url .= '&sort_back=' . Input::get('sort', 'doc_no');
 			$url .= '&order_back=' . Input::get('order', 'ASC');

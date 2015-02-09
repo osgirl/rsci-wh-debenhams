@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return array(
 	'heading_title' 					=> 'Picking Lists',
@@ -55,6 +55,7 @@ return array(
 	'button_to_lock_tags'		=> 'Lock tags',
 	'button_export_detail'		=> 'Export Picklist',
 	'button_add_store'			=> 'Add load',
+	'button_assign_to_stock_piler' 	=> 'Assign to Stock Piler',
 
 	'error_load'		=> 'Please choose picklist/s',
 	'error_not_exist'	=> 'Picklist id does not exist.',
@@ -76,5 +77,5 @@ return array(
 	'text_error_change'			=> 'Something went wrong',
 	'text_success_load'		=> 'You have successfully loaded the picklist',
 	'text_fail_load'			=> 'Unable to load picklist.',
-	
+
 );

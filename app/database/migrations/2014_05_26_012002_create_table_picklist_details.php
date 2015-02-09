@@ -25,13 +25,13 @@ class CreateTablePicklistDetails extends Migration {
 			$table->string('group_name',10);
 			$table->integer('quantity_to_pick')->default(0);
 			$table->integer('moved_qty')->default(0);
-			$table->tinyInteger('move_to_shipping_area')->default(0);
-			$table->integer('lock_tag')->default(0);
+			// $table->tinyInteger('move_to_shipping_area')->default(0);
+			// $table->integer('lock_tag')->default(0);
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 			$table->timestamp('updated_at')->default('0000-00-00 00:00:00');
 			$table->timestamp('deleted_at')->default('0000-00-00 00:00:00');
 			$table->unique(array('move_doc_number', 'sku', 'store_code', 'so_no', 'from_slot_code'), 'my_uniques');
-			$table->index(array('move_doc_number', 'move_to_shipping_area', 'sku', 'store_code', 'assigned_user_id'), 'my_index');
+			$table->index(array('move_doc_number', 'sku', 'store_code', 'assigned_user_id'), 'my_index');
 			$table->engine = 'InnoDB';
 		});
 	}

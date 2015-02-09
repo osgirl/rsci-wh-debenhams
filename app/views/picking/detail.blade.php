@@ -38,12 +38,7 @@
 			      	</div>
 
 			      	<div class="span3">
-			        	<div>
-				        	<span class="search-po-left-pane">{{ $entry_status }}</span>
-				        	<span class="search-po-right-pane">
-				        		{{ Form::select('filter_status_detail', array('' => $text_select) + $pick_status_type, $filter_status_detail, array('class'=>'select-width', 'id'=>"filter_status_detail")) }}
-				        	</span>
-				        </div>
+
 			      	</div>
 
 
@@ -94,7 +89,8 @@
 				<thead>
 					<tr>
 						<th>{{ $col_no }}</th>
-						<th><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif">{{ $col_upc }}</a></th>
+						<th><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif">{{ $col_sku }}</a></th>
+						<th><a href="{{ $sort_upc }}" class="@if( $sort=='upc' ) {{ $order }} @endif">{{ $col_upc }}</a></th>
 						<th><a href="#" class="">SHORT DESCRIPTION</a></th>
 						<th><a href="{{ $sort_so_no }}" class="@if( $sort=='so_no' ) {{ $order }} @endif">{{ $col_so_no }}</a></th>
 						<th><a href="{{ $sort_from_slot_code }}" class="@if( $sort=='from_slot_code' ) {{ $order }} @endif">{{ $col_from_slot_code }}</th>
@@ -102,7 +98,7 @@
 						<th>{{ $col_to_move }}</th>
 						<th>{{ $col_store_name }}</th>
 						<th>{{ $col_store_code }}</th>
-						<th>{{ $col_status }}</th>
+						<!-- <th>{{ $col_status }}</th> -->
 					</tr>
 				</thead>
 				@if( !CommonHelper::arrayHasValue($picklist_detail) )
@@ -114,6 +110,7 @@
 					<tr class="font-size-13">
 						<td>{{$counter++}}</td>
 						<td>{{$pd['sku']}}</td>
+						<td>{{$pd['upc']}}</td>
 						<td>{{$pd['short_description']}}</td>
 						<td>{{$pd['so_no']}}</td>
 						<td>{{$pd['from_slot_code']}}</td>
@@ -121,11 +118,6 @@
 						<td>{{$pd['moved_qty']}}</td>
 						<td>{{$pd['store_name']}}</td>
 						<td>{{$pd['store_code']}}</td>
-						@if($pd['move_to_shipping_area'] == 1)
-							<td>{{$text_in_dispatching}}</td>
-						@else
-							<td>{{$text_in_picking}}</td>
-						@endif
 
 					</tr>
 					@endforeach

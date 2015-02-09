@@ -80,6 +80,7 @@
 		<!-- @endif -->
 		<!-- <a role="button" class="btn btn-info multi-change-to-store" title="{{ $button_change_to_store }}" data-toggle="modal">{{ $button_change_to_store }}</a> -->
 		@if ( CommonHelper::valueInArray('CanExportPickingDocuments', $permissions) )
+		<a role="button" class="btn btn-info btn-darkblue assignPicklist" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a>
 		<a href="{{$url_export}}" class="btn btn-info btn-darkblue">{{ $button_export }}</a>
 		@endif
 
