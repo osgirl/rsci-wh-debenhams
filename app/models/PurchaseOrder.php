@@ -126,10 +126,10 @@ class PurchaseOrder extends Eloquent {
 	*/
 	public static function getPOQuery($data = array())
 	{
-		$query = DB::table('purchase_order_lists')
-					// ->join('users', 'purchase_order_lists.assigned_to_user_id', 'IN', 'users.id', 'LEFT')
+		$query = PurchaseOrder::join('purchase_order_details', 'purchase_order_lists.receiver_no', '=', 'purchase_order_details.receiver_no')
 					->join('dataset', 'purchase_order_lists.po_status', '=', 'dataset.id', 'LEFT')
 					->join('vendors', 'purchase_order_lists.vendor_id', '=', 'vendors.id', 'LEFT');
+					// ->join('users', 'purchase_order_lists.assigned_to_user_id', 'IN', 'users.id', 'LEFT')
 
 		if( CommonHelper::hasValue($data['filter_po_no']) ) $query->where('purchase_order_no', 'LIKE', '%'.$data['filter_po_no'].'%');
 		if( CommonHelper::hasValue($data['filter_receiver_no']) ) $query->where('receiver_no', '=', $data['filter_receiver_no']);
@@ -215,6 +215,18 @@ class PurchaseOrder extends Eloquent {
 
 	public static function getPOInfoByReceiverNo($receiver_no) {
 		return PurchaseOrder::where('receiver_no', '=', $receiver_no)->first();
+	}
+
+	public static function generateShipmentReferenceNo($code) {
+		$shipmentReference = "U-{$code}-000000000";
+		$shipmentReference = substr($shipmentReference, -8);
+		$shipmentReference = (int) $shipmentReference + 1;
+
+		if ($shipmentReference > 99999999) throw new Exception( 'You reach the limit of shipment reference # to 99999999');
+
+		$shipmentReference = "U-{$code}-" . sprintf("%08s", (int)$shipmentReference);
+
+		return $shipmentReference;
 	}
 
 }
