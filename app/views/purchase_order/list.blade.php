@@ -105,7 +105,7 @@
 		@endif
 		@if ( CommonHelper::valueInArray('CanExportPurchaseOrders', $permissions) )
 		<a href= {{ $url_export_backorder }} class="btn btn-info btn-darkblue">{{ $button_generate_backorder }}</a>
-		<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
+		<a href= {{ $url_export }} class="btn btn-info btn-darkblue">{{ $button_export }}</a> <!--  id="exportList" -->
 		@endif
 		@if ( CommonHelper::valueInArray('CanSyncPurchaseOrders', $permissions) )
 		<a class="btn btn-info btn-darkblue">{{ $button_jda }}</a>

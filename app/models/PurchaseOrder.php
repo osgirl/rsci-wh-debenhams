@@ -126,19 +126,22 @@ class PurchaseOrder extends Eloquent {
 	*/
 	public static function getPOQuery($data = array())
 	{
-		$query = PurchaseOrder::join('purchase_order_details', 'purchase_order_lists.receiver_no', '=', 'purchase_order_details.receiver_no')
+		$query = DB::table('purchase_order_lists')
+					// ->join('users', 'purchase_order_lists.assigned_to_user_id', 'IN', 'users.id', 'LEFT')
+					->join('purchase_order_details', 'purchase_order_lists.receiver_no', '=', 'purchase_order_details.receiver_no')
 					->join('dataset', 'purchase_order_lists.po_status', '=', 'dataset.id', 'LEFT')
 					->join('vendors', 'purchase_order_lists.vendor_id', '=', 'vendors.id', 'LEFT');
-					// ->join('users', 'purchase_order_lists.assigned_to_user_id', 'IN', 'users.id', 'LEFT')
 
 		if( CommonHelper::hasValue($data['filter_po_no']) ) $query->where('purchase_order_no', 'LIKE', '%'.$data['filter_po_no'].'%');
 		if( CommonHelper::hasValue($data['filter_receiver_no']) ) $query->where('receiver_no', '=', $data['filter_receiver_no']);
 		if( CommonHelper::hasValue($data['filter_entry_date']) ) $query->where('purchase_order_lists.created_at', 'LIKE', '%'.$data['filter_entry_date'].'%');
-		// if( CommonHelper::hasValue($data['filter_stock_piler']) ) $query->where('assigned_to_user_id', '=', $data['filter_stock_piler']);
 		if( CommonHelper::hasValue($data['filter_stock_piler']) ) $query->whereRaw('find_in_set('. $data['filter_stock_piler'] . ',assigned_to_user_id) > 0');
 		if( CommonHelper::hasValue($data['filter_status']) && $data['filter_status'] !== 'default' ) $query->where('po_status', '=', $data['filter_status']);
 		if( CommonHelper::hasValue($data['filter_back_order']) ) $query->where('back_order', '=', $data['filter_back_order']);
+		if( CommonHelper::hasValue($data['filter_brand']) ) $query->where('brand', '=', $data['filter_brand']);
+		if( CommonHelper::hasValue($data['filter_division']) ) $query->where('division', '=', $data['filter_division']);
 		if( !empty($data['filter_back_order_only']) ) $query->where('back_order', '<>', 0);
+
 		DebugHelper::log(__METHOD__, $query);
 		return $query;
 	}
@@ -217,16 +220,8 @@ class PurchaseOrder extends Eloquent {
 		return PurchaseOrder::where('receiver_no', '=', $receiver_no)->first();
 	}
 
-	public static function generateShipmentReferenceNo($code) {
-		$shipmentReference = "U-{$code}-000000000";
-		$shipmentReference = substr($shipmentReference, -8);
-		$shipmentReference = (int) $shipmentReference + 1;
+	public static function generateShipmentReferenceNo() {
 
-		if ($shipmentReference > 99999999) throw new Exception( 'You reach the limit of shipment reference # to 99999999');
-
-		$shipmentReference = "U-{$code}-" . sprintf("%08s", (int)$shipmentReference);
-
-		return $shipmentReference;
 	}
 
 }

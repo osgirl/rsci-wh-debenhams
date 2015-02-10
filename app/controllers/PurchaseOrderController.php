@@ -269,21 +269,22 @@ class PurchaseOrderController extends BaseController {
 		$this->data['col_total_qty'] = Lang::get('purchase_order.col_total_qty');
 		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 		$this->data['text_posted_po'] = Lang::get('purchase_order.text_posted_po');
-
+//http://local.ccri.com/purchase_order/export?filter_po_no=&filter_receiver_no=&filter_entry_date=&filter_stock_piler=&filter_status=default&sort=purchase_order_lists.created_at&order=DESC
 		$arrParams = array(
-							'filter_po_no' 			=> Input::get('filter_po_no', NULL),
-							'filter_receiver_no' 	=> Input::get('filter_receiver_no', NULL),
-							// 'filter_supplier' 		=> Input::get('filter_supplier', NULL),
-							'filter_entry_date' 	=> Input::get('filter_entry_date',NULL),
-							'filter_stock_piler' 	=> Input::get('filter_stock_piler', NULL),
-							'filter_status' 		=> Input::get('filter_status', NULL),
-							'filter_back_order' 		=> Input::get('filter_back_order', NULL),
-							'sort'					=> Input::get('sort', 'po_no'),
-							'order'					=> Input::get('order', 'ASC'),
-							'page'					=> NULL,
-							'limit'					=> NULL
+							'filter_po_no'       => Input::get('filter_po_no', NULL),
+							'filter_receiver_no' => Input::get('filter_receiver_no', NULL),
+							'filter_entry_date'  => Input::get('filter_entry_date',NULL),
+							'filter_stock_piler' => Input::get('filter_stock_piler', NULL),
+							'filter_status'      => Input::get('filter_status', NULL),
+							'filter_back_order'  => Input::get('filter_back_order', NULL),
+							'filter_brand'       => Input::get('filter_brand', NULL),
+							'filter_division'    => Input::get('filter_division', NULL),
+							'sort'               => Input::get('sort', 'po_no'),
+							'order'              => Input::get('order', 'ASC'),
+							'page'               => NULL,
+							'limit'              => NULL
 						);
-
+		// echo '<pre>'; print_r($arrParams); die();
 		$results = PurchaseOrder::getPoLists($arrParams);
 		$this->data['results'] = $results;
 
@@ -629,7 +630,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['button_assign']      = Lang::get('general.button_assign');
 		$this->data['button_cancel']      = Lang::get('general.button_cancel');
 		// URL
-		$this->data['url_export']                   = URL::to('purchase_order/export');
+		$this->data['url_export']                   = URL::to('purchase_order/export' . $this->setURL());
 		$this->data['url_export_backorder']         = URL::to('purchase_order/export_backorder');
 		$this->data['url_reopen']                   = URL::to('purchase_order/reopen');
 		$this->data['url_assign']                   = URL::to('purchase_order/assign');
