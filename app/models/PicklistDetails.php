@@ -387,7 +387,7 @@ class PicklistDetails extends Eloquent {
 			->leftJoin('stores', 'stores.store_code', '=', 'picklist_details.store_code')
 			->leftJoin('product_lists', 'picklist_details.sku', '=', 'product_lists.upc');
 
-		if( CommonHelper::hasValue($data['filter_sku']) ) $query->where('sku', 'LIKE', '%'.$data['filter_sku'].'%');
+		if( CommonHelper::hasValue($data['filter_sku']) ) $query->where('picklist_details.sku', 'LIKE', '%'.$data['filter_sku'].'%');
 		if( CommonHelper::hasValue($data['filter_so']) ) $query->where('so_no', 'LIKE', '%'.$data['filter_so'].'%');
 		if( CommonHelper::hasValue($data['filter_from_slot']) ) $query->where('from_slot_code', 'LIKE', '%'.$data['filter_from_slot'].'%');
 		// if( CommonHelper::hasValue($data['filter_to_slot']) ) $query->where('to_slot_code', 'LIKE', '%'.$data['filter_to_slot'].'%');
@@ -473,5 +473,91 @@ class PicklistDetails extends Eloquent {
 					'lock_tag'		=> 0,
 					'updated_at'	=>	date('Y-m-d H:i:s')));
 		return true;
+	}
+
+	/**
+	* Get Picklist detail by move_doc_number
+	*
+	* @example  PicklistDetails::getPicklistDetailByDocNo({$docNo})
+	*
+	* @param  sku      move_doc_nmber
+	* @return array of picklist details by move document number
+	*/
+	public static function getPicklistDetailByDocNo($docNo)
+	{
+		$picklistDetails = PicklistDetails::select('picklist_details.sku',"product_lists.description", 'store_code', 'move_doc_number', 'from_slot_code', 'quantity_to_pick', 'moved_qty', 'so_no')
+			->leftJoin('product_lists' , 'product_lists.upc', '=', 'picklist_details.sku')
+			->where('move_doc_number', '=', $docNo)
+			->orderBy('from_slot_code', 'asc')
+			->get();
+
+		return $picklistDetails;
+	}
+
+	/**
+	 * Save details by move_doc_number
+	 * @param  integer 	$docNo   	Picklist document number
+	 * @param  json 	$data    	Details in json format
+	 * @param  integer 	$user_id 	id of the user
+	 * @return boolean
+	 */
+	public static function saveDetail($docNo, $data, $user_id)
+	{
+		$doneId = Dataset::getType(array('data_code' => 'PICKLIST_STATUS_TYPE', 'data_value'=> 'done'))
+						->toArray();
+		//UPDATE ssi.wms_letdown_details SET moved_qty = 250, to_slot_code = 'PCK00001', move_to_picking_area = 1
+		// WHERE from_slot_code = 'CRAC' AND move_doc_number = 8858 AND sku = '2800090900154'
+		foreach ($data as $key => $value) {
+			foreach ($value as $v) {
+				$qtyToMove    = $v['moved_qty'];
+				$boxCode      = $v['box_code'];
+				$sku          = $v['sku'];
+				$fromSlotCode = $v['from_slot_code'];
+				$soNo 		  = $v['so_no'];
+
+				$picklistDetail = PicklistDetails::where('from_slot_code', '=', $fromSlotCode)
+					->where('move_doc_number', '=', $docNo)
+					->where('sku', '=', $sku)
+					->where('so_no', '=', $soNo)
+					->first();
+
+				$picklistDetail->moved_qty             = $qtyToMove;
+				$picklistDetail->updated_at            = date('Y-m-d H:i:s');
+
+				# Save picklist to box
+				BoxDetails::moveToBox($picklistDetail->id, $boxCode,$qtyToMove);
+
+				$picklistDetail->save();
+
+				$dataAfter = $qtyToMove .' items of '. $sku . ' was packed to ' . $boxCode . "\n";
+				self::postToPicklistToBoxAuditTrail($dataAfter, $docNo);
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	* post audit trail when picklist details are moved to boxes
+	*
+	* @example  self::postToPicklistToBoxAuditTrail();
+	*
+	* @param  dataAfter     changes that happened to the picklist
+	* @param  docNos   		document numbers
+	* @return void
+	*/
+	public static function postToPicklistToBoxAuditTrail($dataAfter, $docNo)
+	{
+		$arrParams = array(
+			'module'		=> Config::get("audit_trail_modules.picking"),
+			'action'		=> Config::get("audit_trail.post_picklist_to_box"),
+			'reference'		=> "Picklist Document #: " .$docNo,
+			'data_before'	=> '',
+			'data_after'	=> $dataAfter,
+			'user_id'		=> Authorizer::getResourceOwnerId(),
+			'created_at'	=> date('Y-m-d H:i:s'),
+			'updated_at'	=> date('Y-m-d H:i:s')
+		);
+		AuditTrail::addAuditTrail($arrParams);
 	}
 }

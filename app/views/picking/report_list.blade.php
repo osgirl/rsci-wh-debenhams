@@ -16,6 +16,7 @@
 			<tr>
 				<th>{{ $col_doc_no }}</th>
 				<th>STORE</th>
+				<th>{{ $col_receiving_stock_piler }}</th>
 				<th>{{ $col_status }}</th>
 			</tr>
 		</thead>
@@ -28,6 +29,7 @@
 				<tr class="font-size-13 tblrow" data-id="{{ $value['move_doc_number'] }}">
 					<td> {{ $value['move_doc_number'] }} </td>
 					<td>{{ Store::getStoreName($value['store_code']) }}</td>
+					<td>{{ $value['fullname'] }}</td>
 					<td>{{ $value['data_display'] }}</td>
 				</tr>
 			@endforeach

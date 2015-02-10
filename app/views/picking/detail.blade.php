@@ -107,7 +107,11 @@
 				</tr>
 				@else
 					@foreach( $picklist_detail as $pd )
-					<tr class="font-size-13">
+					<tr class="font-size-13"
+					@if ( ($pd['quantity_to_pick'] - $pd['moved_qty']) > 0 )
+						style="background-color:#F29F9F"
+					@endif
+					>
 						<td>{{$counter++}}</td>
 						<td>{{$pd['sku']}}</td>
 						<td>{{$pd['upc']}}</td>

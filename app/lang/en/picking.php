@@ -4,6 +4,7 @@ return array(
 	'heading_title' 					=> 'Picking Lists',
 	'heading_title_picking_details'		=> 'Picklist detail',
 	'heading_title_picking_lock_tags'	=> 'Picklist Lock tags',
+	'heading_title_assign_picking' 	=> 'Assign Picklist/s to Stock Piler',
 
 	'entry_load'		=> 'Load Picklist',
 	'entry_load_create'	=> 'New Load Code',
@@ -21,6 +22,8 @@ return array(
 
 	'label_sku'			=> 'UPC/SKU:',
 	'label_stock_piler'	=> 'Stock piler:',
+	'label_store'	=> 'Store Name:',
+	'label_receiver'			=> 'Receiver:',
 
 	'col_id'			=> 'Id',
 	'col_no'			=> 'No.',
@@ -41,7 +44,7 @@ return array(
 
 	'col_time_locked'			=> 'Time Locked',
 	'col_stock_piler'			=> 'Stock Piler',
-
+	'col_receiving_stock_piler'	=> 'Receiving Stock Piler',
 	'col_doc_number'			=> 'Document Number',
 	'col_product_name'			=> 'Product name',
 	'col_store'					=> 'Store',
@@ -56,12 +59,14 @@ return array(
 	'button_export_detail'		=> 'Export Picklist',
 	'button_add_store'			=> 'Add load',
 	'button_assign_to_stock_piler' 	=> 'Assign to Stock Piler',
+	'button_close_picklist'				=> 'Close',
 
 	'error_load'		=> 'Please choose picklist/s',
 	'error_not_exist'	=> 'Picklist id does not exist.',
 	'error_no_lock_tag'			=> 'Please choose a lock tag to unlock.',
 	'error_change'		=> 'The picklist cannot be changed to store type',
 	'error_load_no_load_code'	=> 'Please select load code',
+	'error_assign'				=> 'Please select the items to be assigned',
 
 	'text_confirm_load'	=> 'Are you sure you want to load the picking list/s?',
 	'text_in_picking'	=> 'In picking area',
@@ -71,11 +76,18 @@ return array(
 	'text_success_unlock'		=> 'You have successfully unlocked the lock tag/s',
 	'text_fail_unlock'			=> 'Unable to unlock the lock tag/s',
 	'text_confirm_change'		=> 'Are you sure you want to change type to store?',
+	'text_confirm_assign'		=> 'Assign selected items?',
+	'text_success_assign'		=> 'Successfully assigned the Picklist!',
 
 	'text_success_change'		=> 'You have successfully change picklist to store type',
 	'text_fail_change'			=> 'Unable to change picklist to type store',
 	'text_error_change'			=> 'Something went wrong',
 	'text_success_load'		=> 'You have successfully loaded the picklist',
 	'text_fail_load'			=> 'Unable to load picklist.',
+	'text_posted'			=> 'Posted',
+	'text_success_posted'		=> 'Successfully closed picklist!',
+
+	'entry_doc_no'			=> 'Doc No.:',
+	'entry_stock_piler'			=> 'Stock Piler:',
 
 );

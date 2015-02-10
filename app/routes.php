@@ -80,6 +80,9 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::post('picking/change_to_store', 'PicklistController@changeToStore');
 	Route::post('picking/new/load', 'PicklistController@generateLoadCode');
 	Route::post('picking/load', 'PicklistController@loadPicklistDocuments');
+	Route::get('picking/assign', 'PicklistController@assignPilerForm');
+	Route::post('picking/assign_to_piler', 'PicklistController@assignToStockPiler');
+	Route::post('picking/close', 'PicklistController@closePicklist');
 
 	Route::get('inventory', 'InventoryController@showIndex');
 	Route::get('inventory/export', 'InventoryController@exportCSV');
@@ -206,4 +209,9 @@ Route::group(array('prefix'=>'api/v2', 'before'=>'oauth|auth.piler'), function()
 	Route::get('letdown/list', 'ApiLetdown@getLetDownListsv2');
 	Route::get('letdown/details/{move_doc_number}', 'ApiLetdown@getLetdownDetailv2');
 	Route::post('letdown/save', 'ApiLetdown@postLetdownDetailv2');
+
+	Route::get('picking/list', 'ApiPicklist@getPickingListsv2');
+	Route::get('picking/details/{move_doc_number}', 'ApiPicklist@getPickingDetailv2');
+	Route::post('picking/save', 'ApiPicklist@postPickingDetailv2');
+	Route::post('picking/change_status/{docNo}', 'ApiPicklist@updateStatus');
 });

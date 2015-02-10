@@ -15,6 +15,8 @@ class CreateTablePicklist extends Migration {
 		Schema::create('picklist', function($table){
 			$table->increments('id');
 			$table->string('type', 20)->default('upc');
+			$table->integer('assigned_by');
+			$table->string('assigned_to_user_id', 30)->default(0);
 			$table->integer('move_doc_number')->default(0);
 			$table->tinyInteger('pl_status')->default(14); //14(Open) meaning in dataset id
 			$table->timestamp('date_completed')->default('0000-00-00 00:00:00');

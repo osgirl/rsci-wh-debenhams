@@ -38,12 +38,18 @@
 				    </div>
 
 				    <div class="span5">
-				        <!-- <div>
-				        	<span class="search-po-left-pane">{{ $label_type }}</span>
+				        <div>
+				        	<span class="search-po-left-pane">{{ $label_store }}</span>
 				        	<span class="search-po-right-pane">
-				        		{{ Form::select('filter_type', array('' => $text_select) + $pl_type, array('class'=>'select-width', 'id'=>"filter_type")) }}
+				        		{{ Form::select('filter_store', array('' => $text_select) + $stores, $filter_store, array('class'=>'select-width', 'id'=>"filter_store")) }}
 				        	</span>
-				        </div> -->
+				        </div>
+				        <div>
+				        	<span class="search-po-left-pane">{{ $label_receiver }}</span>
+				        	<span class="search-po-right-pane">
+				        		{{ Form::select('filter_stock_piler', array('' => $text_select) + $stock_piler_list, $filter_stock_piler, array('class'=>'select-width', 'id'=>"filter_stock_piler")) }}
+				        	</span>
+				        </div>
 
 				    </div>
 			      	<div class="span11 control-group collapse-border-top">
@@ -85,7 +91,7 @@
 		@endif
 
 		@if ( CommonHelper::valueInArray('CanViewPickingLockTags', $permissions) )
-		<a href="{{$url_lock_tags}}" class="btn btn-info btn-darkblue">{{ $button_to_lock_tags }}</a>
+		<!-- <a href="{{$url_lock_tags}}" class="btn btn-info btn-darkblue">{{ $button_to_lock_tags }}</a> -->
 		@endif
 	</div>
 </div>
@@ -118,6 +124,7 @@
 					<!-- <th>{{ $col_type }}</th> -->
 					<th><a href="{{ $sort_doc_no }}" class="@if( $sort=='doc_no' ) {{ $order }} @endif">{{ $col_doc_no }}</a></th>
 					<th>STORE</th>
+					<th>{{ $col_receiving_stock_piler }}</th>
 					<th>{{ $col_status }}</th>
 					<th>{{ $col_action }}</th>
 				</thead>
@@ -130,7 +137,7 @@
 						<tr class="font-size-13 tblrow" data-id="{{ $value['move_doc_number'] }}">
 							@if ( CommonHelper::valueInArray('CanLoadPicking', $permissions) )
 							<td class="align-center">
-								@if($value['type'] == 'upc')
+								@if($value['data_display'] == 'Open' || $value['data_display'] == 'Assigned')
 								<input type="checkbox" class="checkbox item-selected" name="selected[]" id="selected-{{ $value['move_doc_number'] }}" value="{{ $value['move_doc_number'] }}" />
 								@endif
 							</td>
@@ -145,14 +152,25 @@
 								@endif
 							</td>
 							<td>{{ Store::getStoreName($value['store_code']) }}</td>
+							<td>{{ $value['fullname'] }}</td>
 							<td>{{ $value['data_display'] }}</td>
 							@if ( CommonHelper::valueInArray('CanLoadPicking', $permissions)  || CommonHelper::valueInArray('CanEditPicklist', $permissions))
 								<td class="align-center">
-								@if ( CommonHelper::valueInArray('CanEditPicklist', $permissions) )
-
+								@if($value['data_display'] === 'Posted')
+									<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_posted }}</a>
+								@elseif ($value['data_display'] === 'Done')
+									<a style="width: 70px;" class="btn btn-success closePicklist" data-id="{{ $value['move_doc_number'] }}">{{ $button_close_picklist }}</a>
+								@else
+									<a style="width: 70px;" disabled="disabled" class="btn">{{ $button_close_picklist }}</a>
 								@endif
+
+								{{ Form::open(array('url'=>'picking/close', 'id' => 'closePicklist_' . $value['move_doc_number'], 'style' => 'margin: 0px;')) }}
+									{{ Form::hidden('doc_no', $value['move_doc_number']) }}
+									{{ Form::hidden('module', 'picklist') }}
+						  		{{ Form::close() }}
 							@endif <!--End of checking if either of the permissions are present-->
 							</td>
+
 						</tr>
 					@endforeach
 				@endif
@@ -328,5 +346,43 @@ $(document).ready(function() {
     		$('.table tbody tr > td').removeClass('tblrow-active');
     	}
    	});
+
+   	// Assign PO
+    $('.assignPicklist').click(function() {
+    	var count = $("[name='selected[]']:checked").length;
+
+		if (count>0) {
+			var answer = confirm('{{ $text_confirm_assign }}')
+
+			if (answer) {
+				var doc_no = new Array();
+				$.each($("input[name='selected[]']:checked"), function() {
+					doc_no.push($(this).val());
+				});
+
+    			$('#doc_no').val(doc_no.join(','));
+
+    			// http://local.ccri.com/purchase_order/assign
+    			location = "{{ $url_assign }}" + '?doc_no=' + encodeURIComponent(doc_no.join(','));
+			} else {
+				return false;
+			}
+		} else {
+			alert('{{ $error_assign }}');
+			return false;
+		}
+    });
+
+    $('.closePicklist').click(function() {
+    	var doc_no = $(this).data('id');
+
+    	var answer = confirm('Are you sure you want to close this Picklist?');
+   		if (answer) {
+	    	$('#closePicklist_' + doc_no).submit();
+    	} else {
+			return false;
+		}
+
+    });
 });
 </script>

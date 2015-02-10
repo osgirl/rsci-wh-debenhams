@@ -84,6 +84,8 @@ class PicklistController extends BaseController {
 							'filter_type'   => Input::get('filter_type', NULL),
 							'filter_doc_no' => Input::get('filter_doc_no', NULL),
 							'filter_status' => Input::get('filter_status', NULL),
+							'filter_store' 	=> Input::get('filter_store', NULL),
+							'filter_stock_piler' 	=> Input::get('filter_stock_piler', NULL),
 							'sort'          => Input::get('sort', 'doc_no'),
 							'order'         => Input::get('order', 'ASC'),
 							'page'          => NULL,
@@ -123,8 +125,8 @@ class PicklistController extends BaseController {
 
 			$pdf = App::make('dompdf');
 			$pdf->loadView('picking.report_detail', $this->data)->setPaper('a4')->setOrientation('landscape');
-			return $pdf->stream();
-			// return $pdf->download('picking_detail_' . date('Ymd') . '.pdf');
+			// return $pdf->stream();
+			return $pdf->download('picking_detail_' . date('Ymd') . '.pdf');
 		}
 		return;
 	}
@@ -143,6 +145,8 @@ class PicklistController extends BaseController {
 		$this->data['url_export']             = URL::to('picking/export'. $this->setURL(true));
 		$this->data['url_change_to_store']    = URL::to('picking/change_to_store');
 		$this->data['url_generate_load_code'] = URL::to('picking/new/load');
+		$this->data['url_assign']             = URL::to('picking/assign');
+		$this->data['stores']                 = Store::lists( 'store_name', 'store_code');
 		// $this->data['url_load']	= URL::to('picking/load');
 
 		// Message
@@ -159,11 +163,14 @@ class PicklistController extends BaseController {
 		$this->data['pl_status_type'] = Dataset::getTypeWithValue("PICKLIST_STATUS_TYPE");
 		$this->data['pl_type'] = $this->types;
 		$this->data['load_codes']	= $this->getLoadCodes();
+		$this->data['stock_piler_list'] = $this->getStockPilers();
 
 		// Search Filters
 		$filter_type = Input::get('filter_type', NULL);
 		$filter_doc_no = Input::get('filter_doc_no', NULL);
 		$filter_status = Input::get('filter_status', NULL);
+		$filter_store = Input::get('filter_store', NULL);
+		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
 
 		$sort = Input::get('sort', 'doc_no');
 		$order = Input::get('order', 'ASC');
@@ -174,6 +181,8 @@ class PicklistController extends BaseController {
 						'filter_type' 			=> $filter_type,
 						'filter_doc_no' 		=> $filter_doc_no,
 						'filter_status' 		=> $filter_status,
+						'filter_store' 			=> $filter_store,
+						'filter_stock_piler' 	=> $filter_stock_piler,
 						'sort'					=> $sort,
 						'order'					=> $order,
 						'page'					=> $page,
@@ -181,13 +190,16 @@ class PicklistController extends BaseController {
 					);
 
 		$results 		= Picklist::getPickingListv2($arrParams)->toArray();
-		$results_total 	= Picklist::getPickingListCount($arrParams);
+		$results_total 		= count($results);
+		// $results_total 	= Picklist::getPickingListCount($arrParams);
 
 		// Pagination
 		$this->data['arrFilters'] = array(
 									'filter_type' 			=> $filter_type,
 									'filter_doc_no' 		=> $filter_doc_no,
 									'filter_status' 		=> $filter_status,
+									'filter_store' 			=> $filter_store,
+									'filter_stock_piler' 	=> $filter_stock_piler,
 									'sort'					=> $sort,
 									'order'					=> $order
 								);
@@ -198,12 +210,15 @@ class PicklistController extends BaseController {
 		$this->data['filter_type'] = $filter_type;
 		$this->data['filter_doc_no'] = $filter_doc_no;
 		$this->data['filter_status'] = $filter_status;
+		$this->data['filter_store'] = $filter_store;
+		$this->data['filter_stock_piler'] = $filter_stock_piler;
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
 		$this->data['page'] = $page;
 
 		$url = '?filter_type=' . $filter_type . '&filter_doc_no=' . $filter_doc_no;
-		$url .= '&filter_status=' . $filter_status ;
+		$url .= '&filter_status=' . $filter_status . '&filter_store=' . $filter_store;
+		$url .= '&filter_stock_piler=' . $filter_stock_piler;
 		$url .= '&page=' . $page;
 
 		$order_doc_no = ($sort=='doc_no' && $order=='ASC') ? 'DESC' : 'ASC';
@@ -658,11 +673,14 @@ class PicklistController extends BaseController {
 
 	protected function setURL($forDetail = false, $forBackToList = false) {
 		// Search Filters
+		// http://local.ccri.com/picking/list?filter_doc_no=&filter_status=&filter_store=26&sort=doc_no&order=ASC
 		$url = '?filter_type=' . Input::get('filter_type', NULL);
 		$url .= '&filter_doc_no=' . Input::get('filter_doc_no', NULL);
 		$url .= '&filter_status=' . Input::get('filter_status', NULL);
-		$url .= '&filter_sku=' . Input::get('filter_sku', NULL);
-		$url .= '&filter_upc=' . Input::get('filter_upc', NULL);
+		$url .= '&filter_store=' . Input::get('filter_store', NULL);
+		$url .= '&filter_stock_piler=' . Input::get('filter_stock_piler', NULL);
+		// $url .= '&filter_sku=' . Input::get('filter_sku', NULL);
+		// $url .= '&filter_upc=' . Input::get('filter_upc', NULL);
 		if($forDetail) {
 			$url .= '&sort_back=' . Input::get('sort', 'doc_no');
 			$url .= '&order_back=' . Input::get('order', 'ASC');
@@ -822,4 +840,143 @@ class PicklistController extends BaseController {
 		);
 		AuditTrail::addAuditTrail($arrParams);
 	}*/
+
+	public function assignPilerForm() {
+		$this->data                     = Lang::get('picking');
+		$this->data['doc_no']           = Input::get('doc_no');
+
+		$this->data['stock_piler_list'] = $this->getStockPilers();
+		$this->data['button_assign']    = Lang::get('general.button_assign');
+		$this->data['button_cancel']    = Lang::get('general.button_cancel');
+		$this->data['url_back']         = URL::to('picking/list');
+		$this->data['params']           = explode(',', Input::get('doc_no'));
+		$this->data['info']             = Picklist::getInfoByDocNos($this->data['params']);
+
+		$this->layout->content          = View::make('picking.assign_piler_form', $this->data);
+	}
+
+	/**
+	* Assign stock piler to purchase order
+	*
+	* @example  www.example.com/purchase_order/assign_to_piler
+	*
+	* @param  po_no         int    Purchase order number
+	* @param  stock_piler   int    Stock piler id
+	* @return Status
+	*/
+	public function assignToStockPiler() {
+		// Check Permissions
+		/*if (Session::has('permissions')) {
+	    	if (!in_array('CanAssignPurchaseOrders', unserialize(Session::get('permissions'))) || !in_array('CanAssignPurchaseOrderDetails', unserialize(Session::get('permissions'))))  {
+				return Redirect::to('user/profile');
+			}
+    	} else {
+			return Redirect::to('users/logout');
+		}*/
+
+		$pilers = implode(',' , Input::get('stock_piler'));
+
+
+		//get moved_to_reserve id
+		$arrParams = array('data_code' => 'PICKLIST_STATUS_TYPE', 'data_value'=> 'assigned');
+		$picklistStatus = Dataset::getType($arrParams)->toArray();
+
+		$arrDocNo = explode(',', Input::get("doc_no"));
+
+		foreach ($arrDocNo as $docNo) {
+			$arrParams = array(
+								'assigned_by' 			=> Auth::user()->id,
+								'assigned_to_user_id' 	=> $pilers, //Input::get('stock_piler'),
+								'pl_status' 			=> $picklistStatus['id'], //assigned
+								'updated_at' 			=> date('Y-m-d H:i:s')
+							);
+			Picklist::assignToStockPiler($docNo, $arrParams);
+
+			// AuditTrail
+			$users = User::getUsersFullname(Input::get('stock_piler'));
+
+			$fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $users));
+
+			$data_before = '';
+			$data_after = 'Picklist Doc No: ' . $docNo . ' assigned to ' . $fullname;
+
+			$arrParams = array(
+							'module'		=> Config::get('audit_trail_modules.picking'),
+							'action'		=> Config::get('audit_trail.assign_picklist'),
+							'reference'		=> $docNo,
+							'data_before'	=> $data_before,
+							'data_after'	=> $data_after,
+							'user_id'		=> Auth::user()->id,
+							'created_at'	=> date('Y-m-d H:i:s'),
+							'updated_at'	=> date('Y-m-d H:i:s')
+							);
+			AuditTrail::addAuditTrail($arrParams);
+			// AuditTrail
+		}
+
+
+		return Redirect::to('picking/list' . $this->setURL())->with('message', Lang::get('picking.text_success_assign'));
+
+	}
+
+	public function closePicklist()
+	{
+		// Check Permissions
+		/*if (Session::has('permissions')) {
+	    	if (!in_array('CanClosePurchaseOrders', unserialize(Session::get('permissions'))) || !in_array('CanClosePurchaseOrderDetails', unserialize(Session::get('permissions'))))  {
+				return Redirect::to('user/profile');
+			}
+    	} else {
+			return Redirect::to('users/logout');
+		}*/
+
+		$docNo        = Input::get("doc_no");
+		$status       = 'posted'; // closed
+		$date_updated = date('Y-m-d H:i:s');
+
+		$status_options = Dataset::where("data_code", "=", "PICKLIST_STATUS_TYPE")->get()->lists("id", "data_value");
+
+		/*$picklist = Picklist::where('move_doc_number', '=', $docNo)
+				->update(array(
+					"pl_status" => $status_options[$status_value],
+					"updated_at" => date('Y-m-d H:i:s')
+				));*/
+
+		$picklist = Picklist::updateStatus($docNo, $status_options['closed']);
+
+		// AuditTrail
+		$user = User::find(Auth::user()->id);
+
+		$data_before = '';
+		$data_after = 'Picklist Document No: ' . $docNo . ' posted by ' . $user->username;
+
+		$arrParams = array(
+						'module'		=> Config::get("audit_trail_modules.picking"),
+						'action'		=> Config::get("audit_trail.modify_picklist_status"),
+						'reference'		=> $docNo,
+						'data_before'	=> $data_before,
+						'data_after'	=> $data_after,
+						'user_id'		=> Auth::user()->id,
+						'created_at'	=> date('Y-m-d H:i:s'),
+						'updated_at'	=> date('Y-m-d H:i:s')
+						);
+		AuditTrail::addAuditTrail($arrParams);
+		// AuditTrail
+
+		// Add transaction for jda syncing
+		$isSuccess = JdaTransaction::insert(array(
+			'module' 		=> Config::get('transactions.module_purchase_order'),
+			'jda_action'	=> Config::get('transactions.jda_action_po_closing'),
+			'reference'		=> $docNo
+		));
+
+		// run daemon command: php app/cron/jda/classes/receive_po.php
+		/*if( $isSuccess )
+		{
+			$daemonReceivingClosingPo = "classes/receive_po.php {$purchase_order_no}";
+			CommonHelper::execInBackground($daemonReceivingClosingPo);
+		}*/
+
+		return Redirect::to('picking/list' . $this->setURL())->with('message', Lang::get('picking.text_success_posted'));
+	}
 }

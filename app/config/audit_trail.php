@@ -34,5 +34,7 @@ return array(
 	"create_box"		=> "Create Box",
 	"update_box"		=> "Update Box",
 	"delete_box"		=> "Delete Box",
-	"export_boxes"		=> "Export Boxes"
+	"export_boxes"		=> "Export Boxes",
+	"assign_picklist"			=> "Assigned Picklist",
+	"modify_picklist_status"	=> "Update Picklist Status",
 );

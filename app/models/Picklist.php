@@ -61,6 +61,8 @@ class Picklist extends Eloquent {
 		if( CommonHelper::hasValue($data['filter_doc_no']) ) $query->where('picklist.move_doc_number', 'LIKE', '%'. $data['filter_doc_no'] . '%');
 		if( CommonHelper::hasValue($data['filter_type']) ) $query->where('type', '=',  $data['filter_type']);
 		if( CommonHelper::hasValue($data['filter_status']) ) $query->where('data_value', '=', $data['filter_status'])->where('data_code', '=', 'PICKLIST_STATUS_TYPE');
+		if( CommonHelper::hasValue($data['filter_store']) ) $query->where('store_code', '=',  $data['filter_store']);
+		if( CommonHelper::hasValue($data['filter_stock_piler']) ) $query->whereRaw('find_in_set('. $data['filter_stock_piler'] . ',assigned_to_user_id) > 0');
 
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if($data['sort'] == 'doc_no') $data['sort'] = 'picklist.move_doc_number';
@@ -74,7 +76,15 @@ class Picklist extends Eloquent {
 		}
 
 		$query->groupBy('picklist.move_doc_number');
+
 		$result = $query->get();
+
+		// get the multiple stock piler fullname
+		foreach ($result as $key => $picklist) {
+			$assignedToUserId       = explode(',', $picklist->assigned_to_user_id);
+			$getUsers               = User::getUsersFullname($assignedToUserId);
+			$result[$key]->fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $getUsers));
+		}
 
 		return $result;
 	}
@@ -98,6 +108,42 @@ class Picklist extends Eloquent {
 				'type'		=> 'store',
 				'updated_at'=>	date('Y-m-d H:i:s')));
 		return;
+	}
+
+	public static function getInfoByDocNos($data)
+	{
+		return Picklist::whereIn('move_doc_number', $data)->get()->toArray();
+	}
+
+	public static function assignToStockPiler($docNo = '', $data = array())
+	{
+		$query = Picklist::where('move_doc_number', '=', $docNo)->update($data);
+	}
+
+	/***************************Methods for API only*********************************/
+	public static function getListByPiler($pilerId)
+	{
+		return Picklist::whereRaw('find_in_set('. $pilerId . ',assigned_to_user_id) > 0')
+			->join('picklist_details', 'picklist.move_doc_number', '=', 'picklist_details.move_doc_number')
+			->join('stores', 'stores.store_code', '=', 'picklist_details.store_code')
+			->groupBy('picklist.move_doc_number')
+			->get(array('picklist.move_doc_number','stores.store_name', 'picklist_details.store_code'))
+			->toArray();
+	}
+
+	public static function updateStatusToMoved($docNo)
+	{
+		return Picklist::where('move_doc_number','=', $docNo)
+					->update(array('pl_status' =>  Config::get('picking_statuses.moved')));
+	}
+
+	public static function updateStatus($docNo, $plStatus)
+	{
+		return Picklist::where('move_doc_number', '=', $docNo)
+					->update(array(
+						"pl_status" => $plStatus,
+						"updated_at" => date('Y-m-d H:i:s')
+					));
 	}
 
 }
