@@ -14,7 +14,7 @@ class LetDownController extends BaseController {
 	public function showIndex() {
 		// Check Permissions
 		if (Session::has('permissions')) {
-	    	if (!in_array('CanAccessLetDowns', unserialize(Session::get('permissions'))))  {
+	    	if (!in_array('CanAccessLetdown', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('purchase_order');
 			}
     	} else {
@@ -26,13 +26,13 @@ class LetDownController extends BaseController {
 
 	public function closeLetdown() {
 		// Check Permissions
-		if (Session::has('permissions')) {
-	    	if (!in_array('CanCloseLetDown', unserialize(Session::get('permissions'))) || !in_array('CanCloseLetDownDetails', unserialize(Session::get('permissions'))))  {
+		/*if (Session::has('permissions')) {
+	    	if (!in_array('CanCloseLetdown', unserialize(Session::get('permissions'))) || !in_array('CanCloseLetDownDetails', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('letdown');
 			}
     	} else {
 			return Redirect::to('users/logout');
-		}
+		}*/
 
 		$docNo = Input::get("doc_no");
 		$status = Config::get('letdown_statuses.closed');
@@ -210,7 +210,7 @@ class LetDownController extends BaseController {
 		//TODO
 		///Check Permissions
 		if (Session::has('permissions')) {
-	    	if (!in_array('CanExportLetDownDetails', unserialize(Session::get('permissions'))))  {
+	    	if (!in_array('CanAccessLetdown', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('letdown' . $this->setURL());
 			}
     	} else {
@@ -260,7 +260,7 @@ class LetDownController extends BaseController {
 	public function getLetDownDetails() {
 		// Check Permissions
 		if (Session::has('permissions')) {
-	    	if (!in_array('CanAccessLetDownDetails', unserialize(Session::get('permissions'))))  {
+	    	if (!in_array('CanAccessLetdown', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('letdown');
 			} elseif (Letdown::find(Input::get('id', NULL))==NULL) {
 				return Redirect::to('letdown')->with('error', Lang::get('letdown.error_letdown_details'));

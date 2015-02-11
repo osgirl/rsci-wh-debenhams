@@ -1,10 +1,10 @@
 <div class="control-group">
-	<a href="{{ $url_back }}" class="btn btn-info"> <i class="icon-chevron-left"></i> {{ $button_back }}</a>
-	
-	@if ( CommonHelper::valueInArray('CanExportStoreOrderDetails', $permissions) )
-	<a class="btn btn-info" id="exportList">{{ $button_export }}</a>
+	<a href="{{ $url_back }}" class="btn btn-info btn-darkblue"> <i class="icon-chevron-left"></i> {{ $button_back }}</a>
+
+	@if ( CommonHelper::valueInArray('CanExportStoreOrders', $permissions) )
+	<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
 	@endif
-	
+
 </div>
 
 <!-- PO Detail -->
@@ -25,7 +25,7 @@
 		        	<span class="right-pane">{{ Form::text('store', $so_info->store_code, array('readonly' => 'readonly')) }}</span>
 		        </div>
 	      	</div>
-	      
+
 	      	<div class="span4">
 	      		<div>
 		        	<span class="left-pane">{{ $label_order_date }}</span>
@@ -38,7 +38,7 @@
 		        	<span class="right-pane">{{ Form::text('data_display', $so_status_type[$so_info->so_status], array('readonly' => 'readonly')) }}</span>
 		        </div>
 	      </div>
-	      
+
 	      <div class="span4">
 		        <div>
 		        </div>
@@ -49,7 +49,7 @@
 
 <div class="clear">
 	<div class="div-paginate">
-		@if(CommonHelper::arrayHasValue($store_orders) ) 
+		@if(CommonHelper::arrayHasValue($store_orders) )
 		    <h6 class="paginate">
 				<span>{{ $store_orders->appends($arrFilters)->links() }}&nbsp;</span>
 			</h6>
@@ -76,7 +76,7 @@
 						<th><a href="{{ $sort_ordered_quantity }}" class="@if( $sort_detail=='ordered_quantity' ) {{ $order_detail }} @endif">{{ $col_ordered_quantity }}</a></th>
 					</tr>
 				</thead>
-				@if( !CommonHelper::arrayHasValue($store_orders) ) 
+				@if( !CommonHelper::arrayHasValue($store_orders) )
 				<tr class="font-size-13">
 					<td colspan="12" class="align-center">{{ $text_empty_results }}</td>
 				</tr>
@@ -89,17 +89,17 @@
 						<td>{{ $so->ordered_qty }}</td>
 					</tr>
 					@endforeach
-				@endif				
+				@endif
 			</table>
 		</div>
 	</div>
-	
-	@if( CommonHelper::arrayHasValue($store_orders) ) 
+
+	@if( CommonHelper::arrayHasValue($store_orders) )
     <h6 class="paginate">
 		<span>{{ $store_orders->appends($arrFilters)->links() }}</span>
 	</h6>
 	@endif
-	
+
 </div>
 
 <script type="text/javascript">
@@ -108,22 +108,22 @@ $(document).ready(function() {
     // Close SO
     $('.closeSO').click(function() {
     	var answer = confirm('{{ $text_warning }}');
-			
+
 		if (answer) {
 			var store_code = $(this).data('id');
 	    	$('#closeSO_' + store_code).submit();
 		}
     });
-	
+
 	// Export List
     $('#exportList').click(function() {
     	url = '';
-    	
-    	url += '?id=' + encodeURIComponent('{{ $so_info->id }}');		
+
+    	url += '?id=' + encodeURIComponent('{{ $so_info->id }}');
 		url += '&sort_detail=' + encodeURIComponent('{{ $sort_detail }}');
 		url += '&order_detail=' + encodeURIComponent('{{ $order_detail }}');
-		
+
       	location = "{{ $url_export }}" + url;
     });
-});	
+});
 </script>

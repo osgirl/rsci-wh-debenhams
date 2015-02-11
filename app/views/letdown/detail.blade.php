@@ -1,15 +1,11 @@
 <div class="control-group">
 	<a href="{{ $url_back }}" class="btn btn-info  btn-darkblue"> <i class="icon-chevron-left"></i> {{ $button_back }}</a>
 
-	@if ( CommonHelper::valueInArray('CanSyncLetDownDetails', $permissions))
-	<a class="btn btn-info">{{ $button_jda }}</a>
-	@endif
-
-	@if ( CommonHelper::valueInArray('CanExportLetDownDetails', $permissions) )
+	@if ( CommonHelper::valueInArray('CanExportLetdown', $permissions) )
 	<a class="btn btn-info  btn-darkblue" id="exportList">{{ $button_export }}</a>
 	@endif
 
-	@if ( CommonHelper::valueInArray('CanCloseLetDownDetails', $permissions) )
+	@if ( CommonHelper::valueInArray('CanCloseLetdown', $permissions) )
 		@if($letdown_info->lt_status == Config::get('letdown_statuses.moved'))
 			<a id="closeLetdownDetailButton" style="width: 70px;" class="btn btn-success closeLetDown" data-id="{{ $letdown_info->move_doc_number }}">{{ $button_close_letdown }}</a>
 		@elseif ($letdown_info->lt_status == Config::get('letdown_statuses.closed'))

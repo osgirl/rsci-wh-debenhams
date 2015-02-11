@@ -35,24 +35,24 @@
 				        </div>
 				    </div>
 			      	<div class="span11 control-group collapse-border-top">
-			      		<a class="btn btn-success" id="submitForm">{{ $button_search }}</a>
+			      		<a class="btn btn-success btn-darkblue" id="submitForm">{{ $button_search }}</a>
 		      			<a class="btn" id="clearForm">{{ $button_clear }}</a>
 			      	</div>
             </div>
             {{ Form::hidden('sort', $sort) }}
 		    {{ Form::hidden('order', $order) }}
-            
+
             {{ Form::close() }}
           </div>
       	</div>
-          
-	</div> <!-- /controls -->	
+
+	</div> <!-- /controls -->
 </div> <!-- /control-group -->
 
 
 <div class="clear">
 	<div class="div-paginate">
-		@if(CommonHelper::arrayHasValue($boxes) ) 
+		@if(CommonHelper::arrayHasValue($boxes) )
 		    <h6 class="paginate">
 				<span>{{ $boxes->appends($arrFilters)->links() }}&nbsp;</span>
 			</h6>
@@ -61,25 +61,20 @@
 		@endif
 	</div>
 	<div class="div-buttons">
-		@if ( CommonHelper::valueInArray('CanLoadPicking', $permissions) )
+		{{-- @if ( CommonHelper::valueInArray('CanLoadPicking', $permissions) ) --}}
 			<a role="button" class="btn btn-warning" id="load-boxes" title="{{ $button_load }}" data-toggle="modal">{{ $button_load }}</a>
-		@endif
-		@if ( CommonHelper::valueInArray('CanAddLoad', $permissions) )
-		<a  class="btn btn-info" id="generate-load">{{ $button_add_store }}</a>
-		@endif
-		@if ( CommonHelper::valueInArray('CanCreateBox', $permissions) )
-		<a class="btn btn-info" href="{{$url_add_box}}">{{ $button_create_box }}</a> 
-		<!--Add form here-->
-		@endif
-		
-		@if ( CommonHelper::valueInArray('CanExportBoxes', $permissions) )
-		<a class="btn btn-info" href="{{$url_export_box}}" >{{ $button_export_box }}</a> 
+		{{-- @endif --}}
+		{{-- @if ( CommonHelper::valueInArray('CanAddLoad', $permissions) ) --}}
+		<a  class="btn btn-info btn-darkblue" id="generate-load">{{ $button_add_store }}</a>
+		{{-- @endif --}}
+		{{-- @if ( CommonHelper::valueInArray('CanCreateBox', $permissions) ) --}}
+		<a class="btn btn-info btn-darkblue" href="{{$url_add_box}}">{{ $button_create_box }}</a>
+		{{-- @endif --}}
+
+		@if ( CommonHelper::valueInArray('CanExportBoxingLoading', $permissions) )
+		<a class="btn btn-info btn-darkblue" href="{{$url_export_box}}" >{{ $button_export_box }}</a>
 		@endif
 
-		@if ( CommonHelper::valueInArray('CanDeleteBoxes', $permissions) )
-		<!-- <a class="btn btn-danger" id="deleteMass">{{ $button_delete_box }}</a>  -->
-		@endif
-		
 	</div>
 
 </div>
@@ -102,7 +97,7 @@
 					    {{ Form::hidden('filter_store', $filter_store) }}
 					    {{ Form::hidden('filter_box_code', $filter_box_code) }}
 					    {{ Form::hidden('box_codes', '', array('id'=>'box-codes')) }}
-			            
+
 			            {{ Form::close() }}
 						<th style="width: 20px;" class="align-center"><input type="checkbox" id="main-selected"></th>
 						<th>{{ $col_id }}</th>
@@ -112,7 +107,7 @@
 						<th>{{ $col_action }}</th>
 					</tr>
 				</thead>
-				@if( !CommonHelper::arrayHasValue($boxes) ) 
+				@if( !CommonHelper::arrayHasValue($boxes) )
 				<tr class="font-size-13">
 					<td colspan="9" style="text-align: center;">{{ $text_empty_results }}</td>
 				</tr>
@@ -142,7 +137,7 @@
 							@if ( CommonHelper::valueInArray('CanDeleteBoxes', $permissions) && !CommonHelper::hasValue($box['picklist_detail_id']) )
 								<a  data-id="{{$box['box_code']}}"  class="icon-remove single-box-delete"></a>
 							@endif
-							
+
 						</td>
 					</tr>
 					</tr>
@@ -185,7 +180,7 @@
 		{{ Form::hidden('order', $order) }}
 		{{ Form::hidden('page', $page) }}
 		{{ Form::hidden('module', 'box') }}
-		{{ Form::hidden('box_lists','' , array('class'=>'box-ids-load')) }}				
+		{{ Form::hidden('box_lists','' , array('class'=>'box-ids-load')) }}
 		</br>
 
         {{ Form::close()}}
@@ -235,26 +230,26 @@ $(document).ready(function() {
     // Clear Search Form
     $('#clearForm').click(function() {
     	$('#filter_store, #filter_box_code').val('');
-		
+
 		$('#form-box').submit();
     });
 
-    //Delete 
+    //Delete
 
     $('#deleteMass').click(function(e){
     	var count = $("[name='selected[]']:checked").length;
     	if (count>0) {
 			var answer = confirm('{{ $text_confirm_delete }}')
-			
+
 			if (answer) {
 				var boxes = new Array();
 				$.each($("input[name='selected[]']:checked"), function() {
 					boxes.push($(this).val());
 				});
-    	
+
     			$('#box-codes').val(boxes.join(','));
     			$('#form-box-delete').submit();
-    			
+
 			} else {
 				return false;
 			}
@@ -266,16 +261,16 @@ $(document).ready(function() {
 
     $('.single-box-delete').click(function(e){
     	var answer = confirm('{{ $text_confirm_delete_single }}')
-			
+
 		if (answer) {
 			var box = $(this).attr('data-id');
     		$('#box-codes').val(box);
     		$('#form-box-delete').submit();
-			
+
 		} else {
 			return false;
 		}
-    	
+
     });
 
 
@@ -283,7 +278,7 @@ $(document).ready(function() {
     $('.tblrow').click(function() {
 
     	var rowid = $(this).data('id');
-    	
+
     	if ($('#selected-' + rowid).length>0) {
     		console.log($('#selected-' + rowid));
 	    	if ($('#selected-' + rowid).is(':checked')) {
@@ -297,10 +292,10 @@ $(document).ready(function() {
     		$(this).children('td').removeClass('tblrow-active');
     	}
     });
-    
+
     $('.item-selected').click(function() {
     	var rowid = $(this).data('id');
-    	
+
     	if ($(this).is(':checked')) {
     		$(this).prop('checked', false);
     		$(this).children('td').removeClass('tblrow-active');
@@ -309,7 +304,7 @@ $(document).ready(function() {
     		$(this).children('td').addClass('tblrow-active');
     	}
     });
-    
+
     $('#main-selected').click(function() {
     	if ($('#main-selected').is(':checked')) {
     		$('input[name*=\'selected\']').prop('checked', true);
@@ -341,21 +336,21 @@ $(document).ready(function() {
     //load picklist
     $('#load-boxes').click(function() {
     	var count = $("[name='selected[]']:checked").length;
-		
+
 		if (count>0) {
 			var picklist = new Array();
 			$.each($("input[name='selected[]']:checked"), function() {
 				picklist.push($(this).val());
 			});
 			//form-picking-load
-			
+
 			$('.box-ids-load').val(picklist.join(','));
 
 
 			$('#load-boxes-modal').modal('show');
 
 			//show modal
-			
+
 		} else {
 			alert('{{ $error_load }}');
 			return false;
@@ -364,7 +359,7 @@ $(document).ready(function() {
 
     $('.load-boxes-single').click(function(){
     	var box_id= $(this).attr('data-id');
-    	
+
     	$('.box-ids-load').val(box_id);
     	$('#load-boxes-modal').modal('show');
     });
@@ -382,8 +377,8 @@ $(document).ready(function() {
     			alert('{{ $error_load }}');
 			return false;
 		}
-    	
+
     });
-    
-});	
+
+});
 </script>

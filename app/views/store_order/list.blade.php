@@ -50,24 +50,24 @@
 				        </div>
 			      	</div>
 			      	<div class="span11 control-group collapse-border-top">
-			      		<a class="btn btn-success" id="submitForm">{{ $button_search }}</a>
+			      		<a class="btn btn-success btn-darkblue" id="submitForm">{{ $button_search }}</a>
 		      			<a class="btn" id="clearForm">{{ $button_clear }}</a>
 			      	</div>
             </div>
             {{ Form::hidden('sort', $sort) }}
 		    {{ Form::hidden('order', $order) }}
-            
+
             {{ Form::close() }}
           </div>
       	</div>
-          
-	</div> <!-- /controls -->	
+
+	</div> <!-- /controls -->
 </div> <!-- /control-group -->
 
 
 <div class="clear">
 	<div class="div-paginate">
-		@if(CommonHelper::arrayHasValue($store_orders) ) 
+		@if(CommonHelper::arrayHasValue($store_orders) )
 		    <h6 class="paginate">
 				<span>{{ $store_orders->appends($arrFilters)->links() }}&nbsp;</span>
 			</h6>
@@ -77,7 +77,7 @@
 	</div>
 	<div class="div-buttons">
 		@if ( CommonHelper::valueInArray('CanExportStoreOrders', $permissions) )
-		<a class="btn btn-info" id="exportList">{{ $button_export }}</a>
+		<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
 		@endif
 	</div>
 </div>
@@ -103,7 +103,7 @@
 						<th>{{ $col_action }}</th>
 					</tr>
 				</thead>
-				@if( !CommonHelper::arrayHasValue($store_orders) ) 
+				@if( !CommonHelper::arrayHasValue($store_orders) )
 				<tr class="font-size-13">
 					<td colspan="9" style="text-align: center;">{{ $text_empty_results }}</td>
 				</tr>
@@ -126,8 +126,8 @@
 			</table>
 		</div>
 	</div>
-	
-	@if( CommonHelper::arrayHasValue($store_orders) ) 
+
+	@if( CommonHelper::arrayHasValue($store_orders) )
     <h6 class="paginate">
 		<span>{{ $store_orders->appends($arrFilters)->links() }}</span>
 	</h6>
@@ -139,12 +139,12 @@ $(document).ready(function() {
     $('.date').datepicker({
       format: 'yyyy-mm-dd'
     });
-    
+
 
     // Close SO
     $('.closeSO').click(function() {
     	var answer = confirm('{{ $text_warning }}');
-			
+
 		if (answer) {
 			var so_no = $(this).data('id');
 	    	$('#closeSO_' + so_no).submit();
@@ -166,37 +166,37 @@ $(document).ready(function() {
     $('#clearForm').click(function() {
     	$('#filter_so_no').val('');
 		$('#filter_order_date').val('');
-		
+
 		$('select').val('');
 		$('#form-store-order').submit();
     });
-	
+
 	// Export List
     $('#exportList').click(function() {
     	url = '';
-    	
+
 		var filter_so_no = $('#filter_so_no').val();
 		url += '?filter_so_no=' + encodeURIComponent(filter_so_no);
-		
+
 		var filter_store = $('#filter_store').val();
 		url += '&filter_store=' + encodeURIComponent(filter_store);
-		
+
 		var filter_order_date = $('#filter_order_date').val();
 		url += '&filter_order_date=' + encodeURIComponent(filter_order_date);
-		
+
 		var filter_status = $('select[name=\'filter_status\']').val();
 		url += '&filter_status=' + encodeURIComponent(filter_status);
-		
+
 		url += '&sort=' + encodeURIComponent('{{ $sort }}');
 		url += '&order=' + encodeURIComponent('{{ $order }}');
-		
+
       	location = "{{ $url_export }}" + url;
     });
-    
+
     // Select
     $('.tblrow').click(function() {
     	var rowid = $(this).data('id');
-    	
+
     	if ($('#selected-' + rowid).length>0) {
 	    	if ($('#selected-' + rowid).is(':checked')) {
 	    		$('#selected-' + rowid).prop('checked', false);
@@ -209,10 +209,10 @@ $(document).ready(function() {
     		$(this).children('td').removeClass('tblrow-active');
     	}
     });
-    
+
     $('.item-selected').click(function() {
     	var rowid = $(this).data('id');
-    	
+
     	if ($(this).is(':checked')) {
     		$(this).prop('checked', false);
     		$(this).children('td').removeClass('tblrow-active');
@@ -221,7 +221,7 @@ $(document).ready(function() {
     		$(this).children('td').addClass('tblrow-active');
     	}
     });
-    
+
     $('#main-selected').click(function() {
     	if ($('#main-selected').is(':checked')) {
     		$('input[name*=\'selected\']').prop('checked', true);
@@ -231,5 +231,5 @@ $(document).ready(function() {
     		$('.table tbody tr > td').removeClass('tblrow-active');
     	}
    	});
-});	
+});
 </script>

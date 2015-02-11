@@ -85,18 +85,17 @@
 			</a>
 
 			<ul class="dropdown-menu">
-          @if ( CommonHelper::valueInArray('CanAccessLetDowns', $permissions) )
-            @if (Auth::user()->brand_id !== 2)
+
+          @if ( CommonHelper::valueInArray('CanAccessLetdown', $permissions) )
             <li><a href="{{ URL::to('letdown') }}">{{ $menu_letdown }}</a></li>
-            @endif
           @endif
-          @if ( CommonHelper::valueInArray('CanAccessPicking', $permissions) )
+          @if ( CommonHelper::valueInArray('CanAccessPacking', $permissions) )
             <li><a href="{{ URL::to('picking/list') }}">{{ $menu_picking }}</a></li>
 			    @endif
-          @if ( CommonHelper::valueInArray('CanAccessBoxCreation', $permissions) )
+          @if ( CommonHelper::valueInArray('CanAccessBoxingLoading', $permissions) )
             <li><a href="{{ URL::to('box/list') }}">{{ $menu_carton }}</a></li>
           @endif
-          @if ( CommonHelper::valueInArray('CanAccessLoad', $permissions) )
+          @if ( CommonHelper::valueInArray('CanAccessShipping', $permissions) )
             <li><a href="{{ URL::to('load/list') }}">{{ $menu_load }}</a></li>
           @endif
       </ul>
@@ -133,8 +132,12 @@
         @if ( CommonHelper::valueInArray('CanAccessSlotMasterList', $permissions) )
 				  <li><a href="{{ URL::to('slots') }}">{{ $menu_slot_master_list }}</a></li>
         @endif
+        @if ( CommonHelper::valueInArray('CanAccessVendorMasterList', $permissions) )
         <li><a href="{{ URL::to('vendors') }}">{{ $menu_vendor_master_list }}</a></li>
+        @endif
+        @if ( CommonHelper::valueInArray('CanAccessStoreMasterList', $permissions) )
         <li><a href="{{ URL::to('stores') }}">{{ $menu_store_master_list }}</a></li>
+        @endif
         @if ( CommonHelper::valueInArray('CanAccessInventory', $permissions) )
           <!-- <li><a href="{{ URL::to('inventory') }}">{{ $menu_inventory }}</a></li> -->
         @endif
@@ -164,7 +167,7 @@
 				<li><a href="{{ URL::to('user_roles') }}">{{ $menu_user_roles }}</a></li>
 				@endif
 				@if ( CommonHelper::valueInArray('CanAccessSettings', $permissions) )
-				<li><a href="{{ URL::to('settings') }}">{{ $menu_settings }}</a></li>
+				<!-- <li><a href="{{ URL::to('settings') }}">{{ $menu_settings }}</a></li> -->
 				@endif
             </ul>
 		</li>

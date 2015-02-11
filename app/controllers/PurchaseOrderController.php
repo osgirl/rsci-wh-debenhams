@@ -440,7 +440,7 @@ class PurchaseOrderController extends BaseController {
 	public function getPODetails() {
 		// Check Permissions
 		if (Session::has('permissions')) {
-	    	if (!in_array('CanAccessPurchaseOrderDetails', unserialize(Session::get('permissions'))))  {
+	    	if (!in_array('CanAccessPurchaseOrders', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('purchase_order');
 			} elseif (PurchaseOrder::getPOInfoByReceiverNo(Input::get('receiver_no', NULL))==NULL) {
 				return Redirect::to('purchase_order')->with('error', Lang::get('purchase_order.error_po_details'));

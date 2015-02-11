@@ -4,18 +4,18 @@ class LoadController extends BaseController {
 	private $data = array();
 
 	public $layout = "layouts.main";
-	
+
 	public function __construct()
     {
     	date_default_timezone_set('Asia/Manila');
     	$this->beforeFilter('csrf', array('on' => 'post'));
     	$this->beforeFilter('auth', array('only' => array('Dashboard')));
-    	
+
     	// Check Permissions
     	if (Session::has('permissions')) {
-	    	if (!in_array('CanAccessLoad', unserialize(Session::get('permissions'))))  {
+	    	if (!in_array('CanAccessShipping', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('/');
-			} 
+			}
     	} else {
 			return Redirect::to('users/logout');
 		}
@@ -23,28 +23,28 @@ class LoadController extends BaseController {
 
 	public function showIndex() {
 		// Check Permissions
-		
+
     	if (Session::has('permissions')) {
-	    	if (!in_array('CanAccessLoad', unserialize(Session::get('permissions'))))  {
+	    	if (!in_array('CanAccessShipping', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('/');
-			} 
+			}
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		$this->getList();
 	}
-	
+
 	public function exportCSV() {
 		// Check Permissions
 		if (Session::has('permissions')) {
-	    	if (!in_array('CanExportLoads', unserialize(Session::get('permissions'))))  {
+	    	if (!in_array('CanExportShipping', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('load/list');
 			}
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		$arrParams = array(
 							'filter_load_code'	=> Input::get('filter_load_code', NULL),
 							'filter_status' 	=> Input::get('filter_status', NULL),
@@ -53,21 +53,21 @@ class LoadController extends BaseController {
 							'page'				=> NULL,
 							'limit'				=> NULL
 						);
-		
+
 		$results = Load::getLoadList($arrParams);
 		$output = Lang::get('loads.col_load_no') . ",";
 		$output .= Lang::get('loads.col_status') . "\n";
-		
+
 	    foreach ($results as $value) {
 	    	$exportData = array(
 	    						'"' . $value->load_code . '"',
 	    						'"' . $value->is_shipped . '"'
 	    					);
-	  		
+
 	      	$output .= implode(",", $exportData);
 	      	$output .= "\n";
 	  	}
-	  	
+
 		$headers = array(
 			'Content-Type' => 'text/csv',
 			'Content-Disposition' => 'attachment; filename="loads_' . date('Ymd')  . '_' . time() . '.csv"',
@@ -75,16 +75,16 @@ class LoadController extends BaseController {
 
 		return Response::make(rtrim($output, "\n"), 200, $headers);
 	}
-	
-	protected function getList() 
+
+	protected function getList()
 	{
 		$this->data = Lang::get('loads');
 
 		// URL
 		$this->data['url_export'] = URL::to('load/export');
 		$this->data['url_ship_load'] = URL::to('load/ship');
-		$this->data['url_load_print'] = URL::to('load/print');		
-						
+		$this->data['url_load_print'] = URL::to('load/print');
+
 		// Search Filters
 		$filter_load_code = Input::get('filter_load_code', NULL);
 		$filter_status = Input::get('filter_status', NULL);
@@ -92,7 +92,7 @@ class LoadController extends BaseController {
 		$sort = Input::get('sort', 'load_code');
 		$order = Input::get('order', 'ASC');
 		$page = Input::get('page', 1);
-		
+
 		// Data
 		$arrParams = array(
 							'filter_load_code'	=> $filter_load_code,
@@ -101,11 +101,11 @@ class LoadController extends BaseController {
 							'order'				=> $order,
 							'page'				=> $page,
 							'limit'				=> 30
-						);		
+						);
 		$results = Load::getLoadList($arrParams)->toArray();
 		// echo '<pre>'; dd($results);
 		$results_total = count($results);
-		
+
 		// Pagination
 		$this->data['arrFilters'] = array(
 										'filter_load_code'	=> $filter_load_code,
@@ -113,32 +113,32 @@ class LoadController extends BaseController {
 										'sort'				=> $sort,
 										'order'				=> $order
 									);
-		
+
 		$this->data['loads'] = Paginator::make($results, $results_total, 30);
 		$this->data['load_count'] = $results_total;
-		
+
 		$this->data['counter'] 	= $this->data['loads']->getFrom();
-		
+
 		$this->data['filter_load_code'] = $filter_load_code;
 		$this->data['filter_status'] = $filter_status;
-		
+
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
 		$this->data['page'] = $page;
-		
+
 		$url = '?filter_load_code=' . $filter_load_code;
 		$url .= '&filter_status=' . $filter_status;
 		$url .= '&page=' . $page;
-		
+
 		$order_load_code = ($sort=='load_code' && $order=='ASC') ? 'DESC' : 'ASC';
 		$order_status = ($sort=='status' && $order=='ASC') ? 'DESC' : 'ASC';
 
 		$this->data['sort_load_code'] = URL::to('load/list' . $url . '&sort=load_code&order=' . $order_load_code, NULL, FALSE);
 		$this->data['sort_status'] = URL::to('load/list' . $url . '&sort=status&order=' . $order_status, NULL, FALSE);
-		
+
 		// Permissions
 		$this->data['permissions'] = unserialize(Session::get('permissions'));
-		
+
 		$this->layout->content = View::make('loads.list', $this->data);
 	}
 
@@ -151,7 +151,7 @@ class LoadController extends BaseController {
 			$params = array('load_code' => $data['load_code']);
 			$isSuccess = Load::shipLoad($params);
 
-			if( $isSuccess ) 
+			if( $isSuccess )
 			{
 				$shippingParams = array(
 					'module' 		=> Config::get('transactions.module_shipping'),
@@ -180,17 +180,17 @@ class LoadController extends BaseController {
 	}
 	public function printLoad($loadCode)
 	{
-		try {						
+		try {
 			$this->data['loadCode'] = $loadCode;
-			$this->data['records'] = Load::getLoadDetails($loadCode);		
+			$this->data['records'] = Load::getLoadDetails($loadCode);
 			$this->data['permissions'] = unserialize(Session::get('permissions'));
 
-			$this->layout = View::make('layouts.print');			;				
-			$this->layout->content = View::make('loads.printmts', $this->data);			
+			$this->layout = View::make('layouts.print');			;
+			$this->layout->content = View::make('loads.printmts', $this->data);
 
 		} catch (Exception $e) {
 			return Redirect::to('load/list'. $this->setURL())->withErrors(Lang::get('loads.text_fail_load'));
-		}	
+		}
 	}
 
 	protected function setURL($forDetail = false, $forBackToList = false) {
@@ -223,7 +223,7 @@ class LoadController extends BaseController {
 	*
 	* @param  loadNo   		load number
 	* @return void
-	*/ 
+	*/
 	public static function shipLoadToBoxAuditTrail($loadNo)
 	{
 		$dataAfter = "Load code # {$loadNo} just shipped by ".Auth::user()->username;

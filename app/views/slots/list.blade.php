@@ -14,22 +14,22 @@
 					</div>
 
 					<div class="span11 control-group collapse-border-top" style="margin-top: 6px;">
-						<a class="btn btn-success" id="submitForm">{{ $button_search }}</a>
+						<a class="btn btn-success btn-darkblue" id="submitForm">{{ $button_search }}</a>
 						<a class="btn" id="clearForm">{{ $button_clear }}</a>
 					</div>
 				</div>
 				{{ Form::hidden('sort', $sort) }}
 		        {{ Form::hidden('order', $order) }}
-				
+
 				{{ Form::close() }}
 			</div>
 		</div>
-	</div> <!-- /controls -->	
+	</div> <!-- /controls -->
 </div> <!-- /control-group -->
 
 <div class="clear">
 	<div class="div-paginate">
-		@if(CommonHelper::arrayHasValue($slots) ) 
+		@if(CommonHelper::arrayHasValue($slots) )
 		    <h6 class="paginate">
 				<span>{{ $slots->appends($arrFilters)->links() }}&nbsp;</span>
 			</h6>
@@ -39,7 +39,7 @@
 	</div>
 	<div class="div-buttons">
 		@if ( CommonHelper::valueInArray('CanExportSlotMasterList', $permissions) )
-		<a class="btn btn-info" id="exportList">{{ $button_export }}</a>
+		<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
 		@endif
 	</div>
 </div>
@@ -50,7 +50,7 @@
      	<span class="pagination-totalItems">{{ $text_total }} {{ $slots_count }}</span>
     </div>
     <!-- /widget-header -->
-    
+
     <div class="widget-content">
     	<div class="table-responsive">
 			<table class="table table-striped table-bordered">
@@ -61,7 +61,7 @@
 					</tr>
 				</thead>
 				<tbody>
-				@if( !CommonHelper::arrayHasValue($slots) ) 
+				@if( !CommonHelper::arrayHasValue($slots) )
 					<tr class="font-size-13">
 						<td colspan="2" class="align-center">{{ $text_empty_results }}</td>
 					</tr>
@@ -77,8 +77,8 @@
 			</table>
 		</div>
 	</div>
-	
-	@if(CommonHelper::arrayHasValue($slots) ) 
+
+	@if(CommonHelper::arrayHasValue($slots) )
     <h6 class="paginate">
 		<span>{{ $slots->appends($arrFilters)->links() }}</span>
 	</h6>
@@ -91,30 +91,30 @@ $(document).ready(function() {
     $('#submitForm').click(function() {
     	$('#form-slots').submit();
     });
-    
+
     $('#form-slots input').keydown(function(e) {
 		if (e.keyCode == 13) {
 			$('#form-slots').submit();
 		}
 	});
-    
+
     // Clear Form
     $('#clearForm').click(function() {
     	$('#filter_slot_no').val('');
     	$('#form-slots').submit();
     });
-	
+
 	// Export List
     $('#exportList').click(function() {
     	url = '';
-    	
+
 		var filter_slot_no = $('#filter_slot_no').val();
 		url += '?filter_slot_no=' + encodeURIComponent(filter_slot_no);
-		
+
 		url += '&sort=' + encodeURIComponent('{{ $sort }}');
 		url += '&order=' + encodeURIComponent('{{ $order }}');
-		
+
       	location = "{{ $url_export }}" + url;
     });
-});	
+});
 </script>

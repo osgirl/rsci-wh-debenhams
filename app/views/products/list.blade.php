@@ -48,24 +48,24 @@
 							</span>
 						</div>
 					</div>
-										
+
 					<div class="span11 control-group collapse-border-top" style="margin-top: 6px;">
-						<a class="btn btn-success" id="submitForm">{{ $button_search }}</a>
+						<a class="btn btn-success btn-darkblue" id="submitForm">{{ $button_search }}</a>
 						<a class="btn" id="clearForm">{{ $button_clear }}</a>
 					</div>
 				</div>
 				{{ Form::hidden('sort', $sort) }}
 		        {{ Form::hidden('order', $order) }}
-				
+
 				{{ Form::close() }}
 			</div>
 		</div>
-	</div> <!-- /controls -->	
+	</div> <!-- /controls -->
 </div> <!-- /control-group -->
 
 <div class="clear">
 	<div class="div-paginate">
-		@if( CommonHelper::arrayHasValue($products) ) 
+		@if( CommonHelper::arrayHasValue($products) )
 		    <h6 class="paginate">
 				<span>{{ $products->appends($arrFilters)->links() }}&nbsp;</span>
 			</h6>
@@ -75,7 +75,7 @@
 	</div>
 	<div class="div-buttons">
 		@if ( CommonHelper::valueInArray('CanExportProductMasterList', $permissions) )
-		<a class="btn btn-info" id="exportList">{{ $button_export }}</a>
+		<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
 		@endif
 	</div>
 </div>
@@ -86,7 +86,7 @@
       	<span class="pagination-totalItems">{{ $text_total }} {{ $products_count }}</span>
     </div>
     <!-- /widget-header -->
-    
+
     <div class="widget-content">
     	<div class="table-responsive">
 			<table class="table table-striped table-bordered">
@@ -102,7 +102,7 @@
 					</tr>
 				</thead>
 				<tbody>
-				@if( !CommonHelper::arrayHasValue($products) ) 
+				@if( !CommonHelper::arrayHasValue($products) )
 					<tr class="font-size-13">
 						<td colspan="7" class="align-center">{{ $text_empty_results }}</td>
 					</tr>
@@ -123,8 +123,8 @@
 			</table>
 		</div>
 	</div>
-	
-	@if( CommonHelper::arrayHasValue($products) ) 
+
+	@if( CommonHelper::arrayHasValue($products) )
     <h6 class="paginate">
 		<span>{{ $products->appends($arrFilters)->links() }}</span>
 	</h6>
@@ -137,16 +137,16 @@ $(document).ready(function() {
     $('#submitForm').click(function() {
     	$('#form-products').submit();
     });
-    
+
     $('#form-products input').keydown(function(e) {
 		if (e.keyCode == 13) {
 			$('#form-products').submit();
 		}
 	});
-	
+
 	// Change Sub Dept
-	$('#filter_dept_no').change(function() {		
-		
+	$('#filter_dept_no').change(function() {
+
 	  	$.ajax({
 			url: '{{ $url_department }}',
 			type: 'GET',
@@ -155,18 +155,18 @@ $(document).ready(function() {
 			success: function(output_string) {
 				sub_dept = '<select name="filter_sub_dept_no" id="filter_sub_dept_no" class="select-width">';
 				sub_dept += '<option value="">{{ Lang::get('general.text_select') }}</option>';
-				
+
 				jQuery.each(output_string, function(i, val) {
 					sub_dept += '<option value="'+i+'">'+val+'</option>';
 				});
-				
+
 				sub_dept += '</select>';
-				
+
 				$("#sub_dept").html(sub_dept);
 			}
-		}); 
+		});
 	});
-    
+
     // Clear Form
     $('#clearForm').click(function() {
     	$('#filter_prod_sku').val('');
@@ -177,39 +177,39 @@ $(document).ready(function() {
 		$('#filter_sub_dept_no').val('');
 		$('#form-products').submit();
     });
-	
+
 	// Export List
     $('#exportList').click(function() {
     	url = '';
-    	
+
 		var filter_prod_sku = $('#filter_prod_sku').val();
 		url += '?filter_prod_sku=' + encodeURIComponent(filter_prod_sku);
-		
+
 		var filter_prod_upc = $('#filter_prod_upc').val();
 		url += '&filter_prod_upc=' + encodeURIComponent(filter_prod_upc);
-		
+
 		var filter_prod_full_name = $('#filter_prod_full_name').val();
 		url += '&filter_prod_full_name=' + encodeURIComponent(filter_prod_full_name);
-		
+
 		var filter_prod_short_name = $('#filter_prod_short_name').val();
 		url += '&filter_prod_short_name=' + encodeURIComponent(filter_prod_short_name);
-		
+
 		var filter_dept_no = $('#filter_dept_no').val();
 		url += '&filter_dept_no=' + encodeURIComponent(filter_dept_no);
-		
+
 		var filter_dept_name = $('#filter_dept_name').val();
 		url += '&filter_dept_name=' + encodeURIComponent(filter_dept_name);
-		
+
 		var filter_sub_dept_no = $('#filter_sub_dept_no').val();
 		url += '&filter_sub_dept_no=' + encodeURIComponent(filter_sub_dept_no);
-		
+
 		var filter_sub_dept_name = $('#filter_sub_dept_name').val();
 		url += '&filter_sub_dept_name=' + encodeURIComponent(filter_sub_dept_name);
-		
+
 		url += '&sort=' + encodeURIComponent('{{ $sort }}');
 		url += '&order=' + encodeURIComponent('{{ $order }}');
-		
+
       	location = "{{ $url_export }}" + url;
     });
-});	
+});
 </script>

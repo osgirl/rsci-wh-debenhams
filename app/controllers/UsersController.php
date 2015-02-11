@@ -47,7 +47,8 @@ class UsersController extends BaseController {
 			$userRole = UserRoles::find(Auth::user()->role_id);
 			$userRoleId = Auth::user()->role_id;
 
-			if(!in_array(Auth::user()->role_id, $this->allowedUserRoles) || $userRole->deleted_at > '0000-00-00 00:00:00' || Auth::user()->deleted_at > '0000-00-00 00:00:00')
+			// if(!in_array(Auth::user()->role_id, $this->allowedUserRoles) || $userRole->deleted_at > '0000-00-00 00:00:00' || Auth::user()->deleted_at > '0000-00-00 00:00:00')
+			if ($userRole->deleted_at > '0000-00-00 00:00:00' || Auth::user()->deleted_at > '0000-00-00 00:00:00')
 			{
 				Auth::logout();
 				return Redirect::to('users/login')

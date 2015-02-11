@@ -57,24 +57,24 @@
 							</span>
 						</div>
 					</div>
-					
+
 					<div class="span11 control-group collapse-border-top">
-						<a class="btn btn-success" id="submitForm">{{ $button_search }}</a>
+						<a class="btn btn-success btn-darkblue" id="submitForm">{{ $button_search }}</a>
 						<a class="btn" id="clearForm">{{ $button_clear }}</a>
 					</div>
 				</div>
 				{{ Form::hidden('sort', $sort) }}
 		        {{ Form::hidden('order', $order) }}
-		        
+
 				{{ Form::close() }}
 			</div>
 		</div>
-	</div> <!-- /controls -->	
+	</div> <!-- /controls -->
 </div> <!-- /control-group -->
 
 <div class="clear">
 	<div class="div-paginate">
-		@if(CommonHelper::arrayHasValue($audit_trails) ) 
+		@if(CommonHelper::arrayHasValue($audit_trails) )
 		    <h6 class="paginate">
 				<span>{{ $audit_trails->appends($arrFilters)->links() }}&nbsp;</span>
 			</h6>
@@ -84,10 +84,10 @@
 	</div>
 	<div class="div-buttons">
 		@if ( CommonHelper::valueInArray('CanExportAuditTrail', $permissions) )
-		<a class="btn btn-info" id="exportList">{{ $button_export }}</a>
+		<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
 		@endif
 		@if ( CommonHelper::valueInArray('CanArchiveAuditTrail', $permissions) )
-		<a class="btn btn-info">{{ $button_archive }}</a>
+		<a class="btn btn-info btn-darkblue">{{ $button_archive }}</a>
 		@endif
 	</div>
 </div>
@@ -98,7 +98,7 @@
       	<span class="pagination-totalItems">{{ $text_total }} {{ $audit_trails_count }}</span>
     </div>
     <!-- /widget-header -->
-    
+
     <div class="widget-content">
     	<div class="table-responsive">
 			<table class="table table-striped table-bordered">
@@ -114,7 +114,7 @@
 					</tr>
 				</thead>
 				<tbody>
-				@if( !CommonHelper::arrayHasValue($audit_trails) ) 
+				@if( !CommonHelper::arrayHasValue($audit_trails) )
 					<tr class="font-size-13">
 						<td colspan="7" class="align-center">{{ $text_empty_results }}</td>
 					</tr>
@@ -135,8 +135,8 @@
 			</table>
 		</div>
 	</div>
-	
-	@if( CommonHelper::arrayHasValue($audit_trails) ) 
+
+	@if( CommonHelper::arrayHasValue($audit_trails) )
     <h6 class="paginate">
 		<span>{{ $audit_trails->appends($arrFilters)->links() }}</span>
 	</h6>
@@ -148,55 +148,55 @@ $(document).ready(function() {
     $('.date').datepicker({
       format: 'yyyy-mm-dd'
     });
-    
+
     // Submit Form
     $('#submitForm').click(function() {
     	$('#form-audit-trail').submit();
     });
-    
+
     $('#form-audit-trail input').keydown(function(e) {
 		if (e.keyCode == 13) {
 			$('#form-audit-trail').submit();
 		}
 	});
-    
+
     // Clear Form
     $('#clearForm').click(function() {
     	$('#filter_date_from').val('');
 		$('#filter_date_to').val('');
 		$('#filter_action').val('');
 		$('#filter_reference').val('');
-		
+
 		$('select').val('');
 		$('#form-audit-trail').submit();
     });
-	
+
 	// Export List
     $('#exportList').click(function() {
     	url = '';
-    	
+
 		var filter_date_from = $('#filter_date_from').val();
 		url += '?filter_date_from=' + encodeURIComponent(filter_date_from);
-		
+
 		var filter_date_to = $('#filter_date_to').val();
 		url += '&filter_date_to=' + encodeURIComponent(filter_date_to);
-		
+
 		var filter_module = $('select[name=\'filter_module\']').val();
 		url += '&filter_module=' + encodeURIComponent(filter_module);
-				
+
 		var filter_action = $('#filter_action').val();
 		url += '&filter_action=' + encodeURIComponent(filter_action);
-		
+
 		var filter_reference = $('#filter_reference').val();
 		url += '&filter_reference=' + encodeURIComponent(filter_reference);
-		
+
 		var filter_user = $('select[name=\'filter_user\']').val();
 		url += '&filter_user=' + encodeURIComponent(filter_user);
-		
+
 		url += '&sort=' + encodeURIComponent('{{ $sort }}');
 		url += '&order=' + encodeURIComponent('{{ $order }}');
-		
+
       	location = "{{ $url_export }}" + url;
     });
-});	
+});
 </script>

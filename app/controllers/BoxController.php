@@ -16,13 +16,13 @@ class BoxController extends BaseController {
 	public function index()
 	{
 		if (Session::has('permissions')) {
-	    	if (!in_array('CanAccessBoxCreation', unserialize(Session::get('permissions')))){  
+	    	if (!in_array('CanAccessBoxingLoading', unserialize(Session::get('permissions')))){
 	    			return Redirect::to('user/profile');
-			} 
+			}
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		$this->getList();
 	}
 
@@ -30,7 +30,7 @@ class BoxController extends BaseController {
 	{
 
 		$this->data['heading_title'] = Lang::get('box.heading_title');
-		
+
 		$this->data['entry_load'] = Lang::get('box.entry_load');
 		$this->data['entry_load_create'] = Lang::get('box.entry_load_create');
 
@@ -57,7 +57,7 @@ class BoxController extends BaseController {
 		$this->data['col_box_code'] 	= Lang::get('box.col_box_code');
 		$this->data['col_date_created'] = Lang::get('box.col_date_created');
 		$this->data['col_action'] 		= Lang::get('box.col_action');
-		
+
 		$this->data['button_search'] 	= Lang::get('general.button_search');
 		$this->data['button_clear'] 	= Lang::get('general.button_clear');
 
@@ -70,10 +70,10 @@ class BoxController extends BaseController {
 		// Message
 		$this->data['error'] = '';
 		if (Session::has('error')) $this->data['error'] = Session::get('error');
-		
+
 		$this->data['success'] = '';
 		if (Session::has('success')) $this->data['success'] = Session::get('success');
-		
+
 		$filter_store 		= Input::get('filter_store', NULL);
 		$filter_box_code	= Input::get('filter_box_code', NULL);
 
@@ -97,7 +97,7 @@ class BoxController extends BaseController {
 		// print_r($results);
 		$results_total 	= Box::getBoxesCount($arrParams);
 
-		
+
 
 		$this->data['arrFilters'] = array(
 									'filter_store' 			=> $filter_store,
@@ -146,16 +146,7 @@ class BoxController extends BaseController {
 
 	public function getBoxDetails() {
 		// Check Permissions
-		/*if (Session::has('permissions')) {
-	    	if (!in_array('CanAccessLetDownDetails', unserialize(Session::get('permissions'))))  {
-				return Redirect::to('letdown');
-			} elseif (Letdown::find(Input::get('id', NULL))==NULL) {
-				return Redirect::to('letdown')->with('error', Lang::get('letdown.error_letdown_details'));
-			}
-    	} else {
-			return Redirect::to('users/logout');
-		}
-		*/
+
 		$this->data = Lang::get('box');
 		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 		$this->data['text_total'] = Lang::get('general.text_total');
@@ -167,13 +158,13 @@ class BoxController extends BaseController {
 		// URL
 		$this->data['url_export'] = URL::to('box/export_detail');
 		$this->data['url_back'] = URL::to('box/list' . $this->setURL());
-		
+
 		// Message
 		$this->data['error'] = '';
 		if (Session::has('error')) {
 			$this->data['error'] = Session::get('error');
 		}
-		
+
 		$this->data['success'] = '';
 		if (Session::has('success')) {
 			$this->data['success'] = Session::get('success');
@@ -187,7 +178,7 @@ class BoxController extends BaseController {
 		$sort_back = Input::get('sort_back', 'sku');
 		$order_back = Input::get('order_back', 'ASC');
 		$page_back = Input::get('page_back', 1);
-		
+
 		// Details
 		$sort_detail = Input::get('sort', 'sku');
 		$order_detail = Input::get('order', 'ASC');
@@ -210,8 +201,8 @@ class BoxController extends BaseController {
 		// dd($box_code);
 		$results 		= BoxDetails::getBoxDetails($box_code, $arrParams);
 		DebugHelper::log(__METHOD__, $results);
-		$results_total 	= BoxDetails::getBoxDetails($box_code, $arrParams, true); 
-		// Pagination 
+		$results_total 	= BoxDetails::getBoxDetails($box_code, $arrParams, true);
+		// Pagination
 		$this->data['arrFilters'] = array(
 									'filter_box_code' => $filter_box_code,
 									'page_back'		=> $page_back,
@@ -228,7 +219,7 @@ class BoxController extends BaseController {
 
 		$this->data['boxes'] = Paginator::make($results, $results_total, 30);
 		$this->data['boxes_count'] = $results_total;
-		
+
 		$this->data['counter'] 	= $this->data['boxes']->getFrom();
 		$this->data['box_id'] = $box_id;
 		$this->data['box_code'] = $box_code;
@@ -236,11 +227,11 @@ class BoxController extends BaseController {
 		$this->data['filter_sku'] = $filter_sku;
 		$this->data['filter_store'] = $filter_store;
 		$this->data['filter_box_code'] = $filter_box_code;
-		
+
 		$this->data['sort'] = $sort_detail;
 		$this->data['order'] = $order_detail;
 		$this->data['page'] = $page_detail;
-		
+
 		// Details
 		$this->data['sort_back'] 	= $sort_back;
 		$this->data['order_back'] 	= $order_back;
@@ -253,14 +244,14 @@ class BoxController extends BaseController {
 		$order_sku = ($sort_detail=='sku' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		$order_store = ($sort_detail=='store' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		$order_box_code = ($sort_detail=='box_code' && $order_detail=='ASC') ? 'DESC' : 'ASC';
-		
+
 
 		$this->data['sort_sku'] = URL::to('box/detail' . $url . '&sort=sku&order=' . $order_sku, NULL, FALSE);
 		$this->data['sort_box_code'] = URL::to('box/detail' . $url . '&sort=box_code&order=' . $order_box_code, NULL, FALSE);
 		$this->data['sort_store'] = URL::to('box/detail' . $url . '&sort=store&order=' . $order_store, NULL, FALSE);
 
 		// Permissions
-		// $this->data['permissions'] = unserialize(Session::get('permissions'));
+		$this->data['permissions'] = unserialize(Session::get('permissions'));
 		$this->data['url_detail'] = URL::to('box/detail');
 
 		$this->layout->content = View::make('box.detail', $this->data);
@@ -276,14 +267,14 @@ class BoxController extends BaseController {
 
 			DB::beginTransaction();
 
-			foreach ($boxLists as $boxCode) 
+			foreach ($boxLists as $boxCode)
 			{
 				//get boxes info
 				$boxInfo = Box::getBoxList($boxCode);
 				if(empty($boxInfo)) throw new Exception("Box code does not exist");
 				$soNos = array_unique(explode(',', $boxInfo['so_no'])); //remove duplicate so_no
-				StoreOrder::updateLoadCode($soNos, $loadCode); 
-				
+				StoreOrder::updateLoadCode($soNos, $loadCode);
+
 				$pallete = Pallet::getOrCreatePallete($boxInfo['store_code'], $loadCode);
 				PalletDetails::create(array(
 					'box_code' 		=> $boxCode, //$boxInfo['box_code'],
@@ -304,7 +295,7 @@ class BoxController extends BaseController {
 							'pl_status'	=> Config::get('picking_statuses.closed'),
 							'updated_at' => date('Y-m-d H:i:s')));
 					DebugHelper::log(__METHOD__, $isSuccess);
-					if($isSuccess) self::createJdaTransaction($boxInfo);					
+					if($isSuccess) self::createJdaTransaction($boxInfo);
 				}
 			}
 			self::loadBoxesAuditTrail($boxLists, $loadCode);
@@ -324,7 +315,7 @@ class BoxController extends BaseController {
 			'jda_action'	=> Config::get('transactions.jda_action_picklist'),
 			'reference'		=> $data['move_doc_number']
 		);
-		//create jda transaction for picklist closing 
+		//create jda transaction for picklist closing
 		JdaTransaction::insert($picklistParams);
 		Log::info(__METHOD__ .' dump: '.print_r($data['move_doc_number'],true));
 		$getUniqueBox = BoxDetails::getUniqueBoxPerDocNo($data['move_doc_number']);
@@ -335,7 +326,7 @@ class BoxController extends BaseController {
 			'reference'		=> $getUniqueBox['box_code']
 		);
 		//create jda transaction for box header
-		$boxResp = JdaTransaction::insert($boxParams);		
+		$boxResp = JdaTransaction::insert($boxParams);
 
 		if(is_array($getUniqueBox)) {
 
@@ -366,7 +357,7 @@ class BoxController extends BaseController {
 		//create jda transaction for pallete to box
 		$palletBoxResp = JdaTransaction::insert($palletizeBoxParams);
 
-						
+
 		$loadingParams = array(
 			'module' 		=> Config::get('transactions.module_loading'),
 			'jda_action'	=> Config::get('transactions.jda_action_loading'),
@@ -380,7 +371,7 @@ class BoxController extends BaseController {
 		$palletNo 			= $getPallet['pallet_code'];
 		$loadNo 			= $getLoad['load_code'];
 	}
-		
+
 	protected function getLoadCodes()
 	{
 		$loadCodes = Load::getLoadCodes();
@@ -393,12 +384,12 @@ class BoxController extends BaseController {
 	* @example  www.example.com/picking/new/load
 	*
 	* @return load code
-	*/ 
+	*/
 	public function generateLoadCode()
 	{
 		$loadMax =  Load::select(DB::raw('max(id) as max_created, max(load_code) as load_code'))->first()->toArray();
 		;
-		
+
 		if($loadMax['max_created'] === null) {
 			$loadCode = 'LD0000001';
 		} else {
@@ -406,7 +397,7 @@ class BoxController extends BaseController {
 			$loadCode = (int) $loadCode + 1;
 			$loadCode = 'LD' . sprintf("%07s", (int)$loadCode);
 		}
-		
+
 		Load::create(array(
 			'load_code'	=> $loadCode)
 			);
@@ -432,7 +423,7 @@ class BoxController extends BaseController {
 		$this->data['button_back'] = Lang::get('box.button_back');
 
 		$this->data['error_required_fields'] = Lang::get('box.error_required_fields');
-		
+
 		$this->data['url_back'] = URL::to('box/list' . $this->setURL());
 		$this->data['url_create'] = 'box/create' . $this->setURL();
 
@@ -458,7 +449,7 @@ class BoxController extends BaseController {
 	{
 		self::checkPermissions('CanEditBoxes');
 		$boxCode = Input::get('box_code');
- 
+
 		$this->data['heading_title_update'] = Lang::get('box.heading_title_update');
 
 		$this->data['entry_store'] = Lang::get('box.entry_store');
@@ -472,7 +463,7 @@ class BoxController extends BaseController {
 		$this->data['button_back'] = Lang::get('box.button_back');
 
 		$this->data['error_required_fields'] = Lang::get('box.error_required_fields');
-		
+
 		$this->data['url_back'] = URL::to('box/list' . $this->setURL());
 		$this->data['url_update'] = 'box/update'. $this->setURL();
 
@@ -503,17 +494,9 @@ class BoxController extends BaseController {
 	public function exportDetailsCSV() {
 		//TODO
 		///Check Permissions
-		/*if (Session::has('permissions')) {
-	    	if (!in_array('CanExportLetDownDetails', unserialize(Session::get('permissions'))))  {
-				return Redirect::to('letdown' . $this->setURL());
-			}
-    	} else {
-			return Redirect::to('users/logout');
-		}*/
-		
 		// if (BoxDetails::find(Input::get('box_code', NULL))!=NULL) {
 			$box_code = Input::get('box_code', NULL);
-			
+
 			$arrParams = array(
 							'sort'			=> Input::get('sort', 'sku'),
 							'order'			=> Input::get('order', 'ASC'),
@@ -524,36 +507,36 @@ class BoxController extends BaseController {
 							'page'			=> NULL,
 							'limit'			=> NULL
 						);
-	
+
 			// $ld_info = Letdown::getLetDownInfo($ld_id);
 			$results = BoxDetails::getBoxDetails($box_code, $arrParams);
 
 			$output = Lang::get('box.col_upc'). ',';
 			$output .= Lang::get('box.col_box_code'). ',';
 			$output .= Lang::get('box.col_moved_qty'). "\n";
-		
 
-		    foreach ($results as $key => $value) 
+
+		    foreach ($results as $key => $value)
 		    {
-		  
+
 		    	$exportData = array(
-		    						'"' . $value->sku . '"', 
-		    						'"' . $value->box_code . '"', 
+		    						'"' . $value->sku . '"',
+		    						'"' . $value->box_code . '"',
 		    						'"' . $value->moved_qty . '"'
 		    					);
-		  		
+
 		      	$output .= implode(",", $exportData);
 		      	$output .= "\n";
 		  	}
 
-		  	
+
 			$headers = array(
 				'Content-Type' => 'text/csv',
 				'Content-Disposition' => 'attachment; filename="box_details_' . $box_code . '_' . date('Ymd')  . '_' . time() . '.csv"',
 			);
-	
+
 			return Response::make(rtrim($output, "\n"), 200, $headers);
-		// } 
+		// }
 
 		// return;
 	}
@@ -582,14 +565,14 @@ class BoxController extends BaseController {
 		foreach ($results as $key => $value) {
 			$inUse = ($value['in_use']  == 1) ? 'True' : 'False';
 	    	$exportData = array(
-	    						'"' . $value['id'] . '"', 
-	    						'"' . $value['store_name'] . '"', 
-	    						'"' . $value['store_code'] . '"', 
-	    						'"' . $value['box_code'] . '"', 
-	    						'"' . $inUse . '"', 
-	    						'"' . date("M d, Y", strtotime($value['created_at'])) . '"', 
+	    						'"' . $value['id'] . '"',
+	    						'"' . $value['store_name'] . '"',
+	    						'"' . $value['store_code'] . '"',
+	    						'"' . $value['box_code'] . '"',
+	    						'"' . $inUse . '"',
+	    						'"' . date("M d, Y", strtotime($value['created_at'])) . '"',
 	    					);
-	  		
+
 	      	$output .= implode(",", $exportData);
 	      	$output .= "\n";
 	  	}
@@ -623,7 +606,7 @@ class BoxController extends BaseController {
 	}
 
 	public function postUpdateBox()
-	{	
+	{
 		self::checkPermissions('CanEditBoxes');
 		try {
 			$input = Input::all();
@@ -640,7 +623,7 @@ class BoxController extends BaseController {
 			DB::rollback();
 			return Redirect::to(URL::to('box/update' . $this->setURL() . '&box_code=' . $input['box_code']))->withErrors(Lang::get('box.text_fail_update') . ': ' . $input['box_code']);
 		}
-		
+
 	}
 
 	public function postCreateBox()
@@ -649,10 +632,10 @@ class BoxController extends BaseController {
 		try {
 			#box format: [{storecode}-00001] (eg 005-00001)
 			$input = Input::all();
-			
+
 			DB::beginTransaction();
 			if(! is_numeric($input['box_range']) || (int) $input['box_range'] == 0 ) throw new Exception ('Invalid input.');
-			
+
 			$storeCode = $input['store'];
 			$numberOfBoxes = (int)$input['box_range'];
 
@@ -660,11 +643,11 @@ class BoxController extends BaseController {
 			else if(strlen($storeCode) == 2) $newStoreCodeFormat = "0{$storeCode}-";
 			else if(strlen($storeCode) == 3) $newStoreCodeFormat = "{$storeCode}-";
 			else throw new Exception("Invalid store");
-			
+
 			#check if a record exist in that store
 			$box = Box::where('box_code', 'LIKE', "{$newStoreCodeFormat}%")->max('box_code');
 			#if result is empty follow the format
-			if($box == null) $box = $newStoreCodeFormat."00000"; 
+			if($box == null) $box = $newStoreCodeFormat."00000";
 			#if exists get the latest then increment box
 			$formattedBoxCode = array();
 			$containerBox = array(); //use for audit trail
@@ -676,12 +659,12 @@ class BoxController extends BaseController {
 				$formattedBoxCode[$number]['created_at'] = date('Y-m-d H:i:s');
 				$containerBox[] = $newStoreCodeFormat . sprintf("%05s", (int)$boxCode);
 			}
-			
+
 			Box::insert($formattedBoxCode);
-			
+
 			$storeName = Store::getStoreName($storeCode);
 			$boxCodeInString = implode(',', $containerBox);
-			
+
 			self::postCreateBoxAuditTrail($boxCodeInString, $storeName);
 			DB::commit();
 			return Redirect::to(URL::to('box/create' . $this->setURL()))->with('message', Lang::get('box.text_success_create'));
@@ -690,7 +673,7 @@ class BoxController extends BaseController {
 			// return Redirect::to(URL::to('box/create' . $this->setURL()))->withErrors(Lang::get('box.text_fail_create') . ': ' . $input['store']);
 			return Redirect::to(URL::to('box/create' . $this->setURL()))->withErrors($e->getMessage());
 		}
-		
+
 	}
 
 
@@ -721,17 +704,17 @@ class BoxController extends BaseController {
 			$url .= '&box_code=' . Input::get('box_code', 'NULL');
 			$url .= '&sort=' . Input::get('sort', 'box_code');
 			$url .= '&order=' . Input::get('order', 'ASC');
-			$url .= '&page=' . Input::get('page', 1);	
+			$url .= '&page=' . Input::get('page', 1);
 		}
-		
+
 		return $url;
 	}
 
 	protected function postCreateBoxAuditTrail($boxCode, $storeName)
-	{	
+	{
 		$dataBefore = '';
 		$dataAfter = 'User '. $this->user->username . ' created a box with code ' . $boxCode. ' for ' . $storeName;
-		
+
 		$arrParams = array(
 						'module'		=> Config::get('audit_trail_modules.boxing'),
 						'action'		=> Config::get('audit_trail.create_box'),
@@ -746,11 +729,11 @@ class BoxController extends BaseController {
 	}
 
 	protected function postUpdateBoxAuditTrail($boxCode, $storeName)
-	{	
+	{
 		$user = User::find(Auth::user()->id);
 		$dataBefore = '';
 		$dataAfter = 'User '. $this->user->username . ' reassigned box with code ' . $boxCode. ' to ' . $storeName;
-		
+
 		$arrParams = array(
 						'module'		=> Config::get('audit_trail_modules.boxing'),
 						'action'		=> Config::get('audit_trail.update_box'),
@@ -765,11 +748,11 @@ class BoxController extends BaseController {
 	}
 
 	protected function deleteBoxesAuditTrail($boxCode)
-	{	
-		
+	{
+
 		$dataBefore = '';
 		$dataAfter = 'User '. $this->user->username . ' deleted box/es with code ' . $boxCode . '.';
-		
+
 		$arrParams = array(
 						'module'		=> Config::get('audit_trail_modules.boxing'),
 						'action'		=> Config::get('audit_trail.delete_box'),
@@ -790,7 +773,7 @@ class BoxController extends BaseController {
 	*
 	* @param  $loadCodeload code
 	* @return void
-	*/ 
+	*/
 	private function generateLoadCodeAuditTrail($loadCode)
 	{
 		$data_after = 'Load code # '.$loadCode . ' generated by' . Auth::user()->username;
@@ -815,7 +798,7 @@ class BoxController extends BaseController {
 	* @param  $boxCodes 	box codes
 	* @param  $loadCode 		load code
 	* @return void
-	*/ 
+	*/
 	private function loadBoxesAuditTrail($boxCodes, $loadCode)
 	{
 		$boxCodes = implode(',', $boxCodes);

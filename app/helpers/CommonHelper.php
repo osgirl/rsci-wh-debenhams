@@ -1,18 +1,18 @@
 <?php
 /**
 * Common functions such as random numbers, string manipulations/validations
-* 
+*
 * @package 		SSI-WMS
 * @subpackage 	Common
 * @category    	Helpers
 * @author 		Dean Francis Casili | fcasili2stratpoint.com | dean.casili@gmail.com
 * @version 		Version 1.0
-* 
+*
 */
 class CommonHelper {
     /**
     * check variable is empty
-    * 
+    *
     * @param 	$var		variable to be analyzed
     * @return 	(boolean)
     **/
@@ -35,7 +35,7 @@ class CommonHelper {
 
     /**
     * checks if variable is a valid array and not empty
-    * 
+    *
     * @param    $arr        array variable to be analyzed
     * @return   (boolean)
     **/
@@ -58,7 +58,7 @@ class CommonHelper {
 
     /**
     * returns null if the variable is empty
-    * 
+    *
     * @param    $var        variable to be analyzed
     * @return   (mixed)
     **/
@@ -69,7 +69,7 @@ class CommonHelper {
 
     /**
     * check variable is numeric and has value
-    * 
+    *
     * @param    $var        variable to be analyzed
     * @return   (boolean)
     **/
@@ -86,7 +86,7 @@ class CommonHelper {
 
     /**
     * recursively converts object to array
-    * 
+    *
     * @param (object)   $data   object to be converted to array
     * @return (object)
     **/
@@ -104,7 +104,7 @@ class CommonHelper {
 
     /**
     * searches a specific array item based on key
-    * 
+    *
     * @param (string)   $item           the needle
     * @param (string)   $array_key      key of the array to be compared with the needle
     * @param (string)   $array_items    the haystak
@@ -125,18 +125,19 @@ class CommonHelper {
         }
         return $array_val;
     }
-    
+
     /**
     * checks if the value is in the array
-    * 
+    *
     * @param (string)   $item           the needle
     * @param (string)   $array_items    the haystak
     * @return (boolean)
     **/
     public static function valueInArray($item, $array_items)
     {
+        // print_r()
         if(! CommonHelper::arrayHasValue($array_items)) return FALSE;
-        
+
         if (in_array($item, $array_items)) {
         	return TRUE;
         } else {
@@ -191,17 +192,17 @@ class CommonHelper {
     * @example  Commonhelper::execInBackground();
     *
     * @param  $cmd       string command to execute
-    * @return 
+    * @return
     */
-    public static function execInBackground($cmd) 
-    { 
+    public static function execInBackground($cmd)
+    {
         $cmd = 'nohup php -q ' . __DIR__.'/../../app/cron/jda/' . $cmd;
     	$outputfile = __DIR__.'/../../app/cron/jda/logs/output.log';
     	$pidfile = __DIR__.'/../../app/cron/jda/logs/pidfile.log';
-    	
+
         // exec(sprintf("%s > %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));
         // exec($cmd . " >/dev/null 2> /dev/null & echo $!");
         exec($cmd . " > /dev/null &");
-    } 
+    }
 
 }

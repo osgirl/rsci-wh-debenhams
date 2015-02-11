@@ -23,7 +23,7 @@ class PicklistController extends BaseController {
 	public function showIndex() {
 		// Check Permissions
 		if (Session::has('permissions')) {
-	    	if (!in_array('CanAccessPicking', unserialize(Session::get('permissions'))))  {
+	    	if (!in_array('CanAccessPacking', unserialize(Session::get('permissions'))))  {
 	    		return Redirect::to('purchase_order');
 			}
     	} else {
@@ -233,7 +233,7 @@ class PicklistController extends BaseController {
 
 	public function getPicklistDetails()
 	{
-		$this->checkPermissions('CanAccessPickingDetails');
+		$this->checkPermissions('CanAccessPackingDetails');
 		$picklistDoc = Input::get('picklist_doc', NULL);
 
 		if($picklistDoc == NULL) return Redirect::to('picking/list')->withError(Lang::get('picking.error_not_exist'));
@@ -842,6 +842,13 @@ class PicklistController extends BaseController {
 	}*/
 
 	public function assignPilerForm() {
+		if (Session::has('permissions')) {
+	    	if (!in_array('CanAssignPacking', unserialize(Session::get('permissions'))))  {
+	    		return Redirect::to('purchase_order');
+			}
+    	} else {
+			return Redirect::to('users/logout');
+		}
 		$this->data                     = Lang::get('picking');
 		$this->data['doc_no']           = Input::get('doc_no');
 
@@ -866,14 +873,6 @@ class PicklistController extends BaseController {
 	*/
 	public function assignToStockPiler() {
 		// Check Permissions
-		/*if (Session::has('permissions')) {
-	    	if (!in_array('CanAssignPurchaseOrders', unserialize(Session::get('permissions'))) || !in_array('CanAssignPurchaseOrderDetails', unserialize(Session::get('permissions'))))  {
-				return Redirect::to('user/profile');
-			}
-    	} else {
-			return Redirect::to('users/logout');
-		}*/
-
 		$pilers = implode(',' , Input::get('stock_piler'));
 
 

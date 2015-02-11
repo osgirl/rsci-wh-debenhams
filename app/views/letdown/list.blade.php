@@ -53,7 +53,7 @@
 		@endif
 	</div>
 	<div class="div-buttons">
-		@if ( CommonHelper::valueInArray('CanExportStoreOrders', $permissions) )
+		@if ( CommonHelper::valueInArray('CanExportLetdown', $permissions) )
 		<a href="{{$url_export}}" class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
 		@endif
 		<!-- @if ( CommonHelper::valueInArray('CanViewLetdownLockTags', $permissions) )
@@ -91,7 +91,7 @@
 						<td class="align-center">
 
 						  	<!--For letdown close-->
-						  	@if ( CommonHelper::valueInArray('CanCloseLetDown', $permissions))
+						  	@if ( CommonHelper::valueInArray('CanAccessLetdown', $permissions))
 							  	@if($ld->lt_status == Config::get('letdown_statuses.moved'))
 									<a style="width: 70px;" class="btn btn-success closeLetdown" data-id="{{ $ld->id }}">{{ $button_close_letdown }}</a>
 								@elseif ($ld->lt_status == Config::get('letdown_statuses.closed'))

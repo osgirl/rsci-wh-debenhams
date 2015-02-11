@@ -85,9 +85,11 @@
 		<!-- <a  class="btn btn-info" id="generate-load">{{ $button_add_store }}</a> -->
 		<!-- @endif -->
 		<!-- <a role="button" class="btn btn-info multi-change-to-store" title="{{ $button_change_to_store }}" data-toggle="modal">{{ $button_change_to_store }}</a> -->
-		@if ( CommonHelper::valueInArray('CanExportPickingDocuments', $permissions) )
-		<a role="button" class="btn btn-info btn-darkblue assignPicklist" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a>
-		<a href="{{$url_export}}" class="btn btn-info btn-darkblue">{{ $button_export }}</a>
+		@if ( CommonHelper::valueInArray('CanAssignPacking', $permissions) || CommonHelper::valueInArray('CanEditPicklist', $permissions))
+			<a role="button" class="btn btn-info btn-darkblue assignPicklist" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a>
+		@endif
+		@if ( CommonHelper::valueInArray('CanExportPacking', $permissions) )
+			<a href="{{$url_export}}" class="btn btn-info btn-darkblue">{{ $button_export }}</a>
 		@endif
 
 		@if ( CommonHelper::valueInArray('CanViewPickingLockTags', $permissions) )
@@ -107,7 +109,7 @@
     	<div class="table-responsive">
 			<table class="table table-striped table-bordered">
 				<thead>
-					@if ( CommonHelper::valueInArray('CanLoadPicking', $permissions) || CommonHelper::valueInArray('CanEditPicklist', $permissions))
+					@if ( CommonHelper::valueInArray('CanAssignPacking', $permissions) || CommonHelper::valueInArray('CanEditPicklist', $permissions))
 			  		{{ Form::open(array('url'=>$url_change_to_store,'id' => 'form-picking-change', 'style' => 'margin: 0px;', 'method'=> 'post')) }}
 						{{ Form::hidden('filter_type', $filter_type) }}
 						{{ Form::hidden('filter_doc_no', $filter_doc_no) }}
@@ -118,10 +120,9 @@
 						{{ Form::hidden('module', 'picklist') }}
 						{{ Form::hidden('picklist_doc_no', '', array('id'=>'picklist-docno-change' )) }}
 			  		{{ Form::close() }}
-						<th style="width: 20px;" class="align-center"><input type="checkbox" id="main-selected" /></th>
+					<th style="width: 20px;" class="align-center"><input type="checkbox" id="main-selected" /></th>
 					@endif
 					<th>{{ $col_no }}</th>
-					<!-- <th>{{ $col_type }}</th> -->
 					<th><a href="{{ $sort_doc_no }}" class="@if( $sort=='doc_no' ) {{ $order }} @endif">{{ $col_doc_no }}</a></th>
 					<th>STORE</th>
 					<th>{{ $col_receiving_stock_piler }}</th>
@@ -135,7 +136,7 @@
 				@else
 					@foreach( $picklist as $value )
 						<tr class="font-size-13 tblrow" data-id="{{ $value['move_doc_number'] }}">
-							@if ( CommonHelper::valueInArray('CanLoadPicking', $permissions) )
+							@if ( CommonHelper::valueInArray('CanAssignPacking', $permissions) )
 							<td class="align-center">
 								@if($value['data_display'] == 'Open' || $value['data_display'] == 'Assigned')
 								<input type="checkbox" class="checkbox item-selected" name="selected[]" id="selected-{{ $value['move_doc_number'] }}" value="{{ $value['move_doc_number'] }}" />
@@ -145,7 +146,7 @@
 							<td>{{ $counter++ }}</td>
 							<!-- <td>{{ $value['type'] }}</td> -->
 							<td>
-      							@if( CommonHelper::valueInArray('CanAccessPickingDetails', $permissions))
+      							@if( CommonHelper::valueInArray('CanAccessPacking', $permissions))
 								<a href="{{$url_detail}}&picklist_doc={{$value['move_doc_number']}}">{{ $value['move_doc_number'] }}
 								@else
 								{{ $value['move_doc_number'] }}
@@ -154,8 +155,7 @@
 							<td>{{ Store::getStoreName($value['store_code']) }}</td>
 							<td>{{ $value['fullname'] }}</td>
 							<td>{{ $value['data_display'] }}</td>
-							@if ( CommonHelper::valueInArray('CanLoadPicking', $permissions)  || CommonHelper::valueInArray('CanEditPicklist', $permissions))
-								<td class="align-center">
+							<td class="align-center">
 								@if($value['data_display'] === 'Posted')
 									<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_posted }}</a>
 								@elseif ($value['data_display'] === 'Done')
@@ -168,7 +168,6 @@
 									{{ Form::hidden('doc_no', $value['move_doc_number']) }}
 									{{ Form::hidden('module', 'picklist') }}
 						  		{{ Form::close() }}
-							@endif <!--End of checking if either of the permissions are present-->
 							</td>
 
 						</tr>

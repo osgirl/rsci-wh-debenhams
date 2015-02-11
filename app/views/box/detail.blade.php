@@ -1,6 +1,8 @@
 <div class="control-group">
-	<a href="{{ $url_back }}" class="btn btn-info"> <i class="icon-chevron-left"></i> {{ $button_back }}</a>	
-	<a class="btn btn-info" id="exportList">{{ $button_export }}</a>
+	<a href="{{ $url_back }}" class="btn btn-info btn-darkblue"> <i class="icon-chevron-left"></i> {{ $button_back }}</a>
+	@if ( CommonHelper::valueInArray('CanExportBoxingLoading', $permissions) )
+	<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
+	@endif
 
 </div>
 
@@ -19,7 +21,7 @@
 				        </div>
 			      	</div>
 			      	<div class="span11 control-group collapse-border-top">
-			      		<a class="btn btn-success" id="submitForm">{{ $button_search }}</a>
+			      		<a class="btn btn-success btn-darkblue" id="submitForm">{{ $button_search }}</a>
 		      			<a class="btn" id="clearForm">{{ $button_clear }}</a>
 			      	</div>
             </div>
@@ -30,17 +32,17 @@
             {{ Form::hidden('sort', $sort) }}
 		    {{ Form::hidden('order', $order) }}
             {{ Form::hidden('id',  $box_id) }}
-            
+
             {{ Form::close() }}
           </div>
       	</div>
-          
-	</div> <!-- /controls -->	
+
+	</div> <!-- /controls -->
 </div> <!-- /control-group -->
 
 <div class="clear">
 	<div class="div-paginate">
-		@if(CommonHelper::arrayHasValue($boxes) ) 
+		@if(CommonHelper::arrayHasValue($boxes) )
 		    <h6 class="paginate">
 				<span>{{ $boxes->appends($arrFilters)->links() }}&nbsp;</span>
 			</h6>
@@ -68,7 +70,7 @@
 						<th>{{ $col_moved_qty }}</th>
 					</tr>
 				</thead>
-				@if( !CommonHelper::arrayHasValue($boxes) ) 
+				@if( !CommonHelper::arrayHasValue($boxes) )
 				<tr class="font-size-13">
 					<td colspan="6" class="align-center">{{ $text_empty_results }}</td>
 				</tr>
@@ -80,20 +82,20 @@
 						<td>{{ $box->short_description }}</td>
 						<td>{{ $box->box_code }}</td>
 						<td>{{ $box->moved_qty }}</td>
-						
+
 					</tr>
 					@endforeach
-				@endif				
+				@endif
 			</table>
 		</div>
 	</div>
-	
-	@if( CommonHelper::arrayHasValue($boxes) ) 
+
+	@if( CommonHelper::arrayHasValue($boxes) )
     <h6 class="paginate">
 		<span>{{ $boxes->appends($arrFilters)->links() }}</span>
 	</h6>
 	@endif
-	
+
 </div>
 
 <script type="text/javascript">
@@ -102,17 +104,17 @@ $(document).ready(function() {
     // Close Letdown
     $('#closeLetdownDetailButton').click(function() {
     	var answer = confirm('{{ $text_warning }}');
-			
+
 		if (answer) {
 	    	$('#closeLetdown').submit();
 		}
     });
-	
+
 	// Export List
     $('#exportList').click(function() {
     	url = '';
-    	
-    	url += '?box_code=' + encodeURIComponent('{{ $box_code }}');		
+
+    	url += '?box_code=' + encodeURIComponent('{{ $box_code }}');
 		url += '&sort=' + encodeURIComponent('{{ $sort }}');
 		url += '&order=' + encodeURIComponent('{{ $order }}');
 
@@ -133,8 +135,8 @@ $(document).ready(function() {
     // Clear Form
     $('#clearForm').click(function() {
     	$('#filter_sku').val('');
-		
+
 		$('#form-box-detail').submit();
     });
-});	
+});
 </script>

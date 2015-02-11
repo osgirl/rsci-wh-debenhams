@@ -9,20 +9,20 @@ class StoreOrderController extends BaseController {
 		$this->beforeFilter('auth', array('only'=> array('Dashboard')));
 		$this->apiUrl = Config::get('constant.api_url');
 	}
-	
+
 	public function showIndex() {
 		// Check Permissions
 		if (Session::has('permissions')) {
 	    	if (!in_array('CanAccessStoreOrders', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('user/profile');
-			} 
+			}
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		$this->getList();
 	}
-	
+
 
 	public function exportCSV() {
 		// Check Permissions
@@ -33,7 +33,7 @@ class StoreOrderController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		$arrParams = array(
 							'filter_so_no' 			=> Input::get('filter_so_no', NULL),
 							'filter_store' 			=> Input::get('filter_store', NULL),
@@ -56,20 +56,20 @@ class StoreOrderController extends BaseController {
 
 		$statusTypes = Dataset::getTypeWithValue("SO_STATUS_TYPE");
 	    foreach ($results as $key => $value) {
-	    	
+
 	    	$exportData = array(
-	    						'"' . $value->so_no . '"', 
-	    						'"' . $value->store_code . '"', 
-	    						'"' . $value->store_name . '"', 
-	    						'"' . date("M d, Y", strtotime($value->order_date)) . '"', 
-	    						'"' . $value->load_code. '"', 
+	    						'"' . $value->so_no . '"',
+	    						'"' . $value->store_code . '"',
+	    						'"' . $value->store_name . '"',
+	    						'"' . date("M d, Y", strtotime($value->order_date)) . '"',
+	    						'"' . $value->load_code. '"',
 	    						'"' . $statusTypes[$value->so_status] . '"'
 	    					);
-	  		
+
 	      	$output .= implode(",", $exportData);
 	      	$output .= "\n";
 	  	}
-	  	
+
 		$headers = array(
 			'Content-Type' => 'text/csv',
 			'Content-Disposition' => 'attachment; filename="store_order_' . date('Ymd')  . '_' . time() . '.csv"',
@@ -77,27 +77,27 @@ class StoreOrderController extends BaseController {
 
 		return Response::make(rtrim($output, "\n"), 200, $headers);
 	}
-	
+
 	public function exportDetailsCSV() {
 		///Check Permissions
 		if (Session::has('permissions')) {
-	    	if (!in_array('CanExportStoreOrderDetails', unserialize(Session::get('permissions'))))  {
+	    	if (!in_array('CanExportStoreOrders', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('store_order' . $this->setURL());
 			}
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		if (StoreOrder::find(Input::get('id', NULL))!=NULL) {
 			$so_id = Input::get('id', NULL);
-			
+
 			$arrParams = array(
 							'sort'		=> Input::get('sort_detail', 'sku'),
 							'order'		=> Input::get('order_detail', 'ASC'),
 							'page'		=> NULL,
 							'limit'		=> NULL
 						);
-	
+
 			$so_info = StoreOrder::getSOInfo($so_id);
 			$results = StoreOrderDetail::getSODetails($so_info->so_no, $arrParams);
 			DebugHelper::log(__METHOD__, $results);
@@ -107,27 +107,27 @@ class StoreOrderController extends BaseController {
 			$output .= Lang::get('store_order.col_ordered_quantity'). "\n";
 			// $output .= Lang::get('store_order.col_packed_quantity'). "\n";
 			// $output .= Lang::get('store_order.col_delivered_quantity'). "\n";
-			
+
 
 		    foreach ($results as $key => $value) {
 		    	$exportData = array(
-		    						// '"' . $value->sku . '"', 
-		    						'"' . $value->upc . '"', 
-		    						'"' . $value->short_description . '"', 
+		    						// '"' . $value->sku . '"',
+		    						'"' . $value->upc . '"',
+		    						'"' . $value->short_description . '"',
 		    						'"' . $value->ordered_qty . '"'
 		    						// '"' . $value->packed_qty . '"'
 		    						// '"' . $value->delivered_qty . '"'
 		    					);
-		  		
+
 		      	$output .= implode(",", $exportData);
 		      	$output .= "\n";
 		  	}
-		  	
+
 			$headers = array(
 				'Content-Type' => 'text/csv',
 				'Content-Disposition' => 'attachment; filename="store_order_details_' . $so_info->so_no . '_' . date('Ymd')  . '_' . time() . '.csv"',
 			);
-	
+
 			return Response::make(rtrim($output, "\n"), 200, $headers);
 		}
 	}
@@ -135,23 +135,23 @@ class StoreOrderController extends BaseController {
 	public function exportMTSCSV() {
 		///Check Permissions
 		if (Session::has('permissions')) {
-	    	if (!in_array('CanExportStoreOrderDetails', unserialize(Session::get('permissions'))))  {
+	    	if (!in_array('CanExportStoreOrders', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('store_order' . $this->setURL());
 			}
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		if (StoreOrder::find(Input::get('id', NULL))!=NULL) {
 			$so_id = Input::get('id', NULL);
-			
+
 			$arrParams = array(
 							'sort'		=> Input::get('sort_detail', 'sku'),
 							'order'		=> Input::get('order_detail', 'ASC'),
 							'page'		=> NULL,
 							'limit'		=> NULL
 						);
-	
+
 			$so_info = StoreOrder::getSOInfo($so_id);
 			$results = StoreOrderDetail::getMtsDetails($so_info->so_no, $arrParams);
 			DebugHelper::log(__METHOD__, $results);
@@ -163,36 +163,36 @@ class StoreOrderController extends BaseController {
 			$output .= Lang::get('store_order.col_issued'). ',';
 			$output .= Lang::get('store_order.col_received'). ',';
 			$output .= Lang::get('store_order.col_damaged'). "\n";
-			
+
 
 		    foreach ($results as $key => $value) {
 		    	$exportData = array(
-		    						'"' . $value->load_code . '"', 
-		    						'"' . $value->box_code . '"', 
-		    						'"' . $value->upc . '"', 
-		    						'"' . $value->description . '"', 
-		    						// '"' . $value->ordered_qty . '"', 
+		    						'"' . $value->load_code . '"',
+		    						'"' . $value->box_code . '"',
+		    						'"' . $value->upc . '"',
+		    						'"' . $value->description . '"',
+		    						// '"' . $value->ordered_qty . '"',
 		    						'"' . $value->moved_qty . '"'
 		    						// '"' . $value->delivered_qty . '"'
 		    					);
-		  		
+
 		      	$output .= implode(",", $exportData);
 		      	$output .= "\n";
 		  	}
-		  	
+
 			$headers = array(
 				'Content-Type' => 'text/csv',
 				'Content-Disposition' => 'attachment; filename="store_order_mts_' . $so_info->so_no . '_' . date('Ymd')  . '_' . time() . '.csv"',
 			);
-	
+
 			return Response::make(rtrim($output, "\n"), 200, $headers);
 		}
 	}
-	
+
 	public function getSODetails() {
 		// Check Permissions
 		if (Session::has('permissions')) {
-	    	if (!in_array('CanAccessStoreOrderDetails', unserialize(Session::get('permissions'))))  {
+	    	if (!in_array('CanAccessStoreOrders', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('store_order');
 			} elseif (StoreOrder::find(Input::get('id', NULL))==NULL) {
 				return Redirect::to('store_order')->with('error', Lang::get('store_order.error_so_details'));
@@ -200,24 +200,24 @@ class StoreOrderController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		$this->data['heading_title_so_details'] = Lang::get('store_order.heading_title_so_details');
 		$this->data['heading_title_so_contents'] = Lang::get('store_order.heading_title_so_contents');
-		
+
 		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 		$this->data['text_total'] = Lang::get('general.text_total');
 		$this->data['text_select'] = Lang::get('general.text_select');
 		$this->data['text_print_manifest'] = Lang::get('store_order.text_print_manifest');
 		$this->data['text_closed_so'] = Lang::get('store_order.text_closed_so');
 		$this->data['text_warning'] = Lang::get('store_order.text_warning');
-		
+
 		$this->data['label_store_order_no'] = Lang::get('store_order.label_store_order_no');
 		$this->data['label_store'] = Lang::get('store_order.label_store');
 		$this->data['label_order_date'] = Lang::get('store_order.label_order_date');
 		$this->data['label_dispatch_date'] = Lang::get('store_order.label_dispatch_date');
 		$this->data['label_status'] = Lang::get('store_order.label_status');
 		$this->data['label_app_sync'] = Lang::get('store_order.label_app_sync');
-		
+
 		$this->data['col_id'] = Lang::get('store_order.col_id');
 		$this->data['col_upc'] = Lang::get('store_order.col_upc');
 		$this->data['col_short_name'] = Lang::get('store_order.col_short_name');
@@ -228,26 +228,26 @@ class StoreOrderController extends BaseController {
 		$this->data['col_slot_no'] = Lang::get('store_order.col_slot_no');
 		$this->data['col_expiry_date'] = Lang::get('store_order.col_expiry_date');
 		$this->data['col_moved_to_picking'] = Lang::get('store_order.col_moved_to_picking');
-		
+
 		$this->data['button_back'] = Lang::get('general.button_back');
 		$this->data['button_export'] = Lang::get('general.button_export');
 		$this->data['button_print_manifest'] = Lang::get('store_order.button_print_manifest');
-		
+
 		// URL
 		$this->data['url_export'] = URL::to('store_order/export_detail');
 		$this->data['url_back'] = URL::to('store_order' . $this->setURL());
-		
+
 		// Message
 		$this->data['error'] = '';
 		if (Session::has('error')) {
 			$this->data['error'] = Session::get('error');
 		}
-		
+
 		$this->data['success'] = '';
 		if (Session::has('success')) {
 			$this->data['success'] = Session::get('success');
 		}
-		
+
 		// Search Options
 		// Search Options
 		$this->data['so_status_type'] = Dataset::getTypeWithValue("SO_STATUS_TYPE");
@@ -255,22 +255,22 @@ class StoreOrderController extends BaseController {
 		if(CommonHelper::arrayHasValue($store_list)) {
 			foreach($store_list as $store){
 				$this->data['store_list'][$store] = $store;
-			} 
+			}
 		}
 		else {
 			$this->data['store_list'][] = NULL;
 		}
-		
+
 		// Search Filters
 		$filter_so_no = Input::get('filter_so_no', NULL);
 		$filter_store = Input::get('filter_store', NULL);
 		$filter_order_date = Input::get('filter_order_date', NULL);
 		$filter_status = Input::get('filter_status', NULL);
-		
+
 		$sort = Input::get('sort', 'so_no');
 		$order = Input::get('order', 'ASC');
 		$page = Input::get('page', 1);
-		
+
 		// Details
 		$sort_detail = Input::get('sort_detail', 'sku');
 		$order_detail = Input::get('order_detail', 'ASC');
@@ -302,19 +302,19 @@ class StoreOrderController extends BaseController {
 
 		$this->data['store_orders'] = Paginator::make($results, $results_total, 30);
 		$this->data['store_orders_count'] = $results_total;
-		
+
 		$this->data['counter'] 	= $this->data['store_orders']->getFrom();
-		
+
 		// Main
 		$this->data['filter_so_no'] = $filter_so_no;
 		$this->data['filter_store'] = $filter_store;
 		$this->data['filter_order_date'] = $filter_order_date;
 		$this->data['filter_status'] = $filter_status;
-		
+
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
 		$this->data['page'] = $page;
-		
+
 		// Details
 		$this->data['sort_detail'] = $sort_detail;
 		$this->data['order_detail'] = $order_detail;
@@ -348,7 +348,7 @@ class StoreOrderController extends BaseController {
 	public function getMtsDetails() {
 		// Check Permissions
 		if (Session::has('permissions')) {
-	    	if (!in_array('CanAccessStoreOrderDetails', unserialize(Session::get('permissions'))))  {
+	    	if (!in_array('CanAccessStoreOrders', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('store_order');
 			} elseif (StoreOrder::find(Input::get('id', NULL))==NULL) {
 				return Redirect::to('store_order')->with('error', Lang::get('store_order.error_so_details'));
@@ -356,30 +356,30 @@ class StoreOrderController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
-		
+
 		$this->data = Lang::get('store_order');
 		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 		$this->data['text_total'] = Lang::get('general.text_total');
 		$this->data['text_select'] = Lang::get('general.text_select');
-		
+
 		$this->data['button_back'] = Lang::get('general.button_back');
 		$this->data['button_export'] = Lang::get('general.button_export');
-		
+
 		// URL
 		$this->data['url_mts_export'] = URL::to('store_order/export_mts');
 		$this->data['url_back'] = URL::to('store_order' . $this->setURL());
-		
+
 		// Message
 		$this->data['error'] = '';
 		if (Session::has('error')) {
 			$this->data['error'] = Session::get('error');
 		}
-		
+
 		$this->data['success'] = '';
 		if (Session::has('success')) {
 			$this->data['success'] = Session::get('success');
 		}
-		
+
 		// Search Options
 		// Search Options
 		$this->data['so_status_type'] = Dataset::getTypeWithValue("SO_STATUS_TYPE");
@@ -387,22 +387,22 @@ class StoreOrderController extends BaseController {
 		if(CommonHelper::arrayHasValue($store_list)) {
 			foreach($store_list as $store){
 				$this->data['store_list'][$store] = $store;
-			} 
+			}
 		}
 		else {
 			$this->data['store_list'][] = NULL;
 		}
-		
+
 		// Search Filters
 		$filter_so_no = Input::get('filter_so_no', NULL);
 		$filter_store = Input::get('filter_store', NULL);
 		$filter_order_date = Input::get('filter_order_date', NULL);
 		$filter_status = Input::get('filter_status', NULL);
-		
+
 		$sort = Input::get('sort', 'so_no');
 		$order = Input::get('order', 'ASC');
 		$page = Input::get('page', 1);
-		
+
 		// Details
 		$sort_detail = Input::get('sort_detail', 'sku');
 		$order_detail = Input::get('order_detail', 'ASC');
@@ -434,19 +434,19 @@ class StoreOrderController extends BaseController {
 
 		$this->data['store_orders'] = Paginator::make($results, $results_total, 30);
 		$this->data['store_orders_count'] = $results_total;
-		
+
 		$this->data['counter'] 	= $this->data['store_orders']->getFrom();
-		
+
 		// Main
 		$this->data['filter_so_no'] = $filter_so_no;
 		$this->data['filter_store'] = $filter_store;
 		$this->data['filter_order_date'] = $filter_order_date;
 		$this->data['filter_status'] = $filter_status;
-		
+
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
 		$this->data['page'] = $page;
-		
+
 		// Details
 		$this->data['sort_detail'] = $sort_detail;
 		$this->data['order_detail'] = $order_detail;
@@ -476,22 +476,22 @@ class StoreOrderController extends BaseController {
 
 		$this->layout->content = View::make('store_order.mts_detail', $this->data);
 	}
-	
+
 	protected function getList() {
 		$this->data['heading_title'] = Lang::get('store_order.heading_title');
-		
+
 		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 		$this->data['text_total'] = Lang::get('general.text_total');
 		$this->data['text_select'] = Lang::get('general.text_select');
 		$this->data['text_closed_so'] = Lang::get('store_order.text_closed_so');
 		$this->data['text_warning'] = Lang::get('store_order.text_warning');
 		$this->data['text_confirm_assign'] = Lang::get('store_order.text_confirm_assign');
-		
+
 		$this->data['label_store_order_no'] = Lang::get('store_order.label_store_order_no');
 		$this->data['label_store'] = Lang::get('store_order.label_store');
 		$this->data['label_order_date'] = Lang::get('store_order.label_order_date');
 		$this->data['label_status'] = Lang::get('store_order.label_status');
-		
+
 		$this->data['col_id'] = Lang::get('store_order.col_id');
 		$this->data['col_so_no'] = Lang::get('store_order.col_so_no');
 		$this->data['col_store'] = Lang::get('store_order.col_store');
@@ -500,28 +500,28 @@ class StoreOrderController extends BaseController {
 		$this->data['col_status'] = Lang::get('store_order.col_status');
 		$this->data['col_load_code'] = Lang::get('store_order.col_load_code');
 		$this->data['col_action'] = Lang::get('store_order.col_action');
-		
+
 		$this->data['button_search'] = Lang::get('general.button_search');
 		$this->data['button_clear'] = Lang::get('general.button_clear');
 		$this->data['button_export'] = Lang::get('general.button_export');
 		$this->data['link_view_mts'] = Lang::get('general.link_view_mts');
-		
+
 		// URL
 		$this->data['url_export'] = URL::to('store_order/export');
 		$this->data['url_detail'] = URL::to('store_order/detail' . $this->setURL());
 		$this->data['url_mts_detail'] = URL::to('store_order/mts_detail' . $this->setURL());
-		
+
 		// Message
 		$this->data['error'] = '';
 		if (Session::has('error')) {
 			$this->data['error'] = Session::get('error');
 		}
-		
+
 		$this->data['success'] = '';
 		if (Session::has('success')) {
 			$this->data['success'] = Session::get('success');
 		}
-		
+
 		// Search Options
 		$this->data['so_status_type'] = Dataset::getTypeWithValue("SO_STATUS_TYPE");
 		$store_list 	  			  = StoreOrder::getStoreList();
@@ -529,7 +529,7 @@ class StoreOrderController extends BaseController {
 		if(CommonHelper::arrayHasValue($store_list)) {
 			foreach($store_list as $store){
 				$this->data['store_list'][$store] = $store;
-			} 
+			}
 		}
 		else {
 			$this->data['store_list'][] = NULL;
@@ -539,7 +539,7 @@ class StoreOrderController extends BaseController {
 		$filter_store = Input::get('filter_store', NULL);
 		$filter_order_date = Input::get('filter_order_date', NULL);
 		$filter_status = Input::get('filter_status', NULL);
-		
+
 		$sort = Input::get('sort', 'so_no');
 		$order = Input::get('order', 'ASC');
 		$page = Input::get('page', 1);
@@ -559,7 +559,7 @@ class StoreOrderController extends BaseController {
 		$results 		= StoreOrder::getSOList($arrParams);
 		// echo '<pre>'; dd($results);
 		$results_total 	= StoreOrder::getCount($arrParams);
-		
+
 		// Pagination
 		$this->data['arrFilters'] = array(
 									'filter_so_no' 			=> $filter_so_no,
@@ -572,14 +572,14 @@ class StoreOrderController extends BaseController {
 
 		$this->data['store_orders'] = Paginator::make($results, $results_total, 30);
 		$this->data['store_orders_count'] = $results_total;
-		
+
 		$this->data['counter'] 	= $this->data['store_orders']->getFrom();
 
 		$this->data['filter_so_no'] = $filter_so_no;
 		$this->data['filter_store'] = $filter_store;
 		$this->data['filter_order_date'] = $filter_order_date;
 		$this->data['filter_status'] = $filter_status;
-		
+
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
 		$this->data['page'] = $page;
@@ -612,7 +612,7 @@ class StoreOrderController extends BaseController {
 		$url .= '&sort=' . Input::get('sort', 'so_no');
 		$url .= '&order=' . Input::get('order', 'ASC');
 		$url .= '&page=' . Input::get('page', 1);
-		
+
 		return $url;
 	}
 
