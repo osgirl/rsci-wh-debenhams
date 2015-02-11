@@ -124,10 +124,13 @@ class Picklist extends Eloquent {
 	public static function getListByPiler($pilerId)
 	{
 		return Picklist::whereRaw('find_in_set('. $pilerId . ',assigned_to_user_id) > 0')
+			->where('data_code', '=', 'PICKLIST_STATUS_TYPE')
+			->where('data_value', '<>', 'closed')
 			->join('picklist_details', 'picklist.move_doc_number', '=', 'picklist_details.move_doc_number')
 			->join('stores', 'stores.store_code', '=', 'picklist_details.store_code')
+			->join('dataset', 'picklist.pl_status', '=', 'dataset.id')
 			->groupBy('picklist.move_doc_number')
-			->get(array('picklist.move_doc_number','stores.store_name', 'picklist_details.store_code'))
+			->get(array('picklist.move_doc_number','stores.store_name', 'picklist_details.store_code', 'data_value'))
 			->toArray();
 	}
 
