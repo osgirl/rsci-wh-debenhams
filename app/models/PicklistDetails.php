@@ -521,7 +521,7 @@ class PicklistDetails extends Eloquent {
 					->where('so_no', '=', $soNo)
 					->first();
 
-				$picklistDetail->moved_qty             = $qtyToMove;
+				$picklistDetail->moved_qty             = ($picklistDetail->moved_qty + $qtyToMove);
 				$picklistDetail->updated_at            = date('Y-m-d H:i:s');
 
 				# Save picklist to box
