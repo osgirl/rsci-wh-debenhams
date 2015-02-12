@@ -13,7 +13,7 @@ function mysql_credentials() {
 
 function jda_credentials() {
 	return array(
-	    'jda_lib' => 'MMFMTLIB',
+	    'jda_lib' => 'MMGSTLIB',
 	    'user'	=> 'STRATPGMR',
 	    'password' => 'PASSWORD'
 	);

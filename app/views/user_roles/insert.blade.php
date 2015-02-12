@@ -259,6 +259,21 @@
                         <td class="align-center">--</td>
                     </tr>
                     <tr>
+                        <td class="align-center font-12">{{ $module_unlisted }}</td>
+                        <td class="align-center"><input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessUnlisted" @if(CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessUnlisted', Input::old('permissions')) ) checked="checked" @endif /></td>
+                        <td class="align-center">--</td>
+                        <td class="align-center">--</td>
+                        <td class="align-center">--</td>
+                        <td class="align-center"><input type="checkbox" class="checkbox" name="permissions[]" value="CanExportUnlisted" @if(CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanExportUnlisted', Input::old('permissions')) ) checked="checked" @endif /></td>
+                        <td class="align-center">--</td>
+                        <td class="align-center">--</td>
+                        <td class="align-center">--</td>
+                        <td class="align-center">--</td>
+                        <td class="align-center">--</td>
+                        <td class="align-center">--</td>
+                        <td class="align-center">--</td>
+                    </tr>
+                    <tr>
                         <td class="align-center font-12">{{ $module_users }}</td>
                         <td class="align-center"><input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessUsers" @if(CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessUsers', Input::old('permissions')) ) checked="checked" @endif /></td>
                         <td class="align-center"><input type="checkbox" class="checkbox" name="permissions[]" value="CanInsertUsers" @if(CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanInsertUsers', Input::old('permissions')) ) checked="checked" @endif /></td>

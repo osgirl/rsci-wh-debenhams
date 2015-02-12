@@ -522,6 +522,33 @@
 						<td class="align-center">--</td>
                     </tr>
 
+                    <tr>
+						<td class="align-center font-12">{{ $module_unlisted }}</td>
+						<td class="align-center">
+							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessUnlisted', Input::old('permissions'))) || CommonHelper::valueInArray('CanAccessUnlisted', json_decode($user_role->permissions)))
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessUnlisted" checked="checked" />
+							@else
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessUnlisted" />
+							@endif
+						</td>
+						<td class="align-center">--</td>
+						<td class="align-center">--</td>
+						<td class="align-center">--</td>
+						<td class="align-center">
+							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanExportUnlisted', Input::old('permissions'))) || CommonHelper::valueInArray('CanExportUnlisted', json_decode($user_role->permissions)))
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanExportUnlisted" checked="checked" />
+							@else
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanExportUnlisted" />
+							@endif
+						</td>
+						<td class="align-center">--</td>
+						<td class="align-center">--</td>
+                    	<td class="align-center">--</td>
+						<td class="align-center">--</td>
+						<td class="align-center">--</td>
+						<td class="align-center">--</td>
+                    </tr>
+
 					<tr>
 						<td class="align-center font-12">{{ $module_users }}</td>
 						<td class="align-center">

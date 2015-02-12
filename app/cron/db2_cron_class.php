@@ -210,16 +210,20 @@ class cronDB2 {
 
 	public function purchaseOrder()
 	{
-
-		$sql = "SELECT POVNUM, POMRCV, PONUMB, POLOC, POSTAT
+// POMHDR.POFOB = carton
+// POBON = Back order
+// //POUNTS = total_qty
+// POSHP1 = shipment reference no
+		$sql = "SELECT POMRCH.POVNUM, POMRCH.POMRCV, POMRCH.PONUMB, POMRCH.POLOC, POMRCH.POSTAT, POMHDR.POFOB, POMRCH.POUNTS, POMRCH.POBON, POMHDR.POSHP1
 		        FROM POMRCH
-		        WHERE POSTAT = 3 AND POLOC = 9005"; // get PO with status=3/RELEASE
+		        LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB AND POMRCH.POBON = POMHDR.POBON
+		        WHERE POMRCH.POSTAT = 3 AND POMRCH.POLOC = 7000"; // get PO with status=3/RELEASE
 		        //FETCH FIRST 1 ROWS ONLY";
 
 		$query_result 	= $this->instance->runSQL($sql,true);
 		$filename 		= 'purchase_order_header';
 	    // vendor_id | receiver_no | purchase_order_no | destination | po_status
-		$header_column 	= array('vendor','receiver_no', 'po_no', 'destination', 'po_status');
+		$header_column 	= array('vendor','receiver_no', 'po_no', 'destination', 'po_status', 'carton_id', 'total_qty', 'back_order', 'shipment_reference_no');
 		$this->_export($query_result, $filename, $header_column, __METHOD__);
 	}
 
@@ -230,7 +234,7 @@ class cronDB2 {
 		        FROM POMRCD
 		        LEFT JOIN POMRCH ON POMRCH.POMRCV = POMRCD.POMRCV
 		        INNER JOIN INVUPC ON POMRCD.INUMBR = INVUPC.INUMBR
-		        WHERE POMRCH.POSTAT = 3 AND POMRCH.POLOC = 9005";
+		        WHERE POMRCH.POSTAT = 3 AND POMRCH.POLOC = 7000";
 		        //FETCH FIRST 1 ROWS ONLY";
 
 		$query_result 	= $this->instance->runSQL($sql,true);

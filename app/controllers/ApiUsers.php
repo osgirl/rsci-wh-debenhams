@@ -30,12 +30,14 @@ class ApiUsers extends BaseController {
 				}
 				//validate if user account has been deleted
 				if( $deleted_at > '0000-00-00 00:00:00' ) throw new Exception( 'Invalid username or password!');
+				$brandName = Brands::getBrandNameById(Auth::user()->brand_id);
 
 				$user_detail = array(
 								'user_id' 	=> Auth::user()->id,
 								'username' 	=> Auth::user()->username,
 								'barcode'	=> Auth::user()->barcode,
-								'role_id'	=> Auth::user()->role_id
+								'role_id'	=> Auth::user()->role_id,
+								'brand'  => $brandName[Auth::user()->brand_id]
 							);
 
 				if(Auth::user()->role_id == 4) $user_detail['store_code'] = Auth::user()->store_code;
@@ -82,12 +84,13 @@ class ApiUsers extends BaseController {
 			{
 				$user = $result->toArray();
 				//validate if user account has been deleted
-
+				$brandName = Brands::getBrandNameById($user['brand_id']);
 				$user_detail = array(
 								'user_id' 	=> $user['id'],
 								'username' 	=> $user['username'],
 								'barcode'	=> $user['barcode'],
-								'role_id'	=> $user['role_id']
+								'role_id'	=> $user['role_id'],
+								'brand'     => $brandName[$user['brand_id']]
 							);
 				return Response::json(array(
 					"error" => false,

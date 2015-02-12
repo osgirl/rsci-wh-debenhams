@@ -421,6 +421,8 @@ class PurchaseOrderController extends BaseController {
 							'filter_stock_piler' 	=> NULL,
 							'filter_status' 		=> NULL,
 							'filter_back_order' 	=> NULL,
+							'filter_brand'       => NULL,
+							'filter_division'	 => NULL,
 							'sort'                   => Input::get('sort', 'po_no'),
 							'order'                  => Input::get('order', 'ASC'),
 							'page'                   => NULL,

@@ -48,6 +48,7 @@ return array(
 	'module_audit_trail'            => 'Audit Trail',
 	'module_settings'               => 'Settings',
 	'module_stock_piler'            => 'Stock Piler',
+	'module_unlisted'	            => 'Unlisted',
 
 	'button_insert'                 => 'Add New User Role',
 	'button_delete'                 => 'Delete User Roles',

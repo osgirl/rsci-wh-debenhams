@@ -14,4 +14,8 @@ class Brands extends Eloquent {
 		return $result;
 	}
 
+	public static function getBrandNameById($id) {
+		return Brands::where('id', '=', $id)->lists('brand_code', 'id');
+	}
+
 }
