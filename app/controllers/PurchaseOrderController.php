@@ -112,8 +112,9 @@ class PurchaseOrderController extends BaseController {
 	public function closePO()
 	{
 		// Check Permissions
+		// echo "<pre>"; print_r(Session::get('permissions')); die();
 		if (Session::has('permissions')) {
-	    	if (!in_array('CanClosePurchaseOrders', unserialize(Session::get('permissions'))) || !in_array('CanClosePurchaseOrderDetails', unserialize(Session::get('permissions'))))  {
+	    	if (!in_array('CanClosePurchaseOrders', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('user/profile');
 			}
     	} else {
@@ -180,6 +181,7 @@ class PurchaseOrderController extends BaseController {
 
 			return Redirect::to('purchase_order/detail' . $url)->with('message', Lang::get('purchase_order.text_success_close_po'));
 		} else {
+
 			return Redirect::to('purchase_order' . $this->setURL())->with('message', Lang::get('purchase_order.text_success_close_po'));
 		}
 	}
