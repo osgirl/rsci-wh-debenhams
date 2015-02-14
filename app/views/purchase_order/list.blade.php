@@ -134,6 +134,7 @@
 						<th>{{ $col_carton_id }}</th>
 						<th><a href="{{ $sort_receiver_no }}" class="@if( $sort=='receiver_no' ) {{ $order }} @endif">{{ $col_receiver_no }}</a></th>
 						<th>{{ $col_receiving_stock_piler }}</th>
+						<th>{{ $col_slot }}</th>
 						<th><a href="{{ $sort_entry_date }}" class="@if( $sort=='entry_date' ) {{ $order }} @endif">{{ $col_entry_date }}</a></th>
 						<th>{{ $col_status }}</th>
 						<th class="align-center">{{ $col_action }}</th>
@@ -160,6 +161,7 @@
 						<td>{{ $po->carton_id }}</td>
 						<td><a href="{{ $url_detail . '&receiver_no=' . $po->receiver_no }}">{{$po->receiver_no}}</a></td>
 						<td>{{ $po->fullname }}</td>
+						<td>{{ $po->slot_code }}</td>
 						<td>{{ date("M d, Y", strtotime($po->created_at)) }}</td>
 						<td>{{ $po->data_display }}</td>
 						<td class="align-center">
