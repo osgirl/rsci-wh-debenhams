@@ -273,6 +273,22 @@
                         <td class="align-center">--</td>
                         <td class="align-center">--</td>
                     </tr>
+
+                    <tr>
+                        <td class="align-center font-12">{{ $module_expiry_items }}</td>
+                        <td class="align-center"><input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessExpiryItems" @if(CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessExpiryItems', Input::old('permissions')) ) checked="checked" @endif /></td>
+                        <td class="align-center">--</td>
+                        <td class="align-center">--</td>
+                        <td class="align-center">--</td>
+                        <td class="align-center"><input type="checkbox" class="checkbox" name="permissions[]" value="CanExportExpiryItems" @if(CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanExportExpiryItems', Input::old('permissions')) ) checked="checked" @endif /></td>
+                        <td class="align-center">--</td>
+                        <td class="align-center">--</td>
+                        <td class="align-center">--</td>
+                        <td class="align-center">--</td>
+                        <td class="align-center">--</td>
+                        <td class="align-center">--</td>
+                        <td class="align-center">--</td>
+                    </tr>
                     <tr>
                         <td class="align-center font-12">{{ $module_users }}</td>
                         <td class="align-center"><input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessUsers" @if(CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessUsers', Input::old('permissions')) ) checked="checked" @endif /></td>

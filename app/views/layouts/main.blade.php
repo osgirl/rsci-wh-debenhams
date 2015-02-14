@@ -128,7 +128,7 @@
 			<ul class="dropdown-menu">
 				@if ( CommonHelper::valueInArray('CanAccessProductMasterList', $permissions) )
           <li><a href="{{ URL::to('products') }}">{{ $menu_product_master_list }}</a></li>
-          <li><a href="{{ URL::to('expiry_items') }}">{{ $menu_expiry_items }}</a></li>
+
         @endif
         @if ( CommonHelper::valueInArray('CanAccessSlotMasterList', $permissions) )
 				  <li><a href="{{ URL::to('slots') }}">{{ $menu_slot_master_list }}</a></li>
@@ -144,6 +144,9 @@
         @endif
         @if ( CommonHelper::valueInArray('CanAccessUnlisted', $permissions) )
         <li><a href="{{ URL::to('unlisted') }}">{{ $menu_unlisted_list }}</a></li>
+        @endif
+        @if ( CommonHelper::valueInArray('CanAccessExpiryItems', $permissions) )
+        <li><a href="{{ URL::to('expiry_items') }}">{{ $menu_expiry_items }}</a></li>
         @endif
 				@if ( CommonHelper::valueInArray('CanAccessAuditTrail', $permissions) )
 				<li><a href="{{ URL::to('audit_trail') }}">{{ $menu_audit_trail }}</a></li>

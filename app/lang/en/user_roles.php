@@ -49,6 +49,8 @@ return array(
 	'module_settings'               => 'Settings',
 	'module_stock_piler'            => 'Stock Piler',
 	'module_unlisted'	            => 'Unlisted',
+	'module_expiry_items'	            => 'Expiry Items',
+
 
 	'button_insert'                 => 'Add New User Role',
 	'button_delete'                 => 'Delete User Roles',

@@ -549,6 +549,33 @@
 						<td class="align-center">--</td>
                     </tr>
 
+                    <tr>
+						<td class="align-center font-12">{{ $module_expiry_items }}</td>
+						<td class="align-center">
+							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessExpiryItems', Input::old('permissions'))) || CommonHelper::valueInArray('CanAccessExpiryItems', json_decode($user_role->permissions)))
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessExpiryItems" checked="checked" />
+							@else
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessExpiryItems" />
+							@endif
+						</td>
+						<td class="align-center">--</td>
+						<td class="align-center">--</td>
+						<td class="align-center">--</td>
+						<td class="align-center">
+							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanExportExpiryItems', Input::old('permissions'))) || CommonHelper::valueInArray('CanExportExpiryItems', json_decode($user_role->permissions)))
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanExportExpiryItems" checked="checked" />
+							@else
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanExportExpiryItems" />
+							@endif
+						</td>
+						<td class="align-center">--</td>
+						<td class="align-center">--</td>
+                    	<td class="align-center">--</td>
+						<td class="align-center">--</td>
+						<td class="align-center">--</td>
+						<td class="align-center">--</td>
+                    </tr>
+
 					<tr>
 						<td class="align-center font-12">{{ $module_users }}</td>
 						<td class="align-center">

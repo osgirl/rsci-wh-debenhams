@@ -50,7 +50,7 @@
 		@endif
 	</div>
 	<div class="div-buttons">
-		@if ( CommonHelper::valueInArray('CanExportPurchaseOrders', $permissions) )
+		@if ( CommonHelper::valueInArray('CanExportExpiryItems', $permissions) )
 		<a href= {{ $url_export }} class="btn btn-info btn-darkblue">{{ $button_export }}</a> <!--  id="exportList" -->
 		@endif
 	</div>

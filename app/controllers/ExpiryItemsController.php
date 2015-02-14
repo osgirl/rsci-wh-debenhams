@@ -11,37 +11,37 @@ class ExpiryItemsController extends BaseController {
     	$this->beforeFilter('auth', array('only' => array('Dashboard')));
 
     	// Check Permissions
-    	/*if (Session::has('permissions')) {
+    	if (Session::has('permissions')) {
 	    	if (!in_array('CanAccessExpiryItems', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('/');
 			}
     	} else {
 			return Redirect::to('users/logout');
-		}*/
+		}
     }
 
 	public function showIndex() {
 		// Check Permissions
-    	/*if (Session::has('permissions')) {
+    	if (Session::has('permissions')) {
 	    	if (!in_array('CanAccessExpiryItems', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('/');
 			}
     	} else {
 			return Redirect::to('users/logout');
-		}*/
+		}
 
 		$this->getList();
 	}
 
 	public function exportCSV() {
 		// Check Permissions
-		/*if (Session::has('permissions')) {
+		if (Session::has('permissions')) {
 	    	if (!in_array('CanExportExpiryItems', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('slots');
 			}
     	} else {
 			return Redirect::to('users/logout');
-		}*/
+		}
 		$this->data = Lang::get('expiry_items');
 		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 
