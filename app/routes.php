@@ -193,6 +193,9 @@ Route::group(array('prefix'=>'api/v1', 'before'=>'oauth|auth.piler'), function()
 
 	//audit trail
 	Route::post('audittrail/insert', 'ApiAuditTrail@insertRecord');
+
+	//slots
+	Route::get('slot/is_exist', 'ApiSlots@getIsSlotExist');
 });
 
 Route::group(array('prefix'=>'api/v1', 'before'=>'oauth'), function()
