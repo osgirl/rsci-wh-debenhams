@@ -124,19 +124,19 @@
 						<td><a href="{{ $url_detail . '&id=' . $box['id'] . '&box_code=' . $box['box_code'] }}">{{ $box['box_code'] }}</a></td>
 						<td>{{ date("M d, Y", strtotime($box['created_at']))}}</td>
 						<td class="align-center">
-							@if ( CommonHelper::valueInArray('CanLoadPicking', $permissions)  || CommonHelper::valueInArray('CanEditPicklist', $permissions))
-								@if ( CommonHelper::valueInArray('CanLoadPicking', $permissions) )
+							{{-- @if ( CommonHelper::valueInArray('CanLoadPicking', $permissions)  || CommonHelper::valueInArray('CanEditPicklist', $permissions)) --}}
+								{{-- @if ( CommonHelper::valueInArray('CanLoadPicking', $permissions) )--}}
 									@if( $box['in_use'] == 0 && BoxDetails::isBoxEmpty($box['box_code']) )
 									<a data-id="{{ $box['box_code'] }}" role="button" class="btn btn-info load-boxes-single" title="{{ $button_load }}" data-toggle="modal">{{ $button_load }}</a>
 									@endif
-								@endif
-							@endif
-							@if ( CommonHelper::valueInArray('CanEditBoxes', $permissions) && $box['picklist_detail_id'] === null )
+								{{-- @endif --}}
+							{{-- @endif --}}
+							{{-- @if ( CommonHelper::valueInArray('CanEditBoxes', $permissions) && $box['picklist_detail_id'] === null ) --}}
 								<a href="{{$url_update_box}}&box_code={{$box['box_code']}}" class="icon-edit"></a>
-							@endif
-							@if ( CommonHelper::valueInArray('CanDeleteBoxes', $permissions) && !CommonHelper::hasValue($box['picklist_detail_id']) )
+							{{-- @endif --}}
+							{{-- @if ( CommonHelper::valueInArray('CanDeleteBoxes', $permissions) && !CommonHelper::hasValue($box['picklist_detail_id']) ) --}}
 								<a  data-id="{{$box['box_code']}}"  class="icon-remove single-box-delete"></a>
-							@endif
+							{{-- @endif --}}
 
 						</td>
 					</tr>
