@@ -166,7 +166,7 @@ class PurchaseOrder extends Eloquent {
 		return;
 	}
 
-	public static function updatePOStatus($po_order_no, $po_status, $date_done, $invoice_no='', $invoice_amount=0) {
+	public static function updatePO($po_order_no, $po_status, $date_done, $slot_code, $invoice_no='', $invoice_amount=0) {
 		$status_value = $po_status;
 		$status_options = Dataset::where("data_code", "=", "PO_STATUS_TYPE")->get()->lists("id", "data_value");
 
@@ -177,6 +177,7 @@ class PurchaseOrder extends Eloquent {
 					"invoice_amount"=> $invoice_amount,
 					"invoice_no" => $invoice_no,
 					"po_status" => $status_options[$status_value],
+					"slot_code" => $slot_code,
 					"datetime_done" => $date_done,
 					'latest_mobile_sync_date' => date('Y-m-d H:i:s')
 				));

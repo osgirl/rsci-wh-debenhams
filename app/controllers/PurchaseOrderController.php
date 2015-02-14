@@ -25,12 +25,8 @@ class PurchaseOrderController extends BaseController {
 		// Check Permissions
 		if (Session::has('permissions')) {
 	    	if (!in_array('CanAccessPurchaseOrders', unserialize(Session::get('permissions'))))  {
-	    		if (in_array('CanAccessBoxCreation', unserialize(Session::get('permissions')))) {
-	    			return Redirect::to('box/list');
-	    		} else {
-	    			return Redirect::to('user/profile');
-	    		}
-			}
+    			return Redirect::to('purchase_order');
+    		}
     	} else {
 			return Redirect::to('users/logout');
 		}
@@ -50,7 +46,7 @@ class PurchaseOrderController extends BaseController {
 	public function assignToStockPiler() {
 		// Check Permissions
 		if (Session::has('permissions')) {
-	    	if (!in_array('CanAssignPurchaseOrders', unserialize(Session::get('permissions'))) || !in_array('CanAssignPurchaseOrderDetails', unserialize(Session::get('permissions'))))  {
+	    	if (!in_array('CanAssignPurchaseOrders', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('user/profile');
 			}
     	} else {

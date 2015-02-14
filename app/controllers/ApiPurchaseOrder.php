@@ -79,7 +79,7 @@ class ApiPurchaseOrder extends BaseController {
 		try {
 			if(! CommonHelper::hasValue($po_order_no) ) throw new Exception( 'Missing purchase order number parameter.');
 			// echo "<pre>"; print_r(json_decode(Request::get('data'), true)); die();
-			CommonHelper::setRequiredFields(array('data', 'user_id', 'datetime_done','receiver_no'));
+			CommonHelper::setRequiredFields(array('data', 'user_id', 'datetime_done','receiver_no', 'slot_code'));
 
 			$data 		= json_decode(Request::get('data'), true);
 
@@ -92,6 +92,7 @@ class ApiPurchaseOrder extends BaseController {
 			$date_done   = Request::get('datetime_done');
 			$user_id     = Request::get('user_id');
 			$receiver_no = Request::get('receiver_no');
+			$slot_code = Request::get('slot_code');
 			DB::beginTransaction();
 			//check if user has the right to this PO
 			PurchaseOrder::isPOAssignedToThisUser($user_id, $receiver_no);
@@ -105,7 +106,7 @@ class ApiPurchaseOrder extends BaseController {
 			self::validatePassedPODetails($receiver_no, $po_order_no);
 
 			//update po status
-			PurchaseOrder::updatePOStatus($po_order_no, $po_status, $date_done); //update po_list status to done
+			PurchaseOrder::updatePO($po_order_no, $po_status, $date_done, $slot_code); //update po_list status to done
 
 			//add audit trail
 			self::savedReceivedPOAuditTrail($po_order_no, $user_id);
