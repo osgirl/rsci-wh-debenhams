@@ -60,7 +60,7 @@ class LetDownController extends BaseController {
 	/*public function exportCSV() {
 		// Check Permissions
 		if (Session::has('permissions')) {
-	    	if (!in_array('CanExportLetDowns', unserialize(Session::get('permissions'))))  {
+	    	if (!in_array('CanExportLetDown', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('letdown' . $this->setURL());
 			}
     	} else {
@@ -103,8 +103,9 @@ class LetDownController extends BaseController {
 
 	public function exportCSV() {
 		// Check Permissions
+
 		if (Session::has('permissions')) {
-	    	if (!in_array('CanExportLetDowns', unserialize(Session::get('permissions'))))  {
+	    	if (!in_array('CanExportLetdown', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('letdown' . $this->setURL());
 			}
     	} else {
@@ -248,8 +249,8 @@ class LetDownController extends BaseController {
 
 			$pdf = App::make('dompdf');
 			$pdf->loadView('letdown.report_detail', $this->data)->setPaper('a4')->setOrientation('landscape');
-			return $pdf->stream();
-			// return $pdf->download('letdown_detail' . date('Ymd') . '.pdf');
+			// return $pdf->stream();
+			return $pdf->download('letdown_detail_' . date('Ymd') . '.pdf');
 
 		}
 
