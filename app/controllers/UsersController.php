@@ -81,9 +81,15 @@ class UsersController extends BaseController {
 		$this->data['entry_barcode'] = Lang::get('users.entry_barcode');
 		$this->data['entry_firstname'] = Lang::get('users.entry_firstname');
 		$this->data['entry_lastname'] = Lang::get('users.entry_lastname');
+		$this->data['entry_user_role'] = Lang::get('users.entry_user_role');
+		$this->data['entry_brand'] = Lang::get('users.entry_brand');
 
 		$this->data['button_submit'] = Lang::get('general.button_submit');
-
+		$brands = array('' => Lang::get('general.text_select'));
+		foreach (Brands::getBrandsOption() as $item) {
+			$brands[$item->id] = $item->brand_name;
+		}
+		$this->data['brand_options'] = $brands;
 		// Options
 		$user_roles = array('' => Lang::get('general.text_select'));
 		foreach (UserRoles::getUserRolesOptions() as $item) {
@@ -396,7 +402,7 @@ class UsersController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
-
+		// echo "<pre>"; print_r(Input::all()); die();
 		$rules = array(
 						'firstname'				=> 'required|min:2',
 					    'lastname'				=> 'required|min:2',
