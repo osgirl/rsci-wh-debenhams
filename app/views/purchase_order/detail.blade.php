@@ -1,15 +1,15 @@
 <div class="control-group">
 	<a href="{{ $url_back }}" class="btn btn-info btn-darkblue"> <i class="icon-chevron-left"></i> {{ $button_back }}</a>
 
-	@if ( CommonHelper::valueInArray('CanSyncPurchaseOrderDetails', $permissions) && $po_info->data_display != 'Closed')
+	@if ( CommonHelper::valueInArray('CanSyncPurchaseOrders', $permissions) && $po_info->data_display != 'Closed')
 	<!-- <a class="btn btn-info">{{ $button_jda }}</a> -->
 	@endif
 
-	@if ( CommonHelper::valueInArray('CanExportPurchaseOrderDetails', $permissions) )
+	@if ( CommonHelper::valueInArray('CanExportPurchaseOrders', $permissions) )
 	<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
 	@endif
 
-	@if ( CommonHelper::valueInArray('CanAssignPurchaseOrderDetails', $permissions) )
+	@if ( CommonHelper::valueInArray('CanAccessPurchaseOrders', $permissions) )
 		@if($po_info->data_display !== 'Open' && $po_info->data_display !== 'Assigned')
 			<a style="width: 145px;" class="btn" title="{{ $text_assigned }}" disabled="disabled">{{ $text_assigned }}</a>
 		@else
@@ -18,7 +18,7 @@
 		@endif
 	@endif
 
-	@if ( CommonHelper::valueInArray('CanClosePurchaseOrderDetails', $permissions) )
+	@if ( CommonHelper::valueInArray('CanAccessPurchaseOrders', $permissions) )
 		@if($po_info->data_display === 'Posted')
 			<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_posted_po }}</a>
 		@elseif ($po_info->data_display === 'Done')
