@@ -168,4 +168,37 @@ class PurchaseOrderDetail extends Eloquent {
 
 		return $query->first();
 	}
+
+	public static function getPODetailsWithExpiration($data = array(), $getCount = false) {
+		$query = DB::table('purchase_order_lists')
+					->join('purchase_order_details', 'purchase_order_lists.receiver_no', '=', 'purchase_order_details.receiver_no', 'RIGHT')
+					->join('product_lists', 'purchase_order_details.sku', '=', 'product_lists.upc')
+					->where('expiry_date', '<>', '0000-00-00 00:00:00');
+
+		if( CommonHelper::hasValue($data['filter_po_no']) ) $query->where('purchase_order_no', 'LIKE', '%'.$data['filter_po_no'].'%');
+		if( CommonHelper::hasValue($data['filter_shipment_reference_no']) ) $query->where('shipment_reference_no', 'LIKE', '%'.$data['filter_shipment_reference_no'].'%');
+
+		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
+			if ($data['sort']=='sku') $data['sort'] = 'product_lists.sku';
+			if ($data['sort']=='upc') $data['sort'] = 'product_lists.upc';
+			if ($data['sort']=='short_name') $data['sort'] = 'product_lists.short_description';
+			if ($data['sort']=='expected_quantity') $data['sort'] = 'purchase_order_details.quantity_ordered';
+			if ($data['sort']=='received_quantity') $data['sort'] = 'purchase_order_details.quantity_delivered';
+
+			$query->orderBy($data['sort'], $data['order']);
+		}
+
+		if( CommonHelper::hasValue($data['limit']) && CommonHelper::hasValue($data['page']) && !$getCount)  {
+			$query->skip($data['limit'] * ($data['page'] - 1))
+		          ->take($data['limit']);
+		}
+
+		$result = $query->get();
+
+		if($getCount) {
+			$result = $query->count();
+		}
+
+		return $result;
+	}
 }
