@@ -348,7 +348,7 @@ class PurchaseOrderController extends BaseController {
 	public function exportDetailsCSV() {
 		///Check Permissions
 		if (Session::has('permissions')) {
-	    	if (!in_array('CanExportPurchaseOrderDetails', unserialize(Session::get('permissions'))))  {
+	    	if (!in_array('CanExportPurchaseOrders', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('purchase_order' . $this->setURL());
 			}
     	} else {
@@ -365,9 +365,8 @@ class PurchaseOrderController extends BaseController {
 			$this->data['col_expiry_date']       = Lang::get('purchase_order.col_expiry_date');
 
 			$receiver_no = Input::get('receiver_no', NULL);
-
 			$arrParams = array(
-							'sort'		=> Input::get('sort', 'sku'),
+							'sort'		=> Input::get('sort', 'purchase_order_details.sku'),
 							'order'		=> Input::get('order', 'ASC'),
 							'page'		=> NULL,
 							'limit'		=> NULL
@@ -529,7 +528,7 @@ class PurchaseOrderController extends BaseController {
 		// $receiver_no     = Input::get('receiver_no', 1);
 
 		// Details
-		$sort_detail        = Input::get('sort', 'sku');
+		$sort_detail        = Input::get('sort', 'purchase_order_details.sku');
 		$order_detail       = Input::get('order', 'ASC');
 		$page_detail        = Input::get('page', 1);
 
