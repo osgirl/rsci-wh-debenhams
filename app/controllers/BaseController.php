@@ -35,7 +35,7 @@ class BaseController extends Controller {
 			$this->data['menu_store_master_list'] = Lang::get('general.menu_store_master_list');
 			$this->data['menu_audit_trail'] = Lang::get('general.menu_audit_trail');
 			$this->data['menu_unlisted_list'] = Lang::get('general.menu_unlisted_list');
-
+			$this->data['menu_expiry_items'] = Lang::get('general.menu_expiry_items');
 
 			$this->data['menu_system'] = Lang::get('general.menu_system');
 			$this->data['menu_settings'] = Lang::get('general.menu_settings');

@@ -140,6 +140,9 @@ Route::group(array("before"=>"auth.basic"), function()
 
 	Route::get('unlisted', 'UnlistedController@showIndex');
 	Route::get('unlisted/export', 'UnlistedController@exportCSV');
+
+	Route::get('expiry_items', 'ExpiryItemsController@showIndex');
+	Route::get('expiry_items/export', 'ExpiryItemsController@exportCSV');
 });
 Route::group(array('prefix'=>'api/v1'), function()
 {

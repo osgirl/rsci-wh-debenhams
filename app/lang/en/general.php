@@ -21,6 +21,7 @@ return array(
 	'menu_store_master_list'	=> 'Store Master List',
 	'menu_audit_trail'			=> 'Audit Trail',
 	'menu_unlisted_list'		=> 'Unlisted',
+	'menu_expiry_items'			=> 'Items with Expiry',
 
 	'menu_system'				=> 'System',
 	'menu_settings'				=> 'Settings',

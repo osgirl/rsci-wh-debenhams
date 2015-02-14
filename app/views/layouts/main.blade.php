@@ -128,6 +128,7 @@
 			<ul class="dropdown-menu">
 				@if ( CommonHelper::valueInArray('CanAccessProductMasterList', $permissions) )
           <li><a href="{{ URL::to('products') }}">{{ $menu_product_master_list }}</a></li>
+          <li><a href="{{ URL::to('expiry_items') }}">{{ $menu_expiry_items }}</a></li>
         @endif
         @if ( CommonHelper::valueInArray('CanAccessSlotMasterList', $permissions) )
 				  <li><a href="{{ URL::to('slots') }}">{{ $menu_slot_master_list }}</a></li>
