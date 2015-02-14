@@ -794,7 +794,7 @@ class PurchaseOrderController extends BaseController {
 	{
 		$brands = array();
 		foreach (Department::getBrands() as $item) {
-			$brands[$item['id']] = $item['description'];
+			$brands[$item['dept_code']] = $item['description'];
 		}
 		return array('' => Lang::get('general.text_select')) + $brands;
 	}
@@ -810,7 +810,7 @@ class PurchaseOrderController extends BaseController {
 	{
 		$division = array();
 		foreach (Department::getDivisions() as $item) {
-			$division[$item['id']] = $item['description'];
+			$division[$item['sub_dept']] = $item['description'];
 		}
 		return array('' => Lang::get('general.text_select')) + $division;
 	}
