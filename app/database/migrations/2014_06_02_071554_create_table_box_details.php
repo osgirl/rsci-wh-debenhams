@@ -15,7 +15,7 @@ class CreateTableBoxDetails extends Migration {
 		Schema::create('box_details', function($table){
 			$table->increments('id');
 			$table->integer('picklist_detail_id')->default(0);
-			$table->string('box_code', 9);
+			$table->string('box_code', 10);
 			$table->integer('moved_qty')->default(0);
 			// $table->string('pallet_code', 9);
 			// $table->string('load_code', 9);
@@ -37,7 +37,7 @@ class CreateTableBoxDetails extends Migration {
 	{
 		Schema::drop('box_details');
 	}
-	
+
 	//TODO :: remove this when box is stable
 /*	Schema::create('box_manifest_detail', function($table)
 		{

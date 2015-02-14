@@ -1,11 +1,11 @@
-<?php 
+<?php
 
 return array(
 	'heading_title' 			=> 'Box Lists',
 	'heading_title_detail_contents' 			=> 'Box Content',
 	'heading_title_add'			=> 'Create Box',
 	'heading_title_update'		=> 'Update Box',
-	
+
 	'entry_load'		=> 'Load Boxes',
 	'entry_load_create'	=> 'New Load Code',
 
@@ -31,7 +31,7 @@ return array(
 	'button_submit'				=> 'Submit',
 	'button_cancel'				=> 'Cancel',
 	'button_back'				=> 'Go Back to Box list',
-	'button_export_box'			=> 'Export to CSV',
+	'button_export_box'			=> 'Export to PDF',
 	'button_load'				=> 'Load',
 	'button_add_store'			=> 'Add load',
 
@@ -57,7 +57,7 @@ return array(
 	'error_load'		=> 'Please choose box/s',
 	'error_load_no_load_code'	=> 'Please select load code',
 
-	'entry_store'				=> 'Store: ', 
+	'entry_store'				=> 'Store: ',
 	'entry_box_code'			=> 'Box Code: ',
-	
+
 );

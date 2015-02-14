@@ -75,7 +75,7 @@
 	</div>
 	<div class="div-buttons">
 		@if ( CommonHelper::valueInArray('CanExportProductMasterList', $permissions) )
-		<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
+		<!-- <a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a> -->
 		@endif
 	</div>
 </div>

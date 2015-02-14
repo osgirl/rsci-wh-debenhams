@@ -15,7 +15,7 @@ class CreateBoxTable extends Migration {
 		Schema::create('box', function($table)
 		{
 			$table->increments('id');
-			$table->string('box_code', 9);
+			$table->string('box_code', 10);
 			$table->string('store_code', 50);
 			$table->tinyInteger('in_use')->default(0);
 			$table->tinyInteger('sync_status')->default(0);

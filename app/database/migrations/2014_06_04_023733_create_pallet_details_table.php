@@ -16,7 +16,7 @@ class CreatePalletDetailsTable extends Migration {
 		{
 			$table->increments('id');
 			// $table->integer('box_detail_id');
-			$table->string('box_code', 9);
+			$table->string('box_code', 10);
 			$table->string('pallet_code', 9);
 			$table->tinyInteger('sync_status')->default(0);
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));

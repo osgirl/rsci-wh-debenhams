@@ -409,7 +409,7 @@ class BoxController extends BaseController {
 
 	public function createBox()
 	{
-		self::checkPermissions('CanCreateBox');
+		self::checkPermissions('CanAccessBoxingLoading');
 		$this->data['heading_title_add'] = Lang::get('box.heading_title_add');
 
 		$this->data['entry_store'] = Lang::get('box.entry_store');
@@ -447,7 +447,7 @@ class BoxController extends BaseController {
 
 	public function updateBox()
 	{
-		self::checkPermissions('CanEditBoxes');
+		self::checkPermissions('CanAccessBoxingLoading');
 		$boxCode = Input::get('box_code');
 
 		$this->data['heading_title_update'] = Lang::get('box.heading_title_update');
@@ -494,56 +494,36 @@ class BoxController extends BaseController {
 	public function exportDetailsCSV() {
 		//TODO
 		///Check Permissions
-		// if (BoxDetails::find(Input::get('box_code', NULL))!=NULL) {
-			$box_code = Input::get('box_code', NULL);
+		$box_code = Input::get('box_code', NULL);
+		$this->data = Lang::get('box');
+		$this->data['text_empty_results'] 	= Lang::get('general.text_empty_results');
+		$arrParams = array(
+						'sort'			=> Input::get('sort', 'sku'),
+						'order'			=> Input::get('order', 'ASC'),
+						'filter_sku' 	=> NULL,
+						'filter_store' 	=> NULL,
+						'filter_box_code' => NULL,
+						'filter_status' => NULL,
+						'page'			=> NULL,
+						'limit'			=> NULL
+					);
 
-			$arrParams = array(
-							'sort'			=> Input::get('sort', 'sku'),
-							'order'			=> Input::get('order', 'ASC'),
-							'filter_sku' 	=> NULL,
-							'filter_store' 	=> NULL,
-							'filter_box_code' => NULL,
-							'filter_status' => NULL,
-							'page'			=> NULL,
-							'limit'			=> NULL
-						);
+		// $ld_info = Letdown::getLetDownInfo($ld_id);
+		$results = BoxDetails::getBoxDetails($box_code, $arrParams);
 
-			// $ld_info = Letdown::getLetDownInfo($ld_id);
-			$results = BoxDetails::getBoxDetails($box_code, $arrParams);
+			$this->data['results'] = $results;
 
-			$output = Lang::get('box.col_upc'). ',';
-			$output .= Lang::get('box.col_box_code'). ',';
-			$output .= Lang::get('box.col_moved_qty'). "\n";
-
-
-		    foreach ($results as $key => $value)
-		    {
-
-		    	$exportData = array(
-		    						'"' . $value->sku . '"',
-		    						'"' . $value->box_code . '"',
-		    						'"' . $value->moved_qty . '"'
-		    					);
-
-		      	$output .= implode(",", $exportData);
-		      	$output .= "\n";
-		  	}
-
-
-			$headers = array(
-				'Content-Type' => 'text/csv',
-				'Content-Disposition' => 'attachment; filename="box_details_' . $box_code . '_' . date('Ymd')  . '_' . time() . '.csv"',
-			);
-
-			return Response::make(rtrim($output, "\n"), 200, $headers);
-		// }
-
-		// return;
+		$pdf = App::make('dompdf');
+		$pdf->loadView('box.report_detail', $this->data)->setPaper('a4')->setOrientation('landscape');
+		// return $pdf->stream();
+		return $pdf->download('box_detail_' . date('Ymd') . '.pdf');
 	}
 
 	public function exportBoxes()
 	{
-		self::checkPermissions('CanExportBoxes');
+		self::checkPermissions('CanExportBoxingLoading');
+		$this->data = Lang::get('box');
+		$this->data['text_empty_results'] 	= Lang::get('general.text_empty_results');
 		$arrParams = array(
 						'filter_store' 			=> Input::get('filter_store', NULL),
 						'filter_box_code' 		=> Input::get('filter_box_code', NULL),
@@ -554,41 +534,17 @@ class BoxController extends BaseController {
 					);
 
 		$results 		= Box::getBoxesWithFilters($arrParams)->toArray();
+		$this->data['results'] = $results;
 
-		$output = Lang::get('box.col_id_export'). ',';
-		$output .= Lang::get('box.col_store'). ',';
-		$output .= Lang::get('box.col_store_code'). ',';
-		$output .= Lang::get('box.col_box_code'). ',';
-		$output .= Lang::get('box.col_inuse'). ',';
-		$output .= Lang::get('box.col_date_created'). "\n";
-
-		foreach ($results as $key => $value) {
-			$inUse = ($value['in_use']  == 1) ? 'True' : 'False';
-	    	$exportData = array(
-	    						'"' . $value['id'] . '"',
-	    						'"' . $value['store_name'] . '"',
-	    						'"' . $value['store_code'] . '"',
-	    						'"' . $value['box_code'] . '"',
-	    						'"' . $inUse . '"',
-	    						'"' . date("M d, Y", strtotime($value['created_at'])) . '"',
-	    					);
-
-	      	$output .= implode(",", $exportData);
-	      	$output .= "\n";
-	  	}
-
-		$headers = array(
-			'Content-Type' => 'text/csv',
-			'Content-Disposition' => 'attachment; filename="boxes_' . date('Ymd')  . '_' . time() . '.csv"',
-		);
-
-		return Response::make(rtrim($output, "\n"), 200, $headers);
-
+		$pdf = App::make('dompdf');
+		$pdf->loadView('box.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
+		// return $pdf->stream();
+		return $pdf->download('box_' . date('Ymd') . '.pdf');
 	}
 
 	public function deleteBoxes()
 	{
-		self::checkPermissions('CanDeleteBoxes');
+		self::checkPermissions('CanAccessBoxingLoading');
 		try {
 			$data = Input::all();
 			DB::beginTransaction();
@@ -607,7 +563,7 @@ class BoxController extends BaseController {
 
 	public function postUpdateBox()
 	{
-		self::checkPermissions('CanEditBoxes');
+		self::checkPermissions('CanAccessBoxingLoading');
 		try {
 			$input = Input::all();
 			$input['in_use'] = Config::get('box_statuses.not_in_use');
@@ -628,9 +584,9 @@ class BoxController extends BaseController {
 
 	public function postCreateBox()
 	{
-		self::checkPermissions('CanCreateBox');
+		self::checkPermissions('CanAccessBoxingLoading');
 		try {
-			#box format: [{storecode}-00001] (eg 005-00001)
+			#box format: [{storecode}-00001] (eg 0005-00001)
 			$input = Input::all();
 
 			DB::beginTransaction();
@@ -639,9 +595,10 @@ class BoxController extends BaseController {
 			$storeCode = $input['store'];
 			$numberOfBoxes = (int)$input['box_range'];
 
-			if(strlen($storeCode) == 1) $newStoreCodeFormat = "00{$storeCode}-";
-			else if(strlen($storeCode) == 2) $newStoreCodeFormat = "0{$storeCode}-";
-			else if(strlen($storeCode) == 3) $newStoreCodeFormat = "{$storeCode}-";
+			if(strlen($storeCode) == 1) $newStoreCodeFormat = "000{$storeCode}-";
+			else if(strlen($storeCode) == 2) $newStoreCodeFormat = "00{$storeCode}-";
+			else if(strlen($storeCode) == 3) $newStoreCodeFormat = "0{$storeCode}-";
+			else if(strlen($storeCode) == 4) $newStoreCodeFormat = "{$storeCode}-";
 			else throw new Exception("Invalid store");
 
 			#check if a record exist in that store

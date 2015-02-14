@@ -61,13 +61,13 @@
 		@endif
 	</div>
 	<div class="div-buttons">
-		{{-- @if ( CommonHelper::valueInArray('CanLoadPicking', $permissions) ) --}}
+		{{-- @if ( CommonHelper::valueInArray('CanAccessBoxingLoading', $permissions) ) --}}
 			<a role="button" class="btn btn-warning" id="load-boxes" title="{{ $button_load }}" data-toggle="modal">{{ $button_load }}</a>
 		{{-- @endif --}}
-		{{-- @if ( CommonHelper::valueInArray('CanAddLoad', $permissions) ) --}}
+		{{-- @if ( CommonHelper::valueInArray('CanAccessBoxingLoading', $permissions) ) --}}
 		<a  class="btn btn-info btn-darkblue" id="generate-load">{{ $button_add_store }}</a>
 		{{-- @endif --}}
-		{{-- @if ( CommonHelper::valueInArray('CanCreateBox', $permissions) ) --}}
+		{{-- @if ( CommonHelper::valueInArray('CanAccessBoxingLoading', $permissions) ) --}}
 		<a class="btn btn-info btn-darkblue" href="{{$url_add_box}}">{{ $button_create_box }}</a>
 		{{-- @endif --}}
 

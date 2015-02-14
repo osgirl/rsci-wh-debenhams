@@ -33,7 +33,9 @@ class StoreOrderController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
-
+		$this->data = Lang::get('store_order');
+		$this->data['so_status_type'] = Dataset::getTypeWithValue("SO_STATUS_TYPE");
+		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 		$arrParams = array(
 							'filter_so_no' 			=> Input::get('filter_so_no', NULL),
 							'filter_store' 			=> Input::get('filter_store', NULL),
@@ -47,35 +49,12 @@ class StoreOrderController extends BaseController {
 
 		$results = StoreOrder::getSOList($arrParams);
 
-		$output = Lang::get('store_order.col_so_no'). ',';
-		$output .= Lang::get('store_order.col_store'). ',';
-		$output .= Lang::get('store_order.col_store_name'). ',';
-		$output .= Lang::get('store_order.col_order_date'). ',';
-		$output .= Lang::get('store_order.col_load_code'). ',';
-		$output .= Lang::get('store_order.col_status'). "\n";
+		$this->data['results'] = $results;
 
-		$statusTypes = Dataset::getTypeWithValue("SO_STATUS_TYPE");
-	    foreach ($results as $key => $value) {
-
-	    	$exportData = array(
-	    						'"' . $value->so_no . '"',
-	    						'"' . $value->store_code . '"',
-	    						'"' . $value->store_name . '"',
-	    						'"' . date("M d, Y", strtotime($value->order_date)) . '"',
-	    						'"' . $value->load_code. '"',
-	    						'"' . $statusTypes[$value->so_status] . '"'
-	    					);
-
-	      	$output .= implode(",", $exportData);
-	      	$output .= "\n";
-	  	}
-
-		$headers = array(
-			'Content-Type' => 'text/csv',
-			'Content-Disposition' => 'attachment; filename="store_order_' . date('Ymd')  . '_' . time() . '.csv"',
-		);
-
-		return Response::make(rtrim($output, "\n"), 200, $headers);
+		$pdf = App::make('dompdf');
+		$pdf->loadView('store_order.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
+		// return $pdf->stream();
+		return $pdf->download('store_order_' . date('Ymd') . '.pdf');
 	}
 
 	public function exportDetailsCSV() {
@@ -90,7 +69,9 @@ class StoreOrderController extends BaseController {
 
 		if (StoreOrder::find(Input::get('id', NULL))!=NULL) {
 			$so_id = Input::get('id', NULL);
-
+			$this->data = Lang::get('store_order');
+			$this->data['so_status_type'] = Dataset::getTypeWithValue("SO_STATUS_TYPE");
+			$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 			$arrParams = array(
 							'sort'		=> Input::get('sort_detail', 'sku'),
 							'order'		=> Input::get('order_detail', 'ASC'),
@@ -100,35 +81,12 @@ class StoreOrderController extends BaseController {
 
 			$so_info = StoreOrder::getSOInfo($so_id);
 			$results = StoreOrderDetail::getSODetails($so_info->so_no, $arrParams);
-			DebugHelper::log(__METHOD__, $results);
-			// echo '<pre>'; print_r($results);exit;
-			$output = Lang::get('store_order.col_upc'). ',';
-			$output .= Lang::get('store_order.col_short_name'). ',';
-			$output .= Lang::get('store_order.col_ordered_quantity'). "\n";
-			// $output .= Lang::get('store_order.col_packed_quantity'). "\n";
-			// $output .= Lang::get('store_order.col_delivered_quantity'). "\n";
+			$this->data['results'] = $results;
 
-
-		    foreach ($results as $key => $value) {
-		    	$exportData = array(
-		    						// '"' . $value->sku . '"',
-		    						'"' . $value->upc . '"',
-		    						'"' . $value->short_description . '"',
-		    						'"' . $value->ordered_qty . '"'
-		    						// '"' . $value->packed_qty . '"'
-		    						// '"' . $value->delivered_qty . '"'
-		    					);
-
-		      	$output .= implode(",", $exportData);
-		      	$output .= "\n";
-		  	}
-
-			$headers = array(
-				'Content-Type' => 'text/csv',
-				'Content-Disposition' => 'attachment; filename="store_order_details_' . $so_info->so_no . '_' . date('Ymd')  . '_' . time() . '.csv"',
-			);
-
-			return Response::make(rtrim($output, "\n"), 200, $headers);
+			$pdf = App::make('dompdf');
+			$pdf->loadView('store_order.report_detail', $this->data)->setPaper('a4')->setOrientation('landscape');
+			// return $pdf->stream();
+			return $pdf->download('store_order_detail_' . date('Ymd') . '.pdf');
 		}
 	}
 
@@ -144,7 +102,9 @@ class StoreOrderController extends BaseController {
 
 		if (StoreOrder::find(Input::get('id', NULL))!=NULL) {
 			$so_id = Input::get('id', NULL);
-
+			$this->data = Lang::get('store_order');
+			$this->data['so_status_type'] = Dataset::getTypeWithValue("SO_STATUS_TYPE");
+			$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 			$arrParams = array(
 							'sort'		=> Input::get('sort_detail', 'sku'),
 							'order'		=> Input::get('order_detail', 'ASC'),
@@ -154,38 +114,12 @@ class StoreOrderController extends BaseController {
 
 			$so_info = StoreOrder::getSOInfo($so_id);
 			$results = StoreOrderDetail::getMtsDetails($so_info->so_no, $arrParams);
-			DebugHelper::log(__METHOD__, $results);
-			$output = Lang::get('store_order.col_load_code'). ',';
-			$output .= Lang::get('store_order.col_box_no'). ',';
-			$output .= Lang::get('store_order.col_upc'). ',';
-			$output .= Lang::get('store_order.col_short_name'). ',';
-			// $output .= Lang::get('store_order.col_ordered_quantity'). ',';
-			$output .= Lang::get('store_order.col_issued'). ',';
-			$output .= Lang::get('store_order.col_received'). ',';
-			$output .= Lang::get('store_order.col_damaged'). "\n";
+			$this->data['results'] = $results;
 
-
-		    foreach ($results as $key => $value) {
-		    	$exportData = array(
-		    						'"' . $value->load_code . '"',
-		    						'"' . $value->box_code . '"',
-		    						'"' . $value->upc . '"',
-		    						'"' . $value->description . '"',
-		    						// '"' . $value->ordered_qty . '"',
-		    						'"' . $value->moved_qty . '"'
-		    						// '"' . $value->delivered_qty . '"'
-		    					);
-
-		      	$output .= implode(",", $exportData);
-		      	$output .= "\n";
-		  	}
-
-			$headers = array(
-				'Content-Type' => 'text/csv',
-				'Content-Disposition' => 'attachment; filename="store_order_mts_' . $so_info->so_no . '_' . date('Ymd')  . '_' . time() . '.csv"',
-			);
-
-			return Response::make(rtrim($output, "\n"), 200, $headers);
+			$pdf = App::make('dompdf');
+			$pdf->loadView('store_order.report_mts', $this->data)->setPaper('a4')->setOrientation('landscape');
+			// return $pdf->stream();
+			return $pdf->download('store_order_mts_' . date('Ymd') . '.pdf');
 		}
 	}
 

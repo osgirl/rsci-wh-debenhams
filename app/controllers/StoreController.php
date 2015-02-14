@@ -43,7 +43,8 @@ class StoreController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
-
+		$this->data = Lang::get('stores');
+		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 		$arrParams = array(
 							'filter_store_code'	=> Input::get('filter_store_code', NULL),
 							'filter_store_name' => Input::get('filter_store_name', NULL),
@@ -55,27 +56,12 @@ class StoreController extends BaseController {
 
 		$results = Store::getStoreList($arrParams);
 
-		$output = Lang::get('stores.col_store_name') . ",";
-		$output .= Lang::get('stores.col_store_code') . ",";
-		$output .= Lang::get('stores.col_store_address') . "\n";
+		$this->data['results'] = $results;
 
-	    foreach ($results as $value) {
-	    	$exportData = array(
-	    						'"' . $value->store_name . '"',
-	    						'"' . $value->store_code . '"',
-	    						'"' . $value->address1.' '.$value->address2.' '.$value->address3 . '"'
-	    					);
-
-	      	$output .= implode(",", $exportData);
-	      	$output .= "\n";
-	  	}
-
-		$headers = array(
-			'Content-Type' => 'text/csv',
-			'Content-Disposition' => 'attachment; filename="storeList_' . date('Ymd')  . '_' . time() . '.csv"',
-		);
-
-		return Response::make(rtrim($output, "\n"), 200, $headers);
+		$pdf = App::make('dompdf');
+		$pdf->loadView('stores.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
+		// return $pdf->stream();
+		return $pdf->download('stores_' . date('Ymd') . '.pdf');
 	}
 
 	protected function getList() {
