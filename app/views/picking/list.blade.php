@@ -107,7 +107,7 @@
     <!-- /widget-header -->
     <div class="widget-content">
     	<div class="table-responsive">
-			<table class="table table-striped table-bordered">
+			<table class="table table-bordered">
 				<thead>
 					@if ( CommonHelper::valueInArray('CanAssignPacking', $permissions))
 			  		{{ Form::open(array('url'=>$url_change_to_store,'id' => 'form-picking-change', 'style' => 'margin: 0px;', 'method'=> 'post')) }}
@@ -135,7 +135,11 @@
 					</tr>
 				@else
 					@foreach( $picklist as $value )
-						<tr class="font-size-13 tblrow" data-id="{{ $value['move_doc_number'] }}">
+						<tr class="font-size-13 tblrow" data-id="{{ $value['move_doc_number'] }}"
+						@if ( $value['data_display'] === 'Done' && ($value['quantity_to_pick'] != $value['moved_qty']) )
+							style="background-color:#F29F9F"
+						@endif
+						>
 							@if ( CommonHelper::valueInArray('CanAssignPacking', $permissions) )
 							<td class="align-center">
 								@if($value['data_display'] == 'Open' || $value['data_display'] == 'Assigned')
@@ -158,7 +162,7 @@
 							<td class="align-center">
 								@if($value['data_display'] === 'Posted')
 									<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_posted }}</a>
-								@elseif ($value['data_display'] === 'Done')
+								@elseif ( $value['data_display'] === 'Done' && ($value['quantity_to_pick'] != $value['moved_qty']) )
 									<a style="width: 70px;" class="btn btn-success closePicklist" data-id="{{ $value['move_doc_number'] }}">{{ $button_close_picklist }}</a>
 								@else
 									<a style="width: 70px;" disabled="disabled" class="btn">{{ $button_close_picklist }}</a>
