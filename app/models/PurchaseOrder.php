@@ -91,6 +91,8 @@ class PurchaseOrder extends Eloquent {
 									// 'users.lastname'
 								)
 							);
+
+		DebugHelper::log(__METHOD__, $result);
 		// get the multiple stock piler fullname
 		foreach ($result as $key => $po) {
 			$assignedToUserId       = explode(',', $po->assigned_to_user_id);
@@ -128,9 +130,11 @@ class PurchaseOrder extends Eloquent {
 	{
 		$query = DB::table('purchase_order_lists')
 					// ->join('users', 'purchase_order_lists.assigned_to_user_id', 'IN', 'users.id', 'LEFT')
-					->join('purchase_order_details', 'purchase_order_lists.receiver_no', '=', 'purchase_order_details.receiver_no')
+					->join('purchase_order_details', 'purchase_order_lists.receiver_no', '=', 'purchase_order_details.receiver_no', 'LEFT')
+					->join('product_lists', 'purchase_order_details.sku', '=', 'product_lists.upc', 'LEFT')
 					->join('dataset', 'purchase_order_lists.po_status', '=', 'dataset.id', 'LEFT')
-					->join('vendors', 'purchase_order_lists.vendor_id', '=', 'vendors.id', 'LEFT');
+					->join('vendors', 'purchase_order_lists.vendor_id', '=', 'vendors.id', 'LEFT')
+					->groupBy('purchase_order_lists.purchase_order_no');
 
 		if( CommonHelper::hasValue($data['filter_po_no']) ) $query->where('purchase_order_no', 'LIKE', '%'.$data['filter_po_no'].'%');
 		if( CommonHelper::hasValue($data['filter_receiver_no']) ) $query->where('receiver_no', '=', $data['filter_receiver_no']);
