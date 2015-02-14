@@ -1,6 +1,6 @@
 <div class="control-group">
 	<a href="{{ $url_back }}" class="btn btn-info btn-darkblue"> <i class="icon-chevron-left"></i> {{ $button_back }}</a>
-	@if ( CommonHelper::valueInArray('CanExportPickingDetails', $permissions) )
+	@if ( CommonHelper::valueInArray('CanExportPacking', $permissions) )
 	<a href="{{$url_export_detail}}" class="btn btn-info btn-darkblue"> {{ $button_export_detail }}</a>
 	@endif
 

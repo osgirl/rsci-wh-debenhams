@@ -78,7 +78,7 @@ class PicklistController extends BaseController {
 
 	public function exportCSV()
 	{
-		$this->checkPermissions('CanExportPickingDocuments');
+		$this->checkPermissions('CanExportPacking');
 		$this->data = Lang::get('picking');
 		$arrParams = array(
 							'filter_type'   => Input::get('filter_type', NULL),
@@ -103,7 +103,7 @@ class PicklistController extends BaseController {
 
 	public function exportDetailCSV()
 	{
-		$this->checkPermissions('CanExportPickingDetails');
+		$this->checkPermissions('CanExportPacking');
 
 		if (Picklist::where('move_doc_number'== Input::get('picklist_doc', NULL))!=NULL) {
 			$this->data = Lang::get('picking');
@@ -233,7 +233,7 @@ class PicklistController extends BaseController {
 
 	public function getPicklistDetails()
 	{
-		$this->checkPermissions('CanAccessPackingDetails');
+		$this->checkPermissions('CanAccessPacking');
 		$picklistDoc = Input::get('picklist_doc', NULL);
 
 		if($picklistDoc == NULL) return Redirect::to('picking/list')->withError(Lang::get('picking.error_not_exist'));

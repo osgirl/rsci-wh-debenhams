@@ -85,7 +85,7 @@
 		<!-- <a  class="btn btn-info" id="generate-load">{{ $button_add_store }}</a> -->
 		<!-- @endif -->
 		<!-- <a role="button" class="btn btn-info multi-change-to-store" title="{{ $button_change_to_store }}" data-toggle="modal">{{ $button_change_to_store }}</a> -->
-		@if ( CommonHelper::valueInArray('CanAssignPacking', $permissions) || CommonHelper::valueInArray('CanEditPicklist', $permissions))
+		@if ( CommonHelper::valueInArray('CanAssignPacking', $permissions))
 			<a role="button" class="btn btn-info btn-darkblue assignPicklist" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a>
 		@endif
 		@if ( CommonHelper::valueInArray('CanExportPacking', $permissions) )
@@ -109,7 +109,7 @@
     	<div class="table-responsive">
 			<table class="table table-striped table-bordered">
 				<thead>
-					@if ( CommonHelper::valueInArray('CanAssignPacking', $permissions) || CommonHelper::valueInArray('CanEditPicklist', $permissions))
+					@if ( CommonHelper::valueInArray('CanAssignPacking', $permissions))
 			  		{{ Form::open(array('url'=>$url_change_to_store,'id' => 'form-picking-change', 'style' => 'margin: 0px;', 'method'=> 'post')) }}
 						{{ Form::hidden('filter_type', $filter_type) }}
 						{{ Form::hidden('filter_doc_no', $filter_doc_no) }}
