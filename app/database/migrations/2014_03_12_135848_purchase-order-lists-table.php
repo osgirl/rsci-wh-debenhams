@@ -30,6 +30,7 @@ class PurchaseOrderListsTable extends Migration {
 			$table->tinyInteger('po_status')->default(1);
 			$table->string('invoice_no', 30)->default("0");
 			$table->string('invoice_amount')->default(0);
+			$table->string('slot_code', 10)->default(0);
 			$table->timestamp('delivery_date');
 			$table->timestamp('datetime_done');
 			$table->timestamp('latest_mobile_sync_date');
