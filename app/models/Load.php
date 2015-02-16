@@ -23,10 +23,10 @@ class Load extends Eloquent {
             ->join('pallet', 'pallet.pallet_code', '=', 'load_details.pallet_code')
             ->groupBy('load.load_code');
 
-        if( CommonHelper::hasValue($data['filter_load_code']) ) $query->where('load_code', 'LIKE', '%'. $data['filter_load_code'] . '%');
+        if( CommonHelper::hasValue($data['filter_load_code']) ) $query->where('load.load_code', 'LIKE', '%'. $data['filter_load_code'] . '%');
 
         if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
-            if ($data['sort'] == 'load_code') $data['sort'] = 'load_code';
+            if ($data['sort'] == 'load_code') $data['sort'] = 'load.load_code';
             if ($data['sort'] == 'status') $data['sort'] = 'is_shipped';
 
             $query->orderBy($data['sort'], $data['order']);
