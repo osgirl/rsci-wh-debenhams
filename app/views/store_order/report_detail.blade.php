@@ -14,7 +14,6 @@
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
-				<th>{{ $col_id }}</th>
 				<th>{{ $col_upc }}</th>
 				<th>{{ $col_short_name }}</th>
 				<th>{{ $col_ordered_quantity }}</th>
@@ -27,7 +26,6 @@
 		@else
 			@foreach( $results as $so )
 			<tr class="font-size-13">
-				<td>{{ $counter++ }}</td>
 				<td>{{ $so->upc }}</td>
 				<td>{{ $so->description }}</td>
 				<td>{{ $so->ordered_qty }}</td>
