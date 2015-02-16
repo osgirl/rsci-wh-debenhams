@@ -38,7 +38,7 @@ class PurchaseOrderDetail extends Eloquent {
 		$checkSku = PurchaseOrderDetail::isSKUExist($query, $data);
 
 		if ($checkSku) {
-			PurchaseOrderDetail::checkIfQtyExceeds($query, $data['quantity_delivered']);
+			// PurchaseOrderDetail::checkIfQtyExceeds($query, $data['quantity_delivered']);
 			$array_params = array(
 				'quantity_delivered' => $data['quantity_delivered'],
 				'expiry_date' => $data['expiry_date'],
