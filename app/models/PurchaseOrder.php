@@ -72,7 +72,7 @@ class PurchaseOrder extends Eloquent {
 		// echo "<pre>"; print_r($data); die();
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if ($data['sort']=='po_no') $data['sort'] = 'purchase_order_no';
-			if ($data['sort']=='receiver_no') $data['sort'] = 'receiver_no';
+			if ($data['sort']=='receiver_no') $data['sort'] = 'purchase_order_lists.receiver_no';
 			if ($data['sort']=='entry_date') $data['sort'] = 'purchase_order_lists.created_at';
 
 			$query->orderBy($data['sort'], $data['order']);
@@ -137,7 +137,7 @@ class PurchaseOrder extends Eloquent {
 					->groupBy('purchase_order_lists.purchase_order_no');
 
 		if( CommonHelper::hasValue($data['filter_po_no']) ) $query->where('purchase_order_no', 'LIKE', '%'.$data['filter_po_no'].'%');
-		if( CommonHelper::hasValue($data['filter_receiver_no']) ) $query->where('receiver_no', '=', $data['filter_receiver_no']);
+		if( CommonHelper::hasValue($data['filter_receiver_no']) ) $query->where('purchase_order_lists.receiver_no', '=', $data['filter_receiver_no']);
 		if( CommonHelper::hasValue($data['filter_entry_date']) ) $query->where('purchase_order_lists.created_at', 'LIKE', '%'.$data['filter_entry_date'].'%');
 		if( CommonHelper::hasValue($data['filter_stock_piler']) ) $query->whereRaw('find_in_set('. $data['filter_stock_piler'] . ',assigned_to_user_id) > 0');
 		if( CommonHelper::hasValue($data['filter_status']) && $data['filter_status'] !== 'default' ) $query->where('po_status', '=', $data['filter_status']);
