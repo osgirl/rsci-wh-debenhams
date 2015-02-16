@@ -91,7 +91,7 @@
 						<th>{{ $col_no }}</th>
 						<th><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif">{{ $col_sku }}</a></th>
 						<th><a href="{{ $sort_upc }}" class="@if( $sort=='upc' ) {{ $order }} @endif">{{ $col_upc }}</a></th>
-						<th><a href="#" class="">SHORT DESCRIPTION</a></th>
+						<th>SHORT DESCRIPTION</th>
 						<th><a href="{{ $sort_so_no }}" class="@if( $sort=='so_no' ) {{ $order }} @endif">{{ $col_so_no }}</a></th>
 						<th><a href="{{ $sort_from_slot_code }}" class="@if( $sort=='from_slot_code' ) {{ $order }} @endif">{{ $col_from_slot_code }}</th>
 						<th>{{ $col_qty_to_pick }}</th>
