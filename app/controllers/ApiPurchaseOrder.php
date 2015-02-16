@@ -228,14 +228,22 @@ class ApiPurchaseOrder extends BaseController {
 
 			if(! CommonHelper::arrayHasValue($status_options[$status_value]) ) throw new Exception( 'Invalid status value.');
 
+			$loggedInUserId = Authorizer::getResourceOwnerId();
+
+			$validateUser = PurchaseOrder::where('purchase_order_no', '=', $po_order_no)
+					->where('assigned_to_user_id', '=', $loggedInUserId)->first();
+
+			if ( empty($validateUser) ) throw new Exception( 'User does not have the rights to access this po.');
+
 			$po = PurchaseOrder::where('purchase_order_no', '=', $po_order_no)
+					->where('assigned_to_user_id', '=', $loggedInUserId)
 					->update(array(
 						"po_status" => $status_options[$status_value],
 						"updated_at" => date('Y-m-d H:i:s')
 					));
 
 			//Audit trail
-			$user_id = Authorizer::getResourceOwnerId();
+			$user_id = $loggedInUserId;
 			$date_before = 'PO No #' . $po_order_no . ' status was Assigned.';
 			$data_after = 'PO No #' . $po_order_no . ' status is now ' .$status_options[$status_value]. ' and was changed by Stock Piler #' . $user_id  . '.';
 			$arrParams = array(

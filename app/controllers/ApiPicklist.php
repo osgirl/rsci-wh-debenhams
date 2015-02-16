@@ -291,6 +291,11 @@ class ApiPicklist extends BaseController {
 						"pl_status" => $status_options[$status_value],
 						"updated_at" => date('Y-m-d H:i:s')
 					));*/
+			$loggedInUserId = Authorizer::getResourceOwnerId();
+			$validateUser = Picklist::where('move_doc_number', '=', $docNo)
+					->where('assigned_to_user_id', '=', $loggedInUserId)->first();
+
+			if ( empty($validateUser) ) throw new Exception( 'User does not have the rights to access this picklist.');
 
 			$picklist = Picklist::updateStatus($docNo, $status_options[$status_value]);
 
