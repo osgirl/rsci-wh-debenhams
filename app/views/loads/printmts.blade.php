@@ -44,33 +44,33 @@ td.underline {padding-bottom: 0; }
 	<a href="#" onclick="window.print();">PRINT THIS</a>
 	<a href="{{url('load/list')}}">BACK TO LOAD LIST</a>
 
-</div>	
+</div>
 @foreach($records['StoreOrder'] as $soNo => $val)
 	<?php $grandTotal = 0;?>
 	<section class="soContainer">
 		<header>
 			<div class="doctitle">
-				<h1>Philippine FamilyMart CVS Inc.<br/>MTS REPORT</h1>
-				Print Date: {{ date('m/d/y h:i:s')}}				
-			</div>			
+				<h1>Philippine Gap/Old Navy CVS Inc.<br/>MTS REPORT</h1>
+				Print Date: {{ date('m/d/y h:i A')}}
+			</div>
 		</header>
 		<table class="commonInfo">
 			<tr>
-				<td>				
+				<td>
 					<table>
 						<tr>
 							<th>Load Code:</th>
-							<td>{{$loadCode}}</td>				
+							<td>{{$loadCode}}</td>
 						</tr><tr>
 							<th>Store Order / TL No:</th>
-							<td>{{ $soNo}}</td>				
+							<td>{{ $soNo}}</td>
 						</tr><tr>
 							<th>From Location:</th>
 							<td>Warehouse</td>
 						</tr><tr>
 							<th>To Location:</th>
 							<td>{{ $val['store_code'] .' - ' . $val['store_name']}}</td>
-						</tr>											
+						</tr>
 					</table>
 				</td>
 				<td>
@@ -84,7 +84,7 @@ td.underline {padding-bottom: 0; }
 						</tr><tr>
 							<th>User ID:</th>
 							<td>{{Auth::user()->username;}}</td>
-						</tr>											
+						</tr>
 					</table>
 				</td>
 			<tr>
@@ -97,25 +97,25 @@ td.underline {padding-bottom: 0; }
 				<th>Issued</th>
 				<th>Received</th>
 				<th>Damaged</th>
-			</tr>			
+			</tr>
 			@foreach($val['items'] as $boxNo => $items)
 				<?php $boxTotal = 0;?>
 				<tr>
 					<td colspan="6"><strong>{{$boxNo}}</strong></td>
 				</tr>
 				@foreach($items as $item)
-					<?php 
+					<?php
 						$boxTotal += $item->moved_qty;
 						$grandTotal += $item->moved_qty;
 					?>
-					<tr>				
-						<td></td>	
+					<tr>
+						<td></td>
 						<td>{{$item->upc}}</td>
 						<td>{{$item->description}}</td>
 						<td align="right">{{$item->moved_qty}}</td>
 						<td class="underline"><hr/></td>
-						<td class="underline"><hr/></td>						
-					</tr>				
+						<td class="underline"><hr/></td>
+					</tr>
 				@endforeach
 				<tr>
 					<td colspan="3" align="right"><strong>Box Total: </strong></td>
@@ -129,14 +129,14 @@ td.underline {padding-bottom: 0; }
 				<td align="right">{{$grandTotal}}</td>
 				<td class="underline"><hr/></td>
 				<td class="underline"><hr/></td>
-			</tr>			
+			</tr>
 		</table>
-		
-		<div class="comments">		
-			Comments:	
+
+		<div class="comments">
+			Comments:
 			<hr/><hr/><hr/>
-			
-			
+
+
 		</div>
 
 		<div class="signatories">
@@ -152,7 +152,7 @@ td.underline {padding-bottom: 0; }
 				Posted By / Date:<hr/><br/>
 			</div>
 		</div>
-	</section>		
+	</section>
 @endforeach
 
 
