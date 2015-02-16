@@ -459,8 +459,8 @@ class UsersController extends BaseController {
 						  'First Name: ' . Input::get('firstname') . '<br />' .
 						  'Last Name: ' . Input::get('lastname') . '<br />' .
 						  'Barcode: ' . Input::get('barcode') . '<br />' .
-						  'Role: ' . $role->role_name . '<br />' .
-						  'Brand: ' . $brand->brand_name;
+						  'Role: ' . $role_name . '<br />' .
+						  'Brand: ' . $brand_name;
 
 			$arrParams = array(
 							'module'		=> 'Users',
