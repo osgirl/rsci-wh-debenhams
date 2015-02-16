@@ -9,7 +9,7 @@ class eWMSMigration {
 	var $user;   			//Username for the database
    	var $pass;  				//Password
    	var $host; 		//hostname
-   	var $fieldSeparator = ","; 
+   	var $fieldSeparator = ",";
    	var $fieldEnclosedBy = '"';
    	var $fieldEscapedBy = '';
 	var $lineSeparator = "\n";
@@ -17,7 +17,7 @@ class eWMSMigration {
 	var $eWMSDumpDir = 'ewms_dump/'; 	//directory of the csv files
 	var $filename;
 
-	
+
 
 
 	public function __construct(){
@@ -50,7 +50,7 @@ class eWMSMigration {
 	private function connectDatabase() {
 		echo "cron/ewms_connection: mysql:host={$this->host};dbname={$this->dbName} \n";
 		try {
-		    $pdo = new PDO("mysql:host={$this->host};dbname={$this->dbName}; --local-infile", 
+		    $pdo = new PDO("mysql:host={$this->host};dbname={$this->dbName}; --local-infile",
 		        $this->user, $this->pass,
 		        array(
 		            PDO::MYSQL_ATTR_LOCAL_INFILE => true,
@@ -78,8 +78,8 @@ class eWMSMigration {
 		$ignore_replace = ($use_replace == FALSE) ? 'IGNORE' : 'REPLACE';
 
 		if($result) {
-			$query = "LOAD DATA LOCAL INFILE ".$this->pdo->quote($csv_dir)." 
-					{$ignore_replace} 
+			$query = "LOAD DATA LOCAL INFILE ".$this->pdo->quote($csv_dir)."
+					{$ignore_replace}
 			    	INTO TABLE `$table`
 			    	FIELDS TERMINATED BY ".$this->pdo->quote($this->fieldSeparator). "
 			    		   ENCLOSED BY ".$this->pdo->quote($this->fieldEnclosedBy). "
@@ -90,7 +90,7 @@ class eWMSMigration {
 			echo "$query \n";
 			$affectedRows = $this->pdo->exec($query);
 			// $affectedRows = $this->pdo->exec('mysql -uroot -proot ssi --local-infile');
-			
+
 
 			echo "Loaded a total of $affectedRows records from this csv file.\n";
 
@@ -150,7 +150,7 @@ class eWMSMigration {
 		$files = glob('db2_dump/'.$filename_pattern.'_*.csv');
 		$files = array_combine($files, array_map('filectime', $files));
 		arsort($files);
-		$key   = key($files); // the filename 
+		$key   = key($files); // the filename
 		echo "\n CSV FILE: $key \n";
 		return $key;
 	}

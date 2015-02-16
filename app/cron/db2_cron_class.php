@@ -217,7 +217,7 @@ class cronDB2 {
 		$sql = "SELECT POMRCH.POVNUM, POMRCH.POMRCV, POMRCH.PONUMB, POMRCH.POLOC, POMRCH.POSTAT, POMHDR.POFOB, POMRCH.POUNTS, POMRCH.POBON, POMHDR.POSHP1
 		        FROM POMRCH
 		        LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB AND POMRCH.POBON = POMHDR.POBON
-		        WHERE POMRCH.POSTAT = 3 AND POMRCH.POLOC = 7000"; // get PO with status=3/RELEASE
+		        WHERE POMRCH.POSTAT = 3 AND POMRCH.POLOC = 7000 AND POMRCH.PONUMB = 3718"; // get PO with status=3/RELEASE
 		        //FETCH FIRST 1 ROWS ONLY";
 
 		$query_result 	= $this->instance->runSQL($sql,true);
@@ -234,7 +234,7 @@ class cronDB2 {
 		        FROM POMRCD
 		        LEFT JOIN POMRCH ON POMRCH.POMRCV = POMRCD.POMRCV
 		        INNER JOIN INVUPC ON POMRCD.INUMBR = INVUPC.INUMBR
-		        WHERE POMRCH.POSTAT = 3 AND POMRCH.POLOC = 7000";
+		        WHERE POMRCH.POSTAT = 3 AND POMRCH.POLOC = 7000 AND POMRCH.PONUMB = 3718";
 		        //FETCH FIRST 1 ROWS ONLY";
 
 		$query_result 	= $this->instance->runSQL($sql,true);
@@ -277,13 +277,13 @@ class cronDB2 {
 		// Get all so_no in the picklist of the day
 		// from the gathered picklist match it to the so_no in the Transaction Header/TRFHDR
 		$getSoNo = self::_getUniqueSO();
-		$ids = join(',',$getSoNo);
+
+		$ids = "'".implode("' , '", $getSoNo)."'";
+		$ids = preg_replace('/\s+/', '', $ids);
 
 		if(! empty($ids) )
 		{
-			$sql = "SELECT TRFBCH, TRFTLC, TRFSTS, TRFBDT
-					FROM TRFHDR
-					WHERE TRFBCH IN ($ids)";
+			$sql = "SELECT TRFBCH, TRFTLC, TRFSTS, TRFBDT FROM TRFHDR WHERE TRFBCH IN ($ids)";
 			$query_result 	= $this->instance->runSQL($sql,true);
 
 			$filename 		= 'store_order_header';
@@ -304,7 +304,8 @@ class cronDB2 {
 		//get unique in MVD.WHSVSR  // for header
 
 		$getSoNo = self::_getUniqueSO();
-		$ids = join(',',$getSoNo);
+		$ids = "'".implode("' , '", $getSoNo)."'";
+		$ids = preg_replace('/\s+/', '', $ids);
 
 		if(! empty($ids) )
 		{
@@ -374,6 +375,36 @@ class cronDB2 {
 		$filename 		= 'vendor_master_list';
 	    // vendor_code  | vendor_name
 		$header_column = array('vendor_code', 'vendor_name');
+		$this->_export($query_result, $filename, $header_column, __METHOD__);
+	}
+
+	public function storeReturn()
+	{
+		$sql = "SELECT TRFBCH, TRFTLC, TRFSTS
+				FROM TRFHDR
+				WHERE TRFSTS = 'S' AND TRFTLC = 7000";
+
+		$query_result 	= $this->instance->runSQL($sql,true);
+
+		$filename 		= 'store_return_header';
+	    // so_no | store_name | so_status | order_date | created_at
+		$header_column = array('so_no','store_code', 'so_status');
+		$this->_export($query_result, $filename, $header_column, __METHOD__);
+	}
+
+	//to test
+	public function storeReturnDetails()
+	{
+		$sql = "SELECT TRFDTL.TRFBCH, INVUPC.IUPC,TRFDTL.TRFREQ, TRFDTL.TRFALC
+				FROM TRFHDR
+				RIGHT JOIN TRFDTL ON TRFDTL.TRFBCH = TRFHDR.TRFBCH
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR
+				WHERE TRFSTS = 'S' AND TRFTLC = 7000";
+
+		$query_result 	= $this->instance->runSQL($sql,true);
+		$filename 		= 'store_return_detail';
+	    // so_no | sku | ordered_qty | alloctated_qty | created_at
+		$header_column = array('so_no','sku', 'ordered_qty', 'allocated_qty');
 		$this->_export($query_result, $filename, $header_column, __METHOD__);
 	}
 

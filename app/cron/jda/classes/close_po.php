@@ -3,12 +3,12 @@
 include_once(__DIR__.'/../core/jda5250_helper.php');
 include_once(__DIR__.'/../sql/mysql.php');
 
-class poClosing extends jdaCustomClass 
-{	
+class poClosing extends jdaCustomClass
+{
 	private static $formMsg = "";
 
 	public static $user = 'SYS';
-	public static $warehouseNo = "9005 ";
+	public static $warehouseNo = "7000 ";
 
 
 /*
@@ -47,7 +47,7 @@ class poClosing extends jdaCustomClass
 	{
 		#enter merchandising
 		parent::$jda->screenWait("Merchandise Receiving");
-		parent::display(parent::$jda->screen,132);	
+		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("08",22,44)),ENTER,true);
 		echo "Entered: Merchandise Receiving \n";
 	}
@@ -55,7 +55,7 @@ class poClosing extends jdaCustomClass
 	private static function enterStoreReceivingMenu()
 	{
 		parent::$jda->screenWait("Store Receiving Menu");
-		parent::display(parent::$jda->screen,132);	
+		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("02",22,44)),ENTER,true);
 		echo "Entered: Store Receiving Menu \n";
 	}
@@ -63,7 +63,7 @@ class poClosing extends jdaCustomClass
 	private static function enterDockReceipt()
 	{
 		parent::$jda->screenWait("Dock Receipt and Check-In");
-		parent::display(parent::$jda->screen,132);	
+		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("02",22,44)),ENTER,true);
 		echo "Entered: Dock Receipt and Check-In \n";
 	}
@@ -77,9 +77,9 @@ class poClosing extends jdaCustomClass
 		$formValues[] = array(sprintf("%10d", $receiver_no),8,45);
 
 		parent::$jda->write5250($formValues,ENTER,true);
-		
+
 		return self::checkReceiverNumber($receiver_no);
-		
+
 	}
 
 	private static function checkReceiverNumber($receiver_no)
@@ -99,21 +99,21 @@ class poClosing extends jdaCustomClass
 		}
 		//won't happen in the live environment
 		if(parent::$jda->screenCheck('Receipt is already being processed through')) {
-			self::$formMsg = "{$receiver_no}: Receipt is already being processed through 'RF' or 'single'.";	
+			self::$formMsg = "{$receiver_no}: Receipt is already being processed through 'RF' or 'single'.";
 			parent::logError(self::$formMsg, __METHOD__);
 			self::updateSyncStatus($receiver_no, TRUE);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('You cannot receive this receiver at this time')) {
-			self::$formMsg = "{$receiver_no}: You cannot receive this receiver at this time";	
+			self::$formMsg = "{$receiver_no}: You cannot receive this receiver at this time";
 			parent::logError(self::$formMsg, __METHOD__);
 			self::updateSyncStatus($receiver_no, TRUE);
 			return false;
 		}
-		
+
 		if(parent::$jda->screenCheck('This receiver has been detail received, cannot dock receive.')) {
-			self::$formMsg = "{$receiver_no}: This receiver has been detail received, cannot dock receive.";	
+			self::$formMsg = "{$receiver_no}: This receiver has been detail received, cannot dock receive.";
 			parent::logError(self::$formMsg, __METHOD__);
 			self::updateSyncStatus($receiver_no, TRUE);
 			return false;
@@ -157,7 +157,7 @@ class poClosing extends jdaCustomClass
 
 		echo "\n Getting receiver no from db \n";
 		$sql 	= "SELECT receiver_no reference
-					FROM wms_transactions_to_jda 
+					FROM wms_transactions_to_jda
 					INNER JOIN wms_purchase_order_lists ON reference = purchase_order_no
 					WHERE module = 'Purchase Order' AND jda_action='Closing' AND sync_status = 0";
 		$query 	= $db->query($sql);
@@ -180,20 +180,20 @@ class poClosing extends jdaCustomClass
 		$query 	= $db->query($sql);
 
 		$result = array();
-		
+
 		foreach ($query as $value ) {
 			$result['invoice_no'] = $value['invoice_no'];
 			$result['invoice_amount'] = $value['invoice_amount'];
 		}
 
-		if(!empty($result)) 
+		if(!empty($result))
 		{
-			if( empty($result['invoice_no']) ) 
+			if( empty($result['invoice_no']) )
 			{
 				self::$formMsg = "Invoice no is empty.";
 				parent::logError(self::$formMsg, __METHOD__);
 			}
-			if( empty($result['invoice_amount']) ) 
+			if( empty($result['invoice_amount']) )
 			{
 				self::$formMsg = "Invoice no is amount.";
 				parent::logError(self::$formMsg, __METHOD__);
@@ -239,7 +239,7 @@ class poClosing extends jdaCustomClass
 		$status = ($isError) ? parent::$errorFlag : parent::$successFlag;
 
 		echo "\n Getting receiver no from db \n";
-		$sql 	= "UPDATE wms_transactions_to_jda 
+		$sql 	= "UPDATE wms_transactions_to_jda
 					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}'
 					WHERE sync_status = 0 AND module = 'Purchase Order' AND jda_action='Closing' AND reference = (SELECT purchase_order_no FROM wms_purchase_order_lists po WHERE po.receiver_no = {$reference})";
 		$query 	= $db->exec($sql);
@@ -260,7 +260,7 @@ class poClosing extends jdaCustomClass
 		echo "Entered: PO Receipt Detail by SKU  \n";
 	}
 
-	public function enterQtyPerItem($receiver_no) 
+	public function enterQtyPerItem($receiver_no)
 	{
 		$column 	= 10;
 		$row 		= 100;
@@ -282,7 +282,7 @@ class poClosing extends jdaCustomClass
 		self::checkResponse($receiver_no);
 	}
 
-	private static function checkResponse($receiver_no) 
+	private static function checkResponse($receiver_no)
 	{
 		# error
 		if(parent::$jda->screenCheck('Qty received should not be greater than the qty ordered')) {
@@ -295,7 +295,7 @@ class poClosing extends jdaCustomClass
 		echo self::$formMsg;
 	}
 
-	public function enterClosingPo() 
+	public function enterClosingPo()
 	{
 		parent::$jda->screenWait("Receiver Confirmation Print");
 		parent::display(parent::$jda->screen,132);
@@ -304,7 +304,7 @@ class poClosing extends jdaCustomClass
 		echo "Entered: Closing of PO  \n";
 	}
 
-	public function enterJobName($receiver_no) 
+	public function enterJobName($receiver_no)
 	{
 		parent::$jda->screenWait("Submitted Job Name");
 		parent::display(parent::$jda->screen,132);
@@ -317,7 +317,7 @@ class poClosing extends jdaCustomClass
 	* On done only via android
 	*/
 	public function enterUpToDockReceipt()
-	{	
+	{
 		//TODO::checkvalues
 		//TODO::how to know if error
 		try {
@@ -332,11 +332,11 @@ class poClosing extends jdaCustomClass
 			//send fail status
 			echo 'Error: '. $e->getMessage();
 		}
-		
+
 	}
 
 	public function logout()
-	{	
+	{
 		parent::logout();
 
 		echo "Entered: Done purchase order closing.... \n";
@@ -356,7 +356,7 @@ $poNos = $db->getJdaTransaction($params);
 
 // $receiver_nos = $closePO->getReceiverNo();
 print_r($poNos);
-if(! empty($poNos) ) 
+if(! empty($poNos) )
 {
 	$receiver_nos = $db->getReceiverNo($poNos);
 	print_r($receiver_nos);
@@ -380,7 +380,7 @@ if(! empty($poNos) )
 		$closePO->logout();
 	}
 	else {
-		echo " \n No receiver_nos found!. \n";	
+		echo " \n No receiver_nos found!. \n";
 	}
 }
 else {
@@ -394,7 +394,7 @@ $db->close(); //close db connection
 /*$closePO = new poClosing();
 $receiver_nos = $closePO->getReceiverNo();
 print_r($receiver_nos);
-if(! empty($receiver_nos) ) 
+if(! empty($receiver_nos) )
 {
 	$closePO->enterUpToDockReceipt();
 	foreach($receiver_nos as $receiver) {
