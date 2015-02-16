@@ -149,4 +149,17 @@ class Picklist extends Eloquent {
 					));
 	}
 
+	public static function getPicklistWithoutDiscrepancies()
+	{
+		$status_options = Dataset::where("data_code", "=", "PICKLIST_STATUS_TYPE")->get()->lists("id", "data_value");
+
+		$query = Picklist::join('picklist_details', 'picklist_details.move_doc_number', '=', 'picklist.move_doc_number')
+			->where('pl_status', '=', $status_options['done'])
+			// ->where('quantity_to_pick', '=', 'moved_qty')
+			// ->groupBy('picklist.move_doc_number')
+			->get()->toArray();
+
+
+		echo "<pre>"; print_r($query); die();
+	}
 }

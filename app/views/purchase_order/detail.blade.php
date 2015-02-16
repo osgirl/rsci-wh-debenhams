@@ -140,7 +140,7 @@
 				@else
 					@foreach( $purchase_orders as $po )
 					<tr class="font-size-13"
-					@if ( ($po->quantity_ordered - $po->quantity_delivered) > 0 )
+					@if ( $po->quantity_ordered !== $po->quantity_delivered )
 						style="background-color:#F29F9F"
 					@endif
 					>

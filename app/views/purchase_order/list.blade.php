@@ -31,6 +31,12 @@
 				        		{{ Form::text('filter_receiver_no', $filter_receiver_no, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_receiver_no")) }}
 				        	</span>
 				        </div>
+				        <div>
+				        	<span class="search-po-left-pane">{{ $label_shipment_reference_no }}</span>
+				        	<span class="search-po-right-pane">
+				        		{{ Form::text('filter_shipment_reference_no', $filter_shipment_reference_no, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_shipment_reference_no")) }}
+				        	</span>
+				        </div>
 			      	</div>
 			      	<div class="span4">
 			      		<div>
@@ -413,7 +419,7 @@ $(document).ready(function() {
 
     // Clear Form
     $('#clearForm').click(function() {
-    	$('#filter_po_no, #filter_receiver_no, #filter_supplier').val('');
+    	$('#filter_po_no, #filter_receiver_no, #filter_supplier, #filter_shipment_reference_no').val('');
 		$('#filter_entry_date').val('');
 
 		$('select').val('');

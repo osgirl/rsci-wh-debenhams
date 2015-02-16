@@ -144,6 +144,8 @@ class PurchaseOrder extends Eloquent {
 		if( CommonHelper::hasValue($data['filter_back_order']) ) $query->where('back_order', '=', $data['filter_back_order']);
 		if( CommonHelper::hasValue($data['filter_brand']) ) $query->where('dept_code', '=', $data['filter_brand']);
 		if( CommonHelper::hasValue($data['filter_division']) ) $query->where('sub_dept', '=', $data['filter_division']);
+		if( CommonHelper::hasValue($data['filter_shipment_reference_no']) ) $query->where('shipment_reference_no', '=', $data['filter_shipment_reference_no']);
+
 		if( !empty($data['filter_back_order_only']) ) $query->where('back_order', '<>', 0);
 
 		DebugHelper::log(__METHOD__, $query);

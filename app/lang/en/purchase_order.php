@@ -31,6 +31,7 @@ return array(
 	'label_back_order'			=> 'Back Order',
 	'label_brand'				=> 'Brand',
 	'label_division'			=> 'Division',
+	'label_shipment_reference_no' => 'Shipment Ref No.',
 
 	'entry_purchase_no'			=> 'PO No.:',
 	'entry_stock_piler'			=> 'Stock Piler:',

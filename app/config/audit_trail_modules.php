@@ -8,7 +8,7 @@ return array(
 	"storeorder"	=> "Store Order",
 	"purchaseorder"	=> "Purchase Order",
 	"shipping"		=> "Shipping",
-	"reservezone"	=> "Reserve Zone",
+	"reservezone"	=> "Picking Location",
 	"slotmaster"	=> "Slots",
 	"users"			=> "Users",
 	"settings"		=> "Settings",

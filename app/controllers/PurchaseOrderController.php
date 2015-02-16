@@ -661,6 +661,7 @@ class PurchaseOrderController extends BaseController {
 		$filter_back_order  = Input::get('filter_back_order', NULL);
 		$filter_brand       = Input::get('filter_brand', NULL);
 		$filter_division       = Input::get('filter_division', NULL);
+		$filter_shipment_reference_no = Input::get('filter_shipment_reference_no', NULL);
 
 		$sort               = Input::get('sort', 'purchase_order_lists.created_at');
 		$order              = Input::get('order', 'DESC');
@@ -676,6 +677,7 @@ class PurchaseOrderController extends BaseController {
 						'filter_status'      => $filter_status,
 						'filter_brand'       => $filter_brand,
 						'filter_division'	 => $filter_division,
+						'filter_shipment_reference_no' => $filter_shipment_reference_no,
 						'sort'               => $sort,
 						'order'              => $order,
 						'page'               => $page,
@@ -695,6 +697,7 @@ class PurchaseOrderController extends BaseController {
 									'filter_status'      => $filter_status,
 									'filter_brand'       => $filter_brand,
 									'filter_division'	 => $filter_division,
+									'filter_shipment_reference_no' => $filter_shipment_reference_no,
 									'sort'               => $sort,
 									'order'              => $order
 								);
@@ -710,6 +713,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['filter_back_order']     = $filter_back_order;
 		$this->data['filter_brand']          = $filter_brand;
 		$this->data['filter_division']       = $filter_division;
+		$this->data['filter_shipment_reference_no'] = $filter_shipment_reference_no;
 		$this->data['sort']                  = $sort;
 		$this->data['order']                 = $order;
 		$this->data['page']                  = $page;
@@ -718,6 +722,7 @@ class PurchaseOrderController extends BaseController {
 		$url                                 .= '&filter_entry_date=' . $filter_entry_date . '&filter_back_order=' . $filter_back_order;
 		$url                                 .= '&filter_stock_piler=' . $filter_stock_piler . '&filter_status=' . $filter_status;
 		$url                                 .= '&filter_brand=' . $filter_brand . '&filter_division=' . $filter_division;
+		$url 								 .= '&filter_shipment_reference_no=' . $filter_shipment_reference_no;
 		$url                                 .= '&page=' . $page;
 
 		$order_po_no                         = ($sort=='po_no' && $order=='ASC') ? 'DESC' : 'ASC';
@@ -745,6 +750,7 @@ class PurchaseOrderController extends BaseController {
 		$url .= '&filter_back_order=' . Input::get('filter_back_order', NULL);
 		$url .= '&filter_brand=' . Input::get('filter_brand', NULL);
 		$url .= '&filter_division=' . Input::get('filter_division', NULL);
+		$url .= '&filter_shipment_reference_no=' . Input::get('filter_shipment_reference_no', NULL);
 		if($forDetail) {
 			$url .= '&sort_back=' . Input::get('sort', 'po_no');
 			$url .= '&order_back=' . Input::get('order', 'ASC');

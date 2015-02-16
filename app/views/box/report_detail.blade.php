@@ -27,7 +27,6 @@
 		@else
 			@foreach( $results as $box )
 			<tr class="font-size-13">
-				<td>{{ $counter++ }}</td>
 				<td>{{ $box->sku }}</td>
 				<td>{{ $box->short_description }}</td>
 				<td>{{ $box->box_code }}</td>

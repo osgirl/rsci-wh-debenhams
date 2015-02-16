@@ -118,7 +118,7 @@ $(document).ready(function() {
 
     // Clear Form
     $('#clearForm').click(function() {
-    	$('#filter_reference_no').val('');
+    	$('#filter_reference_no, #filter_sku').val('');
     	$('#form-unlisted').submit();
     });
 
