@@ -58,7 +58,7 @@
 					<tr>
 						<th width="10%">{{ $col_id }}</th>
 						<th><a href="{{ $sort_load_code }}" class="@if( $sort=='load_code' ) {{ $order }} @endif">{{ $col_load_no }}</a></th>
-						<th><a href="#" class="">STORES</a></th>
+						<th>STORES</th>
 						<th><a href="{{ $sort_status }}" class="@if( $sort=='status' ) {{ $order }} @endif">{{ $col_status }}</a></th>
 						<th>{{$col_action}}</th>
 					</tr>
