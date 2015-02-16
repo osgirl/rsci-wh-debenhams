@@ -590,7 +590,7 @@ class BoxController extends BaseController {
 			$input = Input::all();
 
 			DB::beginTransaction();
-			if(! is_numeric($input['box_range']) || (int) $input['box_range'] == 0 ) throw new Exception ('Invalid input.');
+			if(! is_numeric($input['box_range']) || (int) $input['box_range'] == 0 || $input['box_range'] < 0 ) throw new Exception ('Invalid input.');
 
 			$storeCode = $input['store'];
 			$numberOfBoxes = (int)$input['box_range'];
