@@ -124,7 +124,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if ($data['sort']=='name') $data['sort'] = 'users.firstname';
 			if ($data['sort']=='role') $data['sort'] = 'user_roles.role_name';
-			// if ($data['sort']=='brand') $data['sort'] = 'settings.brand_name';
+			if ($data['sort']=='brand') $data['sort'] = 'brands.brand_name';
 			if ($data['sort']=='date') $data['sort'] = 'users.created_at';
 
 			$query->orderBy($data['sort'], $data['order']);
@@ -159,7 +159,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if ($data['sort']=='name') $data['sort'] = 'users.firstname';
 			if ($data['sort']=='role') $data['sort'] = 'user_roles.role_name';
-			// if ($data['sort']=='brand') $data['sort'] = 'settings.brand_name';
+			if ($data['sort']=='brand') $data['sort'] = 'brands.brand_name';
 			if ($data['sort']=='date') $data['sort'] = 'users.created_at';
 
 			$query->orderBy($data['sort'], $data['order']);
