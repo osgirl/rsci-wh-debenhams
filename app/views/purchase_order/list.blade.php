@@ -420,7 +420,7 @@ $(document).ready(function() {
     // Clear Form
     $('#clearForm').click(function() {
     	$('#filter_po_no, #filter_receiver_no, #filter_supplier, #filter_shipment_reference_no').val('');
-		$('#filter_entry_date').val('');
+		$('#filter_entry_date, #filter_back_order').val('');
 
 		$('select').val('');
 		$('#form-purchase-order').submit();
