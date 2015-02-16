@@ -277,6 +277,7 @@ class PurchaseOrderController extends BaseController {
 							'filter_back_order'  => Input::get('filter_back_order', NULL),
 							'filter_brand'       => Input::get('filter_brand', NULL),
 							'filter_division'    => Input::get('filter_division', NULL),
+							'filter_shipment_reference_no' => Input::get('filter_shipment_reference_no', NULL),
 							'sort'               => Input::get('sort', 'po_no'),
 							'order'              => Input::get('order', 'ASC'),
 							'page'               => NULL,
