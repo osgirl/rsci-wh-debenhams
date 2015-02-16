@@ -1,7 +1,7 @@
 <?php
 
 class ApiReserveZone extends BaseController {
-	
+
 	public function __construct() {
 		date_default_timezone_set('Asia/Manila');
 	}
@@ -12,7 +12,7 @@ class ApiReserveZone extends BaseController {
 	* @example  www.example.com/api/{version}/upc
 	*
 	* @return Status
-	*/ 
+	*/
 	public function index() {
 		try {
 			$upc_list = SkuOnDock::getAll();
@@ -30,16 +30,16 @@ class ApiReserveZone extends BaseController {
 	*
 	* @example  www.example.com/api/{version}/upc/reserve_zone/
 	*
-	* @param  slot_id  
-	* @return json encoded array of result of moving 
-    * 
+	* @param  slot_id
+	* @return json encoded array of result of moving
+    *
     * Steps
     * 1 Save transaction of put_away
     * 2 Save slot detail
     */
 	public function putToReserve($slot_id) {
 		try {
-            
+
 			if(! CommonHelper::hasValue($slot_id) ) throw new Exception( 'Missing slot id parameter.');
 
 			CommonHelper::setRequiredFields(array('data', 'created_at', 'user_id'));
@@ -55,13 +55,13 @@ class ApiReserveZone extends BaseController {
 			if(empty($data)) {
 				throw new Exception("You haven't moved any items yet.");
 			}
-			
+
 			Log::info(__METHOD__ .' Data json decode: '.print_r($data,true));
-			
+
 			//get moved_to_reserve id
 			$arrParams = array('data_code' => 'ZONE_TYPE', 'data_value'=> 'moved_to_reserve');
 			$zone_id = Dataset::getType($arrParams)->toArray();
-			
+
 			DB::beginTransaction();
 			//1
 			$transaction = PutAway::createTransaction($slot_id, $zone_id['id']);
@@ -69,7 +69,7 @@ class ApiReserveZone extends BaseController {
 			DebugHelper::log(__METHOD__. ' Transaction: ' , $transaction->id);
 
 			//2 TODO:: move this to another method
-	        if( CommonHelper::hasValue($transaction->id) ) 
+	        if( CommonHelper::hasValue($transaction->id) )
 	        {
 				foreach ($data as $key => $values) {
 		            $arrParams = array(
@@ -82,11 +82,11 @@ class ApiReserveZone extends BaseController {
 		            		'expiry_date'		=> $values['expiry_date']
 		            	);
 
-		            $result[$values['sku']] = $this->_validateQty($arrParams); 
+		            $result[$values['sku']] = $this->_validateQty($arrParams);
 		        }
 
 		        Log::info(__METHOD__ .' Results : '.print_r($result,true));
-		        
+
 	        }
 	        self::putToReserveAuditTrail($user_id, $slot_id, $result, $data);
 	        DB::commit();
@@ -95,7 +95,7 @@ class ApiReserveZone extends BaseController {
 			DB::rollback();
 			Log::error(__METHOD__ .' Something went wrong: '.print_r($e->getMessage(),true));
 			return CommonHelper::return_fail($e->getMessage());
-		}	
+		}
 	}
 
 	/**
@@ -105,13 +105,13 @@ class ApiReserveZone extends BaseController {
 	*
 	* @param  data      sku and moved quantity json string
 	* @return result    what skus were moved
-	*/ 
+	*/
 	private function _validateQty($data = array()) {
 		$checkQty = SkuOnDock::_checkQty($data);
 
-		if( ($checkQty['total_qty_remaining'] >= $data['quantity']) && ($checkQty['total_qty_remaining'] != 0) &&  ($data['quantity'] >0)) 
+		if( ($checkQty['total_qty_remaining'] >= $data['quantity']) && ($checkQty['total_qty_remaining'] != 0) &&  ($data['quantity'] >0))
 		{
-			$result = SlotDetails::insert($data); 
+			$result = SlotDetails::insert($data);
 			if( $result ) SkuOnDock::reduceTotalQtyRemaining($data);
 		}
 		else
@@ -135,15 +135,15 @@ class ApiReserveZone extends BaseController {
 	{
 		//TODO::how do i ensure skus were valid and all moved
 		$data_after = "Stock Piler #" . $user_id . ' moving the following items to slot #' . $slot_code . ':</br>';
-		
+
 		foreach ($skus_original as $key => $value) {
 			if($skus_result[$value['sku']] !== true)
 			{
 				$data_after .= $skus_result[$value['sku']];
 			} else {
-				$data_after .= "Able to insert ". $value['quantity_delivered'] . ' of ' .$value['sku'] . ' with expiration date of ' . $value['expiry_date'];
+				$data_after .= "Able to insert ". $value['quantity_delivered'] . ' of ' .$value['sku'] . ' with expiration date of ' . date("M d, Y", strtotime($value['expiry_date']));
 			}
-			
+
 			$data_after .= "</br>";
 		}
 
@@ -162,31 +162,31 @@ class ApiReserveZone extends BaseController {
 
 	/*********************Unused functions remove******************************/
 	/*private function _oldvalidateQty($values = array(), $po_id) {
-		$params = array('sku'=>$values['sku'], 
+		$params = array('sku'=>$values['sku'],
 									'po_id'=>$po_id
 							);
 		$delivered_qty		= PurchaseOrderDetail::getSku($params);
 		$total_stored_qty 	= SlotDetails::_checkQuantity($values, $po_id);
 		$delivered_qty		= $delivered_qty->quantity_delivered;
-		
+
 		//TRUE if delivered_qty is greater or equal the submitted qty
-		if( (integer) $delivered_qty >= (integer) $values['quantity'] ) 
+		if( (integer) $delivered_qty >= (integer) $values['quantity'] )
 		{
 			Log::info(__METHOD__ .' Values1 : '. $delivered_qty >= (integer) $values['quantity']);
 			$available_qty = $delivered_qty - $total_stored_qty; //sum
-			
+
 			//TRUE if available_qty is greater or equal to submitted qty
 			if( (integer) $available_qty >= (integer) $values['quantity'] ) {
 				Log::info(__METHOD__ .' Values2 : '.$available_qty >= (integer) $values['quantity']);
-				$result = SlotDetails::insert($values); 
-				
+				$result = SlotDetails::insert($values);
+
 			}
 			else {
 				Log::info(__METHOD__ .' else 2 : '. $values['sku']);
 				$result = 'Unable to insert sku #: '.$values['sku'];
 			}
 		}
-		else 
+		else
 		{
 			Log::info(__METHOD__ .' else 1 : '. $values['sku'] . ' delivered_qty: '.$delivered_qty. 'quantity: '.$values['quantity']);
 			$result = 'Unable to insert sku #: '.$values['sku'];

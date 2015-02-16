@@ -13,7 +13,7 @@ return array(
 	"assign_po"			=> "Assigned PO",
 	"close_po"			=> "Closed PO",
 	"post_store_order"	=> 'Put away to dispatching zone',
-	"put_to_reserve"	=> 'Put away to reserve zone',
+	"put_to_reserve"	=> 'Put away to picking location',
 	"assign_to_piler"	=> 'Assign to Stock Piler',
 	"modify_po_status"	=> "Update Purchase Order Status",
 	"update_po_detail"	=> "Update Purchase Order Detail",
