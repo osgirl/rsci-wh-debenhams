@@ -687,7 +687,8 @@ class PurchaseOrderController extends BaseController {
 					);
 
 		$results 		= PurchaseOrder::getPoLists($arrParams);
-		$results_total 	= PurchaseOrder::getCount($arrParams);
+		$results_total 	= count($results);//PurchaseOrder::getCount($arrParams);
+		DebugHelper::log(__METHOD__, $results_total);
 
 		// Pagination
 		$this->data['arrFilters'] = array(
