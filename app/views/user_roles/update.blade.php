@@ -94,7 +94,7 @@
 						<td class="align-center">--</td>
                     </tr>
 
-                    <tr>
+                    <!-- <tr>
 						<td class="align-center font-12">{{ $module_picking }}</td>
 						<td class="align-center">
 							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessLetdown', Input::old('permissions'))) || CommonHelper::valueInArray('CanAccessLetdown', json_decode($user_role->permissions)))
@@ -119,7 +119,7 @@
 						<td class="align-center">--</td>
 						<td class="align-center">--</td>
 						<td class="align-center">--</td>
-                    </tr>
+                    </tr> -->
 
                     <tr>
 						<td class="align-center font-12">{{ $module_packing }}</td>
