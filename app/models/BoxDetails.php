@@ -2,7 +2,7 @@
 
 class BoxDetails extends Eloquent {
 
-	protected $guarded = array(); 
+	protected $guarded = array();
 	/**
      * The database table used by the model.
      *
@@ -24,8 +24,8 @@ class BoxDetails extends Eloquent {
 		//check if box exists in header
 		$boxDetail = BoxDetails::where('picklist_detail_id', '=', $picklistDetailId)
 			->where('box_code', '=', $boxCode)
-			->first(); 
-		
+			->first();
+
 		if(count($boxDetail) === 0) {
 			self::addBoxManifestDetail($picklistDetailId, $boxCode,$qtyToMove);
 		} else {
@@ -44,7 +44,7 @@ class BoxDetails extends Eloquent {
 	*
 	*/
 	public static function addBoxManifestDetail($picklistDetailId,$boxCode,$qtyToMove)
-	{	
+	{
 		BoxDetails::create(array(
 			"picklist_detail_id"		=> intval($picklistDetailId),
 			"box_code"					=> $boxCode,
@@ -52,7 +52,7 @@ class BoxDetails extends Eloquent {
 			"created_at"				=> date('Y-m-d H:i:s'),
 			"updated_at"				=> date('Y-m-d H:i:s')
 		));
-		
+
 		return;
 	}
 
@@ -104,6 +104,7 @@ class BoxDetails extends Eloquent {
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if ($data['sort']=='box_code') $data['sort'] = 'box_details.box_code';
 			if ($data['sort']=='store') $data['sort'] = 'stores.store_name';
+			if ($data['sort']=='date_created') $data['sort'] = 'box.created_at';
 
 
 			$query->orderBy($data['sort'], $data['order']);
@@ -119,8 +120,8 @@ class BoxDetails extends Eloquent {
 			$result = $query->count();
 		}
 
-		
-		
+
+
 		return $result;
 	}
 
@@ -168,8 +169,8 @@ GROUP BY box.box_code
     	/*SELECT DISTINCT pl.move_doc_number, b.store_code, MIN(bd.box_code) box_code
 					FROM wms_box_details bd
 					INNER JOIN wms_box b ON b.box_code = bd.box_code
-					INNER JOIN wms_picklist_details pd ON bd.picklist_detail_id = pd.id 
-                    INNER JOIN wms_picklist pl ON pl.move_doc_number = pd.move_doc_number 
+					INNER JOIN wms_picklist_details pd ON bd.picklist_detail_id = pd.id
+                    INNER JOIN wms_picklist pl ON pl.move_doc_number = pd.move_doc_number
 					WHERE bd.sync_status = 0 AND pl_status = 2
 					GROUP BY pl.move_doc_number
 					ORDER BY pl.move_doc_number, sequence_no ASC*/

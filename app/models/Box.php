@@ -2,7 +2,7 @@
 
 class Box extends Eloquent {
 
-	protected $guarded = array(); 
+	protected $guarded = array();
 
     /**
     * Get single box
@@ -12,7 +12,7 @@ class Box extends Eloquent {
     * @param  boxCode   box code
     * @param  storeCode store code
     * @return Status
-    */ 
+    */
     public static function getBox($boxCode, $storeCode)
     {
         $box = Box::where('box_code','=',$boxCode)
@@ -44,7 +44,7 @@ class Box extends Eloquent {
     * @example  Box::getBoxesWithFilter({params})
     *
     * @return boxes
-    */ 
+    */
     public static function getBoxesWithFilters($data= array())
     {
         /*$query = Box::select('box_details.picklist_detail_id', 'box.box_code', 'box.id', 'box.store_code', 'box.in_use', 'box.created_at', 'stores.store_name')
@@ -57,7 +57,7 @@ class Box extends Eloquent {
             ->leftJoin('picklist', function($join)
             {
                 $join->on('picklist.move_doc_number', '=', 'picklist_details.move_doc_number');
-                     
+
             })
             ->leftJoin('box_details', 'box_details.box_code', '=', 'box.box_code');
 
@@ -65,6 +65,8 @@ class Box extends Eloquent {
             if ($data['sort']=='store') $data['sort'] = 'box.store_code';
             if ($data['sort']=='box_code') $data['sort'] = 'box.box_code';
             if ($data['sort']=='date_created') $data['sort'] = 'box.created_at';
+
+            // die($data['order']);
 
             $query->orderBy($data['sort'], $data['order']);
         }
@@ -80,10 +82,10 @@ class Box extends Eloquent {
                   ->take($data['limit']);
         }
         $query->groupBy('box.box_code');
-        
+
         $result = $query->get();
-        
-        
+
+
         return $result;
     }
 
@@ -116,7 +118,7 @@ class Box extends Eloquent {
     * @example  Box::updateBox({array})
     *
     * @return Status
-    */ 
+    */
     public static function updateBox($data=array())
     {
         $test = Box::where('box_code', '=', $data['box_code'])
