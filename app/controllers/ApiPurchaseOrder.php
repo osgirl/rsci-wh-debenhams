@@ -231,7 +231,8 @@ class ApiPurchaseOrder extends BaseController {
 			$loggedInUserId = Authorizer::getResourceOwnerId();
 
 			$validateUser = PurchaseOrder::where('purchase_order_no', '=', $po_order_no)
-					->where('assigned_to_user_id', '=', $loggedInUserId)->first();
+					// ->where('assigned_to_user_id', '=', $loggedInUserId)->first();
+					->whereRaw('find_in_set('. $loggedInUserId . ',assigned_to_user_id) > 0')->first();
 
 			if ( empty($validateUser) ) throw new Exception( 'User does not have the rights to access this po.');
 
