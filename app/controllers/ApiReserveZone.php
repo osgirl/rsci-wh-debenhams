@@ -141,7 +141,7 @@ class ApiReserveZone extends BaseController {
 			{
 				$data_after .= $skus_result[$value['sku']];
 			} else {
-				$data_after .= "Able to insert ". $value['quantity_delivered'] . ' of ' .$value['sku'] . ' with expiration date of ' . date("M d, Y", strtotime($value['expiry_date']));
+				$data_after .= "Able to insert ". $value['quantity_delivered'] . ' of ' .$value['sku'];
 			}
 
 			$data_after .= "</br>";
