@@ -11,15 +11,22 @@
 </head>
 <body>
 <div class="table-responsive">
+	<div class="align-center">UNLISTED SUMMARY REPORT</div>
+	<br />
+	UIRR No. : U-7000-{{ time() }}<br />
+	Actual Delivery Date : <br />
+	Print Date : {{ date('m/d/Y') }}<br />
+
+	<br /><br />
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
-				<th>{{ $col_upc }}</th>
 				<th>{{ $col_reference }}</th>
+				<th>{{ $col_brand }}</th>
+				<th>{{ $col_upc }}</th>
 				<th>{{ $col_quantity_received }}</th>
 				<th>{{ $col_description }}</th>
 				<th>{{ $col_style_no }}</th>
-				<th>{{ $col_brand }}</th>
 				<th>{{ $col_division }}</th>
 			</tr>
 		</thead>
@@ -30,12 +37,12 @@
 		@else
 			@foreach($results as $unlist)
 			<tr class="font-size-13">
-				<td>{{ $unlist['sku'] }}</td>
 				<td>{{ $unlist['reference_no'] }}</td>
+				<td>{{ $unlist['brand'] }}</td>
+				<td>{{ $unlist['sku'] }}</td>
 				<td>{{ $unlist['quantity_received'] }}</td>
 				<td>{{ $unlist['description'] }}</td>
 				<td>{{ $unlist['style_no'] }}</td>
-				<td>{{ $unlist['brand'] }}</td>
 				<td>{{ $unlist['division'] }}</td>
 			</tr>
 			@endforeach
