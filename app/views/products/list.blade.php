@@ -1,6 +1,8 @@
 <div class="control-group">
+<h2><span class="label label-important" style="font-size: 15px; font-weight: normal;">Notes: Please use filter first before using the export button.</span></h2>
 	<div class="controls">
 		<div class="accordion" id="accordion2">
+
 			<div class="accordion-group search-panel">
 				{{ Form::open(array('url'=>'products', 'class'=>'form-signin', 'id'=>'form-products', 'role'=>'form', 'method' => 'get')) }}
 				<div id="collapseOne" class="accordion-body collapse in search-panel-content">
@@ -75,7 +77,7 @@
 	</div>
 	<div class="div-buttons">
 		@if ( CommonHelper::valueInArray('CanExportProductMasterList', $permissions) )
-		<!-- <a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a> -->
+		<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
 		@endif
 	</div>
 </div>

@@ -33,7 +33,7 @@ class ProductListController extends BaseController {
 		$this->getList();
 	}
 
-	public function exportCSV() {
+	/*public function exportCSV() {
 		// Check Permissions
 		if (Session::has('permissions')) {
 	    	if (!in_array('CanExportProductMasterList', unserialize(Session::get('permissions'))))  {
@@ -56,7 +56,6 @@ class ProductListController extends BaseController {
 							'limit'						=> NULL
 						);
 		$results = ProductList::getProductLists($arrParams);
-
 	    $output = Lang::get('product_list.col_prod_sku') . ',';
 		$output .= Lang::get('product_list.col_prod_upc') . ',';
 		$output .= Lang::get('product_list.col_prod_full_name') . ',';
@@ -84,9 +83,9 @@ class ProductListController extends BaseController {
 		);
 
 		return Response::make(rtrim($output, "\n"), 200, $headers);
-	}
+	}*/
 
-	/*public function exportCSV() {
+	public function exportCSV() {
 		// Check Permissions
 		if (Session::has('permissions')) {
 	    	if (!in_array('CanExportProductMasterList', unserialize(Session::get('permissions'))))  {
@@ -117,7 +116,7 @@ class ProductListController extends BaseController {
 		$pdf->loadView('products.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
 		// return $pdf->stream();
 		return $pdf->download('products_' . date('Ymd') . '.pdf');
-	}*/
+	}
 
 	public function getSubDepartments() {
 		$filter_dept_no = Input::get('filter_dept_no', NULL);
@@ -202,8 +201,9 @@ class ProductListController extends BaseController {
 							'limit'						=> 30
 						);
 		$results = ProductList::getProductLists($arrParams);
+		DebugHelper::log(__METHOD__, $results);
 		$results_total = ProductList::getCountProductLists($arrParams);
-
+		DebugHelper::log(__METHOD__, $results_total);
 		// Pagination
 		$this->data['arrFilters'] = array(
 										'filter_prod_sku'			=> $filter_prod_sku,

@@ -42,7 +42,8 @@ class SlotListController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
-
+		$this->data = Lang::get('slot_list');
+		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 		$arrParams = array(
 							'filter_slot_no'	=> Input::get('filter_slot_no', NULL),
 							'sort'				=> Input::get('sort', 'slot_code'),
@@ -52,23 +53,12 @@ class SlotListController extends BaseController {
 						);
 		$results = SlotList::getSlotLists($arrParams);
 
-		$output = Lang::get('slot_list.col_slot_no') . "\n";
+		$this->data['results'] = $results;
 
-	    foreach ($results as $value) {
-	    	$exportData = array(
-	    						'"' . $value->slot_code . '"'
-	    					);
-
-	      	$output .= implode(",", $exportData);
-	      	$output .= "\n";
-	  	}
-
-		$headers = array(
-			'Content-Type' => 'text/csv',
-			'Content-Disposition' => 'attachment; filename="slotList_' . date('Ymd')  . '_' . time() . '.csv"',
-		);
-
-		return Response::make(rtrim($output, "\n"), 200, $headers);
+		$pdf = App::make('dompdf');
+		$pdf->loadView('slots.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
+		// return $pdf->stream();
+		return $pdf->download('slots_' . date('Ymd') . '.pdf');
 	}
 
 	/*public function exportCSV() {

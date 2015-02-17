@@ -1,4 +1,5 @@
 <div class="control-group">
+	<h2><span class="label label-important" style="font-size: 15px; font-weight: normal;">Notes: Please use filter first before using the export button.</span></h2>
 	<div class="controls">
 		<div class="accordion" id="accordion2">
 			<div class="accordion-group search-panel">
@@ -39,7 +40,7 @@
 	</div>
 	<div class="div-buttons">
 		@if ( CommonHelper::valueInArray('CanExportSlotMasterList', $permissions) )
-		<!-- <a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a> -->
+		<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
 		@endif
 	</div>
 </div>
