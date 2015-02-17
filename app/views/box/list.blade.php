@@ -132,7 +132,7 @@
 								{{-- @endif --}}
 							{{-- @endif --}}
 							@if ( $box['picklist_detail_id'] === null )
-								<a href="{{$url_update_box}}&box_code={{$box['box_code']}}" class="icon-edit"></a>
+								<!-- <a href="{{$url_update_box}}&box_code={{$box['box_code']}}" class="icon-edit"></a> -->
 							@endif
 							@if ( !CommonHelper::hasValue($box['picklist_detail_id']) )
 								<a  data-id="{{$box['box_code']}}"  class="icon-remove single-box-delete"></a>
