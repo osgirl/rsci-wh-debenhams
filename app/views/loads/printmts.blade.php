@@ -50,7 +50,7 @@ td.underline {padding-bottom: 0; }
 	<section class="soContainer">
 		<header>
 			<div class="doctitle">
-				<h1>Casual Clothing Retailers Incorported<br/>MTS REPORT</h1>
+				<h1>Casual Clothing Retailers Inc.<br/>MTS REPORT</h1>
 				Print Date: {{ date('m/d/y h:i A')}}
 			</div>
 		</header>
