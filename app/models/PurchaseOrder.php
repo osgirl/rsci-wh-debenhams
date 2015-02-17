@@ -174,15 +174,18 @@ class PurchaseOrder extends Eloquent {
 
 		if(! CommonHelper::arrayHasValue($status_options[$status_value]) ) throw new Exception( 'Invalid status value.');
 
-		$result = PurchaseOrder::where('purchase_order_no', '=', $po_order_no)
-				->update(array(
+		$params = array(
 					"invoice_amount"=> $invoice_amount,
 					"invoice_no" => $invoice_no,
 					"po_status" => $status_options[$status_value],
-					"slot_code" => $slot_code,
 					"datetime_done" => $date_done,
 					'latest_mobile_sync_date' => date('Y-m-d H:i:s')
-				));
+				);
+
+		if( !empty($slot_code) ) $params['slot_code'] = $slot_code;
+
+		$result = PurchaseOrder::where('purchase_order_no', '=', $po_order_no)
+				->update($params);
 
 		DebugHelper::log(__METHOD__, $result);
 
