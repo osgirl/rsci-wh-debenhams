@@ -11,6 +11,14 @@ class PicklistController extends BaseController {
 		$this->beforeFilter('auth', array('only'=> array('Dashboard')));
 		$this->apiUrl = Config::get('constant.api_url');
 		date_default_timezone_set('Asia/Manila');
+
+		$docNo        = Input::get("doc_no");
+		$status       = 'posted'; // closed
+		$date_updated = date('Y-m-d H:i:s');
+
+		$status_options = Dataset::where("data_code", "=", "PICKLIST_STATUS_TYPE")->get()->lists("id", "data_value");
+
+		print_r($status_options['closed']);
 	}
 
 	/**
@@ -942,6 +950,19 @@ class PicklistController extends BaseController {
 				));*/
 
 		$picklist = Picklist::updateStatus($docNo, $status_options['closed']);
+
+		// for jda transaction TODOS
+		/*$closePicklist = BoxDetails::checkBoxesPerDocNo($boxInfo['move_doc_number']);
+
+		if (! $closePicklist->isEmpty() || $useBox)
+		{
+			$isSuccess = Picklist::where('move_doc_number', '=', $boxInfo['move_doc_number'])
+				->update(array(
+					'pl_status'	=> Config::get('picking_statuses.closed'),
+					'updated_at' => date('Y-m-d H:i:s')));
+			DebugHelper::log(__METHOD__, $isSuccess);
+			if($isSuccess) self::createJdaTransaction($boxInfo);
+		}*/
 
 		// AuditTrail
 		$user = User::find(Auth::user()->id);

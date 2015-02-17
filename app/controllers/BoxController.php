@@ -285,18 +285,6 @@ class BoxController extends BaseController {
 					"store"		=> $boxInfo['store_code'],
 					"in_use"	=> Config::get('box_statuses.in_use')
 					));
-
-				$closePicklist = BoxDetails::checkBoxesPerDocNo($boxInfo['move_doc_number']);
-
-				if (! $closePicklist->isEmpty() || $useBox)
-				{
-					$isSuccess = Picklist::where('move_doc_number', '=', $boxInfo['move_doc_number'])
-						->update(array(
-							'pl_status'	=> Config::get('picking_statuses.closed'),
-							'updated_at' => date('Y-m-d H:i:s')));
-					DebugHelper::log(__METHOD__, $isSuccess);
-					if($isSuccess) self::createJdaTransaction($boxInfo);
-				}
 			}
 			self::loadBoxesAuditTrail($boxLists, $loadCode);
 			DB::commit();
