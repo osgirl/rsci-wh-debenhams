@@ -124,7 +124,7 @@ class PurchaseOrderController extends BaseController {
 		$status            = 'closed'; // closed
 		$date_updated      = date('Y-m-d H:i:s');
 
-		PurchaseOrder::updatePO($purchase_order_no, $status, $date_updated, $invoice_no, $invoice_amount);
+		PurchaseOrder::updatePO($purchase_order_no, $status, $date_updated, '', $invoice_no, $invoice_amount);
 
 		$skus = PurchaseOrderDetail::getScannedPODetails($receiver_no);
 
