@@ -61,7 +61,6 @@ return array(
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => 'wms_',
-            'unix_socket'=> '/Applications/MAMP/tmp/mysql/mysql.sock',
 		),
 
 		'pgsql' => array(
