@@ -1,8 +1,8 @@
 <?php
 include_once('../../config/config.php');
 
-class pdoConnection 
-{	
+class pdoConnection
+{
 	public static $pdo;
 	public static $dbName;// 	= 'ssi';		//database name
 	public static $user;// 	= 'root';  			//Username for the database
@@ -25,7 +25,7 @@ class pdoConnection
 	public static function connectDatabase() {
 		echo "sql/mysql: mysql:host=".self::$host.";dbname=".self::$dbName."\n";
 		try {
-		    $pdo = new PDO("mysql:host=".self::$host.";dbname=".self::$dbName."; --local-infile", 
+		    $pdo = new PDO("mysql:host=".self::$host.";dbname=".self::$dbName."; --local-infile",
 		        self::$user, self::$pass,
 		        array(
 		            PDO::MYSQL_ATTR_LOCAL_INFILE => true,
@@ -45,32 +45,32 @@ class pdoConnection
 		return self::$pdo->query($sql);
 	}
 
-	public function exec($sql) 
+	public function exec($sql)
 	{
 		echo "\n $sql \n";
 
 		return self::$pdo->exec($sql);
 	}
 
-	public function getJdaTransaction($data = array()) 
+	public function getJdaTransaction($data = array())
 	{
 		$module = $data['module'];
 		$jdaAction = $data['jda_action'];
 
 		echo "\n Getting reference # from db \n";
 
-		$sql 	= "SELECT reference FROM wms_transactions_to_jda 
+		$sql 	= "SELECT reference FROM wms_transactions_to_jda
 					WHERE module = '{$module}' AND jda_action='{$jdaAction}' AND sync_status = 0";
 
 		if(!empty($data['reference'])) $sql .= " AND reference = '{$data['reference']}'";
-		/*if(!empty($data['reference'])) 
+		/*if(!empty($data['reference']))
 		{
 			// print_r($data['reference']);
 			$reference = json_decode($data['reference']);
 			$decodedReference = "'" . implode("','", $reference) . "'";
 			$sql .= " AND reference IN ({$decodedReference})";
 		}*/
-		
+
 		$query = self::query($sql);
 		$result = array();
 		foreach ($query as $value ) {
@@ -86,14 +86,14 @@ class pdoConnection
 	* @param $data 	array()		array values are module, jda_action & reference
 	* @return array of reference
 	*/
-	public function getJdaTransactionPicklist($data = array()) 
+	public function getJdaTransactionPicklist($data = array())
 	{
 		$module 	= $data['module'];
 		$jdaAction 	= $data['jda_action'];
 
 		echo "\n Getting reference # from db \n";
 
-		if(!empty($data['reference'])) 
+		if(!empty($data['reference']))
 		{
 			$sql = "SELECT DISTINCT reference FROM wms_transactions_to_jda trans
 					INNER JOIN wms_picklist_details pick_d ON pick_d.move_doc_number = trans.reference
@@ -108,9 +108,9 @@ class pdoConnection
 					INNER JOIN wms_box_details bd ON bd.picklist_detail_id = pick_d.id
 					INNER JOIN wms_pallet_details pd ON bd.box_code = pd.box_code
 					INNER JOIN wms_load_details ld ON ld.pallet_code = pd.pallet_code
-					WHERE module = '{$module}' AND jda_action = '{$jdaAction}' AND trans.sync_status = 0";	
+					WHERE module = '{$module}' AND jda_action = '{$jdaAction}' AND trans.sync_status = 0";
 		}
-		
+
 		$query = self::query($sql);
 		$result = array();
 		foreach ($query as $value ) {
@@ -126,14 +126,14 @@ class pdoConnection
 	* @param $data 	array()		array values are module, jda_action & reference
 	* @return array of reference
 	*/
-	public function getJdaTransactionBoxHeader($data = array()) 
+	public function getJdaTransactionBoxHeader($data = array())
 	{
 		$module 	= $data['module'];
 		$jdaAction 	= $data['jda_action'];
 
 		echo "\n Getting reference # from db \n";
 
-		if(!empty($data['reference'])) 
+		if(!empty($data['reference']))
 		{
 			$sql = "SELECT DISTINCT reference FROM wms_transactions_to_jda trans
 					INNER JOIN wms_pallet_details pd ON trans.reference = pd.box_code
@@ -146,7 +146,7 @@ class pdoConnection
 					INNER JOIN wms_load_details ld ON ld.pallet_code = pd.pallet_code
 					WHERE module = '{$module}' AND jda_action = '{$jdaAction}' AND trans.sync_status = 0";
 		}
-		
+
 		$query = self::query($sql);
 		$result = array();
 		foreach ($query as $value ) {
@@ -162,14 +162,14 @@ class pdoConnection
 	* @param $data 	array()		array values are module, jda_action & reference
 	* @return array of reference
 	*/
-	public function getJdaTransactionPallet($data = array()) 
+	public function getJdaTransactionPallet($data = array())
 	{
 		$module 	= $data['module'];
 		$jdaAction 	= $data['jda_action'];
 
 		echo "\n Getting reference # from db \n";
 
-		if(!empty($data['reference'])) 
+		if(!empty($data['reference']))
 		{
 			$sql = "SELECT DISTINCT reference FROM wms_transactions_to_jda trans
 					INNER JOIN wms_pallet_details pd ON trans.reference = pd.pallet_code
@@ -182,7 +182,7 @@ class pdoConnection
 					INNER JOIN wms_load_details ld ON ld.pallet_code = pd.pallet_code
 					WHERE module = '{$module}' AND jda_action = '{$jdaAction}' AND trans.sync_status = 0";
 		}
-		
+
 		$query = self::query($sql);
 		$result = array();
 		foreach ($query as $value ) {
@@ -195,14 +195,14 @@ class pdoConnection
 	public function getReceiverNo($poNo) {
 		$poNo = join(',', $poNo);
 		echo "\n Getting receiver no from db \n";
-		$sql 	= "SELECT receiver_no FROM wms_purchase_order_lists
+		$sql 	= "SELECT receiver_no, back_order FROM wms_purchase_order_lists
 					WHERE purchase_order_no IN ({$poNo})
 					ORDER BY purchase_order_no ASC";
 		$query 	= self::query($sql);
 
 		$result = array();
 		foreach ($query as $value ) {
-			$result[] = $value['receiver_no'];
+			$result[] =  array('receiver_no' => $value['receiver_no'], 'back_order' => $value['back_order']);
 		}
 
 		return $result;
@@ -211,7 +211,7 @@ class pdoConnection
 	public function getPutawaySkus()
 	{
 		echo "\n Getting data from slot_details \n";
-		$sql 	= "SELECT slot_id, wms_product_lists.sku AS sku, quantity FROM wms_slot_details 
+		$sql 	= "SELECT slot_id, wms_product_lists.sku AS sku, quantity FROM wms_slot_details
 					INNER JOIN wms_product_lists ON wms_slot_details.sku = wms_product_lists.upc
 					WHERE sync_status = 0";
 		$query 	= self::query($sql);
@@ -224,14 +224,14 @@ class pdoConnection
 		return $result;
 	}
 
-	public function getPicklistInfo($docNo) 
+	public function getPicklistInfo($docNo)
 	{
 		$docNo = join(',', $docNo);
 		echo "\n Getting move doc number from db \n";
 		$sql = "SELECT DISTINCT pl.move_doc_number, pd.store_code, MIN(bd.box_code) box_code
 					FROM wms_box_details bd
-					INNER JOIN wms_picklist_details pd ON bd.picklist_detail_id = pd.id 
-                    INNER JOIN wms_picklist pl ON pl.move_doc_number = pd.move_doc_number 
+					INNER JOIN wms_picklist_details pd ON bd.picklist_detail_id = pd.id
+                    INNER JOIN wms_picklist pl ON pl.move_doc_number = pd.move_doc_number
 					WHERE pl_status = 2 AND pl.move_doc_number IN ({$docNo})
 					GROUP BY pl.move_doc_number
 					ORDER BY pl.move_doc_number, sequence_no ASC";
@@ -246,7 +246,7 @@ class pdoConnection
 		return $result;
 	}
 
-	public function getPalletsInfo($palletCode) 
+	public function getPalletsInfo($palletCode)
 	{
 		// $palletCodex = (string) join(',', $palletCode);
 		$pallet = "'" . implode("','", $palletCode) . "'";
@@ -270,7 +270,7 @@ class pdoConnection
 	/*
 	* Get boxes
 	*/
-	public function getSOBoxes() 
+	public function getSOBoxes()
 	{
 		$soStatus = 3;
 		echo "\n Getting load_code from db \n";
@@ -298,14 +298,14 @@ class pdoConnection
     * @example  instance->execInBackground();
     *
     * @param  $cmd       string command to execute
-    * @return 
+    * @return
     */
-    private static function execInBackground($cmd) 
-    { 
+    private static function execInBackground($cmd)
+    {
         $cmd = 'nohup php -q ' . __DIR__.'/../../jda/' . $cmd;
     	$outputfile = __DIR__.'/../../jda/logs/output.log';
     	$pidfile = __DIR__.'/../../jda/logs/pidfile.log';
-    	
+
         // exec(sprintf("%s > %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));
         // exec($cmd . " </dev/null 2> /dev/null & echo $!");
         exec($cmd . " > /dev/null &");
@@ -321,7 +321,7 @@ class pdoConnection
 		echo "Closing pdo connection... \n";
 		self::$pdo = NULL;
 	}
-	
+
 }
 
 /*$pdo = new pdoConnection();

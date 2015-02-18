@@ -217,13 +217,13 @@ class cronDB2 {
 		$sql = "SELECT POMRCH.POVNUM, POMRCH.POMRCV, POMRCH.PONUMB, POMRCH.POLOC, POMRCH.POSTAT, POMHDR.POFOB, POMRCH.POUNTS, POMRCH.POBON, POMHDR.POSHP1
 		        FROM POMRCH
 		        LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB AND POMRCH.POBON = POMHDR.POBON
-		        WHERE POMRCH.POSTAT = 3 AND POMRCH.POLOC = 7000 AND POMRCH.PONUMB = 3718"; // get PO with status=3/RELEASE
+		        WHERE POMRCH.POSTAT = 3 AND POMRCH.POLOC = 7000 AND POMRCH.PONUMB IN (3722, 3723, 3726)"; // get PO with status=3/RELEASE
 		        //FETCH FIRST 1 ROWS ONLY";
 
 		$query_result 	= $this->instance->runSQL($sql,true);
 		$filename 		= 'purchase_order_header';
 	    // vendor_id | receiver_no | purchase_order_no | destination | po_status
-		$header_column 	= array('vendor','receiver_no', 'po_no', 'destination', 'po_status', 'carton_id', 'total_qty', 'back_order', 'shipment_reference_no');
+		$header_column 	= array('vendor','receiver_no', 'po_no', 'destination', 'carton_id', 'total_qty', 'back_order', 'shipment_reference_no', 'po_status');
 		$this->_export($query_result, $filename, $header_column, __METHOD__);
 	}
 
@@ -234,7 +234,7 @@ class cronDB2 {
 		        FROM POMRCD
 		        LEFT JOIN POMRCH ON POMRCH.POMRCV = POMRCD.POMRCV
 		        INNER JOIN INVUPC ON POMRCD.INUMBR = INVUPC.INUMBR
-		        WHERE POMRCH.POSTAT = 3 AND POMRCH.POLOC = 7000 AND POMRCH.PONUMB = 3718";
+		        WHERE POMRCH.POSTAT = 3 AND POMRCH.POLOC = 7000 AND POMRCH.PONUMB IN (3722, 3723, 3726)";
 		        //FETCH FIRST 1 ROWS ONLY";
 
 		$query_result 	= $this->instance->runSQL($sql,true);

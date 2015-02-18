@@ -151,7 +151,9 @@ class cronEWMS {
 		echo "\n Running method " . __METHOD__ . "\n";
 		$csvfile_pattern = "purchase_order_header";
 		$eWMSTable = self::$purchaseOrder;
-		$columns = '(vendor_id,receiver_no,purchase_order_no,destination)';
+		$columns = '(@vendor_id,@receiver_no,@purchase_order_no,@destination, @carton_id, @total_qty, @back_order, @shipment_reference_no)
+				set vendor_id=@vendor_id, receiver_no=@receiver_no, purchase_order_no=@purchase_order_no, destination=@destination, carton_id=@carton_id,
+					total_qty=@total_qty, back_order=@back_order, shipment_reference_no=@shipment_reference_no';
 
 		$csvLocation = $this->instance->getLatestCsv($csvfile_pattern);
 		$this->instance->import($csvLocation, $eWMSTable, $columns);
