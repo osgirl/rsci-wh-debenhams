@@ -57,7 +57,7 @@ Palletizing Maintaining of Cartoon Pallet
 		parent::$jda->write5250($formValues,ENTER,true);
 		echo "Entered: Pallet Type \n";	
 
-		return self::checkResponse($pallet_code);
+		return self::checkResponse($pallet_code,__METHOD__);
 	}
 
 	private static function enterPalletId($pallet_code)
@@ -70,7 +70,7 @@ Palletizing Maintaining of Cartoon Pallet
 		parent::$jda->write5250($formValues,ENTER,true);
 		echo "Entered: Pallet I.D \n";	
 
-		return self::checkResponse($pallet_code);
+		return self::checkResponse($pallet_code,__METHOD__);
 	}
 
 	private static function enterDetailForm($pallet)
@@ -89,7 +89,7 @@ Palletizing Maintaining of Cartoon Pallet
 		parent::$jda->write5250($formValues,F7,true);
 		echo "Entered: Detailed Form \n";
 
-		return self::checkResponse($pallet_code);
+		return self::checkResponse($pallet_code,__METHOD__);
 	}
 
 	public function save($pallet) 
@@ -100,26 +100,29 @@ Palletizing Maintaining of Cartoon Pallet
 		self::enterDetailForm($pallet);
 	}
 
-	private static function checkResponse($pallet_code) 
+	private static function checkResponse($pallet_code,$source)
 	{
 		# error
 		if(parent::$jda->screenCheck('Pallet type selection code is not valid or blank')) {
-			self::$formMsg = "{self::$palletType}: Carton type selection code is not valid or blank";
+            $receiver_message="Pallet type selection code is not valid or blank";
+			self::$formMsg = "{self::$palletType}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($pallet_code, TRUE);
+			self::updateSyncStatus($pallet_code,"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('The pallet id number must be entered')) {
-			self::$formMsg = "{$pallet_code}: The pallet id number must be entered";
+            $receiver_message="The pallet id number must be entered";
+			self::$formMsg = "{$pallet_code}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
 			return false;
 		}
 		
 		if(parent::$jda->screenCheck('The clerk entered is not valid for the from location')) {
-			self::$formMsg = "{self::$user}: The clerk entered is not valid for the from location";
+            $receiver_message="The clerk entered is not valid for the from location";
+			self::$formMsg = "{self::$user}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($pallet_code, TRUE);
+			self::updateSyncStatus($pallet_code,"{$source}: {$receiver_message}", TRUE);
 			parent::pressF1();
 			parent::enterWarning();
 			return false;
@@ -191,7 +194,7 @@ Palletizing Maintaining of Cartoon Pallet
 	/*
 	* Update ewms trasaction_to_jda sync_status
 	*/
-	private static function updateSyncStatus($reference, $isError = FALSE) 
+	private static function updateSyncStatus($reference,$error_message=null, $isError = FALSE)
 	{
 		$db = new pdoConnection();
 		$date_today = date('Y-m-d H:i:s');
@@ -200,7 +203,7 @@ Palletizing Maintaining of Cartoon Pallet
 
 		echo "\n Getting receiver no from db \n";
 		$sql 	= "UPDATE wms_transactions_to_jda 
-					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}'
+					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}', error_message = '{$error_message}'
 					WHERE sync_status = 0 AND module = 'Pallet Header' AND jda_action='Creation' AND reference = '{$reference}'";
 		$query 	= $db->exec($sql);
 		echo "Affected rows: $query \n";

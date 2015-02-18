@@ -72,64 +72,73 @@ F7
 		$formValues[] = array(sprintf("%11d", $quantity), 15, 32);// enter quantity
 		parent::$jda->write5250($formValues,F7,true);
 
-		self::checkResponse($data);
+		self::checkResponse($data,__METHOD__);
 	}
 
-	private static function checkResponse($data = array()) 
+	private static function checkResponse($data = array(),$source)
 	{
 		# error
 		if(parent::$jda->screenCheck('Please enter a valid warehouse number')) {
-			self::$formMsg = "{self::$warehouseNo}: Please enter a valid warehouse number";
+            $receiver_message="Please enter a valid warehouse number";
+			self::$formMsg = "{self::$warehouseNo}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data, TRUE);
+			self::updateSyncStatus($data,"{$source}: {$receiver_message}", TRUE);
 		}
 
 		if(parent::$jda->screenCheck("Invalid 'sku' entered")) {
-			self::$formMsg = "{$data['sku']}: Invalid 'sku' entered";
+            $receiver_message="Invalid 'sku' entered";
+			self::$formMsg = "{$data['sku']}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data, TRUE);
+			self::updateSyncStatus($data,"{$source}: {$receiver_message}", TRUE);
 		}
 
 		if(parent::$jda->screenCheck("Clerk is not valid")) {
-			self::$formMsg = "{self::$warehouseNo}: Clerk is not valid";
+            $receiver_message="Clerk is not valid";
+			self::$formMsg = "{self::$warehouseNo}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data, TRUE);
+			self::updateSyncStatus($data,"{$source}: {$receiver_message}", TRUE);
 		}
 
 		if(parent::$jda->screenCheck("'From slot' or 'new primary slot' must be entered")) {
-			self::$formMsg = "{self::$fromSlot}: From slot or new primary slot must be entered";
+            $receiver_message="From slot or new primary slot must be entered";
+			self::$formMsg = "{self::$fromSlot}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data, TRUE);
+			self::updateSyncStatus($data,"{$source}: {$receiver_message}", TRUE);
 		}
 
 		if(parent::$jda->screenCheck("To slot or new primary slot must be entered")) {
-			self::$formMsg = "{$data['toSlot']}: To slot or new primary slot must be entered";
+            $receiver_message="To slot or new primary slot must be entered";
+			self::$formMsg = "{$data['toSlot']}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data, TRUE);
+			self::updateSyncStatus($data,"{$source}: {$receiver_message}", TRUE);
 		}
 
 		if(parent::$jda->screenCheck("Slot not valid for this warehouse")) {
-			self::$formMsg = "{$data['toSlot']}: Slot not valid for this warehouse";
+            $receiver_message="Slot not valid for this warehouse";
+			self::$formMsg = "{$data['toSlot']}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data, TRUE);
+			self::updateSyncStatus($data,"{$source}: {$receiver_message}", TRUE);
 		}
 
 		if(parent::$jda->screenCheck("Use of decimals incorrect or too many numbers entered")) {
-			self::$formMsg = "{$data['quantity']}: Use of decimals incorrect or too many numbers entered";
+            $receiver_message="Use of decimals incorrect or too many numbers entered";
+			self::$formMsg = "{$data['quantity']}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data, TRUE);
+			self::updateSyncStatus($data,"{$source}: {$receiver_message}", TRUE);
 		}
 		
 		if(parent::$jda->screenCheck('Quantity requested to move exceeds quantity available')) {
-			self::$formMsg = "{$data['sku']}: Quantity requested to move exceeds quantity available";	
+            $receiver_message="Quantity requested to move exceeds quantity available";
+			self::$formMsg = "{$data['sku']}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data, TRUE);
+			self::updateSyncStatus($data,"{$source}: {$receiver_message}", TRUE);
 		}
 
 		if(parent::$jda->screenCheck('Cannot move between two identical slots')) {
-			self::$formMsg = "{$data['sku']}: Cannot move between two identical slots";	
+            $receiver_message="Cannot move between two identical slots";
+			self::$formMsg = "{$data['sku']}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data, TRUE);
+			self::updateSyncStatus($data,"{$source}: {$receiver_message}", TRUE);
 		}
 
 		echo self::$formMsg;
@@ -170,7 +179,7 @@ F7
 	/*
 	* Update ewms trasaction_to_jda sync_status
 	*/
-	private static function updateSyncStatus($data = array(), $isError = FALSE) {
+	private static function updateSyncStatus($data = array(),$error_message=null, $isError = FALSE) {
 		$db = new pdoConnection();
 		$date_today = date('Y-m-d H:i:s');
 		$sku = $data['sku'];
@@ -183,7 +192,7 @@ F7
 					SET sync_status = 1, updated_at = '{$date_today}'
 					WHERE sku = {$sku} AND slot_id = '{$slot}'";*/
 		$sql = "UPDATE wms_slot_details sd
-				SET sync_status = {$status}, updated_at = '{$date_today}'
+				SET sync_status = {$status}, updated_at = '{$date_today}', error_message = '{$error_message}'
 				WHERE sd.sku = (SELECT upc FROM wms_product_lists pl WHERE pl.sku = {$sku}) AND slot_id = '{$slot}'";
 		$query 	= $db->exec($sql);
 		echo "Affected rows: $query \n";

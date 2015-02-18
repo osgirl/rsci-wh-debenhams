@@ -73,7 +73,7 @@ store receiving
 		parent::$jda->write5250($formValues,ENTER,true);
 		echo "Entered: Carton Id \n";
 
-		return self::checkResponse($box_code, $store_code);
+		return self::checkResponse($box_code, $store_code,__METHOD__);
 	}
 
 	public function enterForm($box_code, $store_code)
@@ -98,7 +98,7 @@ store receiving
 		parent::$jda->write5250($formValues,ENTER,true);
 		parent::$jda->write5250($formValues,F7,true); 
 		echo "Entered: Detail Form \n";
-		return self::checkResponse($box_code, $store_code);
+		return self::checkResponse($box_code, $store_code,__METHOD__);
 		// }
 	}
 
@@ -123,41 +123,46 @@ store receiving
 	}
 	
 
-	private static function checkResponse($box_code, $store_code) 
+	private static function checkResponse($box_code, $store_code,$source)
 	{
 		# error
 		if(parent::$jda->screenCheck('Carton ID must be entered')) {
-			self::$formMsg = "{$box_code}: Carton ID must be entered";
+            $receiver_message="Carton ID must be entered";
+			self::$formMsg = "{$box_code}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($box_code, TRUE, $store_code);
+			self::updateSyncStatus($box_code,"{$source}: {$receiver_message}", TRUE, $store_code);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('Carton ID not valid')) {
-			self::$formMsg = "{$box_code}: Carton ID not valid";
+            $receiver_message="Carton ID not valid";
+            self::$formMsg = "{$box_code}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($box_code, TRUE, $store_code);
+			self::updateSyncStatus($box_code,"{$source}: {$receiver_message}", TRUE, $store_code);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('Warning: The received quantity is less than the shipped quantity')) {
-			self::$formMsg = "{$box_code}: Warning: The received quantity is less than the shipped quantity";
+            $receiver_message="Warning: The received quantity is less than the shipped quantity";
+            self::$formMsg = "{$box_code}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($box_code, TRUE, $store_code);
+			self::updateSyncStatus($box_code,"{$source}: {$receiver_message}", TRUE, $store_code);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('The received quantity is greater than the shipped')) {
-			self::$formMsg = "{$box_code}: The received quantity is greater than the shipped quantity";
+            $receiver_message="The received quantity is greater than the shipped quantity";
+            self::$formMsg = "{$box_code}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($box_code, TRUE, $store_code);
+			self::updateSyncStatus($box_code,"{$source}: {$receiver_message}", TRUE, $store_code);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('The carton status is not correct for receiving')) {
-			self::$formMsg = "{$box_code}: The carton status is not correct for receiving";
+            $receiver_message="The carton status is not correct for receiving";
+            self::$formMsg = "{$box_code}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($box_code, TRUE, $store_code);
+			self::updateSyncStatus($box_code,"{$source}: {$receiver_message}", TRUE, $store_code);
 			return false;
 		}
 
@@ -246,7 +251,7 @@ store receiving
 	/*
 	* Update batch wms_store_order so_status to 3 (close)
 	*/
-	private static function updateSyncStatus($box_code, $isError = FALSE, $store_code = NULL) 
+	private static function updateSyncStatus($box_code,$error_message=null, $isError = FALSE, $store_code = NULL)
 	{
 		$db = new pdoConnection();
 		$date_today = date('Y-m-d H:i:s');
@@ -255,7 +260,7 @@ store receiving
 
 		echo "\n Updating... \n";
 
-		$sql = "UPDATE wms_store_order SET wms_store_order.sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}'
+		$sql = "UPDATE wms_store_order SET wms_store_order.sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}', error_message = '{$error_message}'
 				WHERE wms_store_order.sync_status = 0 AND load_code = (SELECT load_code FROM `wms_pallet_details` pd
 									INNER JOIN wms_load_details ld ON ld.pallet_code = pd.pallet_code
 									WHERE box_code = '{$box_code}') AND store_code = {$store_code}";

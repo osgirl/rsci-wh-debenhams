@@ -77,51 +77,57 @@ NOTE: per sequence no ASCENDING order
 			$formValues[] = array(sprintf("%8s", $date_now), 16, 25);// enter date completed
 			parent::$jda->write5250($formValues,F6,true);
 		}
-		return self::checkResponse($data);
+		return self::checkResponse($data,__METHOD__);
 	}
 
-	private static function checkResponse($data) 
+	private static function checkResponse($data,$source)
 	{
 		# error
 		if(parent::$jda->screenCheck('Location entered is invalid')) {
-			self::$formMsg = "{self::$warehouseNo}: Location entered is invalid";
+            $receiver_message='Location entered is invalid';
+			self::$formMsg = "{self::$warehouseNo}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data, TRUE);
+			self::updateSyncStatus($data,"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('Move document does not exist')) {
-			self::$formMsg = "{$data['document_number']}: Move document does not exist";
+            $receiver_message='Move document does not exist';
+			self::$formMsg = "{$data['document_number']}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data, TRUE);
+			self::updateSyncStatus($data,"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('Status code of move transaction is not "open"')) {
-			self::$formMsg = "{$data['document_number']}: Status code of move transaction is not 'open'";
+            $receiver_message="Status code of move transaction is not 'open'";
+			self::$formMsg = "{$data['document_number']}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data, TRUE);
+			self::updateSyncStatus($data,"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('Warehouse clerk is invalid for this location')) {
-			self::$formMsg = "{self::$user}: Warehouse clerk is invalid for this location";
+            $receiver_message="Warehouse clerk is invalid for this location";
+			self::$formMsg = "{self::$user}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data, TRUE);
+			self::updateSyncStatus($data,"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('quantity greater than requested')) {
-			self::$formMsg = "{$data['document_number']}: F5 to accept quantity greater than requested";
+            $receiver_message="F5 to accept quantity greater than requested";
+			self::$formMsg = "{$data['document_number']}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data, TRUE);
+			self::updateSyncStatus($data,"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('Use of decimals incorrect or too many numbers entered')) {
-			self::$formMsg = "{$data['document_number']}: Use of decimals incorrect or too many numbers entered";
+            $receiver_message="Use of decimals incorrect or too many numbers entered";
+			self::$formMsg = "{$data['document_number']}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data, TRUE);
+			self::updateSyncStatus($data,"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 		#end error
@@ -162,7 +168,7 @@ NOTE: per sequence no ASCENDING order
 		parent::$jda->write5250($formValues,F7,true);
 		echo "Entered: Enter and Approve Letdowns Details \n";
 
-		return self::checkResponse($data);
+		return self::checkResponse($data,__METHOD__);
 	}
 
 	public function submit($data)
@@ -178,7 +184,7 @@ NOTE: per sequence no ASCENDING order
 		parent::$jda->write5250(NULL,F7,true);
 		echo "Entered: Update Detail Again \n";
 
-		self::checkResponse($data);
+		self::checkResponse($data,__METHOD__);
 	}
 
 	private static function enterSubmit() 
@@ -245,7 +251,7 @@ NOTE: per sequence no ASCENDING order
 	/*
 	* Update ewms trasaction_to_jda sync_status
 	*/
-	private static function updateSyncStatus($reference, $isError = FALSE) 
+	private static function updateSyncStatus($reference,$error_message=null, $isError = FALSE)
 	{
 		$db = new pdoConnection();
 		$date_today = date('Y-m-d H:i:s');
@@ -254,7 +260,7 @@ NOTE: per sequence no ASCENDING order
 
 		echo "\n Getting receiver no from db \n";
 		$sql 	= "UPDATE wms_transactions_to_jda 
-					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}'
+					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}', error_message = '{$error_message}'
 					WHERE sync_status = 0 AND module = 'Letdown' AND jda_action='Closing' AND reference = {$reference}";
 		$query 	= $db->exec($sql);
 		echo "Affected rows: $query \n";

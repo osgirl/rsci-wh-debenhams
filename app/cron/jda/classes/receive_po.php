@@ -75,44 +75,49 @@ class poReceiving extends jdaCustomClass
 		$formValues[] = array(sprintf("%10d", $receiver_no),8,45);
 
 		parent::$jda->write5250($formValues,ENTER,true);
-		return self::checkReceiverNumber($receiver_no);
+		return self::checkReceiverNumber($receiver_no,__METHOD__);
 		
 	}
 
-	private static function checkReceiverNumber($receiver_no)
+	private static function checkReceiverNumber($receiver_no,$source)
 	{
 		if(parent::$jda->screenCheck('This receiver number does not exist')) {
-			self::$formMsg = "{$receiver_no}: This receiver number does not exist";
+            $receiver_message='This receiver number does not exist';
+			self::$formMsg = "{$receiver_no}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($receiver_no, TRUE);
+			self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('Receiver is already being received by another user.')) {
-			self::$formMsg = "{$receiver_no}: Receiver is already being received by another user";
+            $receiver_message='Receiver is already being received by another user.';
+            self::$formMsg = "{$receiver_no}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($receiver_no, TRUE);
+			self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 		//won't happen in the live environment
 		if(parent::$jda->screenCheck('Receipt is already being processed through')) {
-			self::$formMsg = "{$receiver_no}: Receipt is already being processed through 'RF' or 'single'.";	
+            $receiver_message="Receipt is already being processed through 'RF' or 'single'.";
+            self::$formMsg = "{$receiver_no}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($receiver_no, TRUE);
+			self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('You cannot receive this receiver at this time')) {
-			self::$formMsg = "{$receiver_no}: You cannot receive this receiver at this time";	
+            $receiver_message="You cannot receive this receiver at this time";
+            self::$formMsg = "{$receiver_no}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($receiver_no, TRUE);
+			self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 		
 		if(parent::$jda->screenCheck('This receiver has been detail received, cannot dock receive.')) {
-			self::$formMsg = "{$receiver_no}: This receiver has been detail received, cannot dock receive.";	
-			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($receiver_no, TRUE);
+            $receiver_message="This receiver has been detail received, cannot dock receive.";
+            self::$formMsg = "{$receiver_no}: {$receiver_message}";
+            parent::logError(self::$formMsg, __METHOD__);
+			self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 
@@ -171,7 +176,7 @@ class poReceiving extends jdaCustomClass
 	/*
 	* Update ewms trasaction_to_jda sync_status
 	*/
-	private static function updateSyncStatus($reference, $isError = FALSE) {
+	private static function updateSyncStatus($reference,$error_message=null, $isError = FALSE) {
 		$db = new pdoConnection();
 		$date_today = date('Y-m-d H:i:s');
 
@@ -179,7 +184,7 @@ class poReceiving extends jdaCustomClass
 
 		echo "\n Getting receiver no from db \n";
 		$sql 	= "UPDATE wms_transactions_to_jda 
-					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}'
+					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}', error_message = '{$error_message}'
 					WHERE sync_status = 0 AND module = 'Purchase Order' AND jda_action='Receiving' AND reference = (SELECT purchase_order_no FROM wms_purchase_order_lists po WHERE po.receiver_no = {$reference})";
 		$query 	= $db->exec($sql);
 		echo "Affected rows: $query \n";

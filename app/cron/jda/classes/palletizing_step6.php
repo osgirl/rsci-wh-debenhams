@@ -71,7 +71,7 @@ Palletizing: Shipping
 		parent::$jda->write5250($formValues,ENTER,true);
 		echo "Entered: Load id \n";
 
-		return self::checkResponse($load_code);
+		return self::checkResponse($load_code,__METHOD__);
 	}
 
 	public static function pressEnter()
@@ -92,7 +92,7 @@ Palletizing: Shipping
 		parent::$jda->write5250($formValues,F7,true);
 		echo "Entered: Actual Weight \n";
 
-		return self::checkResponse($load_code);
+		return self::checkResponse($load_code,__METHOD__);
 	}
 
 	/*public static function pressF7($load_code)
@@ -112,7 +112,7 @@ Palletizing: Shipping
 		// self::pressF7($load_code);
 	}
 
-	private static function checkResponse($load_code) 
+	private static function checkResponse($load_code,$source)
 	{
 		# error
 		if(parent::$jda->screenCheck('WRF0133')) {
@@ -123,17 +123,19 @@ Palletizing: Shipping
 		}
 
 		if(parent::$jda->screenCheck('WRF0134')) {
-			self::$formMsg = "{$load_code}: WRF0134: The load id does not exist";
+            $receiver_message="WRF0134: The load id does not exist";
+			self::$formMsg = "{$load_code}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($load_code, TRUE);
+			self::updateSyncStatus($load_code,"{$source}: {$receiver_message}", TRUE);
 			parent::pressEnter();
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('WRF0135')) {
-			self::$formMsg = "{$load_code}: WRF0135: The load id must not be in a closed status";
+            $receiver_message="WRF0135: The load id must not be in a closed status";
+			self::$formMsg = "{$load_code}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($load_code, TRUE);
+			self::updateSyncStatus($load_code,"{$source}: {$receiver_message}", TRUE);
 			parent::pressEnter();
 			return false;
 		}
@@ -198,7 +200,7 @@ Palletizing: Shipping
 	/*
 	* Update ewms trasaction_to_jda sync_status
 	*/
-	private static function updateSyncStatus($reference, $isError = FALSE) 
+	private static function updateSyncStatus($reference,$error_message=null, $isError = FALSE)
 	{
 		$db = new pdoConnection();
 		$date_today = date('Y-m-d H:i:s');
@@ -207,7 +209,7 @@ Palletizing: Shipping
 
 		echo "\n Getting receiver no from db \n";
 		$sql 	= "UPDATE wms_transactions_to_jda 
-					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}'
+					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}', error_message = '{$error_message}'
 					WHERE sync_status = 0 AND module = 'Shipping' AND jda_action='Shipping' AND reference = '{$reference}'";
 		$query 	= $db->exec($sql);
 		echo "Affected rows: $query \n";

@@ -22,7 +22,7 @@ class jdaCustomClass
 		self::$lastTime = microtime(true);
 
 		echo "Connecting to JDA \n";
-		self::$jda = new jdatelnet("172.16.1.9",3);
+		self::$jda = new jdatelnet("172.16.1.1",3);
 		self::$jda->screenWait("Password");
 		self::$jda->login($creds['user'],$creds['password'],$creds['jda_lib']);
 	}

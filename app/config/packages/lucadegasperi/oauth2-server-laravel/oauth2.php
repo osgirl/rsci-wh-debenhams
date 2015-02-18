@@ -74,39 +74,9 @@ return [
     |
     */
 
-    'grant_types' => array(
-        'password' => array(
-            'class'            => '\League\OAuth2\Server\Grant\PasswordGrant',
-            'access_token_ttl' => 604800,
-            'callback'         => function ($username, $password) {
+    'grant_types' => [
 
-                $credentials = array(
-                    'username' => $username,
-                    'password' => $password,
-                );
-
-
-                $valid = Auth::validate($credentials);
-
-                if (!$valid) {
-                    $user = User::where('username', '=',$username)->first();
-
-                    if (is_null($user) ) return false;
-
-                    $hashedUsernameBarcode = md5($username . $user->barcode);
-                    if($hashedUsernameBarcode !== $password) {
-                        return false;
-                    }
-                    $credentials = array(
-                        'username'  => $username,
-                        'barcode'   => $user->barcode
-                        );
-                }
-
-                return Auth::getProvider()->retrieveByCredentials($credentials)->id;
-            }
-        )
-    ),
+    ],
 
     /*
     |--------------------------------------------------------------------------

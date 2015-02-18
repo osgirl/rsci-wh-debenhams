@@ -47,7 +47,7 @@ Palletizing Maintaining of Cartoon header
 		parent::$jda->write5250($formValues,ENTER,true);
 		echo "Entered: Carton Type \n";	
 
-		return self::checkResponse($box_code);
+		return self::checkResponse($box_code,__METHOD__);
 	}
 
 	private static function enterCartonId($box_code)
@@ -61,7 +61,7 @@ Palletizing Maintaining of Cartoon header
 		parent::$jda->write5250($formValues,ENTER,true);
 		echo "Entered: Carton ID \n";	
 
-		return self::checkResponse($box_code);
+		return self::checkResponse($box_code,__METHOD__);
 	}
 
 	private static function enterCartonDetails($box_code)
@@ -71,7 +71,7 @@ Palletizing Maintaining of Cartoon header
 		parent::$jda->write5250(NULL,F7,true);
 		echo "Entered: Carton Details \n";	
 
-		return self::checkResponse($box_code);
+		return self::checkResponse($box_code,__METHOD__);
 	}
 
 	public function save($box_code)
@@ -81,13 +81,14 @@ Palletizing Maintaining of Cartoon header
 		self::enterCartonDetails($box_code);
 	}
 
-	private static function checkResponse($box_code) 
+	private static function checkResponse($box_code,$source)
 	{
 		# error
 		if(parent::$jda->screenCheck('Carton type selection code is not valid or blank')) {
-			self::$formMsg = "{self::$cartonType}: Carton type selection code is not valid or blank";
+            $receiver_message="Carton type selection code is not valid or blank";
+			self::$formMsg = "{self::$cartonType}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($box_code, TRUE);
+			self::updateSyncStatus($box_code,"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 
@@ -98,18 +99,20 @@ Palletizing Maintaining of Cartoon header
 
 		//TODOS: what to do if this message occured
 		if(parent::$jda->screenCheck('This is a new record. Press F1 to bypass record add')) {
-			self::$formMsg = "{$box_code}: This is a new record. Press F1 to bypass record add";
+            $receiver_message="This is a new record. Press F1 to bypass record add";
+			self::$formMsg = "{$box_code}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($box_code, TRUE);
+			self::updateSyncStatus($box_code,"{$source}: {$receiver_message}", TRUE);
 			parent::pressF1();
 			parent::enterWarning();
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('The from location entered is not valid')) {
-			self::$formMsg = "{$box_code}: The from location entered is not valid";
+            $receiver_message="The from location entered is not valid";
+			self::$formMsg = "{$box_code}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($box_code, TRUE);
+			self::updateSyncStatus($box_code,"{$source}: {$receiver_message}", TRUE);
 			parent::pressF1();
 			parent::enterWarning();
 			return false;
@@ -173,7 +176,7 @@ Palletizing Maintaining of Cartoon header
 	/*
 	* Update ewms trasaction_to_jda sync_status
 	*/
-	private static function updateSyncStatus($reference, $isError = FALSE) 
+	private static function updateSyncStatus($reference,$error_message=null, $isError = FALSE)
 	{
 		$db = new pdoConnection();
 		$date_today = date('Y-m-d H:i:s');
@@ -182,7 +185,7 @@ Palletizing Maintaining of Cartoon header
 
 		echo "\n Getting receiver no from db \n";
 		$sql 	= "UPDATE wms_transactions_to_jda 
-					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}'
+					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}', error_message = '{$error_message}'
 					WHERE sync_status = 0 AND module = 'Box Header' AND jda_action='Creation' AND reference = '{$reference}'";
 		$query 	= $db->exec($sql);
 		echo "Affected rows: $query \n";

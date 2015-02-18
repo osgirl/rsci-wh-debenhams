@@ -72,7 +72,7 @@ class PurchaseOrderDetailSeeder extends Seeder {
 					  	"po_id"=>1,
 					    "sku"=>'NGM0009',
 					    "quantity_ordered"=>5,
-					    "quantity_delivered"=>0,					    
+					    "quantity_delivered"=>0,
 					    "receiver_no" => 1
 					  ),
 					array(

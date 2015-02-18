@@ -91,80 +91,90 @@ F1
 			$formValues[] = array(sprintf("%8s", $date_now), 16, 25);// enter date completed
 			parent::$jda->write5250($formValues,F6,true);
 		}
-		return self::checkResponse($data);
+		return self::checkResponse($data,__METHOD__);
 	}
 
-	private static function checkResponse($data) 
+	private static function checkResponse($data,$source)
 	{
 		# error
 		if(parent::$jda->screenCheck('Location entered is invalid')) {
-			self::$formMsg = "{self::$warehouseNo}: Location entered is invalid";
+            $receiver_message="Location entered is invalid";
+			self::$formMsg = "{self::$warehouseNo}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data, TRUE);
+			self::updateSyncStatus($data,"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('Move document does not exist')) {
-			self::$formMsg = "{$data['document_number']}: Move document does not exist";
+            $receiver_message="Move document does not exist";
+			self::$formMsg = "{$data['document_number']}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data, TRUE);
+			self::updateSyncStatus($data,"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('A valid store number is required')) {
-			self::$formMsg = "{$data['document_number']}: A valid store number is required";
+            $receiver_message="A valid store number is required";
+			self::$formMsg = "{$data['document_number']}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data['document_number'], TRUE);
+			self::updateSyncStatus($data['document_number'],"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('A carton id must be entered')) {
-			self::$formMsg = "{$data['document_number']}: A carton id must be entered";
+            $receiver_message="A carton id must be entered";
+			self::$formMsg = "{$data['document_number']}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data['document_number'], TRUE);
+			self::updateSyncStatus($data['document_number'],"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('Carton id entered is assigned to a different store')) {
-			self::$formMsg = "{$data['document_number']}: Carton id entered is assigned to a different store";
+            $receiver_message="Carton id entered is assigned to a different store";
+			self::$formMsg = "{$data['document_number']}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data['document_number'], TRUE);
+			self::updateSyncStatus($data['document_number'],"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('Store number entered is not valid')) {
-			self::$formMsg = "{$data['store_number']}: Store number entered is not valid.";
+            $receiver_message="Store number entered is not valid.";
+			self::$formMsg = "{$data['store_number']}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data['document_number'], TRUE);
+			self::updateSyncStatus($data['document_number'],"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 		
 		if(parent::$jda->screenCheck('The store requested is not assigned to the move selected')) {
-			self::$formMsg = "{$data['document_number']}: The store requested is not assigned to the move selected";
+            $receiver_message="The store requested is not assigned to the move selected";
+			self::$formMsg = "{$data['document_number']}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data['document_number'], TRUE);
+			self::updateSyncStatus($data['document_number'],"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('Warehouse clerk is invalid for this location')) {
-			self::$formMsg = "{self::$user}: Warehouse clerk is invalid for this location";
+            $receiver_message="Warehouse clerk is invalid for this location";
+			self::$formMsg = "{self::$user}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data['document_number'], TRUE);
+			self::updateSyncStatus($data['document_number'],"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 
 		if(parent::$jda->screenCheck('Sequence entry cannot be zero or negative')) {
-			self::$formMsg = "{$data['document_number']}: Sequence entry cannot be zero or negative";
+            $receiver_message="Sequence entry cannot be zero or negative";
+			self::$formMsg = "{$data['document_number']}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data['document_number'], TRUE);
+			self::updateSyncStatus($data['document_number'],"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 
 		//if error persist exit
 		if(parent::$jda->screenCheck('F5 to accept quantity greater than requested')) {
-			self::$formMsg = "{$data['document_number']}: F5 to accept quantity greater than requested";
+            $receiver_message="F5 to accept quantity greater than requested";
+			self::$formMsg = "{$data['document_number']}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($data['document_number'], TRUE);
+			self::updateSyncStatus($data['document_number'],"{$source}: {$receiver_message}", TRUE);
 			parent::pressF1();
 			parent::enterWarning();
 			return false;
@@ -211,7 +221,7 @@ F1
 		parent::$jda->write5250($formValues,F7,true);
 		echo "Entered: Approve Picks Into Cartons Details \n";
 
-		return self::checkResponse($data);
+		return self::checkResponse($data,__METHOD__);
 	}
 
 	/**
@@ -230,7 +240,7 @@ F1
 		parent::$jda->write5250($formValues,F7,true);
 		echo "Entered: Approve Picks Into Cartons Details \n";
 
-		return self::checkResponse($data);
+		return self::checkResponse($data,__METHOD__);
 	}
 
 	public function save($data) 
@@ -241,7 +251,7 @@ F1
 		parent::$jda->write5250(NULL,F10,true); // TO CHECK
 		echo "Entered: Update Detail Again \n";
 
-		self::checkResponse($data);
+		self::checkResponse($data,__METHOD__);
 	}
 
 	/*
@@ -326,7 +336,7 @@ F1
 	/*
 	* Update ewms trasaction_to_jda sync_status
 	*/
-	private static function updateSyncStatus($reference, $isError = FALSE) 
+	private static function updateSyncStatus($reference,$error_message=null, $isError = FALSE)
 	{
 		$db = new pdoConnection();
 		$date_today = date('Y-m-d H:i:s');
@@ -335,7 +345,7 @@ F1
 
 		echo "\n Getting receiver no from db \n";
 		$sql 	= "UPDATE wms_transactions_to_jda 
-					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}'
+					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}', error_message = '{$error_message}'
 					WHERE sync_status = 0 AND module = 'Picklist' AND jda_action='Closing' AND reference = {$reference}";
 		$query 	= $db->exec($sql);
 		echo "Affected rows: $query \n";
