@@ -69,13 +69,14 @@ user: STRATPGMR pass: PASSWORD
 		echo "Entered: Dock Receipt and Check-In \n";
 	}
 
-	public function enterReceiverNumber($receiver_no)
+	public function enterReceiverNumber($receiver_no, $back_order)
 	{
 		parent::$jda->screenWait("Receiver Number");
 		parent::display(parent::$jda->screen,132);
 
 		$formValues = array();//values to enter to form
 		$formValues[] = array(sprintf("%10d", $receiver_no),8,45);
+		$formValues[] = array(sprintf("%2d", $back_order),14,45);
 
 		parent::$jda->write5250($formValues,ENTER,true);
 
@@ -142,9 +143,9 @@ user: STRATPGMR pass: PASSWORD
 
 		$formValues = array();//values to enter to form
 	//	$formValues[] = array(sprintf("%30d", $invoices['invoice_no']),12,20); //enter invoice number
-		$formValues[] = array($invoices['invoice_no'],12,20); //enter invoice number
+		// $formValues[] = array($invoices['invoice_no'],12,20); //enter invoice number
 		$formValues[] = array(self::$user,12,69);  //enter receive by
-		$formValues[] = array(sprintf("%20d", $invoices['invoice_amount']),13,20); //enter invoice amount
+		// $formValues[] = array(sprintf("%20d", $invoices['invoice_amount']),13,20); //enter invoice amount
 		$formValues[] = array(self::$user,17,72);  //enter checked by
 		parent::$jda->write5250($formValues,F5,true);
 		echo "Entered: Purchase Order Store Receipt  \n";
@@ -275,7 +276,15 @@ user: STRATPGMR pass: PASSWORD
 		$formValues = array();
 
 		//coordinates start on 100/10
-		for ($i=0; $i < count($quantity); $i++) {
+		for ($i=0; $i < count($quantity); $i++)
+		{
+			if($i %11 == 0) //pagination
+			{
+				parent::$jda->write5250(null,ROLLDOWN,true);
+				$column = 10;
+				$row = 100;
+			}
+
 			$new_col = ($i + $column);
 			echo "\n value of new_col is: {$new_col} \n";
 			echo "value of quantity is: {$quantity[$i]} \n";
@@ -371,8 +380,10 @@ if(! empty($poNos) )
 	{
 		$closePO = new poClosing();
 		$closePO->enterUpToDockReceipt();
-		foreach($receiver_nos as $receiver) {
-			$validate = $closePO->enterReceiverNumber($receiver);
+		foreach($receiver_nos as $receiver_no) {
+			$receiver = $receiver_no['receiver_no'];
+			$back_order = $receiver_no['back_order'];
+			$validate = $closePO->enterReceiverNumber($receiver, $back_order);
 			if($validate)
 			{
 				$closePO->enterPOForm($receiver);

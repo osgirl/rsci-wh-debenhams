@@ -2,8 +2,8 @@
 include_once(__DIR__.'/../core/jda5250_helper.php');
 include_once(__DIR__.'/../sql/mysql.php');
 
-class poReceiving extends jdaCustomClass 
-{	
+class poReceiving extends jdaCustomClass
+{
 	private static $formMsg = "";
 	public static $user = 'SYS';
 
@@ -45,7 +45,7 @@ class poReceiving extends jdaCustomClass
 	{
 		#enter merchandising
 		parent::$jda->screenWait("Merchandise Receiving");
-		parent::display(parent::$jda->screen,132);	
+		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("08",22,44)),ENTER,true);
 		echo "Entered: Merchandise Receiving \n";
 	}
@@ -53,7 +53,7 @@ class poReceiving extends jdaCustomClass
 	private static function enterStoreReceivingMenu()
 	{
 		parent::$jda->screenWait("Store Receiving Menu");
-		parent::display(parent::$jda->screen,132);	
+		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("02",22,44)),ENTER,true);
 		echo "Entered: Store Receiving Menu \n";
 	}
@@ -61,22 +61,23 @@ class poReceiving extends jdaCustomClass
 	private static function enterDockReceipt()
 	{
 		parent::$jda->screenWait("Dock Receipt and Check-In");
-		parent::display(parent::$jda->screen,132);	
+		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("02",22,44)),ENTER,true);
 		echo "Entered: Dock Receipt and Check-In \n";
 	}
 
-	public function enterReceiverNumber($receiver_no)
+	public function enterReceiverNumber($receiver_no, $back_order)
 	{
 		parent::$jda->screenWait("Receiver Number");
 		parent::display(parent::$jda->screen,132);
 
 		$formValues = array();//values to enter to form
 		$formValues[] = array(sprintf("%10d", $receiver_no),8,45);
+		$formValues[] = array(sprintf("%2d", $back_order),14,45);
 
 		parent::$jda->write5250($formValues,ENTER,true);
 		return self::checkReceiverNumber($receiver_no,__METHOD__);
-		
+
 	}
 
 	private static function checkReceiverNumber($receiver_no,$source)
@@ -112,7 +113,7 @@ class poReceiving extends jdaCustomClass
 			self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
-		
+
 		if(parent::$jda->screenCheck('This receiver has been detail received, cannot dock receive.')) {
             $receiver_message="This receiver has been detail received, cannot dock receive.";
             self::$formMsg = "{$receiver_no}: {$receiver_message}";
@@ -126,19 +127,19 @@ class poReceiving extends jdaCustomClass
 		return true;
 	}
 
-	public function enterPOForm($receiver)
+	public function enterPOForm($receiver, $slot_code)
 	{
 		// $receiver_no = $receiver['reference'];
 		parent::$jda->screenWait("Date Received");
 		parent::display(parent::$jda->screen,132);
-		self::enterPoStoreReceipt($receiver);
+		self::enterPoStoreReceipt($receiver, $slot_code);
 	}
 
-	private static function enterPoStoreReceipt($receiver) {
+	private static function enterPoStoreReceipt($receiver, $slot_code) {
 		$invoice_amt = 1; //set 1 for now
 		$formValues = array();//values to enter to form
 		$formValues[] = array(self::$user,12,69);  //enter receive by
-		$formValues[] = array(sprintf("%20d", $invoice_amt),13,20); //enter invoice amount
+		$formValues[] = array(sprintf("%8s", $slot_code),16,72); //enter slot
 		$formValues[] = array(self::$user,17,72);  //enter checked by
 		parent::$jda->write5250($formValues,ENTER,true);
 		echo "Entered: Purchase Order Store Receipt  \n";
@@ -158,7 +159,7 @@ class poReceiving extends jdaCustomClass
 
 		echo "\n Getting receiver no from db \n";
 		$sql 	= "SELECT receiver_no reference
-					FROM wms_transactions_to_jda 
+					FROM wms_transactions_to_jda
                     INNER JOIN wms_purchase_order_lists ON reference = purchase_order_no
 					WHERE module = 'Purchase Order' AND jda_action='Receiving' AND sync_status = 0";
 		$query 	= $db->query($sql);
@@ -183,7 +184,7 @@ class poReceiving extends jdaCustomClass
 		$status = ($isError) ? parent::$errorFlag : parent::$successFlag;
 
 		echo "\n Getting receiver no from db \n";
-		$sql 	= "UPDATE wms_transactions_to_jda 
+		$sql 	= "UPDATE wms_transactions_to_jda
 					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}', error_message = '{$error_message}'
 					WHERE sync_status = 0 AND module = 'Purchase Order' AND jda_action='Receiving' AND reference = (SELECT purchase_order_no FROM wms_purchase_order_lists po WHERE po.receiver_no = {$reference})";
 		$query 	= $db->exec($sql);
@@ -195,7 +196,7 @@ class poReceiving extends jdaCustomClass
 	* On done only via android
 	*/
 	public function enterUpToDockReceipt()
-	{	
+	{
 		//TODO::checkvalues
 		//TODO::how to know if error
 		try {
@@ -210,7 +211,7 @@ class poReceiving extends jdaCustomClass
 			//send fail status
 			echo 'Error: '. $e->getMessage();
 		}
-		
+
 	}
 
 	private static function syncPOClosing($params)
@@ -224,11 +225,11 @@ class poReceiving extends jdaCustomClass
 	}
 
 	public function logout($params = array())
-	{	
+	{
 		parent::logout();
 		self::syncPOClosing($params);
 	}
-	
+
 }
 
 $db = new pdoConnection(); //open db connection
@@ -242,7 +243,7 @@ if($argv[1]) $params['reference'] = $execParams['poNo'];
 
 $poNos = $db->getJdaTransaction($params);
 
-if(! empty($poNos) ) 
+if(! empty($poNos) )
 {
 	$receiver_nos = $db->getReceiverNo($poNos);
 	print_r($receiver_nos);
@@ -250,15 +251,18 @@ if(! empty($poNos) )
 	{
 		$receivePO = new poReceiving();
 		$receivePO->enterUpToDockReceipt();
-		foreach($receiver_nos as $receiver) 
+		foreach($receiver_nos as $receiver_no)
 		{
-			$validate = $receivePO->enterReceiverNumber($receiver);
-			if($validate) $receivePO->enterPOForm($receiver);
+			$receiver = $receiver_no['receiver_no'];
+			$back_order = $receiver_no['back_order'];
+			$slot_code = $receiver_no['slot_code'];
+			$validate = $receivePO->enterReceiverNumber($receiver, $back_order);
+			if($validate) $receivePO->enterPOForm($receiver, $slot_code);
 		}
 		$receivePO->logout($execParams);
 	}
 	else {
-		echo " \n No receiver_nos found!. \n";	
+		echo " \n No receiver_nos found!. \n";
 	}
 }
 else {
@@ -271,7 +275,7 @@ $db->close(); //close db connection
 $receivePO = new poReceiving();
 $receiver_nos = $receivePO->getReceiverNo();
 print_r($receiver_nos);
-if(! empty($receiver_nos) ) 
+if(! empty($receiver_nos) )
 {
 	$receivePO->enterUpToDockReceipt();
 	foreach($receiver_nos as $receiver) {

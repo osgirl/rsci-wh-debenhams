@@ -195,14 +195,17 @@ class pdoConnection
 	public function getReceiverNo($poNo) {
 		$poNo = join(',', $poNo);
 		echo "\n Getting receiver no from db \n";
-		$sql 	= "SELECT receiver_no, back_order FROM wms_purchase_order_lists
+		$sql 	= "SELECT receiver_no, back_order, slot_code FROM wms_purchase_order_lists
 					WHERE purchase_order_no IN ({$poNo})
 					ORDER BY purchase_order_no ASC";
 		$query 	= self::query($sql);
 
 		$result = array();
 		foreach ($query as $value ) {
-			$result[] =  array('receiver_no' => $value['receiver_no'], 'back_order' => $value['back_order']);
+			$result[] =  array(
+				'receiver_no' => $value['receiver_no'],
+				'back_order' => $value['back_order'],
+				'slot_code' => $value['slot_code']);
 		}
 
 		return $result;
