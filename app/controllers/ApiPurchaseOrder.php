@@ -294,7 +294,7 @@ class ApiPurchaseOrder extends BaseController {
 				$po = PurchaseOrderDetail::firstOrNew(array('sku'=>$value['upc'], 'receiver_no'=>$value['receiver_no']));
 				$po->sku                = $value['upc'];
 				$po->receiver_no        = $value['receiver_no'];
-				$po->quantity_delivered = ($po->exists) ? ($po->quantity_delivered + 1) : $value['quantity_delivered'];
+				$po->quantity_delivered = $value['quantity_delivered']; //($po->exists) ? ($po->quantity_delivered) :
 				$po->expiry_date		= $value['expiry_date'];
 				$po->save();
 			}
