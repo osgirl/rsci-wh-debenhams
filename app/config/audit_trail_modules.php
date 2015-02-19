@@ -2,7 +2,7 @@
 
 return array(
 	"boxing"		=> "Box Manifest",
-	"letdown" 		=> "Letdown",
+	// "letdown" 		=> "Letdown",
 	"picking"		=> "Picking",
 	"product"		=> "Product",
 	"storeorder"	=> "Store Order",
