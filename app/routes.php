@@ -185,6 +185,7 @@ Route::group(array('prefix'=>'api/v1', 'before'=>'oauth|auth.piler'), function()
 
 	//boxing
 	Route::get('boxes/{store_code}', 'ApiBox@getBoxesByStore');
+	Route::post('boxes/create', 'ApiBox@postCreateBox');
 
 
 	//get status types

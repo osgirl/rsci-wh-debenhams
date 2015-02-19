@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 
 class ApiBox extends BaseController {
@@ -12,7 +12,7 @@ class ApiBox extends BaseController {
 	*
 	* @example  www.example.com/api/{version}/boxes/{store_code}
 	* @return boxes
-	*/ 
+	*/
 	public static function getBoxesByStore($storeCode)
 	{
 		try {
@@ -21,7 +21,7 @@ class ApiBox extends BaseController {
 		} catch (Exception $e) {
 			return CommonHelper::return_fail($e->getMessage());
 		}
-		
+
 	}
 
 	/**
@@ -34,7 +34,7 @@ class ApiBox extends BaseController {
 	* @param  doc_nos   	document numbers involved in the transaction
 	* @param  store_code    store code
 	* @return void
-	*/ 
+	*/
 	public static function postToPicklistToBox()
 	{
 		try {
@@ -71,11 +71,11 @@ class ApiBox extends BaseController {
 	* @example  self::moveQuantityToBox
 	*
 	* @param  picklistDetail      picklist details
-	* @param  data   			  box code 
+	* @param  data   			  box code
 	* @param  storeCode           store code
 	* @param  sku                 sku/up
 	* @return data that will be logged in audi trail
-	*/ 
+	*/
 	private static function moveQuantityToBox($picklistDetail,$data, $storeCode, $sku)
 	{
 		$picklistDetail = $picklistDetail->toArray();
@@ -102,13 +102,13 @@ class ApiBox extends BaseController {
 			// dd();
 			$qtyToMove = 0;
 			//if the needed quantity of the picklist detail is less than the distributed quantity, set it as the qty to move
-			if((int)$picklistDetail[$i]['quantity_to_pick'] <= $distributedQty) { 
+			if((int)$picklistDetail[$i]['quantity_to_pick'] <= $distributedQty) {
 				$qtyToMove = (int) $picklistDetail[$i]['quantity_to_pick'];
 				$distributedQty = $distributedQty - $picklistDetail[$i]['quantity_to_pick'];
 				$picklistDetail[$i]['quantity_to_pick'] -= $qtyToMove;
-			} else { 
+			} else {
 				$qtyToMove = $distributedQty;
-				$distributedQty = 0; 
+				$distributedQty = 0;
 				$picklistDetail[$i]['quantity_to_pick'] -= $qtyToMove;
 			}
 			if($qtyToMove > 0) {
@@ -116,7 +116,7 @@ class ApiBox extends BaseController {
 				BoxDetails::moveToBox($picklistDetail[$i]['id'], $data[$dataCounter-1]->box_code,$qtyToMove);
 				$dataAfter = $qtyToMove .' items of '. $sku . ' was packed to ' . $data[$dataCounter-1]->box_code . "\n";
 			}
-		}	
+		}
 		if($distributedQty > 0) {
 			throw new Exception("Cannot move quantity greater than required");
 		}
@@ -134,7 +134,7 @@ class ApiBox extends BaseController {
 	* @param  storeCode           store code
 	* @param  sku                 sku/up
 	* @return picklistDetail
-	*/ 
+	*/
 	private static function getPicklistDetail($docNos, $storeCode, $sku)
 	{
 		$picklistDetail = PicklistDetails::getPicklistDetail($docNos, $storeCode, $sku);
@@ -151,7 +151,7 @@ class ApiBox extends BaseController {
 	* @param  docNos    document numbers
 	* @throws error if wrong format was passed
 	* @return void
-	*/ 
+	*/
 	private static function checkDataAndDocNosFormat($data, $docNos)
 	{
 		if(empty($data)) throw new Exception("Parameter doc_nos does not have a valid format [{'box_code':'930213', 'qty_packed': 20}]");
@@ -170,9 +170,9 @@ class ApiBox extends BaseController {
 	* @example  self::checkBoxData({params})
 	*
 	* @param  boxData    box code and quantity packed ex: {'box_code': '', 'qty_packed': ''}
-	* @param  storeCode  store code 
+	* @param  storeCode  store code
 	* @return Status if data passed is valid
-	*/ 
+	*/
 	private static function checkBoxData($boxData, $storeCode)
 	{
 		//check data passed
@@ -193,7 +193,7 @@ class ApiBox extends BaseController {
 	* @param  dataAfter     changes that happened to the picklist
 	* @param  docNos   		document numbers
 	* @return void
-	*/ 
+	*/
 	public static function postToPicklistToBoxAuditTrail($dataAfter, $docNos)
 	{
 		$arrParams = array(
@@ -206,6 +206,83 @@ class ApiBox extends BaseController {
 			'created_at'	=> date('Y-m-d H:i:s'),
 			'updated_at'	=> date('Y-m-d H:i:s')
 		);
+		AuditTrail::addAuditTrail($arrParams);
+	}
+
+	/**
+	* Create box in series
+	*
+	* @example  self::postToPicklistToBoxAuditTrail();
+	*
+	* @param  dataAfter     changes that happened to the picklist
+	* @param  docNos   		document numbers
+	* @return void
+	*/
+	public static function postCreateBox()
+	{
+		try {
+
+			CommonHelper::setRequiredFields(array('store'));
+
+			DB::beginTransaction();
+
+			$storeCode = Request::get('store');
+			$numberOfBoxes = 1;
+
+			if(strlen($storeCode) == 1) $newStoreCodeFormat = "000{$storeCode}-";
+			else if(strlen($storeCode) == 2) $newStoreCodeFormat = "00{$storeCode}-";
+			else if(strlen($storeCode) == 3) $newStoreCodeFormat = "0{$storeCode}-";
+			else if(strlen($storeCode) == 4) $newStoreCodeFormat = "{$storeCode}-";
+			else throw new Exception("Invalid store");
+
+			#check if a record exist in that store
+			$box = Box::where('box_code', 'LIKE', "{$newStoreCodeFormat}%")->max('box_code');
+			#if result is empty follow the format
+			if($box == null) $box = $newStoreCodeFormat."00000";
+			#if exists get the latest then increment box
+			$formattedBoxCode = array();
+			$containerBox = array(); //use for audit trail
+			foreach(range(1, $numberOfBoxes) as $number) {
+				$boxCode = substr($box, -5);
+				$boxCode = (int) $boxCode + $number;
+				$formattedBoxCode[$number]['box_code'] = $newStoreCodeFormat . sprintf("%05s", (int)$boxCode);
+				$formattedBoxCode[$number]['store_code'] = $storeCode;
+				$formattedBoxCode[$number]['created_at'] = date('Y-m-d H:i:s');
+				$containerBox[] = $newStoreCodeFormat . sprintf("%05s", (int)$boxCode);
+			}
+
+			Box::insert($formattedBoxCode);
+			/*print_r($containerBox);
+			die();*/
+			$storeName = Store::getStoreName($storeCode);
+			$boxCodeInString = implode(',', $containerBox);
+
+			self::postCreateBoxAuditTrail($boxCodeInString, $storeName);
+			DB::commit();
+			return CommonHelper::return_success_message($containerBox[0]);
+		} catch (Exception $e) {
+			DB::rollback();
+			return CommonHelper::return_fail($e->getMessage());
+		}
+	}
+
+	private static function postCreateBoxAuditTrail($boxCode, $storeName)
+	{
+		$user_id = Authorizer::getResourceOwnerId();
+		$userInfo = User::find($user_id);
+		$dataBefore = '';
+		$dataAfter = 'User '. $userInfo->username . ' created a box with code ' . $boxCode. ' for ' . $storeName;
+
+		$arrParams = array(
+						'module'		=> Config::get('audit_trail_modules.boxing'),
+						'action'		=> Config::get('audit_trail.create_box'),
+						'reference'		=> 'Box code # ' . $boxCode,
+						'data_before'	=> $dataBefore,
+						'data_after'	=> $dataAfter,
+						'user_id'		=> $user_id,
+						'created_at'	=> date('Y-m-d H:i:s'),
+						'updated_at'	=> date('Y-m-d H:i:s')
+						);
 		AuditTrail::addAuditTrail($arrParams);
 	}
 
