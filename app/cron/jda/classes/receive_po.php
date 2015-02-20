@@ -122,6 +122,14 @@ class poReceiving extends jdaCustomClass
 			return false;
 		}
 
+		if(parent::$jda->screenCheck('This dock location is invalid for this warehouse.')) {
+            $receiver_message="This dock location is invalid for this warehouse.";
+            self::$formMsg = "{$receiver_no}: {$receiver_message}";
+            parent::logError(self::$formMsg, __METHOD__);
+			self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
+			return false;
+		}
+
 		echo self::$formMsg;
 
 		return true;
@@ -139,19 +147,24 @@ class poReceiving extends jdaCustomClass
 		$invoice_amt = 1; //set 1 for now
 		$formValues = array();//values to enter to form
 		$formValues[] = array(self::$user,12,69);  //enter receive by
-		$formValues[] = array(sprintf("%8s", $slot_code),16,72); //enter slot
+		$formValues[] = array(sprintf("%6s", $slot_code),16,72); //enter slot
 		$formValues[] = array(self::$user,17,72);  //enter checked by
 		parent::$jda->write5250($formValues,ENTER,true);
-		echo "Entered: Purchase Order Store Receipt  \n";
-		self::checkReceiverLanding($receiver);
+		$validate = self::checkReceiverNumber($receiver,__METHOD__);
+
+		if ($validate)
+		{
+			echo "Entered: Purchase Order Store Receipt  \n";
+			self::checkReceiverLanding($receiver);
+		}
 	}
 
 	private static function checkReceiverLanding($receiver) {
 		parent::$jda->screenWait("Receiver Number");
 		parent::display(parent::$jda->screen,132);
-		//when it lands here we can now assume that the transaction was a success
-		//need more test here
+
 		self::updateSyncStatus($receiver);
+
 	}
 
 	/*public function getReceiverNo() {
