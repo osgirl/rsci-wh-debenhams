@@ -25,7 +25,7 @@ class BaseController extends Controller {
 
 			$this->data['menu_str_receiving'] = Lang::get('general.menu_str_receiving');
 			$this->data['menu_store_order'] = Lang::get('general.menu_store_order');
-
+			$this->data['menu_store_return'] = Lang::get('general.menu_store_return');
 
 
 			$this->data['menu_reports'] = Lang::get('general.menu_reports');
