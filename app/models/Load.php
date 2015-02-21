@@ -16,6 +16,11 @@ class Load extends Eloquent {
     	return $loadCodes;
     }
 
+    public static function getLoads()
+    {
+        return Load::where('is_shipped', '=', 0)->get(array('id','load_code'));
+    }
+
     public static function getLoadList($data = array(), $getCount = false)
     {
         $query = Load::select(DB::raw("wms_load.id, wms_load.load_code, wms_load.is_shipped, group_concat(wms_pallet.store_code SEPARATOR ',') stores"))
@@ -149,4 +154,5 @@ class Load extends Eloquent {
         return $result;
 
     }*/
+
 }

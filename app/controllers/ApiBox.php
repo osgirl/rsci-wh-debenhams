@@ -252,8 +252,7 @@ class ApiBox extends BaseController {
 			}
 
 			Box::insert($formattedBoxCode);
-			/*print_r($containerBox);
-			die();*/
+
 			$storeName = Store::getStoreName($storeCode);
 			$boxCodeInString = implode(',', $containerBox);
 
@@ -285,5 +284,4 @@ class ApiBox extends BaseController {
 						);
 		AuditTrail::addAuditTrail($arrParams);
 	}
-
 }
