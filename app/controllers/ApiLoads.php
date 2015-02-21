@@ -77,5 +77,72 @@ class ApiLoads extends BaseController {
 		}
 	}
 
+	public function loadBoxes()
+	{
+		try {
 
+			CommonHelper::setRequiredFields(array('data', 'load_code'));
+
+			$boxLists = json_decode(Request::get('data'));
+			$loadCode = Request::get('load_code');
+
+			DB::beginTransaction();
+			// print_r($boxLists); die();
+			foreach ($boxLists as $boxCode)
+			{
+				$boxCode = $boxCode->box_code;
+				//get boxes info
+				$boxInfo = Box::getBoxList($boxCode);
+				if(empty($boxInfo)) throw new Exception("Box code does not exist");
+				$soNos = array_unique(explode(',', $boxInfo['so_no'])); //remove duplicate so_no
+				StoreOrder::updateLoadCode($soNos, $loadCode);
+
+				$pallete = Pallet::getOrCreatePallete($boxInfo['store_code'], $loadCode);
+				PalletDetails::create(array(
+					'box_code' 		=> $boxCode, //$boxInfo['box_code'],
+					'pallet_code'	=> $pallete['pallet_code']
+					));
+				$useBox = Box::updateBox(array(
+					"box_code"	=> $boxInfo['box_code'],
+					"store"		=> $boxInfo['store_code'],
+					"in_use"	=> Config::get('box_statuses.in_use')
+					));
+			}
+			self::loadBoxesAuditTrail($boxLists, $loadCode);
+			DB::commit();
+
+			return CommonHelper::return_success();
+		} catch (Exception $e) {
+			DB::rollback();
+			return CommonHelper::return_fail($e->getMessage());
+		}
+	}
+
+	/**
+	* Audit trail for picklist loading
+	*
+	* @example  self::loadBoxesAuditTrail()
+	*
+	* @param  $boxCodes 	box codes
+	* @param  $loadCode 		load code
+	* @return void
+	*/
+	private function loadBoxesAuditTrail($boxCodes, $loadCode)
+	{
+		$user_id = Authorizer::getResourceOwnerId();
+		$userInfo = User::find($user_id);
+		$boxCodes = implode(',', $boxCodes);
+		$data_after = 'Box code # '.$boxCodes . '  loaded to Load # ' . $loadCode .' by '. $userInfo->username;
+		$arrParams = array(
+			'module'		=> Config::get("audit_trail_modules.boxing"),
+			'action'		=> Config::get("audit_trail.box_load"),
+			'reference'		=> 'Box code # ' . $boxCodes,
+			'data_before'	=> '',
+			'data_after'	=> $data_after,
+			'user_id'		=> $user_id,
+			'created_at'	=> date('Y-m-d H:i:s'),
+			'updated_at'	=> date('Y-m-d H:i:s')
+		);
+		AuditTrail::addAuditTrail($arrParams);
+	}
 }
