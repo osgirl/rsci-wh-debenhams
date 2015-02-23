@@ -37,4 +37,7 @@ return array(
 	"export_boxes"		=> "Export Boxes",
 	"assign_picklist"			=> "Assigned Picklist",
 	"modify_picklist_status"	=> "Update Picklist Status",
+	"assign_store_return"			=> "Assigned Store Return",
+	"modify_store_return_status"	=> "Update Store Return Status",
+	"done_store_return"	=> "Done Store Return",
 );

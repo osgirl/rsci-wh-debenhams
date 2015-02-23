@@ -137,7 +137,42 @@ class DatasetSeeder extends Seeder {
 						'data_display' => 'Posted',
 						'description' => 'Picklist status is now closed',
 						'created_at' => date('Y-m-d H:i:s')
-					)
+					),
+					array(
+						'data_code' => 'SR_STATUS_TYPE', // store return
+						'data_value' => 'open',
+						'data_display' => 'Open',
+						'description' => 'Store return status is open',
+						'created_at' => date('Y-m-d H:i:s')
+					),
+					array(
+						'data_code' => 'SR_STATUS_TYPE',
+						'data_value' => 'assigned',
+						'data_display' => 'Assigned',
+						'description' => 'Store return status is assigned to stock piler/s',
+						'created_at' => date('Y-m-d H:i:s')
+					),
+					array(
+						'data_code' => 'SR_STATUS_TYPE',
+						'data_value' => 'in_process',
+						'data_display' => 'In Process',
+						'description' => 'Store return status is In-process',
+						'created_at' => date('Y-m-d H:i:s')
+					),
+					array(
+						'data_code' => 'SR_STATUS_TYPE',
+						'data_value' => 'done',
+						'data_display' => 'Done',
+						'description' => 'Store return status is done',
+						'created_at' => date('Y-m-d H:i:s')
+					),
+					array(
+						'data_code' => 'SR_STATUS_TYPE',
+						'data_value' => 'closed',
+						'data_display' => 'Posted',
+						'description' => 'Store return status is now closed',
+						'created_at' => date('Y-m-d H:i:s')
+					),
 			);
 
 		foreach ($data as $d) {

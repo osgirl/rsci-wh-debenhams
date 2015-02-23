@@ -48,6 +48,13 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::post('store_order/generate_picklist', 'StoreOrderController@generatePicklist');
 	Route::get('store_order/mts_detail', 'StoreOrderController@getMtsDetails');
 
+	Route::get('store_return', 'StoreReturnController@showIndex');
+	Route::get('store_return/detail', 'StoreReturnController@getSODetails');
+	Route::get('store_return/assign', 'StoreReturnController@assignPilerForm');
+	Route::post('store_return/assign_to_piler', 'StoreReturnController@assignToStockPiler');
+	Route::get('store_return/export', 'StoreReturnController@exportCSV');
+	Route::get('store_return/export_detail', 'StoreReturnController@exportDetailsCSV');
+
 	Route::get('box/list', 'BoxController@index');
 	Route::get('box/detail', 'BoxController@getBoxDetails');
 	Route::get('box/create', 'BoxController@createBox');
@@ -205,6 +212,12 @@ Route::group(array('prefix'=>'api/v1', 'before'=>'oauth|auth.piler'), function()
 
 	//slots
 	Route::get('slot/is_exist', 'ApiSlots@getIsSlotExist');
+
+	//store return
+	Route::get('store_return/list', 'ApiStoreReturn@getStoreReturnList');
+	Route::get('store_return/details/{soNo}', 'ApiStoreReturn@getStoreReturnDetail');
+	Route::post('store_return/save', 'ApiStoreReturn@postSaveDetail');
+	Route::post('store_return/change_status/{soNo}', 'ApiStoreReturn@updateStatus');
 });
 
 Route::group(array('prefix'=>'api/v1', 'before'=>'oauth'), function()

@@ -20,8 +20,9 @@ class CreateStoreReturnTable extends Migration {
 			$table->string('so_no', 50);
 			$table->string('store_code')->default(0);
 			// $table->string('load_code', 9)->default(0);;
-			$table->tinyInteger('so_status')->default(0);
-			$table->integer('assigned_user_id')->default(0);
+			$table->tinyInteger('so_status')->default(19);
+			// $table->integer('assigned_user_id')->default(0);
+			$table->string('slot_code', 10)->default(0);
 			$table->tinyInteger('sync_status')->default(0);
 			$table->timestamp('delivered_date')->default('0000-00-00 00:00:00');
 			$table->timestamp('jda_sync_date')->default('0000-00-00 00:00:00');

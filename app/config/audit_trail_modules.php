@@ -12,5 +12,6 @@ return array(
 	"slotmaster"	=> "Slots",
 	"users"			=> "Users",
 	"settings"		=> "Settings",
-	"user_roles"	=> "User Roles"
+	"user_roles"	=> "User Roles",
+	"store_return"	=> "Store Return"
 );
