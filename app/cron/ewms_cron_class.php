@@ -24,6 +24,8 @@ class cronEWMS {
 	public static $picklistDetails = 'wms_picklist_details';
 	public static $storeOrder = 'wms_store_order';
 	public static $storeOrderDetails = 'wms_store_order_detail';
+	public static $storeReturn = 'wms_store_return';
+	public static $storeReturnDetail = 'wms_store_return_detail';
 	public static $storeOrderLetdown = 'wms_store_order_letdown';
 
 
@@ -193,6 +195,30 @@ class cronEWMS {
 		// $columns = '(so_no, sku, ordered_qty, allocated_qty)';
 		$columns = '(so_no, sku, ordered_qty)';
 		// so_no | sku | ordered_qty | alloctated_qty | created_at
+
+		$csvLocation = $this->instance->getLatestCsv($csvfile_pattern);
+		$this->instance->import($csvLocation, $eWMSTable, $columns);
+	}
+
+	//blank
+	public function storeReturn() {
+
+		echo "\n Running method " . __METHOD__ . "\n";
+		$csvfile_pattern = "store_return_header";
+		$eWMSTable = self::$storeReturn;
+		$columns = '(@so_no, @store_code, @so_status) set so_no=@so_no, store_code=@store_code';
+		// so_no | store_name | so_status | order_date | created_at
+
+		$csvLocation = $this->instance->getLatestCsv($csvfile_pattern);
+		$this->instance->import($csvLocation, $eWMSTable, $columns);
+	}
+
+	//blank
+	public function storeReturnDetail() {
+		echo "\n Running method " . __METHOD__ . "\n";
+		$csvfile_pattern = "store_return_detail";
+		$eWMSTable = self::$storeReturnDetail;
+		$columns = '(so_no, sku, delivered_qty)';
 
 		$csvLocation = $this->instance->getLatestCsv($csvfile_pattern);
 		$this->instance->import($csvLocation, $eWMSTable, $columns);
