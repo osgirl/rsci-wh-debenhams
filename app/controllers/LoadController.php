@@ -172,13 +172,43 @@ class LoadController extends BaseController {
 			$this->data['records'] = Load::getLoadDetails($loadCode);
 			$this->data['permissions'] = unserialize(Session::get('permissions'));
 
-			$this->layout = View::make('layouts.print');			;
+			$this->layout = View::make('layouts.print');
 			$this->layout->content = View::make('loads.printmts', $this->data);
 
 		} catch (Exception $e) {
 			return Redirect::to('load/list'. $this->setURL())->withErrors(Lang::get('loads.text_fail_load'));
 		}
 	}
+
+    public function printPackingList($loadCode)
+    {
+        try {
+            $this->data['loadCode'] = $loadCode;
+            $this->data['records'] = Load::getPackingDetails($loadCode);
+            $this->data['permissions'] = unserialize(Session::get('permissions'));
+
+            $this->layout = View::make('layouts.print');
+            $this->layout->content = View::make('loads.print_packing_list', $this->data);
+
+        } catch (Exception $e) {
+            return Redirect::to('load/list'. $this->setURL())->withErrors(Lang::get('loads.text_fail_load'));
+        }
+    }
+
+    public function printLoadingSheet($loadCode)
+    {
+        try {
+            $this->data['loadCode'] = $loadCode;
+            $this->data['records'] = Load::getLoadDetails($loadCode);
+            $this->data['permissions'] = unserialize(Session::get('permissions'));
+
+            $this->layout = View::make('layouts.print');
+            $this->layout->content = View::make('loads.print_loading_sheet', $this->data);
+
+        } catch (Exception $e) {
+            return Redirect::to('load/list'. $this->setURL())->withErrors(Lang::get('loads.text_fail_load'));
+        }
+    }
 
 	protected function setURL($forDetail = false, $forBackToList = false) {
 		// Search Filters
