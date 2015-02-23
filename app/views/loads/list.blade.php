@@ -95,6 +95,8 @@
 							@endif
 
 								&nbsp;&nbsp;<a href="{{url('load/print/' . $load['load_code'])}}" target="_blank" class="btn btn-danger">Print MTS</a>
+								&nbsp;&nbsp;<a href="{{url('load/printpacklist/' . $load['load_code'])}}" target="_blank" class="btn btn-primary">Print Packing List</a>
+								&nbsp;&nbsp;<a href="{{url('load/printloadingsheet/' . $load['load_code'])}}" target="_blank" class="btn btn-info">Print Loading Sheet</a>
 						</td>
 					</tr>
 					@endforeach

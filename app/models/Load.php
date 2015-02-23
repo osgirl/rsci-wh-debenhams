@@ -63,6 +63,50 @@ class Load extends Eloquent {
 
         return $result;
     }
+
+    /*
+     * load details->(load_code)store order->(so_no) = Reference MTS No
+     * load details->(load_code)store order->(so_no)picklist details->(id)box details->(box_code) = boxes
+     * load details->(load_code)store order->(so_no)picklist details->(quantity_to_pick, moved_qty) = quantity
+     */
+    public static function getPackingDetails($loadCode)
+    {
+        $so= DB::table('store_order')
+            ->select('so_no','store_code')
+            ->join('load_details','load_details.load_code','=','store_order.load_code')
+            ->where('load_details.load_code', '=', $loadCode)
+            ->get();
+        $data['store_code']=$so[0]->store_code;
+
+        $store = DB::table('stores')
+            ->select('store_name')
+            ->where('stores.store_code', '=', $so[0]->store_code)
+            ->get();
+        $data['store_name']=$store[0]->store_name;
+        foreach($so as $val){
+            $box = DB::table('picklist_details')
+                ->select('box_details.box_code')
+                ->join('box_details','box_details.picklist_detail_id','=','picklist_details.id')
+                ->where('picklist_details.so_no', '=', $val->so_no)
+                ->distinct()
+                ->get();
+            if(!empty($box)){
+                $data['StoreOrder'][$val->so_no]['box_code']=$box;
+            }
+            $box = DB::table('picklist_details')
+                ->where('so_no', '=', $val->so_no)
+                ->sum('quantity_to_pick');
+            $data['StoreOrder'][$val->so_no]['issued']=$box;
+
+            $box = DB::table('picklist_details')
+                ->where('so_no', '=', $val->so_no)
+                ->sum('moved_qty');
+            $data['StoreOrder'][$val->so_no]['received']=$box;
+
+        }
+        return $data;
+    }
+
     public static function getLoadDetails($loadCode)
     {
         // get load date
