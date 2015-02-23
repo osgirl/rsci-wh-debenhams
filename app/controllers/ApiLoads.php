@@ -108,7 +108,7 @@ class ApiLoads extends BaseController {
 					"in_use"	=> Config::get('box_statuses.in_use')
 					));
 			}
-			self::loadBoxesAuditTrail($boxLists, $loadCode);
+			self::loadBoxesAuditTrail(json_decode(Request::get('data'), true), $loadCode);
 			DB::commit();
 
 			return CommonHelper::return_success();
