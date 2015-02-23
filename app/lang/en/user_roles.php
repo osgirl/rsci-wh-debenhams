@@ -50,7 +50,7 @@ return array(
 	'module_stock_piler'            => 'Stock Piler',
 	'module_unlisted'	            => 'Unlisted',
 	'module_expiry_items'	            => 'Expiry Items',
-
+	'module_store_return'	            => 'Store Return',
 
 	'button_insert'                 => 'Add New User Role',
 	'button_delete'                 => 'Delete User Roles',

@@ -300,6 +300,39 @@
 						</td> -->
                     </tr>
 
+                    <tr>
+						<td class="align-center font-12">{{ $module_store_return }}</td>
+						<td class="align-center">
+							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessStoreReturn', Input::old('permissions'))) || CommonHelper::valueInArray('CanAccessStoreReturn', json_decode($user_role->permissions)))
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessStoreReturn" checked="checked" />
+							@else
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessStoreReturn" />
+							@endif
+						</td>
+						<td class="align-center">--</td>
+						<td class="align-center">--</td>
+						<td class="align-center">--</td>
+						<td class="align-center">
+							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanExportStoreReturn', Input::old('permissions'))) || CommonHelper::valueInArray('CanExportStoreReturn', json_decode($user_role->permissions)))
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanExportStoreReturn" checked="checked" />
+							@else
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanExportStoreReturn" />
+							@endif
+						</td>
+						<td class="align-center">--</td>
+						<td class="align-center">--</td>
+                    	<td class="align-center">--</td>
+						<td class="align-center">
+							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAssignStoreReturn', Input::old('permissions'))) || CommonHelper::valueInArray('CanAssignStoreReturn', json_decode($user_role->permissions)))
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAssignStoreReturn" checked="checked" />
+							@else
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAssignStoreReturn" />
+							@endif
+						</td>
+						<td class="align-center">--</td>
+						<td class="align-center">--</td>
+                    </tr>
+
                     <!-- <tr>
 						<td class="align-center font-12">{{ $module_store_order_details }}</td>
 						<td class="align-center">

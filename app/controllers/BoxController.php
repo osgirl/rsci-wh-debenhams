@@ -376,7 +376,6 @@ class BoxController extends BaseController {
 	public function generateLoadCode()
 	{
 		$loadMax =  Load::select(DB::raw('max(id) as max_created, max(load_code) as load_code'))->first()->toArray();
-		;
 
 		if($loadMax['max_created'] === null) {
 			$loadCode = 'LD0000001';

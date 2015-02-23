@@ -13,6 +13,7 @@ return array(
 
 	'menu_str_receiving'		=> 'STR Receiving',
 	'menu_store_order'			=> 'Store Orders',
+	'menu_store_return'			=> 'Store Returns',
 
 	'menu_reports'				=> 'Reports',
 	'menu_product_master_list'	=> 'Product Master List',

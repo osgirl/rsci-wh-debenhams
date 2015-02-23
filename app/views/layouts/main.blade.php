@@ -110,8 +110,11 @@
 			</a>
 
 			<ul class="dropdown-menu">
-			     @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) )
+			    @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) )
             <li><a href="{{ URL::to('store_order') }}">{{ $menu_store_order }}</a></li>
+          @endif
+          @if ( CommonHelper::valueInArray('CanAccessStoreReturn', $permissions) )
+            <li><a href="{{ URL::to('store_return') }}">{{ $menu_store_return }}</a></li>
           @endif
 			</ul>
 		</li>
