@@ -108,7 +108,7 @@ class ApiLoads extends BaseController {
 					"in_use"	=> Config::get('box_statuses.in_use')
 					));
 			}
-			self::loadBoxesAuditTrail(json_decode(Request::get('data'), true), $loadCode);
+			self::loadBoxesAuditTrail(Request::get('data'), $loadCode);
 			DB::commit();
 
 			return CommonHelper::return_success();
@@ -129,9 +129,17 @@ class ApiLoads extends BaseController {
 	*/
 	private function loadBoxesAuditTrail($boxCodes, $loadCode)
 	{
+		$boxCodes = json_decode($boxCodes, true);
+
+		$newArray = array();
+		foreach ($boxCodes as $value) {
+			$newArray[] = implode(',', $value);
+		}
+
+		$boxCodes = implode(',', $newArray);
+
 		$user_id = Authorizer::getResourceOwnerId();
 		$userInfo = User::find($user_id);
-		$boxCodes = implode(',', $boxCodes);
 		$data_after = 'Box code # '.$boxCodes . '  loaded to Load # ' . $loadCode .' by '. $userInfo->username;
 		$arrParams = array(
 			'module'		=> Config::get("audit_trail_modules.boxing"),
