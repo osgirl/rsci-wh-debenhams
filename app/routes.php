@@ -137,6 +137,9 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::get('load/export', 'LoadController@exportCSV');
 	Route::post('load/ship', 'LoadController@shipLoad');
 	Route::get('load/print/{loadCode}', 'LoadController@printLoad');
+    Route::get('load/printpacklist/{loadCode}', 'LoadController@printPackingList');
+    Route::get('load/printloadingsheet/{loadCode}', 'LoadController@printLoadingSheet');
+
 
 	Route::get('unlisted', 'UnlistedController@showIndex');
 	Route::get('unlisted/export', 'UnlistedController@exportCSV');
