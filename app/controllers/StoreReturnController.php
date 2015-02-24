@@ -26,8 +26,8 @@ class StoreReturnController extends BaseController {
 	public function exportCSV() {
 		// Check Permissions
 		if (Session::has('permissions')) {
-	    	if (!in_array('CanExportStoreOrders', unserialize(Session::get('permissions'))))  {
-				return Redirect::to('store_order' . $this->setURL());
+	    	if (!in_array('CanExportStoreReturn', unserialize(Session::get('permissions'))))  {
+				return Redirect::to('store_return' . $this->setURL());
 			}
     	} else {
 			return Redirect::to('users/logout');
@@ -59,14 +59,14 @@ class StoreReturnController extends BaseController {
 	public function exportDetailsCSV() {
 		///Check Permissions
 		if (Session::has('permissions')) {
-	    	if (!in_array('CanExportStoreOrders', unserialize(Session::get('permissions'))))  {
+	    	if (!in_array('CanExportStoreReturn', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('store_return' . $this->setURL());
 			}
     	} else {
 			return Redirect::to('users/logout');
 		}
 
-		if (StoreOrder::find(Input::get('id', NULL))!=NULL) {
+		if (StoreReturn::find(Input::get('id', NULL))!=NULL) {
 			$so_id = Input::get('id', NULL);
 			$this->data = Lang::get('store_return');
 			$this->data['so_status_type'] = Dataset::getTypeWithValue("SR_STATUS_TYPE");
@@ -94,7 +94,7 @@ class StoreReturnController extends BaseController {
 		if (Session::has('permissions')) {
 	    	if (!in_array('CanAccessStoreReturn', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('store_return');
-			} elseif (StoreOrder::find(Input::get('id', NULL))==NULL) {
+			} elseif (StoreReturn::find(Input::get('id', NULL))==NULL) {
 				return Redirect::to('store_return')->with('error', Lang::get('store_return.error_so_details'));
 			}
     	} else {
