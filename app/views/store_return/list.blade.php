@@ -137,7 +137,7 @@
 								<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_posted }}</a>
 								 <!-- && ($so['quantity_to_pick'] != $so['moved_qty']) -->
 							@elseif ( $so['data_display'] === 'Done' )
-								<a style="width: 70px;" class="btn btn-success closePicklist" data-id="{{ $so['move_doc_number'] }}">{{ $button_close_picklist }}</a>
+								<a style="width: 70px;" class="btn btn-success closePicklist" data-id="{{ $so['so_no'] }}">{{ $button_close_picklist }}</a>
 							@else
 								<a style="width: 70px;" disabled="disabled" class="btn">{{ $button_close_store_return }}</a>
 							@endif
