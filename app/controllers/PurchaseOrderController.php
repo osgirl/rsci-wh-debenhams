@@ -25,7 +25,7 @@ class PurchaseOrderController extends BaseController {
 		// Check Permissions
 		if (Session::has('permissions')) {
 	    	if (!in_array('CanAccessPurchaseOrders', unserialize(Session::get('permissions'))))  {
-    			return Redirect::to('purchase_order');
+    			return Redirect::to('user/profile');
     		}
     	} else {
 			return Redirect::to('users/logout');
