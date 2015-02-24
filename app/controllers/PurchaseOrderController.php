@@ -178,7 +178,7 @@ class PurchaseOrderController extends BaseController {
 			return Redirect::to('purchase_order/detail' . $url)->with('message', Lang::get('purchase_order.text_success_close_po'));
 		} else {
 
-			return Redirect::to('purchase_order' . $this->setURL())->with('message', Lang::get('purchase_order.text_success_close_po'));
+			return Redirect::to('purchase_order')->with('message', Lang::get('purchase_order.text_success_close_po'));
 		}
 	}
 
