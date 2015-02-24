@@ -76,7 +76,10 @@
 		</li>
 		@endif
 
-
+    @if ( CommonHelper::valueInArray('CanAccessLetdown', $permissions) ||
+    CommonHelper::valueInArray('CanAccessPacking', $permissions) ||
+    CommonHelper::valueInArray('CanAccessBoxingLoading', $permissions) ||
+    CommonHelper::valueInArray('CanAccessShipping', $permissions))
 		<li class="dropdown">
 			<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
 				<i class="icon-share"></i>
@@ -100,8 +103,10 @@
           @endif
       </ul>
 		</li>
+    @endif
 
-    @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) )
+    @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) ||
+    CommonHelper::valueInArray('CanAccessStoreReturn', $permissions))
 		<li class="dropdown">
 			<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
 				<i class="icon-inbox"></i>
@@ -120,7 +125,13 @@
 		</li>
 		@endif <!--end if drop down for store receiving-->
 
-		@if ( CommonHelper::valueInArray('CanAccessProductMasterList', $permissions) || CommonHelper::valueInArray('CanAccessSlotMasterList', $permissions) )
+		@if ( CommonHelper::valueInArray('CanAccessProductMasterList', $permissions) ||
+    CommonHelper::valueInArray('CanAccessSlotMasterList', $permissions) ||
+    CommonHelper::valueInArray('CanAccessVendorMasterList', $permissions) ||
+    CommonHelper::valueInArray('CanAccessStoreMasterList', $permissions) ||
+    CommonHelper::valueInArray('CanAccessUnlisted', $permissions) ||
+    CommonHelper::valueInArray('CanAccessExpiryItems', $permissions) ||
+    CommonHelper::valueInArray('CanAccessAuditTrail', $permissions))
         <li class="@if(Route::currentRouteUses('ProductListController@showIndex') || Route::currentRouteUses('SlotListController@showIndex') || Route::currentRouteUses('AuditTrailController@showIndex')) active @endif dropdown">
 			<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
 				<i class="icon-list-alt"></i>
@@ -158,7 +169,9 @@
 		</li>
 		@endif
 
-		@if ( CommonHelper::valueInArray('CanAccessUsers', $permissions) || CommonHelper::valueInArray('CanAccessUserRoles', $permissions) || CommonHelper::valueInArray('CanAccessSettings', $permissions) )
+		@if ( CommonHelper::valueInArray('CanAccessUsers', $permissions) ||
+    CommonHelper::valueInArray('CanAccessUserRoles', $permissions) ||
+    CommonHelper::valueInArray('CanAccessSettings', $permissions) )
         <li class="@if(Route::currentRouteUses('UsersController@showIndex') || Route::currentRouteUses('UsersController@insertDataForm') || Route::currentRouteUses('UsersController@updateDataForm') || Route::currentRouteUses('UsersController@updatePasswordForm')  || Route::currentRouteUses('UserRolesController@showIndex') || Route::currentRouteUses('UserRolesController@insertDataForm') || Route::currentRouteUses('UserRolesController@updateDataForm') || Route::currentRouteUses('SettingsController@showIndex') || Route::currentRouteUses('SettingsController@insertDataForm') || Route::currentRouteUses('SettingsController@updateDataForm')) active @endif dropdown">
 			<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
 				<i class="icon-cogs"></i>
