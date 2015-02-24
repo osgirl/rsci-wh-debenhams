@@ -46,6 +46,7 @@ td.underline {padding-bottom: 0; }
 	<a href="{{url('load/list')}}">BACK TO LOAD LIST</a>
 
 </div>
+@foreach($records['StoreOrder'] as $soNo => $val)
 	<?php
         $grandTotal = 0;
         $grandReceivedTotal = 0;
@@ -65,7 +66,7 @@ td.underline {padding-bottom: 0; }
 							<td>Warehouse</td>
 						</tr><tr>
 							<th>To Location:</th>
-							<td>{{ $records['store_code'] .' - ' . $records['store_name']}}</td>
+							<td>{{ $val['store_code'] .' - ' . $val['store_name']}}</td>
 						</tr>
 					</table>
 				</td>
@@ -82,41 +83,46 @@ td.underline {padding-bottom: 0; }
 				<th style="text-align: center">Received</th>
 			</tr>
 			<tr>
-            @foreach($records['StoreOrder'] as $soNo => $val)
 			    <td>{{$soNo}}</td>
 			    <td>
-			    @foreach($val['box_code'] as $box)
-			    {{$box->box_code}},
+			    @foreach($val['items'] as $boxNo => $items)
+				<?php $boxTotal = 0;?>
+			    {{$boxNo}},
 			    @endforeach
 			    </td>
-                    <?php
-						$grandTotal += $val['issued'];
-						$grandReceivedTotal += $val['received'];
+			    @foreach($val['items'] as $boxNo => $items)
+				@foreach($items as $item)
+					<?php
+						$boxTotal += $item->moved_qty;
+						$grandTotal += $item->moved_qty;
 					?>
-			    <td>{{$val['issued']}}</td>
-			    <td>{{$val['received']}}</td>
-			@endforeach
+				@endforeach
+			    @endforeach
+			    <td>{{$boxTotal}}</td>
+				<td class="underline"><hr/></td>
 			</tr>
 			<tr>
 			    <td></td>
 			    <td style="text-align: right"><strong>Box Total:</strong></td>
 			    <td>{{$grandTotal}}</td>
-			    <td>{{$grandReceivedTotal}}</td>
+				<td class="underline"><hr/></td>
 			</tr>
 			<tr>
-			    <td>_</td>
+				<td>_</td>
 			</tr>
 			<tr>
-			    <td></td>
-			    <td style="text-align: right"><strong>Grand Total:</strong></td>
-			    <td colspan="2">{{$grandTotal}}</td>
+				<th colspan="2" align="right">Grand Total: </th>
+			    <td>{{$grandTotal}}</td>
+				<td class="underline"><hr/></td>
 			</tr>
-			<tr><th colspan="5" style="text-align: center">Inter-Transfers</th></tr>
 			<tr>
-			    <td></td>
-			    <td style="text-align: right"><strong>Grand Total:</strong></td>
-			    <td>___</td>
-			    <td>___</td>
+				<td>_</td>
+			</tr>
+			<tr><th colspan="5">Inter-Transfers</th></tr>
+			<tr>
+				<th colspan="2" align="right">Grand Total: </th>
+				<td class="underline"><hr/></td>
+				<td class="underline"><hr/></td>
 			</tr>
 		</table>
 
@@ -138,3 +144,4 @@ td.underline {padding-bottom: 0; }
 			</div>
 		</div>
 	</section>
+@endforeach
