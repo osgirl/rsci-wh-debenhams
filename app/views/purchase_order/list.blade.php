@@ -338,7 +338,7 @@ $(document).ready(function() {
     			$('#po_no').val(purchase_no.join(','));
 
     			// http://local.ccri.com/purchase_order/assign
-    			location = "{{ $url_assign }}" + '?po_no=' + encodeURIComponent(purchase_no.join(','));
+    			location = "{{ $url_assign }}" + '&po_no=' + encodeURIComponent(purchase_no.join(','));
 			} else {
 				return false;
 			}
