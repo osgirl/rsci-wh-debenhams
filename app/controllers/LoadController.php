@@ -184,7 +184,7 @@ class LoadController extends BaseController {
     {
         try {
             $this->data['loadCode'] = $loadCode;
-            $this->data['records'] = Load::getPackingDetails($loadCode);
+            $this->data['records'] = Load::getLoadDetails($loadCode);
             $this->data['permissions'] = unserialize(Session::get('permissions'));
 
             $this->layout = View::make('layouts.print');
