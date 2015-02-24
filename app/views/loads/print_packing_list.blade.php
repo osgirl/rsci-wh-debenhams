@@ -86,11 +86,11 @@ td.underline {padding-bottom: 0; }
 			    <td>{{$soNo}}</td>
 			    <td>
 			    @foreach($val['items'] as $boxNo => $items)
-				<?php $boxTotal = 0;?>
 			    {{$boxNo}},
 			    @endforeach
 			    </td>
 			    @foreach($val['items'] as $boxNo => $items)
+				<?php $boxTotal = 0;?>
 				@foreach($items as $item)
 					<?php
 						$boxTotal += $item->moved_qty;
@@ -98,13 +98,13 @@ td.underline {padding-bottom: 0; }
 					?>
 				@endforeach
 			    @endforeach
-			    <td>{{$boxTotal}}</td>
+			    <td align="right">{{$boxTotal}}</td>
 				<td class="underline"><hr/></td>
 			</tr>
 			<tr>
 			    <td></td>
 			    <td style="text-align: right"><strong>Box Total:</strong></td>
-			    <td>{{$grandTotal}}</td>
+			    <td align="right">{{$grandTotal}}</td>
 				<td class="underline"><hr/></td>
 			</tr>
 			<tr>
@@ -112,7 +112,7 @@ td.underline {padding-bottom: 0; }
 			</tr>
 			<tr>
 				<th colspan="2" align="right">Grand Total: </th>
-			    <td>{{$grandTotal}}</td>
+			    <td align="right">{{$grandTotal}}</td>
 				<td class="underline"><hr/></td>
 			</tr>
 			<tr>
