@@ -25,7 +25,7 @@ class PurchaseOrderController extends BaseController {
 		// Check Permissions
 		if (Session::has('permissions')) {
 	    	if (!in_array('CanAccessPurchaseOrders', unserialize(Session::get('permissions'))))  {
-    			return Redirect::to('purchase_order');
+    			return Redirect::to('user/profile');
     		}
     	} else {
 			return Redirect::to('users/logout');
@@ -101,7 +101,7 @@ class PurchaseOrderController extends BaseController {
 
 			return Redirect::to('purchase_order/detail' . $url)->with('message', Lang::get('purchase_order.text_success_assign'));
 		} else {
-			return Redirect::to('purchase_order' . $this->setURL())->with('message', Lang::get('purchase_order.text_success_assign'));
+			return Redirect::to('purchase_order')->with('message', Lang::get('purchase_order.text_success_assign'));
 		}
 	}
 
@@ -499,7 +499,7 @@ class PurchaseOrderController extends BaseController {
 		// URL
 		$this->data['url_export']                   = URL::to('purchase_order/export_detail');
 		$this->data['url_back']                     = URL::to('purchase_order' . $this->setURL(false, true));
-		$this->data['url_assign']                   = URL::to('purchase_order/assign');
+		$this->data['url_assign']                   = URL::to('purchase_order/assign' );
 
 		// Message
 		$this->data['error'] = '';
@@ -634,7 +634,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['url_export']                   = URL::to('purchase_order/export' . $this->setURL());
 		$this->data['url_export_backorder']         = URL::to('purchase_order/export_backorder');
 		$this->data['url_reopen']                   = URL::to('purchase_order/reopen');
-		$this->data['url_assign']                   = URL::to('purchase_order/assign');
+		$this->data['url_assign']                   = URL::to('purchase_order/assign' . $this->setURL(false, true));
 		$this->data['url_detail']                   = URL::to('purchase_order/detail' . $this->setURL(true));
 
 		// Message
@@ -859,13 +859,13 @@ class PurchaseOrderController extends BaseController {
 	}
 
 	public function assignPilerForm() {
-		/*if (Session::has('permissions')) {
+		if (Session::has('permissions')) {
 	    	if (!in_array('CanAssignPurchaseOrders', unserialize(Session::get('permissions')))) {
 				return Redirect::to('purchase_order');
 			}
     	} else {
 			return Redirect::to('users/logout');
-		}*/
+		}
 		// Search Filters
 		$this->data['po_no']                   = Input::get('po_no');
 		$this->data['heading_title_assign_po'] = Lang::get('purchase_order.heading_title_assign_po');
