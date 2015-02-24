@@ -95,8 +95,14 @@
 							@endif
 
 								&nbsp;&nbsp;<a href="{{url('load/print/' . $load['load_code'])}}" target="_blank" class="btn btn-danger">Print MTS</a>
-								&nbsp;&nbsp;<a href="{{url('load/printpacklist/' . $load['load_code'])}}" target="_blank" class="btn btn-primary">Print Packing List</a>
+								&nbsp;&nbsp;<a href="{{url('load/printpacklist/' . $load['load_code'])}}" target="_blank" class="btn btn-default">Print Packing List</a>
 								&nbsp;&nbsp;<a href="{{url('load/printloadingsheet/' . $load['load_code'])}}" target="_blank" class="btn btn-info">Print Loading Sheet</a>
+							@foreach($load['records']['StoreOrder'] as $soNo => $val)
+								<?php $boxTotal = count($val['items']);?>
+								@foreach($val['items'] as $boxNo => $items)
+								&nbsp;&nbsp;<a href="{{url('load/printboxlabel/' .$load['load_code'].'/'. $boxNo )}}" target="_blank" class="btn btn-success">Box {{$boxNo}} of {{$boxTotal}} </a>
+								@endforeach
+							@endforeach
 						</td>
 					</tr>
 					@endforeach

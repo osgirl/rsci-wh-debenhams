@@ -39,6 +39,7 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::get('purchase_order/export_backorder', 'PurchaseOrderController@exportBackorder');
 	Route::post('purchase_order/reopen', 'PurchaseOrderController@reopen');
 	Route::get('purchase_order/assign', 'PurchaseOrderController@assignPilerForm');
+	Route::get('purchase_order/pulljda', 'PurchaseOrderController@pullJDA');
 
 	Route::get('store_order', 'StoreOrderController@showIndex');
 	Route::get('store_order/detail', 'StoreOrderController@getSODetails');
@@ -146,6 +147,7 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::get('load/print/{loadCode}', 'LoadController@printLoad');
     Route::get('load/printpacklist/{loadCode}', 'LoadController@printPackingList');
     Route::get('load/printloadingsheet/{loadCode}', 'LoadController@printLoadingSheet');
+    Route::get('load/printboxlabel/{loadCode}/{boxCode}', 'LoadController@printBoxLabel');
 
 
 	Route::get('unlisted', 'UnlistedController@showIndex');

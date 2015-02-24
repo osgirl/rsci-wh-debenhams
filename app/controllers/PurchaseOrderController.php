@@ -34,6 +34,20 @@ class PurchaseOrderController extends BaseController {
 		$this->getList();
 	}
 
+	//pull JDA
+	public function pullJDA() {
+		try {
+			$pullPurchaseOrder	= "daemon_pulling_po.php";
+			CommonHelper::execInBackground($pullPurchaseOrder);
+			return Redirect::to('purchase_order'. $this->setURL())->with('message', Lang::get('purchase_order.text_success_pull'));
+		} catch (Exception $e) {
+			DB::rollback();
+			return Redirect::to('purchase_order'. $this->setURL())->withErrors(Lang::get('purchase_order.text_fail_pull'));
+		}
+
+		die();
+	}
+
 	/**
 	* Assign stock piler to purchase order
 	*

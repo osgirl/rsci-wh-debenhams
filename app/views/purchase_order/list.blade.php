@@ -114,7 +114,7 @@
 		<a href= {{ $url_export }} class="btn btn-info btn-darkblue">{{ $button_export }}</a> <!--  id="exportList" -->
 		@endif
 		@if ( CommonHelper::valueInArray('CanSyncPurchaseOrders', $permissions) )
-		<a class="btn btn-info btn-darkblue">{{ $button_jda }}</a>
+		<a class="btn btn-info btn-darkblue" href={{URL::to('purchase_order/pulljda')}}>{{ $button_jda }}</a>
 		@endif
 	</div>
 </div>

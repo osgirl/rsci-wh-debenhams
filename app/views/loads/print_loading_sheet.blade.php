@@ -64,7 +64,7 @@ td.underline {padding-bottom: 0; }
 					    <td>_____________</td>
 						</tr><tr>
 							<th style="text-align: right">Destination:</th>
-							<td>_____________</td>
+							<td>{{ $val['store_code'] .' - ' . $val['store_name']}}</td>
 					    </tr>
 					</table>
 				</td>
@@ -98,30 +98,58 @@ td.underline {padding-bottom: 0; }
 			<tr>
 		</table>
 		<table class="contents">
+
+				<?php $colsBox = count($val['items']);?>
 			<tr>
-				<th colspan="6" style="text-align: center">Regular Transfer from Warehouse</th>
+				<th colspan="{{$colsBox + 1}}" style="text-align: center">Regular Transfer from Warehouse</th>
 				<th colspan="4" style="text-align: center">Inner-Store Transfer (IT)</th>
 			</tr>
             <tr>
 				<th rowspan="2" style="text-align: center">MTS No.</th>
-				<th colspan="5" style="text-align: center">Box # (QTY)</th>
+				<th colspan="{{$colsBox}}" style="text-align: center">Box # (QTY)</th>
 				<th rowspan="2" style="text-align: center">MTS No.</th>
 				<th rowspan="2" style="text-align: center">Box #</th>
 				<th rowspan="2" style="text-align: center">QTY</th>
 				<th rowspan="2" style="text-align: center">Remarks</th>
 			</tr>
             <tr>
-				<th style="text-align: center">1</th>
-				<th style="text-align: center">2</th>
-				<th style="text-align: center">3</th>
-				<th style="text-align: center">4</th>
-				<th style="text-align: center">5</th>
+			    @foreach($val['items'] as $boxNo => $items)
+			    	<th style="text-align: center">{{$boxNo}}</th>
+				@endforeach
+			</tr>
+			<tr>
+			    <td>{{$soNo}}</td>
+			    @foreach($val['items'] as $boxNo => $items)
+				<?php $boxTotal = 0;?>
+				@foreach($items as $item)
+					<?php
+						$boxTotal += $item->moved_qty;
+						$grandTotal += $item->moved_qty;
+					?>
+				@endforeach
+			    <td align="right">{{$boxTotal}}</td>
+			    @endforeach
+				<td class="underline"><hr/></td>
+				<td class="underline"><hr/></td>
+				<td class="underline"><hr/></td>
+				<td class="underline"><hr/></td>
+			</tr>
+			<tr>
+				<th align="right">Total: </th>
+				<td align="right">{{$grandTotal}}</td>
+				<td></td>
+				<td></td>
+				<td class="underline"><hr/></td>
+				<td></td>
 			</tr>
 		</table>
 
 		<div class="signatories">
 			<div>
-				Total<br/>
+				<br/>
+			</div>
+			<div>
+				<br/>
 			</div>
 			<div>
 				Checked by: <hr/>

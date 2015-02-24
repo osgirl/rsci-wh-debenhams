@@ -9,6 +9,8 @@ return array(
 	'text_success_assign'		=> 'Successfully assigned the PO!',
 	'text_success_close_po'		=> 'Successfully closed the PO!',
 	'text_success_reopen'		=> 'Successfully reopen Purchase Order # :purchaseOrderNo.',
+	'text_success_pull'		    => 'Successfully pulled from JDA!',
+	'text_fail_pull'		    => 'Failed pull from JDA!',
 	'text_assigned'				=> 'Assigned',
 	'text_closed_po'			=> 'Closed',
 	'text_posted_po'			=> 'Posted',
