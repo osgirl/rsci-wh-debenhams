@@ -139,13 +139,10 @@ user: STRATPGMR pass: PASSWORD
 	}
 
 	private static function enterPoStoreReceipt($receiver_no) {
-		$invoices = self::getInvoices($receiver_no);
+		// $invoices = self::getInvoices($receiver_no);
 
 		$formValues = array();//values to enter to form
-	//	$formValues[] = array(sprintf("%30d", $invoices['invoice_no']),12,20); //enter invoice number
-		// $formValues[] = array($invoices['invoice_no'],12,20); //enter invoice number
 		$formValues[] = array(self::$user,12,69);  //enter receive by
-		// $formValues[] = array(sprintf("%20d", $invoices['invoice_amount']),13,20); //enter invoice amount
 		$formValues[] = array(self::$user,17,72);  //enter checked by
 		parent::$jda->write5250($formValues,F5,true);
 		echo "Entered: Purchase Order Store Receipt  \n";
@@ -158,26 +155,6 @@ user: STRATPGMR pass: PASSWORD
 		//need more test here
 		self::updateSyncStatus($reference);
 	}
-
-	/*public function getReceiverNo() {
-		$db = new pdoConnection();
-
-		echo "\n Getting receiver no from db \n";
-		$sql 	= "SELECT receiver_no reference
-					FROM wms_transactions_to_jda
-					INNER JOIN wms_purchase_order_lists ON reference = purchase_order_no
-					WHERE module = 'Purchase Order' AND jda_action='Closing' AND sync_status = 0";
-		$query 	= $db->query($sql);
-
-		$result = array();
-		foreach ($query as $value ) {
-			$result[] = $value['reference'];
-		}
-
-		$db->close();
-
-		return $result;
-	}*/
 
 	private static function getInvoices($receiver_no) {
 		$db = new pdoConnection();
@@ -221,7 +198,7 @@ user: STRATPGMR pass: PASSWORD
 				INNER JOIN wms_purchase_order_lists po_lists ON po_lists.purchase_order_no = trans.reference
 				INNER JOIN wms_purchase_order_details po_details ON po_lists.receiver_no = po_details.receiver_no
 				INNER JOIN wms_product_lists prod ON po_details.sku = prod.upc
-				WHERE module = 'Purchase Order' AND jda_action='Closing' AND trans.sync_status = 0 AND po_lists.receiver_no = {$receiver_no}
+				WHERE module = 'Purchase Order' AND jda_action='Closing' AND trans.sync_status = 0 AND po_details.quantity_ordered <> 0 AND po_lists.receiver_no = {$receiver_no}
 				ORDER BY prod.sku ASC";
 
 		$query 	= $db->query($sql);
@@ -234,6 +211,69 @@ user: STRATPGMR pass: PASSWORD
 		$db->close();
 
 		return $result;
+	}
+
+	public static function getNotInPoQtyDelivered($receiver_no) {
+		$db = new pdoConnection();
+
+		echo "\n Getting quantity delivered from db \n";
+		$sql = "SELECT prod.sku, po_lists.slot_code, po_details.quantity_delivered
+				FROM `wms_transactions_to_jda` trans
+				INNER JOIN wms_purchase_order_lists po_lists ON po_lists.purchase_order_no = trans.reference
+				INNER JOIN wms_purchase_order_details po_details ON po_lists.receiver_no = po_details.receiver_no
+				LEFT JOIN wms_product_lists prod ON po_details.sku = prod.upc
+				WHERE module = 'Purchase Order' AND jda_action='Closing' AND trans.sync_status = 0 AND po_details.quantity_ordered = 0 AND po_lists.receiver_no = {$receiver_no}
+				ORDER BY prod.sku ASC";
+
+		$query 	= $db->query($sql);
+
+		$result = array();
+		foreach ($query as $value ) {
+			$result[] = array(
+				'sku' => $value['sku'],
+				'quantity_delivered' => $value['quantity_delivered'],
+				'slot_code'	=> $value['slot_code']
+			);
+		}
+
+		$db->close();
+
+		return $result;
+	}
+
+	// enter not in po data
+	private static function enterDataEntryMode($receiver_no) {
+		$notInPo    = self::getNotInPoQtyDelivered($receiver_no);
+		print_r($notInPo);
+		$formValues = array();
+
+		// if there is data insert item that is not in po
+		if ( count($notInPo) > 0 )
+		{
+			foreach ($notInPo as $po)
+			{
+				$sku      = $po['sku'];
+				$quantity = $po['quantity_delivered'];
+				$slot     = $po['slot_code'];
+
+				parent::$jda->write5250(null,F10,true);
+				echo "Entered: Data Entry Mode  \n";
+				parent::$jda->screenWait("Receiving Data Entry");
+				parent::display(parent::$jda->screen,132);
+
+				$formValues[] = array($sku,14,44);  //enter sku
+				$formValues[] = array($quantity,15,44);  //enter quantity
+				$formValues[] = array($slot,16,44);  //enter slot
+				parent::$jda->write5250($formValues,ENTER,true);
+
+				if(parent::$jda->screenCheck('Sku not on order. Press F9 to add.')) {
+					parent::$jda->write5250(null,F9,true);
+				}
+			}
+			//if done press F1
+			parent::$jda->write5250(null,F1,true);
+			self::checkResponse($receiver_no,__METHOD__);
+		}
 	}
 
 	/*
@@ -272,25 +312,35 @@ user: STRATPGMR pass: PASSWORD
 		$column 	= 10;
 		$row 		= 100;
 		$quantity 	= self::getQtyDelivered($receiver_no);
-		$count 		= (count($quantity) + $column);
+		$total      = count($quantity);
 		$formValues = array();
+		$limit      = 12;
+		$offset     = 0;
+		$count      = ceil($total / $limit);
 
-		//coordinates start on 100/10
-		for ($i=0; $i < count($quantity); $i++)
-		{
-			if($i %11 == 0) //pagination
-			{
-				parent::$jda->write5250(null,ROLLDOWN,true);
-				$column = 10;
-				$row = 100;
+		while($offset < $count) {
+			$new = $offset;
+
+			if($new !== 0) {
+				$new = $new * $limit;
+				echo "\nEntered ROLLUP: Page: {$offset} with offset of: {$new} and row {$row} \n";
+				parent::$jda->write5250(null,ROLLUP,true);
 			}
 
-			$new_col = ($i + $column);
-			echo "\n value of new_col is: {$new_col} \n";
-			echo "value of quantity is: {$quantity[$i]} \n";
-			$formValues[] = array(sprintf("%10d", $quantity[$i]),$new_col,$row); //enter qty_delivered
+			$page = array_slice( $quantity, $new, $limit );
+			foreach ($page as $key => $value) {
+				$new_column = $key + $column;
+				echo "\n value of new_col is: {$new_column} \n";
+				echo "value of quantity is: {$value} \n";
+				$formValues[] = array(sprintf("%10d", $value),$new_column,$row); //enter qty_delivered
+			}
+			parent::display(parent::$jda->screen,132);
+			$offset++;
 		}
-
+		print_r($formValues);
+		// for not in PO
+		// self::enterDataEntryMode($receiver_no);
+		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250($formValues,F7,true);
 		echo "Entered: Quantity per item/sku  \n";
 
@@ -306,6 +356,42 @@ user: STRATPGMR pass: PASSWORD
 			parent::logError(self::$formMsg, __METHOD__);
 			self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
 		}
+
+		if(parent::$jda->screenCheck('Sku number cannot be zero.')) {
+            $receiver_message="Sku number cannot be zero.";
+			self::$formMsg = "{$receiver_no}: {$receiver_message}";
+			parent::logError(self::$formMsg, __METHOD__);
+			self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
+		}
+
+		if(parent::$jda->screenCheck('Invalid sku entered.')) {
+            $receiver_message="Invalid sku entered.";
+			self::$formMsg = "{$receiver_no}: {$receiver_message}";
+			parent::logError(self::$formMsg, __METHOD__);
+			self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
+		}
+
+		if(parent::$jda->screenCheck('Receipt quantity cannot be zero.')) {
+            $receiver_message="Receipt quantity cannot be zero.";
+			self::$formMsg = "{$receiver_no}: {$receiver_message}";
+			parent::logError(self::$formMsg, __METHOD__);
+			self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
+		}
+
+		if(parent::$jda->screenCheck('Warehouse slot required.')) {
+            $receiver_message="Warehouse slot required.";
+			self::$formMsg = "{$receiver_no}: {$receiver_message}";
+			parent::logError(self::$formMsg, __METHOD__);
+			self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
+		}
+
+		if(parent::$jda->screenCheck('Sku is not valid for the vendor.')) {
+            $receiver_message="Sku is not valid for the vendor.";
+			self::$formMsg = "{$receiver_no}: {$receiver_message}";
+			parent::logError(self::$formMsg, __METHOD__);
+			self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
+		}
+
 		#end error
 
 		echo self::$formMsg;
@@ -380,10 +466,13 @@ if(! empty($poNos) )
 	{
 		$closePO = new poClosing();
 		$closePO->enterUpToDockReceipt();
-		foreach($receiver_nos as $receiver_no) {
-			$receiver = $receiver_no['receiver_no'];
+
+		foreach($receiver_nos as $receiver_no)
+		{
+			$receiver   = $receiver_no['receiver_no'];
 			$back_order = $receiver_no['back_order'];
-			$validate = $closePO->enterReceiverNumber($receiver, $back_order);
+			$validate   = $closePO->enterReceiverNumber($receiver, $back_order);
+
 			if($validate)
 			{
 				$closePO->enterPOForm($receiver);

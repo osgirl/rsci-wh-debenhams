@@ -130,23 +130,32 @@ class poReceiving extends jdaCustomClass
 			return false;
 		}
 
+		if(parent::$jda->screenCheck('Ship via cannot be left blank.')) {
+            $receiver_message="Ship via cannot be left blank.";
+            self::$formMsg = "{$receiver_no}: {$receiver_message}";
+            parent::logError(self::$formMsg, __METHOD__);
+			self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
+			return false;
+		}
+
 		echo self::$formMsg;
 
 		return true;
 	}
 
-	public function enterPOForm($receiver, $slot_code)
+	public function enterPOForm($receiver, $slot_code, $shipment_reference_no)
 	{
 		// $receiver_no = $receiver['reference'];
 		parent::$jda->screenWait("Date Received");
 		parent::display(parent::$jda->screen,132);
-		self::enterPoStoreReceipt($receiver, $slot_code);
+		self::enterPoStoreReceipt($receiver, $slot_code, $shipment_reference_no);
 	}
 
-	private static function enterPoStoreReceipt($receiver, $slot_code) {
+	private static function enterPoStoreReceipt($receiver, $slot_code, $shipment_reference_no) {
 		$invoice_amt = 1; //set 1 for now
 		$formValues = array();//values to enter to form
 		$formValues[] = array(self::$user,12,69);  //enter receive by
+		$formValues[] = array($shipment_reference_no,13,20);  //enter ship via
 		$formValues[] = array(sprintf("%6s", $slot_code),16,72); //enter slot
 		$formValues[] = array(self::$user,17,72);  //enter checked by
 		parent::$jda->write5250($formValues,ENTER,true);
@@ -269,8 +278,10 @@ if(! empty($poNos) )
 			$receiver = $receiver_no['receiver_no'];
 			$back_order = $receiver_no['back_order'];
 			$slot_code = $receiver_no['slot_code'];
+			$shipment_reference_no = $receiver_no['shipment_reference_no'];
+
 			$validate = $receivePO->enterReceiverNumber($receiver, $back_order);
-			if($validate) $receivePO->enterPOForm($receiver, $slot_code);
+			if($validate) $receivePO->enterPOForm($receiver, $slot_code, $shipment_reference_no);
 		}
 		$receivePO->logout($execParams);
 	}
@@ -278,11 +289,11 @@ if(! empty($poNos) )
 		echo " \n No receiver_nos found!. \n";
 	}
 }
-else {
+/*else {
 	echo " \n No rows found!. Proceed to Closing of PO...\n";
 	$formattedString = "{$execParams['poNo']}";
 	$db->daemon('close_po', $formattedString);
-}
+}*/
 $db->close(); //close db connection
 /*
 $receivePO = new poReceiving();
