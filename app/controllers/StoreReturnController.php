@@ -412,7 +412,7 @@ class StoreReturnController extends BaseController {
 		}
 
 
-		return Redirect::to('store_return' . $this->setURL())->with('message', Lang::get('picking.text_success_assign'));
+		return Redirect::to('store_return' . $this->setURL())->with('message', Lang::get('store_return.text_success_assign'));
 
 	}
 
