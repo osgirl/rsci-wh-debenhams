@@ -55,6 +55,7 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::post('store_return/assign_to_piler', 'StoreReturnController@assignToStockPiler');
 	Route::get('store_return/export', 'StoreReturnController@exportCSV');
 	Route::get('store_return/export_detail', 'StoreReturnController@exportDetailsCSV');
+	Route::post('store_return/close', 'StoreReturnController@closeStoreReturn');
 
 	Route::get('box/list', 'BoxController@index');
 	Route::get('box/detail', 'BoxController@getBoxDetails');

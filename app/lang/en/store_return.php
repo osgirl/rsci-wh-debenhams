@@ -67,4 +67,5 @@ return array(
 	'entry_stock_piler'			=> 'Stock Piler:',
 
 	'text_success_assign'		=> 'Successfully assigned the Store Return/s!',
+	'text_posted'			=> 'Posted',
 );

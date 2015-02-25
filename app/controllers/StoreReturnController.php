@@ -432,4 +432,46 @@ class StoreReturnController extends BaseController {
 		return array('' => Lang::get('general.text_select')) + $stock_pilers;
 	}
 
+
+	public function closeStoreReturn()
+	{
+		// Check Permissions
+		/*if (Session::has('permissions')) {
+	    	if (!in_array('CanClosePurchaseOrders', unserialize(Session::get('permissions'))) || !in_array('CanClosePurchaseOrderDetails', unserialize(Session::get('permissions'))))  {
+				return Redirect::to('user/profile');
+			}
+    	} else {
+			return Redirect::to('users/logout');
+		}*/
+
+		$soNo        = Input::get("so_no");
+		$status       = 'posted'; // closed
+		$date_updated = date('Y-m-d H:i:s');
+
+		$status_options = Dataset::where("data_code", "=", "SR_STATUS_TYPE")->get()->lists("id", "data_value");
+		$store = StoreReturn::updateStatus($soNo, $status_options['closed']);
+
+
+		// AuditTrail
+		$user = User::find(Auth::user()->id);
+
+		$data_before = '';
+		$data_after = 'Store Return No: ' . $soNo . ' posted by ' . $user->username;
+
+		$arrParams = array(
+						'module'		=> Config::get("audit_trail_modules.store_return"),
+						'action'		=> Config::get("audit_trail.modify_store_return_status"),
+						'reference'		=> $soNo,
+						'data_before'	=> $data_before,
+						'data_after'	=> $data_after,
+						'user_id'		=> Auth::user()->id,
+						'created_at'	=> date('Y-m-d H:i:s'),
+						'updated_at'	=> date('Y-m-d H:i:s')
+						);
+		AuditTrail::addAuditTrail($arrParams);
+		// AuditTrail
+
+		return Redirect::to('store_return' . $this->setURL())->with('message', Lang::get('store_return.text_success_posted'));
+	}
+
 }

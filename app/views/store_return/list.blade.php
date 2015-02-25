@@ -137,7 +137,7 @@
 								<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_posted }}</a>
 								 <!-- && ($so['quantity_to_pick'] != $so['moved_qty']) -->
 							@elseif ( $so['data_display'] === 'Done' )
-								<a style="width: 70px;" class="btn btn-success closePicklist" data-id="{{ $so['so_no'] }}">{{ $button_close_store_return }}</a>
+								<a style="width: 70px;" class="btn btn-success closeStoreReturn" data-id="{{ $so['so_no'] }}">{{ $button_close_store_return }}</a>
 							@else
 								<a style="width: 70px;" disabled="disabled" class="btn">{{ $button_close_store_return }}</a>
 							@endif
@@ -283,6 +283,18 @@ $(document).ready(function() {
 			alert('{{ $error_assign }}');
 			return false;
 		}
+    });
+
+    $('.closeStoreReturn').click(function() {
+    	var so_no = $(this).data('id');
+
+    	var answer = confirm('Are you sure you want to close this Store Return?');
+   		if (answer) {
+	    	$('#closeSO_' + so_no).submit();
+    	} else {
+			return false;
+		}
+
     });
 });
 </script>
