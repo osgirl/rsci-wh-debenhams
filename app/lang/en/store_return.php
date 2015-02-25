@@ -68,4 +68,5 @@ return array(
 
 	'text_success_assign'		=> 'Successfully assigned the Store Return/s!',
 	'text_posted'			=> 'Posted',
+	'text_success_posted'		=> 'Successfully closed store return!',
 );
