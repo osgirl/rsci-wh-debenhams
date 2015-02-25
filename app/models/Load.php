@@ -64,7 +64,7 @@ class Load extends Eloquent {
         return $result;
     }
 
-    public static function getLoadDetails($loadCode, $boxCode=null)
+    public static function getLoadDetails($loadCode)
     {
         // get load date
         $rs = DB::table('load')
@@ -74,21 +74,12 @@ class Load extends Eloquent {
         $data['load_date'] = $rs->load_date;
 
         // get box codes and details based on pallet code
-        if($boxCode==null){
             $rs = DB::table('pallet_details')
                         ->select('box_code')
                         ->join('load_details','load_details.pallet_code','=','pallet_details.pallet_code','RIGHT')
                         ->where('load_code', '=', $loadCode)
                         ->get();
-        }
-        else{
-            $rs = DB::table('pallet_details')
-                        ->select('box_code')
-                        ->join('load_details','load_details.pallet_code','=','pallet_details.pallet_code','RIGHT')
-                        ->where('load_code', '=', $loadCode)
-                        ->where('box_code', '=', $boxCode)
-                        ->get();
-        }
+                        
         foreach($rs as $val){
             $box =  DB::table('box_details')
                     ->select('box_details.moved_qty',
@@ -107,21 +98,21 @@ class Load extends Eloquent {
             }
         }
         // echo '<pre>'; dd($data);
-        foreach ($data['StoreOrder'] as $soNo => $value) {
-            $store = DB::table('stores')
-                ->select('store_name')
-                ->where('store_code','=', $value['store_code'])
-                ->first();
-            $data['StoreOrder'][$soNo]['store_name'] = $store->store_name;
+            foreach ($data['StoreOrder'] as $soNo => $value) {
+                $store = DB::table('stores')
+                    ->select('store_name')
+                    ->where('store_code','=', $value['store_code'])
+                    ->first();
+                $data['StoreOrder'][$soNo]['store_name'] = $store->store_name;
 
-            // get so date created
-            // echo '<pre>'; dd($soNo);
-            $so = DB::table('store_order')
-                ->select(DB::raw("date_format(order_date,'%m/%d/%y') as order_date "))
-                ->where('so_no','=',$soNo)
-                ->first();
-            $data['StoreOrder'][$soNo]['order_date'] = $so->order_date;
-        }
+                // get so date created
+                // echo '<pre>'; dd($soNo);
+                $so = DB::table('store_order')
+                    ->select(DB::raw("date_format(order_date,'%m/%d/%y') as order_date "))
+                    ->where('so_no','=',$soNo)
+                    ->first();
+                $data['StoreOrder'][$soNo]['order_date'] = $so->order_date;
+            }
         // echo '<pre>'; dd($data);
         // $data['StoreOrder'][]
         // arrange array based on store order

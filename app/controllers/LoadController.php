@@ -32,7 +32,7 @@ class LoadController extends BaseController {
 			return Redirect::to('users/logout');
 		}
 
-		return $this->getList();
+		$this->getList();
 	}
 
 	public function exportCSV() {
@@ -89,11 +89,7 @@ class LoadController extends BaseController {
 							'page'				=> $page,
 							'limit'				=> 30
 						);
-		$results = Load::getLoadList($arrParams);
-		foreach ($results as $result) {
-			$result->records = Load::getLoadDetails($result->load_code);
-		}
-		$results=$results->toArray();
+		$results = Load::getLoadList($arrParams)->toArray();
 		// echo '<pre>'; dd($results);
 		$results_total = count($results);
 
@@ -170,11 +166,11 @@ class LoadController extends BaseController {
 		die();
 	}
 
-	public function printBoxLabel($loadCode, $boxCode)
+	public function printBoxLabel($loadCode)
 	{
 		try {
 			$this->data['loadCode'] = $loadCode;
-			$this->data['records'] = Load::getLoadDetails($loadCode,$boxCode);
+			$this->data['records'] = Load::getLoadDetails($loadCode);
 			$this->data['permissions'] = unserialize(Session::get('permissions'));
 
 			$this->layout = View::make('layouts.print');

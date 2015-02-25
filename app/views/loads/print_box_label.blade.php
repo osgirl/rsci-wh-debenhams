@@ -46,8 +46,13 @@ td.underline {padding-bottom: 0; }
 
 </div>
 @foreach($records['StoreOrder'] as $soNo => $val)
-	@foreach($val['items'] as $boxNo => $items)
 	<section class="soContainer">
+	<?php 
+		$boxTotal = count($val['items']);
+		$counter=1;
+	?>
+	@foreach($val['items'] as $boxNo => $items)
+		Box {{$counter .' of '. $boxTotal }}
 		<table class="contents">
 			<tr>
 				<th>Box No.</th>
@@ -62,8 +67,9 @@ td.underline {padding-bottom: 0; }
 						<td>{{ $val['store_code'] .' - ' . $val['store_name']}}</td>
 				</tr>
 		</table>
-	</section>
+		<?php $counter++; ?>
 	@endforeach
+	</section>
 @endforeach
 
 

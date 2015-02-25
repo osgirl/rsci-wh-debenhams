@@ -147,7 +147,7 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::get('load/print/{loadCode}', 'LoadController@printLoad');
     Route::get('load/printpacklist/{loadCode}', 'LoadController@printPackingList');
     Route::get('load/printloadingsheet/{loadCode}', 'LoadController@printLoadingSheet');
-    Route::get('load/printboxlabel/{loadCode}/{boxCode}', 'LoadController@printBoxLabel');
+    Route::get('load/printboxlabel/{loadCode}', 'LoadController@printBoxLabel');
 
 
 	Route::get('unlisted', 'UnlistedController@showIndex');
