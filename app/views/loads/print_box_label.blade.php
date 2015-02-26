@@ -45,31 +45,75 @@ td.underline {padding-bottom: 0; }
 	<a href="{{url('load/list')}}">BACK TO LOAD LIST</a>
 
 </div>
-@foreach($records['StoreOrder'] as $soNo => $val)
-	<section class="soContainer">
 	<?php 
-		$boxTotal = count($val['items']);
+		$boxarray=[];
+		$tempboxarray=[];
 		$counter=1;
 	?>
+@foreach($records['StoreOrder'] as $soNo => $val)
 	@foreach($val['items'] as $boxNo => $items)
-		Box {{$counter .' of '. $boxTotal }}
-		<table class="contents">
-			<tr>
-				<th>Box No.</th>
-				<th>Transfer Number</th>
-				<th>From Location</th>
-				<th>To Location</th>
-			</tr>
-				<tr>
-					<td><strong>{{$boxNo}}</strong></td>
-						<td> {{$soNo}} </td>
-						<td>Warehouse</td>
-						<td>{{ $val['store_code'] .' - ' . $val['store_name']}}</td>
-				</tr>
-		</table>
-		<?php $counter++; ?>
+		<?php 
+			if(!in_array($boxNo, $tempboxarray)){
+				$sonoarray[$boxNo] =[];
+				array_push($sonoarray[$boxNo], $soNo);
+				array_push($tempboxarray, $boxNo);
+			}
+			else
+				array_push($sonoarray[$boxNo], $soNo);
+
+			$totalBox=count($tempboxarray);
+		?>
 	@endforeach
-	</section>
+@endforeach
+@foreach($records['StoreOrder'] as $soNo => $val)
+	@foreach($val['items'] as $boxNo => $items)
+		<?php 
+			$boxTotal=0;
+		?>
+		@foreach($items as $item)
+			<?php
+				$boxTotal += $item->moved_qty;
+			?>
+		@endforeach
+		@if(!in_array($boxNo, $boxarray))
+		<section class="soContainer" style="width:375px; height:225px" >
+			Box {{$counter .' of '. $totalBox }}
+		<header>
+			<div class="doctitle">
+				<h1>Box No:<br/>{{$boxNo}}</h1>
+			</div>
+		</header>
+			<table class="contents">
+				<tr>
+					<th>Category</th>
+					<th>MTS No</th>
+					<th>From</th>
+					<th>To</th>
+					<th>Quantity</th>
+				</tr>
+					<tr>
+						<td>{{$items[0]->description}}</td>
+								<td> 
+								@foreach($sonoarray[$boxNo] as $so_no)
+									@if(count($sonoarray[$boxNo])>1)
+										{{$so_no}}, 
+									@else
+										{{$so_no}}
+									@endif
+								@endforeach
+								</td>
+							<td>Warehouse</td>
+							<td>{{ $val['store_code'] .' - ' . $val['store_name']}}</td>
+							<td align="right"> {{$boxTotal}} </td>
+					</tr>
+			</table>
+			<?php 
+				array_push($boxarray, $boxNo);
+			?>
+		</section>
+			<?php $counter++; ?>
+		@endif
+	@endforeach
 @endforeach
 
 

@@ -46,13 +46,10 @@ td.underline {padding-bottom: 0; }
 	<a href="{{url('load/list')}}">BACK TO LOAD LIST</a>
 
 </div>
-@foreach($records['StoreOrder'] as $soNo => $val)
-	<?php $grandTotal = 0;?>
 	<section class="soContainer">
 		<header>
 			<div class="doctitle">
 				<h1>Casual Clothing Retailers Inc.<br/>WAREHOUSE LOADING SHEET</h1>
-				Print Date: {{ date('m/d/y h:i A')}}
 			</div>
 		</header>
 		<table class="commonInfo">
@@ -64,7 +61,7 @@ td.underline {padding-bottom: 0; }
 					    <td>_____________</td>
 						</tr><tr>
 							<th style="text-align: right">Destination:</th>
-							<td>{{ $val['store_code'] .' - ' . $val['store_name']}}</td>
+							<td>{{ $records['store_code'] .' - ' . $records['store_name']}}</td>
 					    </tr>
 					</table>
 				</td>
@@ -74,7 +71,12 @@ td.underline {padding-bottom: 0; }
 					    <tr>
 					    <th style="text-align: right">Seal #:</th>
 					    <td>_____________</td>
-						</tr><tr>
+						</tr>
+					    <tr>
+					    <th style="text-align: right">Seal #2:</th>
+					    <td>_____________</td>
+						</tr>
+						<tr>
 							<th style="text-align: right">Manual PL#:</th>
 							<td>_____________</td>
 					    </tr><tr>
@@ -91,54 +93,70 @@ td.underline {padding-bottom: 0; }
 							<td></td>
 					    </tr><tr>
 					    <th style="text-align: right">Date:</th>
-					    <td>_____________</td>
+					    <td>{{$records['load_date']}}</td>
 					    </tr>
 					</table>
 				</td>
 			<tr>
 		</table>
 		<table class="contents">
-
-				<?php $colsBox = count($val['items']);?>
 			<tr>
-				<th colspan="{{$colsBox + 1}}" style="text-align: center">Regular Transfer from Warehouse</th>
-				<th colspan="4" style="text-align: center">Inner-Store Transfer (IT)</th>
+				<th colspan="3" style="text-align: center">Regular Transfer from Warehouse</th>
+				<th colspan="4" style="text-align: center">Inter-Store Transfer (IT)</th>
 			</tr>
             <tr>
-				<th rowspan="2" style="text-align: center">MTS No.</th>
-				<th colspan="{{$colsBox}}" style="text-align: center">Box # (QTY)</th>
-				<th rowspan="2" style="text-align: center">MTS No.</th>
-				<th rowspan="2" style="text-align: center">Box #</th>
-				<th rowspan="2" style="text-align: center">QTY</th>
-				<th rowspan="2" style="text-align: center">Remarks</th>
+				<th style="text-align: center">MTS No.</th>
+				<th style="text-align: center">Box #</th>
+				<th style="text-align: center">QTY</th>
+				<th style="text-align: center">MTS No.</th>
+				<th style="text-align: center">Box #</th>
+				<th style="text-align: center">QTY</th>
+				<th style="text-align: center">Remarks</th>
 			</tr>
             <tr>
+	<?php 
+		$boxarray=[];
+		$grandTotal = 0;
+	?>
+			@foreach($records['StoreOrder'] as $soNo => $val)
+				<tr>
+					<td colspan="7"><strong>{{$soNo}}</strong></td>
+				</tr>
 			    @foreach($val['items'] as $boxNo => $items)
-			    	<th style="text-align: center">{{$boxNo}}</th>
-				@endforeach
-			</tr>
-			<tr>
-			    <td>{{$soNo}}</td>
-			    @foreach($val['items'] as $boxNo => $items)
-				<?php $boxTotal = 0;?>
-				@foreach($items as $item)
-					<?php
-						$boxTotal += $item->moved_qty;
-						$grandTotal += $item->moved_qty;
+					<?php 
+						if(!in_array($boxNo, $boxarray))
+							array_push($boxarray, $boxNo);
+	    				$boxTotal = 0;
 					?>
+			    <tr>
+					<td></td>
+			    	<td>{{$boxNo}}</td>
+					@foreach($items as $item)
+						<?php
+							if($item->so_no == $soNo){
+								$boxTotal += $item->moved_qty;
+								$grandTotal += $item->moved_qty;
+							}
+						?>
+					@endforeach
+					<td align="right"> {{$boxTotal}} </td>
+				<td class="underline"><hr/></td>
+				<td class="underline"><hr/></td>
+				<td class="underline"><hr/></td>
+				<td class="underline"><hr/></td>
+				</tr>
 				@endforeach
-			    <td align="right">{{$boxTotal}}</td>
-			    @endforeach
-				<td class="underline"><hr/></td>
-				<td class="underline"><hr/></td>
-				<td class="underline"><hr/></td>
-				<td class="underline"><hr/></td>
+			@endforeach
 			</tr>
 			<tr>
+				<?php 
+					$numOfBoxTotal=count($boxarray);
+				?>
 				<th align="right">Total: </th>
+				<td align="right">{{$numOfBoxTotal}}</td>
 				<td align="right">{{$grandTotal}}</td>
 				<td></td>
-				<td></td>
+				<td class="underline"><hr/></td>
 				<td class="underline"><hr/></td>
 				<td></td>
 			</tr>
@@ -146,7 +164,8 @@ td.underline {padding-bottom: 0; }
 
 		<div class="signatories">
 			<div>
-				<br/>
+				Prepared by: <hr/>
+				Signature over Printed Name<br/>
 			</div>
 			<div>
 				<br/>
@@ -157,4 +176,3 @@ td.underline {padding-bottom: 0; }
 			</div>
 		</div>
 	</section>
-@endforeach
