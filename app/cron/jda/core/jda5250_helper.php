@@ -3,8 +3,8 @@ chdir(dirname(__FILE__));
 include_once('../../config/config.php');
 include_once("jda5250.php");
 
-class jdaCustomClass 
-{	
+class jdaCustomClass
+{
 	public static $jda;
 	public static $scrCounter;
 	public static $timers = array();
@@ -76,7 +76,7 @@ class jdaCustomClass
 			$params[] = array(7,38,"YES");
 			self::$jda->write5250($params,ENTER,true);
 			echo " Done!\n";
-			self::$jda->close();	
+			self::$jda->close();
 			# login again
 			self::login();
 		}
@@ -96,7 +96,7 @@ class jdaCustomClass
 	public static function enterDistributionManagement()
 	{
 		self::$jda->screenWait("Distribution Center Management");
-		self::display(self::$jda->screen,132);	
+		self::display(self::$jda->screen,132);
 		self::$jda->write5250(array(array("13",22,44)),ENTER,true);
 		echo "Entered: Distribution Center Management \n";
 	}
@@ -104,25 +104,25 @@ class jdaCustomClass
 	public static function pressEnter()
 	{
 		self::$jda->screenWait("Press {ENTER}");
-		self::display(self::$jda->screen,132);	
+		self::display(self::$jda->screen,132);
 		self::$jda->write5250(NULL,ENTER,true);
-		echo "Entered: Pressed Enter Key \n";	
+		echo "Entered: Pressed Enter Key \n";
 	}
 
 	public static function pressF1()
 	{
 		self::$jda->screenWait("F1=Return");
-		self::display(self::$jda->screen,132);	
+		self::display(self::$jda->screen,132);
 		self::$jda->write5250(NULL,F1,true);
-		echo "Entered: Pressed F1 Key \n";	
+		echo "Entered: Pressed F1 Key \n";
 	}
 
 	public static function pressF7()
 	{
 		self::$jda->screenWait("F7=Close");
-		self::display(self::$jda->screen,132);	
+		self::display(self::$jda->screen,132);
 		self::$jda->write5250(NULL,F7,true);
-		echo "Entered: Pressed F7 Key \n";	
+		echo "Entered: Pressed F7 Key \n";
 	}
 
 	public static function pressF10()
@@ -136,9 +136,15 @@ class jdaCustomClass
 	public static function enterWarning()
 	{
 		self::$jda->screenWait("You have requested to Exit");
-		self::display(self::$jda->screen,132);	
+		self::display(self::$jda->screen,132);
 		self::$jda->write5250(NULL,F1,true);
-		echo "Entered: Warning Message \n";	
+		echo "Entered: Warning Message \n";
+	}
+
+	public static function pressF9()
+	{
+		self::$jda->write5250(NULL,F9,true);
+		echo "Entered: Pressed F9 Key \n";
 	}
 
 	#box/palletizing
@@ -147,7 +153,7 @@ class jdaCustomClass
 		self::$jda->screenWait("Warehouse Maintenance");
 		self::display(self::$jda->screen,132);
 		self::$jda->write5250(array(array("04",22,44)),ENTER,true);
-		echo "Entered: Warehouse Maintenance \n";	
+		echo "Entered: Warehouse Maintenance \n";
 	}
 
 	#box/palletizing
@@ -156,11 +162,11 @@ class jdaCustomClass
 		self::$jda->screenWait("Load Maintenance");
 		self::display(self::$jda->screen,132);
 		self::$jda->write5250(array(array("10",22,44)),ENTER,true);
-		echo "Entered: Carton Pallet Load Maintenance \n";	
+		echo "Entered: Carton Pallet Load Maintenance \n";
 	}
 
 	/*public function pressF1By7Times()
-	{	
+	{
 		# F1 to Return
 		self::checkRecoverJob();
 		$tries = 0;
@@ -173,14 +179,14 @@ class jdaCustomClass
 			{
 				self::$jda->write5250(null,F12,true);
 			}
-		}	
+		}
 
 		self::show_timers();
 		echo "End\n";
 	}*/
-	
+
 	public function logout()
-	{	
+	{
 		# F1 to Return
 		$tries = 0;
 		while($tries++ < 5 && !self::$jda->screenCheck("F7=Signoff")){
@@ -188,7 +194,7 @@ class jdaCustomClass
 			self::$jda->set_pos(6,8);
 			self::$jda->write5250(null,F1,true);
 
-			/*if(self::$jda->screenCheck("Program Messages - Help")) 
+			/*if(self::$jda->screenCheck("Program Messages - Help"))
 			{
 				self::$jda->write5250(null,F3,true);
 				echo "Entered: Program Messages \n";
@@ -199,14 +205,14 @@ class jdaCustomClass
 					break;
 				}
 			}*/
-		}	
+		}
 		echo "F1 to return\n";
 		self::display(self::$jda->screen,132);
 		# F7 to signoff
 		self::$jda->write5250(null,F7,true);				// Enter F7 to signoff
 		echo "F7 to signoff\n";
-		self::display(self::$jda->screen,132);		
-		self::$jda->close();			
+		self::display(self::$jda->screen,132);
+		self::$jda->close();
 
 		self::show_timers();
 		echo "End\n";
@@ -218,5 +224,5 @@ class jdaCustomClass
 		$errorMsgFormat = "[{$date}] ERROR: {$method} with message \"{$error_message}\" \n";
 		error_log("{$errorMsgFormat}", 3, dirname(__FILE__)."/../logs/jda-errors.log");
 	}
-	
+
 }

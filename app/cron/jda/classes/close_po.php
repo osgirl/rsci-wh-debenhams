@@ -242,39 +242,91 @@ user: STRATPGMR pass: PASSWORD
 	}
 
 	// enter not in po data
-	private static function enterDataEntryMode($receiver_no) {
+	/*public static function enterDataEntryMode($receiver_no) {
 		$notInPo    = self::getNotInPoQtyDelivered($receiver_no);
-		print_r($notInPo);
-		$formValues = array();
 
 		// if there is data insert item that is not in po
 		if ( count($notInPo) > 0 )
 		{
 			foreach ($notInPo as $po)
 			{
-				$sku      = $po['sku'];
-				$quantity = $po['quantity_delivered'];
-				$slot     = $po['slot_code'];
-
 				parent::$jda->write5250(null,F10,true);
-				echo "Entered: Data Entry Mode  \n";
-				parent::$jda->screenWait("Receiving Data Entry");
-				parent::display(parent::$jda->screen,132);
+				echo "Entered: Pressed F10 Key.  \n";
+				// parent::$jda->screenWait("Receiving Data Entry");
+				if (parent::$jda->screenWait("Receiving Data Entry")) {
+					print_r($po);
+					$form   = array();
+					$form[] = array($po['sku'],14,44);  //enter sku
+					$form[] = array($po['quantity_delivered'],15,44);  //enter quantity
+					$form[] = array($po['slot_code'],16,44);  //enter slot
 
-				$formValues[] = array($sku,14,44);  //enter sku
-				$formValues[] = array($quantity,15,44);  //enter quantity
-				$formValues[] = array($slot,16,44);  //enter slot
-				parent::$jda->write5250($formValues,ENTER,true);
+					parent::display(parent::$jda->screen,132);
+					parent::$jda->write5250($form,ENTER,true);
 
-				if(parent::$jda->screenCheck('Sku not on order. Press F9 to add.')) {
-					parent::$jda->write5250(null,F9,true);
+					if(parent::$jda->screenCheck('Sku not on order. Press F9 to add')) {
+						parent::pressF9();
+					}
 				}
+				else {
+					echo "Screen: Receiving Data Entry NOT FOUND -------------------------------  \n";
+				}
+
+				parent::pressF1();
+				// self::checkResponse($receiver_no,__METHOD__);
 			}
-			//if done press F1
-			parent::$jda->write5250(null,F1,true);
-			self::checkResponse($receiver_no,__METHOD__);
+
+			echo "Entered: Data Entry Mode  \n";
+			parent::display(parent::$jda->screen,132);
 		}
-	}
+
+	}*/
+
+	public static function enterDataEntryMode($receiver_no)
+    {
+		$notInPo = self::getNotInPoQtyDelivered($receiver_no);
+		$total   = count($notInPo);
+		$row     = 44;
+
+        if ($total > 0)
+        {
+	        for ($i=0; $i < $total; $i++) {
+	        	print_r($notInPo[$i]);
+	        	parent::$jda->write5250(null,F10,true);
+
+        		if (parent::$jda->screenWait("Receiving Data Entry"))
+        		{
+    				echo "Entered: Pressed F10 Key.  \n";
+		        	$formValues = array();
+		        	$formValues[] = array($notInPo[$i]['sku'],14,$row);
+		        	$formValues[] = array($notInPo[$i]['quantity_delivered'],15,$row);
+		        	$formValues[] = array($notInPo[$i]['slot_code'],16,$row);
+
+					parent::$jda->write5250($formValues,ENTER,true);
+					parent::display(parent::$jda->screen,132);
+
+					echo "Entered: counter: {$i} Sleeping mode in 5 seconds  \n";
+					// since this is a NOT IN PO, pressing F9 is required
+					if (parent::$jda->screenWait("Sku not on order")) {
+						parent::pressF9();
+						sleep(5);
+						parent::pressF1();
+					}
+					sleep(5);
+        		}
+
+	        }
+
+	        echo "Entered: Data Entry Mode  \n";
+
+			parent::display(parent::$jda->screen,132);
+			sleep(5);
+        }
+
+        // return true;
+
+        // self::checkResponse($receiver_no,__METHOD__);
+    }
+
 
 	/*
 	* Update ewms trasaction_to_jda sync_status
@@ -337,14 +389,30 @@ user: STRATPGMR pass: PASSWORD
 			parent::display(parent::$jda->screen,132);
 			$offset++;
 		}
-		print_r($formValues);
+
 		// for not in PO
-		// self::enterDataEntryMode($receiver_no);
-		parent::display(parent::$jda->screen,132);
+		self::enterDataEntryMode($receiver_no);
+		print_r($formValues);
+		if (parent::$jda->screenWait("Receiving Data Entry")) {
+			echo "Screen: Receiving Data Entry FOUND -------------------------------  \n";
+			parent::pressF1();
+		}
+
+		if (parent::$jda->screenCheck("*********** WARNING ***********")) {
+			parent::display(parent::$jda->screen,132);
+			self::$jda->write5250(NULL,F12,true);
+			echo "Entered: Pressed F12 Key \n";
+		}
+
+
+
 		parent::$jda->write5250($formValues,F7,true);
+		parent::display(parent::$jda->screen,132);
 		echo "Entered: Quantity per item/sku  \n";
 
 		self::checkResponse($receiver_no,__METHOD__);
+
+
 	}
 
 	private static function checkResponse($receiver_no,$source)
@@ -392,27 +460,43 @@ user: STRATPGMR pass: PASSWORD
 			self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
 		}
 
+		if(parent::$jda->screenCheck('The slot selected is not a valid slot.')) {
+            $receiver_message="The slot selected is not a valid slot.";
+			self::$formMsg = "{$receiver_no}: {$receiver_message}";
+			parent::logError(self::$formMsg, __METHOD__);
+			self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
+		}
+
 		#end error
 
-		echo self::$formMsg;
+		// echo self::$formMsg;
 	}
 
 	public function enterClosingPo()
 	{
-		parent::$jda->screenWait("Receiver Confirmation Print");
-		parent::display(parent::$jda->screen,132);
-		parent::$jda->write5250(null,TAB,true);
-		parent::$jda->write5250(array(array("1",16,68)),F7,true);
-		echo "Entered: Closing of PO  \n";
+		if (parent::$jda->screenWait("Receiver Confirmation Print")) {
+			parent::display(parent::$jda->screen,132);
+			parent::$jda->write5250(null,TAB,true);
+			parent::$jda->write5250(array(array("1",16,68)),F7,true);
+			// parent::$jda->write5250(array(array("1",14,68)),F7,true);
+			echo "Entered: Closing of PO  \n";
+		}
+		else {
+			echo "Screen: Receiver Confirmation Print NOT FOUND -------------------------------  \n";
+		}
 	}
 
 	public function enterJobName($receiver_no)
 	{
-		parent::$jda->screenWait("Submitted Job Name");
-		parent::display(parent::$jda->screen,132);
-		parent::$jda->write5250(null,ENTER,true);
-		echo "Entered: Job Name Queue.  \n";
-		self::checkReceiverLanding($receiver_no);
+		if (parent::$jda->screenWait("Submitted Job Name")) {
+			parent::display(parent::$jda->screen,132);
+			parent::$jda->write5250(null,ENTER,true);
+			echo "Entered: Job Name Queue.  \n";
+			self::checkReceiverLanding($receiver_no);
+		}
+		else {
+			echo "Screen: Submitted Job Name NOT FOUND -------------------------------  \n";
+		}
 	}
 
 	/*
