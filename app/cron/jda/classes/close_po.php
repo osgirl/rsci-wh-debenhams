@@ -193,19 +193,24 @@ user: STRATPGMR pass: PASSWORD
 		$db = new pdoConnection();
 
 		echo "\n Getting quantity delivered from db \n";
-		$sql = "SELECT prod.sku, po_details.quantity_delivered
+		$sql = "SELECT prod.sku, po_lists.slot_code, po_details.quantity_delivered
 				FROM `wms_transactions_to_jda` trans
 				INNER JOIN wms_purchase_order_lists po_lists ON po_lists.purchase_order_no = trans.reference
 				INNER JOIN wms_purchase_order_details po_details ON po_lists.receiver_no = po_details.receiver_no
 				INNER JOIN wms_product_lists prod ON po_details.sku = prod.upc
-				WHERE module = 'Purchase Order' AND jda_action='Closing' AND trans.sync_status = 0 AND po_details.quantity_ordered <> 0 AND po_lists.receiver_no = {$receiver_no}
+				WHERE module = 'Purchase Order' AND jda_action='Closing' AND trans.sync_status = 0 AND po_lists.receiver_no = {$receiver_no}
 				ORDER BY prod.sku ASC";
-
+ // AND po_details.quantity_ordered <> 0
 		$query 	= $db->query($sql);
 
 		$result = array();
 		foreach ($query as $value ) {
-			$result[] = $value['quantity_delivered'];
+			// $result[] = $value['quantity_delivered'];
+			$result[] = array(
+				'sku' => $value['sku'],
+				'quantity_delivered' => $value['quantity_delivered'],
+				'slot_code'	=> $value['slot_code']
+			);
 		}
 
 		$db->close();
@@ -296,12 +301,12 @@ user: STRATPGMR pass: PASSWORD
         		if (parent::$jda->screenWait("Receiving Data Entry"))
         		{
     				echo "Entered: Pressed F10 Key.  \n";
-		        	$formValues = array();
-		        	$formValues[] = array($notInPo[$i]['sku'],14,$row);
-		        	$formValues[] = array($notInPo[$i]['quantity_delivered'],15,$row);
-		        	$formValues[] = array($notInPo[$i]['slot_code'],16,$row);
+		        	$formInputs = array();
+		        	$formInputs[] = array($notInPo[$i]['sku'],14,$row);
+		        	$formInputs[] = array($notInPo[$i]['quantity_delivered'],15,$row);
+		        	$formInputs[] = array($notInPo[$i]['slot_code'],16,$row);
 
-					parent::$jda->write5250($formValues,ENTER,true);
+					parent::$jda->write5250($formInputs,ENTER,true);
 					parent::display(parent::$jda->screen,132);
 
 					echo "Entered: counter: {$i} Sleeping mode in 5 seconds  \n";
@@ -359,7 +364,7 @@ user: STRATPGMR pass: PASSWORD
 		echo "Entered: PO Receipt Detail by SKU  \n";
 	}
 
-	public function enterQtyPerItem($receiver_no)
+	/*public function enterQtyPerItem($receiver_no)
 	{
 		$column 	= 10;
 		$row 		= 100;
@@ -370,29 +375,8 @@ user: STRATPGMR pass: PASSWORD
 		$offset     = 0;
 		$count      = ceil($total / $limit);
 
-		while($offset < $count) {
-			$new = $offset;
-
-			if($new !== 0) {
-				$new = $new * $limit;
-				echo "\nEntered ROLLUP: Page: {$offset} with offset of: {$new} and row {$row} \n";
-				parent::$jda->write5250(null,ROLLUP,true);
-			}
-
-			$page = array_slice( $quantity, $new, $limit );
-			foreach ($page as $key => $value) {
-				$new_column = $key + $column;
-				echo "\n value of new_col is: {$new_column} \n";
-				echo "value of quantity is: {$value} \n";
-				$formValues[] = array(sprintf("%10d", $value),$new_column,$row); //enter qty_delivered
-			}
-			parent::display(parent::$jda->screen,132);
-			$offset++;
-		}
-
-		// for not in PO
+		// process not in po items
 		self::enterDataEntryMode($receiver_no);
-		print_r($formValues);
 		if (parent::$jda->screenWait("Receiving Data Entry")) {
 			echo "Screen: Receiving Data Entry FOUND -------------------------------  \n";
 			parent::pressF1();
@@ -403,15 +387,128 @@ user: STRATPGMR pass: PASSWORD
 			self::$jda->write5250(NULL,F12,true);
 			echo "Entered: Pressed F12 Key \n";
 		}
+		//end process not in po items
 
+		//enter quantities in the po
+		while($offset < $count) {
+			echo "\n Count: {$count} \n";
+			$new = $offset;
 
+			if ($new !== 0) {
+				$new = $new * $limit;
 
+				parent::pressF1();
+				if (parent::$jda->screenCheck("*********** WARNING ***********"))
+				{
+					parent::display(parent::$jda->screen,132);
+					self::$jda->write5250(NULL,F12,true);
+					echo "Entered: Pressed F12 Key \n";
+				}
+
+				for($i=0; $i < $offset; $i++)
+				{
+					echo "\nCounter of i is: {$offset} \n";
+					echo "\nEntered ROLLUP: Page: {$offset} with offset of: {$new} and row {$row} \n";
+					parent::$jda->write5250(null,ROLLUP,true);
+					parent::display(parent::$jda->screen,132);
+				}
+			}
+
+			$page = array_slice( $quantity, $new, $limit );
+			foreach ($page as $key => $value) {
+				$new_column = $key + $column;
+				echo "\n value of new_col is: {$new_column} \n";
+				echo "value of quantity is: {$value} \n";
+				$formValues[] = array(sprintf("%10d", $value),$new_column,$row); //enter qty_delivered
+
+			}
+			parent::display(parent::$jda->screen,132);
+			$offset++;
+		}
+
+		print_r($formValues);
 		parent::$jda->write5250($formValues,F7,true);
+		// parent::$jda->write5250(null,F7,true);
 		parent::display(parent::$jda->screen,132);
 		echo "Entered: Quantity per item/sku  \n";
 
 		self::checkResponse($receiver_no,__METHOD__);
+	}*/
 
+	public function enterQtyPerItem($receiver_no)
+	{
+		$column 	= 10;
+		$row 		= 100;
+		$quantity 	= self::getQtyDelivered($receiver_no);
+		$total      = count($quantity);
+		$limit      = 12;
+		$offset     = 0;
+		$count      = ceil($total / $limit);
+		$flag		= FALSE;
+		print_r($quantity);
+
+
+		//enter in receiving data entry
+    	parent::$jda->write5250(null,F10,true);
+    	//retry
+    	$tries3 = 0;
+		while($tries3++ < 5 && !parent::$jda->screenCheck("Receiving Data Entry")){
+			echo "\n Unable to find Receiving Data Entry pressed F1 & tries: {$tries3} \n";
+			parent::$jda->set_pos(24,81);
+			parent::$jda->write5250(null,F10,true);
+		}
+		sleep(5);
+
+		if (parent::$jda->screenWait("Receiving Data Entry"))
+		{
+			foreach ($quantity as $key => $detail) {
+				echo "Entered: Pressed F10 Key.  \n";
+				echo "Entered: counter: {$key}  \n";
+
+				$tries4 = 0;
+				while($tries4++ < 5 && parent::$jda->screenCheck("Sku not on order")){
+					echo "\n Found Sku not in order: {$tries4} \n";
+					parent::$jda->write5250(null,F9,true);
+				}
+
+				if (!parent::$jda->screenWait("Sku not on order")) {
+					parent::$jda->write5250(array(array($detail['sku'],14,44)),ENTER,true);sleep(2);
+					parent::$jda->write5250(array(array(sprintf("%11d", $detail['quantity_delivered']),15,44)),ENTER,true);sleep(2);
+					parent::display(parent::$jda->screen,132);
+					parent::$jda->write5250(array(array($detail['slot_code'],16,44)),ENTER,true);sleep(2);
+				}
+
+				// action for adding items not in po
+				if (parent::$jda->screenWait("Sku not on order")) {
+					parent::display(parent::$jda->screen,132);
+					parent::pressF9();
+					sleep(10);
+				}
+				sleep(5);
+			}
+        }
+        parent::pressF1();
+        //close dialog box
+		$tries = 0;
+		while($tries++ < 5 && parent::$jda->screenCheck("Receiving Data Entry")){
+			echo "\n Found Receiving Data Entry pressed F1 & tries: {$tries} \n";
+			parent::$jda->set_pos(18,28);
+			parent::$jda->write5250(null,F1,true);
+		}
+
+
+		$tries2 = 0;
+		while($tries2++ < 5 && parent::$jda->screenWait("You have requested to Exit")){
+			echo "\n Found *********** WARNING *********** pressed F12 & tries: {$tries2} \n";
+			parent::$jda->set_pos(17,24);
+			parent::$jda->write5250(null,F12,true);
+		}
+
+        echo "Entered: Data Entry Mode  \n";
+		parent::display(parent::$jda->screen,132);
+		parent::$jda->write5250(NULL,F7,true);
+		parent::display(parent::$jda->screen,132);
+        self::checkResponse($receiver_no, __METHOD__);
 
 	}
 
@@ -483,6 +580,7 @@ user: STRATPGMR pass: PASSWORD
 		}
 		else {
 			echo "Screen: Receiver Confirmation Print NOT FOUND -------------------------------  \n";
+			parent::display(parent::$jda->screen,132);
 		}
 	}
 
@@ -496,6 +594,7 @@ user: STRATPGMR pass: PASSWORD
 		}
 		else {
 			echo "Screen: Submitted Job Name NOT FOUND -------------------------------  \n";
+			parent::display(parent::$jda->screen,132);
 		}
 	}
 
@@ -541,7 +640,7 @@ if($argv[1]) $params['reference'] = $execParams['poNo'];
 $poNos = $db->getJdaTransaction($params);
 
 // $receiver_nos = $closePO->getReceiverNo();
-print_r($poNos);
+// print_r($poNos);
 if(! empty($poNos) )
 {
 	$receiver_nos = $db->getReceiverNo($poNos);
@@ -555,6 +654,7 @@ if(! empty($poNos) )
 		{
 			$receiver   = $receiver_no['receiver_no'];
 			$back_order = $receiver_no['back_order'];
+
 			$validate   = $closePO->enterReceiverNumber($receiver, $back_order);
 
 			if($validate)
