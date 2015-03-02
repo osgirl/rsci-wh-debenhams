@@ -457,7 +457,7 @@ user: STRATPGMR pass: PASSWORD
 			parent::$jda->set_pos(24,81);
 			parent::$jda->write5250(null,F10,true);
 		}
-		sleep(5);
+		// sleep(5);
 
 		if (parent::$jda->screenWait("Receiving Data Entry"))
 		{
@@ -472,19 +472,19 @@ user: STRATPGMR pass: PASSWORD
 				}
 
 				if (!parent::$jda->screenWait("Sku not on order")) {
-					parent::$jda->write5250(array(array($detail['sku'],14,44)),ENTER,true);sleep(2);
-					parent::$jda->write5250(array(array(sprintf("%11d", $detail['quantity_delivered']),15,44)),ENTER,true);sleep(2);
+					parent::$jda->write5250(array(array($detail['sku'],14,44)),ENTER,true);//sleep(2);
+					parent::$jda->write5250(array(array(sprintf("%11d", $detail['quantity_delivered']),15,44)),ENTER,true);//sleep(2);
 					parent::display(parent::$jda->screen,132);
-					parent::$jda->write5250(array(array($detail['slot_code'],16,44)),ENTER,true);sleep(2);
+					parent::$jda->write5250(array(array($detail['slot_code'],16,44)),ENTER,true);//sleep(2);
 				}
 
 				// action for adding items not in po
 				if (parent::$jda->screenWait("Sku not on order")) {
 					parent::display(parent::$jda->screen,132);
 					parent::pressF9();
-					sleep(10);
+					// sleep(10);
 				}
-				sleep(5);
+				// sleep(5);
 			}
         }
         parent::pressF1();
