@@ -188,4 +188,5 @@ td.underline {padding-bottom: 0; }
 				Driver:<hr/><br/>
 			</div>
 		</div>
+		Copy 1 &  2 - WH-OS (for checking), then to WH-DC (for Posting) and then to WH-SCC (for IMS update)  <br>   Copy 3 - WH-SCC (file copy upon release)
 	</section>

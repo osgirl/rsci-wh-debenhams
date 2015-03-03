@@ -155,9 +155,11 @@ td.underline {padding-bottom: 0; }
 				Received by / Date:<hr/><br/>
 			</div>
 			<div>
+				<br/><br/><br/><br/>
 				Posted By / Date:<hr/><br/>
 			</div>
 		</div>
+			Copy 1 - ICG &nbsp&nbsp&nbsp    Copy 2 - Receiving / To  &nbsp&nbsp&nbsp   Copy 3 - From Location   &nbsp&nbsp&nbsp  Copy 4 - From Location
 	</section>
 @endforeach
 
