@@ -176,7 +176,7 @@ class PurchaseOrderController extends BaseController {
 			'jda_action'	=> Config::get('transactions.jda_action_po_closing'),
 			'reference'		=> $purchase_order_no
 		));
-
+		Log::info(__METHOD__ .' jda transaction dump: '.print_r($isSuccess,true));
 		// run daemon command: php app/cron/jda/classes/receive_po.php
 		if( $isSuccess )
 		{
@@ -701,7 +701,10 @@ class PurchaseOrderController extends BaseController {
 					);
 
 		$results 		= PurchaseOrder::getPoLists($arrParams);
-		$results_total 	= count($results);//PurchaseOrder::getCount($arrParams);
+		$results_total	= PurchaseOrder::getPoLists($arrParams, TRUE);
+		// echo "<pre>"; print_r($results); die();
+		// $results_total 	= PurchaseOrder::getPOQuery($arrParams, TRUE); //count($results);//
+		// print_r($results_total); die();
 		DebugHelper::log(__METHOD__, $results_total);
 
 		// Pagination

@@ -67,18 +67,11 @@ class PurchaseOrder extends Eloquent {
 	* @return array of po
 	* Use :  cms
 	*/
-	public static function getPoLists($data = array()) {
+	public static function getPoLists($data = array(), $getCount = FALSE) {
 		$query = PurchaseOrder::getPOQuery($data);
 		// echo "<pre>"; print_r($data); die();
-		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
-			if ($data['sort']=='po_no') $data['sort'] = 'purchase_order_no';
-			if ($data['sort']=='receiver_no') $data['sort'] = 'purchase_order_lists.receiver_no';
-			if ($data['sort']=='entry_date') $data['sort'] = 'purchase_order_lists.created_at';
 
-			$query->orderBy($data['sort'], $data['order']);
-		}
-
-		if( CommonHelper::hasValue($data['limit']) && CommonHelper::hasValue($data['page']))  {
+		if( CommonHelper::hasValue($data['limit']) && CommonHelper::hasValue($data['page']) && !$getCount)  {
 			$query->skip($data['limit'] * ($data['page'] - 1))
 		          ->take($data['limit']);
 		}
@@ -99,6 +92,8 @@ class PurchaseOrder extends Eloquent {
 			$getUsers               = User::getUsersFullname($assignedToUserId);
 			$result[$key]->fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $getUsers));
 		}
+
+		if($getCount) return count($result);
 
 		return $result;
 	}
@@ -145,6 +140,14 @@ class PurchaseOrder extends Eloquent {
 		if( CommonHelper::hasValue($data['filter_brand']) ) $query->where('dept_code', '=', $data['filter_brand']);
 		if( CommonHelper::hasValue($data['filter_division']) ) $query->where('sub_dept', '=', $data['filter_division']);
 		if( CommonHelper::hasValue($data['filter_shipment_reference_no']) ) $query->where('shipment_reference_no', '=', $data['filter_shipment_reference_no']);
+
+		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
+			if ($data['sort']=='po_no') $data['sort'] = 'purchase_order_no';
+			if ($data['sort']=='receiver_no') $data['sort'] = 'purchase_order_lists.receiver_no';
+			if ($data['sort']=='entry_date') $data['sort'] = 'purchase_order_lists.created_at';
+
+			$query->orderBy($data['sort'], $data['order']);
+		}
 
 		if( !empty($data['filter_back_order_only']) ) $query->where('back_order', '<>', 0);
 
