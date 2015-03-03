@@ -146,7 +146,7 @@ public static function getPackingDetails($loadCode)
             $box =  DB::table('box_details')
                     ->select('box_details.moved_qty',
                             'picklist_details.sku as upc','picklist_details.store_code','picklist_details.so_no','picklist_details.store_code',
-                            'product_lists.description')
+                            'product_lists.description','product_lists.dept_code','product_lists.sub_dept','product_lists.class','product_lists.sub_class')
                     ->join('picklist_details','picklist_details.id','=','box_details.picklist_detail_id','LEFT')
                     ->join('product_lists','product_lists.upc','=','picklist_details.sku','LEFT')
                     ->where('box_details.box_code','=', $val->box_code)
@@ -155,6 +155,8 @@ public static function getPackingDetails($loadCode)
 
 
             if(!empty($box)){
+                    $res= Department::getBrand($box[0]->dept_code,$box[0]->sub_dept,$box[0]->class,$box[0]->sub_class);
+                    $data['StoreOrder'][$box[0]->so_no]['brand'] = $res[0]['description'];
                 $counter=count($box);
                 for($i=0;$i<$counter;$i++){
                     $data['store_code'] = $box[$i]->store_code;

@@ -62,7 +62,7 @@ td.underline {padding-bottom: 0; }
 							<th>Load Code:</th>
 							<td>{{$loadCode}}</td>
 						</tr><tr>
-							<th>Store Order / TL No:</th>
+							<th>MTS Number:</th>
 							<td>{{ $soNo}}</td>
 						</tr><tr>
 							<th>From Location:</th>
