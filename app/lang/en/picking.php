@@ -10,7 +10,7 @@ return array(
 	'entry_load_create'	=> 'New Load Code',
 
 	'entry_sku'				=> 'UPC:',
-	'entry_so'				=> 'Store order #:',
+	'entry_so'				=> 'Transfer #:',
 	'entry_from_slot_code'	=> 'From slot code:',
 	'entry_to_slot_code'	=> 'To slot code:',
 	'entry_status'			=> 'Status:',
@@ -36,7 +36,7 @@ return array(
 	'col_store_name'	=> 'Store Name',
 	'col_sku'			=> 'Sku',
 	'col_upc'			=> 'UPC',
-	'col_so_no'			=> 'Store Order #',
+	'col_so_no'			=> 'Transfer #',
 	'col_from_slot_code'=> 'From slot code',
 	'col_to_slot_code'	=> 'To slot code',
 	'col_qty_to_pick'	=> 'Quantity to pick',
