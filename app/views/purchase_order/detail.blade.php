@@ -157,7 +157,7 @@
 						</td>
 						<td>{{ $po->quantity_ordered }}</td>
 						<td>{{ $po->quantity_delivered }}</td>
-						<td>{{ $po->quantity_ordered- $po->quantity_delivered }}</td>
+						<td>{{ $po->quantity_delivered - $po->quantity_ordered  }}</td>
 					</tr>
 					@endforeach
 				@endif
