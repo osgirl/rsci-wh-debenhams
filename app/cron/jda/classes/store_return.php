@@ -15,6 +15,7 @@ class storeReturn extends jdaCustomClass
 	>what happens to transferred batch (daemon at syncclosing)
 	>how to detect sku that don't exist in jda
 	>pagination
+	>invalid slot error
 
 	*master menu
 	09
@@ -49,6 +50,11 @@ class storeReturn extends jdaCustomClass
 	01
 	29
 	06
+
+	check slot 
+	13
+	24
+	03
 	*/
 
 	public function __construct() {
@@ -123,8 +129,16 @@ class storeReturn extends jdaCustomClass
 			return false;
 		}
 
-		if(parent::$jda->screenCheck('Transfer batch is already being transfered by another user.')) {
-            $receiver_message='Transfer batch  is already being transfered by another user.';
+		if(parent::$jda->screenCheck('Transfer is being modified by another user.')) {
+            $transfer_message='Transfer is being modified by another user.';
+            self::$formMsg = "{$transfer_no}: {$transfer_message}";
+			parent::logError(self::$formMsg, __METHOD__);
+			self::updateSyncStatus($transfer_no,"{$source}: {$transfer_message}", TRUE);
+			return false;
+		}
+
+		if(parent::$jda->screenCheck('Invalid slot - does not exist.')) {
+            $transfer_message='Invalid slot - does not exist.';
             self::$formMsg = "{$transfer_no}: {$transfer_message}";
 			parent::logError(self::$formMsg, __METHOD__);
 			self::updateSyncStatus($transfer_no,"{$source}: {$transfer_message}", TRUE);
@@ -144,25 +158,48 @@ class storeReturn extends jdaCustomClass
 	}
 	private static function enterSoTransferReceipt($transferer, $slot_code, $transfer_nos) {
 		$invoice_amt = 1; //set 1 for now
-		$formValues = array();//values to enter to form
-		$formValues[] = array(sprintf("%6s", $slot_code),7,12);  //enter slot
+		$formValues = array();//values to enter to form //enter slot
 		$column 	= 78;
 		$row 		= 10;
+		$currentpage=1;
 		// $qtyMoved 	= array(1);
 		$formValues = array();
+		$formValues[] = array(sprintf("%-8s", $slot_code),7,12);
 		//coordinates start on 37/9
 		for ($i=0; $i < count($transfer_nos); $i++) {
+			if($i>0 && $i%11==0){
+				parent::$jda->write5250($formValues,F7,true);
+
+				if(parent::$jda->screenCheck('All Recieved Quantities are ZERO.')) {
+					parent::$jda->write5250(NULL,F1,true);
+					parent::display(parent::$jda->screen,132);
+				}				
+				$formValues = array();
+
+				parent::$jda->write5250(NULL,ROLLUP,true);
+				$row = 10;
+				$currentpage++;
+			}
+			echo "\n page is: {$currentpage} \n";
 			echo "\n value of row is: {$row} \n";
 			echo "value of quantity received is: {$transfer_nos[$i]['received_qty']} \n";
 			$formValues[] = array(sprintf("%10d", $transfer_nos[$i]['received_qty']),$row,$column); //enter moved_qty
 			$row++;
 		}
-		parent::$jda->write5250($formValues,F10,true);
-		if(parent::$jda->screenCheck('This is a WARNING')) {
-			// parent::$jda->write5250(NULL,F7,true);
+
+		parent::$jda->write5250($formValues,F7,true);
+
+		if(parent::$jda->screenCheck("All Recieved Quantities are ZERO.")) {
 			parent::$jda->write5250(NULL,F1,true);
-			parent::$jda->write5250(NULL,F10,true);
+			parent::display(parent::$jda->screen,132);
 		}
+
+		if(parent::$jda->screenCheck('Invalid slot - does not exist.')) {
+			// parent::$jda->write5250(NULL,F1,true);
+			parent::display(parent::$jda->screen,132);
+		}
+
+		parent::$jda->write5250($formValues,F7,true);
 		$validate = self::checkTransferNumber($transferer,__METHOD__);
 
 		if ($validate)
@@ -173,10 +210,11 @@ class storeReturn extends jdaCustomClass
 	}
 
 	private static function checkTransferLanding($transferer,$source) {
-			parent::$jda->screenWait("This job has been placed on a batch Job Queue");
+		if(parent::$jda->screenCheck('This job has been placed on a batch Job Queue')) {
 			parent::display(parent::$jda->screen,132);
 			parent::$jda->write5250(NULL,ENTER,true);
 			self::updateSyncStatus($transferer);
+		}
 	}
 
 	/*
@@ -271,26 +309,5 @@ if(! empty($soNos) )
 		echo " \n No receiver_nos found!. \n";
 	}
 }
-/*else {
-	echo " \n No rows found!. Proceed to Closing of PO...\n";
-	$formattedString = "{$execParams['poNo']}";
-	$db->daemon('close_po', $formattedString);
-}*/
+
 $db->close(); //close db connection
-/*
-$receivePO = new poReceiving();
-$receiver_nos = $receivePO->getReceiverNo();
-print_r($receiver_nos);
-if(! empty($receiver_nos) )
-{
-	$receivePO->enterUpToDockReceipt();
-	foreach($receiver_nos as $receiver) {
-		$validate = $receivePO->enterReceiverNumber($receiver);
-		if($validate) $receivePO->enterPOForm($receiver);
-	}
-}
-else {
-	echo " \n No rows found!. \n";
-}
-$receivePO->logout();
-*/

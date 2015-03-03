@@ -215,10 +215,11 @@ class pdoConnection
 	public function getTransferNo($soNo) {
 		$soNo = join(',', $soNo);
 		echo "\n Getting transfer no from db \n";
-		$sql 	= "SELECT wms_store_return.so_no,slot_code,wms_store_return_detail.received_qty FROM wms_store_return
+		$sql 	= "SELECT wms_store_return.so_no,slot_code,wms_store_return_detail.received_qty,wms_product_lists.sku FROM wms_store_return
 					INNER JOIN wms_store_return_detail ON wms_store_return.so_no = wms_store_return_detail.so_no
+					INNER JOIN wms_product_lists ON wms_store_return_detail.sku = wms_product_lists.upc
 					WHERE wms_store_return.so_no IN ({$soNo})
-					ORDER BY so_no ASC";
+					ORDER BY sku ASC";
 		$query 	= self::query($sql);
 
 		$result = array();
