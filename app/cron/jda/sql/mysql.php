@@ -330,9 +330,9 @@ class pdoConnection
     	$outputfile = __DIR__.'/../../jda/logs/output.log';
     	$pidfile = __DIR__.'/../../jda/logs/pidfile.log';
 
-        // exec(sprintf("%s > %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));
+        exec(sprintf("%s > %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));
         // exec($cmd . " </dev/null 2> /dev/null & echo $!");
-        exec($cmd . " > /dev/null &");
+        // exec($cmd . " > /dev/null &");
     }
 
     // TODO: validation
