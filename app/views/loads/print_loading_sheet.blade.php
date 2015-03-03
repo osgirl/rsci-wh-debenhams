@@ -50,6 +50,7 @@ td.underline {padding-bottom: 0; }
 		<header>
 			<div class="doctitle">
 				<h1>Casual Clothing Retailers Inc.<br/>WAREHOUSE LOADING SHEET</h1>
+				Print Date: {{ date('m/d/y h:i A')}}
 			</div>
 		</header>
 		<table class="commonInfo">
@@ -69,7 +70,7 @@ td.underline {padding-bottom: 0; }
 				<td>
 					<table>
 					    <tr>
-					    <th style="text-align: right">Seal #:</th>
+					    <th style="text-align: right">Seal #1:</th>
 					    <td>_____________</td>
 						</tr>
 					    <tr>
@@ -91,9 +92,6 @@ td.underline {padding-bottom: 0; }
 					    <td></td>
 						</tr><tr>
 							<td></td>
-					    </tr><tr>
-					    <th style="text-align: right">Date:</th>
-					    <td>{{$records['load_date']}}</td>
 					    </tr>
 					</table>
 				</td>
@@ -117,20 +115,23 @@ td.underline {padding-bottom: 0; }
 	<?php 
 		$boxarray=[];
 		$grandTotal = 0;
+		$counter=0;
 	?>
 			@foreach($records['StoreOrder'] as $soNo => $val)
 				<tr>
-					<td colspan="7"><strong>{{$soNo}}</strong></td>
-				</tr>
+					<td align="center"><strong>{{$soNo}}</strong></td>
 			    @foreach($val['items'] as $boxNo => $items)
 					<?php 
 						if(!in_array($boxNo, $boxarray))
 							array_push($boxarray, $boxNo);
 	    				$boxTotal = 0;
+						$counter++;
 					?>
-			    <tr>
-					<td></td>
-			    	<td>{{$boxNo}}</td>
+					@if($counter>1)
+						<tr>
+							<td></td>
+					@endif
+			    	<td align="center">{{$boxNo}}</td>
 					@foreach($items as $item)
 						<?php
 							if($item->so_no == $soNo){
@@ -139,13 +140,16 @@ td.underline {padding-bottom: 0; }
 							}
 						?>
 					@endforeach
-					<td align="right"> {{$boxTotal}} </td>
-				<td class="underline"><hr/></td>
-				<td class="underline"><hr/></td>
-				<td class="underline"><hr/></td>
-				<td class="underline"><hr/></td>
-				</tr>
+					<td align="center"> {{$boxTotal}} </td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					@if($counter>1)
+						</tr>
+					@endif
 				@endforeach
+				</tr>
 			@endforeach
 			</tr>
 			<tr>
@@ -153,11 +157,11 @@ td.underline {padding-bottom: 0; }
 					$numOfBoxTotal=count($boxarray);
 				?>
 				<th align="right">Total: </th>
-				<td align="right">{{$numOfBoxTotal}}</td>
-				<td align="right">{{$grandTotal}}</td>
+				<td align="center">{{$numOfBoxTotal}}</td>
+				<td align="center">{{$grandTotal}}</td>
 				<td></td>
-				<td class="underline"><hr/></td>
-				<td class="underline"><hr/></td>
+				<td></td>
+				<td></td>
 				<td></td>
 			</tr>
 		</table>

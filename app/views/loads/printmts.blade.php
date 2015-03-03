@@ -62,7 +62,7 @@ td.underline {padding-bottom: 0; }
 							<th>Load Code:</th>
 							<td>{{$loadCode}}</td>
 						</tr><tr>
-							<th>Store Order / TL No:</th>
+							<th>MTS Number:</th>
 							<td>{{ $soNo}}</td>
 						</tr><tr>
 							<th>From Location:</th>
@@ -99,24 +99,30 @@ td.underline {padding-bottom: 0; }
 				<th>Damaged</th>
 			</tr>
 			@foreach($val['items'] as $boxNo => $items)
-				<?php $boxTotal = 0;?>
+				<?php $boxTotal = 0;
+				$counter=0;?>
 				<tr>
-					<td colspan="6"><strong>{{$boxNo}}</strong></td>
-				</tr>
+					<td rowpan="3"><strong>{{$boxNo}}</strong></td>
 				@foreach($items as $item)
 					<?php
 						$boxTotal += $item->moved_qty;
 						$grandTotal += $item->moved_qty;
+						$counter++;
 					?>
-					<tr>
-						<td></td>
+					@if($counter>1)
+						<tr>
+							<td></td>
+					@endif
 						<td>{{$item->upc}}</td>
 						<td>{{$item->description}}</td>
 						<td align="right">{{$item->moved_qty}}</td>
 						<td class="underline"><hr/></td>
 						<td class="underline"><hr/></td>
-					</tr>
+					@if($counter>1)
+						</tr>
+					@endif
 				@endforeach
+				</tr>
 				<tr>
 					<td colspan="3" align="right"><strong>Box Total: </strong></td>
 					<td align="right">{{$boxTotal}}</td>

@@ -35,7 +35,7 @@ header {margin-bottom: 20px;}
 td.underline hr{ margin-top: 20px; border: none; border-bottom: solid 1px #000;}
 td.underline {padding-bottom: 0; }
 
-#actionButtons { top:0; left: 0; background-color: #DFF1F7; padding: 5px;}
+#actionButtons { top:0; left: 0; background-color: #DFF1F7; padding: 5px;width: 52%;}
 #actionButtons a {display: inline-block; padding: 1em; background-color: #3199BE; text-decoration: none; font: bold 1em Verdana ; color: #FFF;}
 #actionButtons a:hover {background-color: #1F6077 ;}
 

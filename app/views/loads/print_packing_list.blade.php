@@ -65,13 +65,25 @@ td.underline {padding-bottom: 0; }
 						</tr>
 					</table>
 				</td>
+				<td>
+					<table><tr>
+							<th>Username:</th>
+							<td>{{Auth::user()->username;}}</td>
+						</tr><tr>
+							<th>PL Number:</th>
+							<td>_____________</td>
+						</tr>
+					</table>
+				</td>
 			<tr>
 		</table>
 		<table class="contents">
 			<tr>
+				<th rowspan="2" style="text-align: center">Brand</th>
 				<th rowspan="2" style="text-align: center">Ref MTS No.</th>
 				<th rowspan="2" style="text-align: center">Boxes</th>
 				<th colspan="2" style="text-align: center">Quantity</th>
+				<th rowspan="2" style="text-align: center">Received By/ Date</th>
 			</tr>
             <tr>
 				<th style="text-align: center">Issued</th>
@@ -80,21 +92,26 @@ td.underline {padding-bottom: 0; }
 			<?php 
 				$boxarray=[];
 				$grandTotal = 0;
+				$counter=0;
 			?>
 			@foreach($records['StoreOrder'] as $soNo => $val)
 				<tr>
-					<td colspan="6"><strong>{{$soNo}}</strong></td>
-				</tr>
+					<td align="center">{{$val['brand']}}</td>
+					<td align="center"><strong>{{$soNo}}</strong></td>
 			    @foreach($val['items'] as $boxNo => $items)
-				<tr>
-					<td></td>
 					<?php 
 						if(!in_array($boxNo, $boxarray))
 							array_push($boxarray, $boxNo);
 	    				$boxTotal = 0;
+						$counter++;
 					?>
+					@if($counter>1)
+						<tr>
+							<td></td>
+							<td></td>
+					@endif
 			    
-			    	<td>{{$boxNo}}</td>
+			    	<td align="center">{{$boxNo}}</td>
 					@foreach($items as $item)
 						<?php
 							if($item->so_no == $soNo){
@@ -103,38 +120,54 @@ td.underline {padding-bottom: 0; }
 							}
 						?>
 					@endforeach
-				    <td align="right">{{$boxTotal}}</td>
+				    <td align="center">{{$boxTotal}}</td>
 					<td class="underline"><hr/></td>
-				</tr>
+					@if($counter>1)
+						</tr>
+					@endif
 			    @endforeach
+				</tr>
 			@endforeach
 			<tr>
 				<?php 
 					$numOfBoxTotal=count($boxarray);
 				?>
-			    <td style="text-align: right"><strong>Box Total:</strong></td>
-			    <td align="right"> {{ $numOfBoxTotal }} </td>
-			    <td align="right">{{$grandTotal}}</td>
+					<td></td>
+			    <td style="text-align: center"><strong>Box Total:</strong></td>
+			    <td align="center"> {{ $numOfBoxTotal }} </td>
+			    <td align="center">{{$grandTotal}}</td>
+				<td class="underline"><hr/></td>
 				<td class="underline"><hr/></td>
 			</tr>
 			<tr>
 				<td>.</td>
 			</tr>
 			<tr>
-				<th align="right">Grand Total: </th>
-			    <td align="right">{{$numOfBoxTotal}}</td>
-			    <td align="right">{{$grandTotal}}</td>
+					<td></td>
+				<th style="text-align: center">Grand Total: </th>
+			    <td align="center">{{$numOfBoxTotal}}</td>
+			    <td align="center">{{$grandTotal}}</td>
 				<td class="underline"><hr/></td>
 			</tr>
 			<tr>
 				<td>.</td>
 			</tr>
-			<tr><th colspan="5">Inter-Transfers</th></tr>
+			<tr><th colspan="6">Inter-Transfers</th></tr>
 			<tr>
-				<th align="right">Grand Total: </th>
+					<td></td>
+				<th style="text-align: center">Grand Total: </th>
 				<td class="underline"><hr/></td>
 				<td class="underline"><hr/></td>
 				<td></td>
+			</tr>
+		</table>
+		<table>
+			<tr>
+				<th style="text-align: right">Seal #1:</th>
+				<td>_____________</td>
+					<td>&nbsp&nbsp&nbsp</td>
+				<th style="text-align: right">Seal #2:</th>
+				<td>_____________</td>
 			</tr>
 		</table>
 
@@ -151,7 +184,7 @@ td.underline {padding-bottom: 0; }
 			</div>
 			<div>
 				Delivery Van Opened By / Date:<hr/><br/>
-				Updated By / Date:<hr/><br/>
+				Posted By / Date:<hr/><br/>
 				Driver:<hr/><br/>
 			</div>
 		</div>

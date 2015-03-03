@@ -36,6 +36,15 @@ class Department extends Eloquent {
 			->toArray();
 	}
 
+	public static function getBrand($dept_code,$sub_dept,$class,$sub_class) {
+		return Department::where('dept_code', '=', $dept_code)
+			->where('sub_dept', '=', $sub_dept)
+			->where('class', '=', $class)
+			->where('sub_class', '=', $sub_class)
+			->get(array('id', 'dept_code', 'description'))
+			->toArray();
+	}
+
 	public static function getDivisions() {
 		return Department::where('dept_code', '<>', 0)
 			->where('sub_dept', '<>', 0)

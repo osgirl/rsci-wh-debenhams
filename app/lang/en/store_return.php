@@ -14,7 +14,7 @@ return array(
 	'text_success_generated'	=> 'Letdown list Generated',
 	'text_confirm_assign'		=> 'Assign selected items?',
 
-	'label_store_order_no'		=> 'SO No.:',
+	'label_store_order_no'		=> 'Transfer No.:',
 	'label_store'				=> 'Store:',
 	'label_order_date'			=> 'Delivered Date:',
 	'label_dispatch_date'		=> 'Shipped Date:',
@@ -23,7 +23,7 @@ return array(
 	'label_jda_sync'			=> 'Latest JDA Sync Date:',
 	'label_app_sync'			=> 'Latest App Sync Date:',
 
-	'store_order_no'			=> 'SO No.:',
+	'store_order_no'			=> 'Transfer No.:',
 	'entry_stock_piler'			=> 'Stock Piler:',
 
 	'button_close_so'			=> 'Close SO',
@@ -33,7 +33,7 @@ return array(
 	'button_assign_to_stock_piler' 	=> 'Assign to Stock Piler',
 
 	'col_id' 					=> 'No.',
-	'col_so_no'					=> 'SO No.',
+	'col_so_no'					=> 'Transfer No.',
 	'col_store'					=> 'Store',
 	'col_store_name'					=> 'Store Name',
 	'col_order_date'			=> 'Delivered Date',

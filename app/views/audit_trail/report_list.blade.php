@@ -11,6 +11,10 @@
 </head>
 <body>
 <div class="table-responsive">
+			<div style="text-align: center">
+				<h1>Casual Clothing Retailers Inc.<br/>AUDIT TRAIL REPORT</h1>
+				Print Date: {{ date('m/d/y h:i A')}}
+			</div>
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
