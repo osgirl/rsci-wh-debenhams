@@ -92,21 +92,24 @@ td.underline {padding-bottom: 0; }
 			<?php 
 				$boxarray=[];
 				$grandTotal = 0;
+				$counter=0;
 			?>
 			@foreach($records['StoreOrder'] as $soNo => $val)
 				<tr>
-					<td align="center" rowspan={{count($val['items'])+1}} >{{$val['brand']}}</td>
+					<td align="center">{{$val['brand']}}</td>
 					<td align="center"><strong>{{$soNo}}</strong></td>
-					<td align="center" colspan="3"></td>
-				</tr>
 			    @foreach($val['items'] as $boxNo => $items)
-				<tr>
-					<td></td>
 					<?php 
 						if(!in_array($boxNo, $boxarray))
 							array_push($boxarray, $boxNo);
 	    				$boxTotal = 0;
+						$counter++;
 					?>
+					@if($counter>1)
+						<tr>
+							<td></td>
+							<td></td>
+					@endif
 			    
 			    	<td align="center">{{$boxNo}}</td>
 					@foreach($items as $item)
@@ -119,8 +122,11 @@ td.underline {padding-bottom: 0; }
 					@endforeach
 				    <td align="center">{{$boxTotal}}</td>
 					<td class="underline"><hr/></td>
-				</tr>
+					@if($counter>1)
+						</tr>
+					@endif
 			    @endforeach
+				</tr>
 			@endforeach
 			<tr>
 				<?php 
@@ -178,7 +184,7 @@ td.underline {padding-bottom: 0; }
 			</div>
 			<div>
 				Delivery Van Opened By / Date:<hr/><br/>
-				Updated By / Date:<hr/><br/>
+				Posted By / Date:<hr/><br/>
 				Driver:<hr/><br/>
 			</div>
 		</div>

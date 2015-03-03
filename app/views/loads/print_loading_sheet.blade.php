@@ -115,20 +115,22 @@ td.underline {padding-bottom: 0; }
 	<?php 
 		$boxarray=[];
 		$grandTotal = 0;
+		$counter=0;
 	?>
 			@foreach($records['StoreOrder'] as $soNo => $val)
 				<tr>
 					<td align="center"><strong>{{$soNo}}</strong></td>
-					<td colspan="6"></td>
-				</tr>
 			    @foreach($val['items'] as $boxNo => $items)
 					<?php 
 						if(!in_array($boxNo, $boxarray))
 							array_push($boxarray, $boxNo);
 	    				$boxTotal = 0;
+						$counter++;
 					?>
-			    <tr>
-					<td></td>
+					@if($counter>1)
+						<tr>
+							<td></td>
+					@endif
 			    	<td align="center">{{$boxNo}}</td>
 					@foreach($items as $item)
 						<?php
@@ -143,8 +145,11 @@ td.underline {padding-bottom: 0; }
 					<td></td>
 					<td></td>
 					<td></td>
-				</tr>
+					@if($counter>1)
+						</tr>
+					@endif
 				@endforeach
+				</tr>
 			@endforeach
 			</tr>
 			<tr>
