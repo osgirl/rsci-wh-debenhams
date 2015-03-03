@@ -167,8 +167,9 @@ class storeReturn extends jdaCustomClass
 		$formValues[] = array(sprintf("%-8s", $slot_code),7,12);
 		//coordinates start on 37/9
 		for ($i=0; $i < count($transfer_nos); $i++) {
-			if($i>0 && $i%11==0){
+			if($i>0 && $i%12==0){
 				parent::$jda->write5250($formValues,F7,true);
+				parent::$jda->write5250(NULL,F7,true);
 
 				if(parent::$jda->screenCheck('All Recieved Quantities are ZERO.')) {
 					parent::$jda->write5250(NULL,F1,true);
@@ -187,19 +188,15 @@ class storeReturn extends jdaCustomClass
 			$row++;
 		}
 
-		parent::$jda->write5250($formValues,F7,true);
+		parent::$jda->write5250($formValues,F10,true);
+		parent::$jda->write5250(NULL,F10,true);
 
-		if(parent::$jda->screenCheck("All Recieved Quantities are ZERO.")) {
+		if(parent::$jda->screenCheck("This is a WARNING")) {
 			parent::$jda->write5250(NULL,F1,true);
+			parent::$jda->write5250(NULL,F10,true);
 			parent::display(parent::$jda->screen,132);
 		}
 
-		if(parent::$jda->screenCheck('Invalid slot - does not exist.')) {
-			// parent::$jda->write5250(NULL,F1,true);
-			parent::display(parent::$jda->screen,132);
-		}
-
-		parent::$jda->write5250($formValues,F7,true);
 		$validate = self::checkTransferNumber($transferer,__METHOD__);
 
 		if ($validate)
