@@ -920,42 +920,12 @@ class PicklistController extends BaseController {
 
 	public function closePicklist()
 	{
-		// Check Permissions
-		/*if (Session::has('permissions')) {
-	    	if (!in_array('CanClosePurchaseOrders', unserialize(Session::get('permissions'))) || !in_array('CanClosePurchaseOrderDetails', unserialize(Session::get('permissions'))))  {
-				return Redirect::to('user/profile');
-			}
-    	} else {
-			return Redirect::to('users/logout');
-		}*/
-
 		$docNo        = Input::get("doc_no");
 		$status       = 'posted'; // closed
 		$date_updated = date('Y-m-d H:i:s');
 
 		$status_options = Dataset::where("data_code", "=", "PICKLIST_STATUS_TYPE")->get()->lists("id", "data_value");
-
-		/*$picklist = Picklist::where('move_doc_number', '=', $docNo)
-				->update(array(
-					"pl_status" => $status_options[$status_value],
-					"updated_at" => date('Y-m-d H:i:s')
-				));*/
-
 		$picklist = Picklist::updateStatus($docNo, $status_options['closed']);
-
-		// for jda transaction TODOS
-		/*$closePicklist = BoxDetails::checkBoxesPerDocNo($boxInfo['move_doc_number']);
-
-		if (! $closePicklist->isEmpty() || $useBox)
-		{
-			$isSuccess = Picklist::where('move_doc_number', '=', $boxInfo['move_doc_number'])
-				->update(array(
-					'pl_status'	=> Config::get('picking_statuses.closed'),
-					'updated_at' => date('Y-m-d H:i:s')));
-			DebugHelper::log(__METHOD__, $isSuccess);
-			if($isSuccess) self::createJdaTransaction($boxInfo);
-		}*/
-
 		// AuditTrail
 		$user = User::find(Auth::user()->id);
 
@@ -975,19 +945,22 @@ class PicklistController extends BaseController {
 		AuditTrail::addAuditTrail($arrParams);
 		// AuditTrail
 
-		// Add transaction for jda syncing
-		$isSuccess = JdaTransaction::insert(array(
-			'module' 		=> Config::get('transactions.module_purchase_order'),
-			'jda_action'	=> Config::get('transactions.jda_action_po_closing'),
+		// jda syncing
+		$picklistParams = array(
+			'module' 		=> Config::get('transactions.module_picklist'),
+			'jda_action'	=> Config::get('transactions.jda_action_picklist'),
 			'reference'		=> $docNo
-		));
+		);
+		//create jda transaction for picklist closing
+		$isSuccess = JdaTransaction::insert($picklistParams);
+		Log::info(__METHOD__ .' dump: '.print_r($docNo,true));
 
-		// run daemon command: php app/cron/jda/classes/receive_po.php
-		/*if( $isSuccess )
+		// run daemon command: php app/cron/jda/classes/picklist.php
+		if( $isSuccess )
 		{
-			$daemonReceivingClosingPo = "classes/receive_po.php {$purchase_order_no}";
-			CommonHelper::execInBackground($daemonReceivingClosingPo);
-		}*/
+			$daemon = "classes/picklist.php {$docNo}";
+			CommonHelper::execInBackground($daemon);
+		}
 
 		return Redirect::to('picking/list' . $this->setURL())->with('message', Lang::get('picking.text_success_posted'));
 	}

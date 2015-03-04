@@ -471,6 +471,20 @@ class StoreReturnController extends BaseController {
 		AuditTrail::addAuditTrail($arrParams);
 		// AuditTrail
 
+		// Add transaction for jda syncing
+		$isSuccess = JdaTransaction::insert(array(
+			'module' 		=> Config::get('transactions.module_store_return'),
+			'jda_action'	=> Config::get('transactions.jda_action_sr_closing'),
+			'reference'		=> $soNo
+		));
+		Log::info(__METHOD__ .' jda transaction dump: '.print_r($isSuccess,true));
+		// run daemon command: php app/cron/jda/classes/receive_po.php
+		if( $isSuccess )
+		{
+			$daemon = "classes/store_return.php {$soNo}";
+			CommonHelper::execInBackground($daemon);
+		}
+
 		return Redirect::to('store_return' . $this->setURL())->with('message', Lang::get('store_return.text_success_posted'));
 	}
 

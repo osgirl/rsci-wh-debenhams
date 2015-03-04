@@ -10,6 +10,7 @@ return array(
 	'module_palletize_box' => 'Palletize Box',
 	'module_loading' => 'Loading',
 	'module_shipping' => 'Shipping',
+	'module_store_return' => 'Store Return',
 
 	'jda_action_po_receiving' => 'Receiving',
 	'jda_action_po_closing' => 'Closing',
@@ -20,6 +21,7 @@ return array(
 	'jda_action_load' => 'Creation',
 	'jda_action_palletize_box' => 'Assigning',
 	'jda_action_loading' => 'Assigning',
-	'jda_action_shipping' => 'Shipping'
-	
+	'jda_action_shipping' => 'Shipping',
+	'jda_action_sr_closing' => 'Returning'
+
 );
