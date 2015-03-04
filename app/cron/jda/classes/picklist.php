@@ -3,12 +3,12 @@
 include_once(__DIR__.'/../core/jda5250_helper.php');
 include_once(__DIR__.'/../sql/mysql.php');
 
-class picklist extends jdaCustomClass 
-{	
+class picklist extends jdaCustomClass
+{
 	private static $formMsg = "";
 
 	public static $user = 'SYS';
-	public static $warehouseNo = "9005 ";
+	public static $warehouseNo = "7000 ";
 	/*
 
 13
@@ -49,7 +49,7 @@ F1
 	private static function enterPickingMenu()
 	{
 		parent::$jda->screenWait("Picking Menu");
-		parent::display(parent::$jda->screen,132);	
+		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("19",22,44)),ENTER,true);
 		echo "Entered: Picking Menu \n";
 	}
@@ -57,13 +57,14 @@ F1
 	private static function enterApprovePicksIntoCartons()
 	{
 		parent::$jda->screenWait("Approve Picks into Cartons");
-		parent::display(parent::$jda->screen,132);	
+		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("23",22,44)),ENTER,true);
 		echo "Entered: Approve Picks into Cartons \n";
 	}
 
 	public function enterForm($data)
 	{
+		print_r($data);
 		parent::$jda->screenWait("Warehouse..");
 		parent::display(parent::$jda->screen,132);
 
@@ -83,7 +84,7 @@ F1
 		$formValues[] = array($carton_code, 13, 25);// enter carton id
 		$formValues[] = array(self::$user, 15, 25);// enter warehouse clerk
 		parent::$jda->write5250($formValues,F6,true);
-		
+
 		#special case when the completed date is less than todays date
 		if(parent::$jda->screenCheck('The completion time cannot be before the assign time')) {
 			parent::logError("The completion time cannot be before the assign time", __METHOD__);
@@ -91,6 +92,8 @@ F1
 			$formValues[] = array(sprintf("%8s", $date_now), 16, 25);// enter date completed
 			parent::$jda->write5250($formValues,F6,true);
 		}
+
+		parent::display(parent::$jda->screen,132);
 		return self::checkResponse($data,__METHOD__);
 	}
 
@@ -144,7 +147,7 @@ F1
 			self::updateSyncStatus($data['document_number'],"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
-		
+
 		if(parent::$jda->screenCheck('The store requested is not assigned to the move selected')) {
             $receiver_message="The store requested is not assigned to the move selected";
 			self::$formMsg = "{$data['document_number']}: {$receiver_message}";
@@ -180,28 +183,28 @@ F1
 			return false;
 		}
 
-		
-		
+
+
 		#success
 		if(parent::$jda->screenCheck("Document {$data['document_number']} accepted for store {$data['store_number']}")) {
 			self::$formMsg = "Document {$data['document_number']} accepted for store {$data['store_number']}";
 			self::updateSyncStatus($data['document_number']);
 			// parent::pressF1();
 		}
-		
+
 		echo self::$formMsg;
 
 		return true;
 	}
 
-	public function enterUpdateDetail() 
+	public function enterUpdateDetail()
 	{
 		parent::$jda->screenWait("Carton ID");
-		parent::display(parent::$jda->screen,132);	
+		parent::display(parent::$jda->screen,132);
 		echo "Entered: Update Detail \n";
 	}
 
-	public function enterFormDetails($data) 
+	/*public function enterFormDetailsOrig($data)
 	{
 		$qtyMoved 	= self::getQtyMoved($data['move_doc_number']);
 		parent::$jda->screenWait("SZ000001");
@@ -217,9 +220,68 @@ F1
 			$formValues[] = array(sprintf("%10d", $qtyMoved[$i]),$new_col,$row); //enter moved_qty
 		}
 		print_r($formValues);
-		parent::display(parent::$jda->screen,132);	
+		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250($formValues,F7,true);
 		echo "Entered: Approve Picks Into Cartons Details \n";
+
+		return self::checkResponse($data,__METHOD__);
+	}*/
+
+	public function enterFormDetails($data)
+	{
+		echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \n";
+		$qtyMoved 	= self::getQtyMoved($data['move_doc_number']);
+		parent::$jda->screenWait("SZ000001");
+
+		$column 	= 9;
+		$row 		= 37;
+		$limit      = 11;
+		$total      = count($qtyMoved);
+		$offset     = 0;
+		$count      = ceil($total / $limit);
+		// $formValues = array();
+		//coordinates start on 37/9
+		/*for ($i=0; $i < count($qtyMoved); $i++) {
+			$new_col = ($i + $column);
+			echo "\n value of new_col is: {$new_col} \n";
+			echo "value of quantity moved is: {$qtyMoved[$i]} \n";
+			$formValues[] = array(sprintf("%10d", $qtyMoved[$i]),$new_col,$row); //enter moved_qty
+		}*/
+		echo "\n Offset: {$offset} \n";
+		echo "\n count: {$count} \n";
+		while($offset < $count) {
+			echo "\n Count: {$count} \n";
+			$new = $offset;
+
+			if ($new !== 0) {
+				$new = $new * $limit;
+
+				if (parent::$jda->screenWait("Warehouse..")) {
+					parent::$jda->write5250(null,F6,true);
+				}
+
+				for($i=0; $i < $offset; $i++)
+				{
+					echo "\nCounter of i is: {$offset} \n";
+					echo "\nEntered ROLLUP: Page: {$offset} with offset of: {$new} and row {$row} \n";
+					parent::$jda->write5250(null,ROLLUP,true);
+					parent::display(parent::$jda->screen,132);
+				}
+			}
+			$page = array_slice( $qtyMoved, $new, $limit );
+			$formValues = array();
+			foreach ($page as $key => $value) {
+				$new_column = $key + $column;
+				echo "\n value of new_col is: {$new_column} \n";
+				echo "value of qtyMoved is: {$value} \n";
+				$formValues[] = array(sprintf("%10d", $value),$new_column,$row); //enter qty_delivered
+
+			}
+			parent::display(parent::$jda->screen,132);
+			parent::$jda->write5250($formValues,F7,true);
+			$offset++;
+		}
+		echo "Entered: Approve Picks Into Cartons Details xxxxxxxxxxxxxxxxxxxxxxx\n";
 
 		return self::checkResponse($data,__METHOD__);
 	}
@@ -227,7 +289,7 @@ F1
 	/**
 	 * Per sequence no entry
 	 */
-	public function enterFormDetailsPerSequence($data) 
+	public function enterFormDetailsPerSequence($data)
 	{
 		$qtyMoved 	= $data['moved_qty'];
 		$formValues = array();
@@ -236,17 +298,17 @@ F1
 
 		$formValues[] = array(sprintf("%10d", $qtyMoved),9, 37); //enter moved_qty
 		print_r($formValues);
-		parent::display(parent::$jda->screen,132);	
+		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250($formValues,F7,true);
 		echo "Entered: Approve Picks Into Cartons Details \n";
 
 		return self::checkResponse($data,__METHOD__);
 	}
 
-	public function save($data) 
+	public function save($data)
 	{
 		parent::$jda->screenWait("CENTRAL WAREHOUSE");
-		parent::display(parent::$jda->screen,132);	
+		parent::display(parent::$jda->screen,132);
 		// parent::$jda->write5250(NULL,F7,true); // backup
 		parent::$jda->write5250(NULL,F10,true); // TO CHECK
 		echo "Entered: Update Detail Again \n";
@@ -257,7 +319,7 @@ F1
 	/*
 	* Get document number of picklist
 	*/
-	/*public function getPickNumber() 
+	/*public function getPickNumber()
 	{
 		$db = new pdoConnection();
 
@@ -265,8 +327,8 @@ F1
 		$sql = "SELECT DISTINCT pl.move_doc_number, b.store_code, MIN(bd.box_code) box_code
 					FROM wms_box_details bd
 					INNER JOIN wms_box b ON b.box_code = bd.box_code
-					INNER JOIN wms_picklist_details pd ON bd.picklist_detail_id = pd.id 
-                    INNER JOIN wms_picklist pl ON pl.move_doc_number = pd.move_doc_number 
+					INNER JOIN wms_picklist_details pd ON bd.picklist_detail_id = pd.id
+                    INNER JOIN wms_picklist pl ON pl.move_doc_number = pd.move_doc_number
 					WHERE bd.sync_status = 0 AND pl_status = 2
 					GROUP BY pl.move_doc_number
 					ORDER BY pl.move_doc_number, sequence_no ASC";
@@ -286,20 +348,20 @@ F1
 	/*
 	* Get quantity moved per letdown document number
 	*/
-	private static function getQtyMoved($docNo) 
+	private static function getQtyMoved($docNo)
 	{
 		$db = new pdoConnection();
 
 		echo "\n Getting quantity delivered from db \n";
-		/*$sql = "SELECT bd.id, pl.move_doc_number, b.store_code, picklist_detail_id, MIN(bd.box_code) box_code, sequence_no, pd.moved_qty 
+		/*$sql = "SELECT bd.id, pl.move_doc_number, b.store_code, picklist_detail_id, MIN(bd.box_code) box_code, sequence_no, pd.moved_qty
 					FROM wms_box_details bd
 					INNER JOIN wms_box b ON b.box_code = bd.box_code
-					INNER JOIN wms_picklist_details pd ON bd.picklist_detail_id = pd.id 
-                    INNER JOIN wms_picklist pl ON pl.move_doc_number = pd.move_doc_number 
+					INNER JOIN wms_picklist_details pd ON bd.picklist_detail_id = pd.id
+                    INNER JOIN wms_picklist pl ON pl.move_doc_number = pd.move_doc_number
 					WHERE bd.sync_status = 0 AND pl_status = 2 AND pl.move_doc_number = {$docNo}
 					GROUP BY picklist_detail_id
 					ORDER BY pl.move_doc_number, sequence_no ASC";*/
-		$sql = "SELECT moved_qty FROM wms_picklist_details WHERE move_doc_number = {$docNo} 
+		$sql = "SELECT moved_qty FROM wms_picklist_details WHERE move_doc_number = {$docNo}
 				ORDER BY sequence_no ASC";
 		$query 	= $db->query($sql);
 
@@ -316,7 +378,7 @@ F1
 	/*
 	* Update ewms box_details sync_status
 	*/
-	/*private static function updateSyncStatus($data, $isError = FALSE) 
+	/*private static function updateSyncStatus($data, $isError = FALSE)
 	{
 		$db = new pdoConnection();
 		$date_today = date('Y-m-d H:i:s');
@@ -344,7 +406,7 @@ F1
 		$status = ($isError) ? parent::$errorFlag : parent::$successFlag;
 
 		echo "\n Getting receiver no from db \n";
-		$sql 	= "UPDATE wms_transactions_to_jda 
+		$sql 	= "UPDATE wms_transactions_to_jda
 					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}', error_message = '{$error_message}'
 					WHERE sync_status = 0 AND module = 'Picklist' AND jda_action='Closing' AND reference = {$reference}";
 		$query 	= $db->exec($sql);
@@ -356,7 +418,7 @@ F1
 	* On done only via android
 	*/
 	public function enterUpToApprovePicksIntoCartons()
-	{	
+	{
 		try {
 			$title = "Picklist \n";
 			echo $title;
@@ -365,19 +427,19 @@ F1
 			parent::enterDistributionManagement();
 			self::enterPickingMenu();
 			self::enterApprovePicksIntoCartons();
-			
-			
+
+
 		} catch (Exception $e) {
 			//send fail status
 			echo 'Error: '. $e->getMessage();
 		}
-		
+
 	}
 
 	public function logout($params = array())
-	{	
+	{
 		parent::logout();
-		self::syncBoxHeader($params);
+		// self::syncBoxHeader($params);
 	}
 
 	private static function syncBoxHeader($params)
@@ -402,18 +464,20 @@ $execParams['loadNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
 
 if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
 $document_nos = $db->getJdaTransactionPicklist($jdaParams);
-if(! empty($document_nos) ) 
+if(! empty($document_nos) )
 {
 	$getPicklist = $db->getPicklistInfo($document_nos);
+
+	print_r($getPicklist);
 	$picklist = new picklist();
 	$picklist->enterUpToApprovePicksIntoCartons();
-	
+
 	$params = array();
-	foreach($getPicklist as $detail) 
+	foreach($getPicklist as $detail)
 	{
 		$params = array(
-					'document_number' => $detail['move_doc_number'], 
-					'store_number'=> $detail['store_code'], 
+					'document_number' => $detail['move_doc_number'],
+					'store_number'=> $detail['store_code'],
 					'carton_code'=> $detail['box_code']
 				);
 		$validate = $picklist->enterForm($params);
@@ -421,7 +485,7 @@ if(! empty($document_nos) )
 		{
 			$picklist->enterUpdateDetail();
 			$validateDetail = $picklist->enterFormDetails($detail);
-			if($validateDetail) 
+			if($validateDetail)
 			{
 				$picklist->save($params);
 			}
@@ -429,11 +493,11 @@ if(! empty($document_nos) )
 	}
 	$picklist->logout($execParams);
 }
-else 
+else
 {
-	echo " \n No rows found!. Proceed to Box Header Creation\n";
+	/*echo " \n No rows found!. Proceed to Box Header Creation\n";
 	$formattedString = "{$execParams['loadNo']}";
-	$db->daemon('palletizing_step1', $formattedString);
+	$db->daemon('palletizing_step1', $formattedString);*/
 }
 
 $db->close(); //close db connection

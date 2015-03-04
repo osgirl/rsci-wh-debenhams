@@ -257,7 +257,7 @@ class pdoConnection
 					FROM wms_box_details bd
 					INNER JOIN wms_picklist_details pd ON bd.picklist_detail_id = pd.id
                     INNER JOIN wms_picklist pl ON pl.move_doc_number = pd.move_doc_number
-					WHERE pl_status = 2 AND pl.move_doc_number IN ({$docNo})
+					WHERE pl_status = 18 AND pl.move_doc_number IN ({$docNo})
 					GROUP BY pl.move_doc_number
 					ORDER BY pl.move_doc_number, sequence_no ASC";
 					// GROUP BY picklist_detail_id
