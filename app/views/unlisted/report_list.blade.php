@@ -11,11 +11,12 @@
 </head>
 <body>
 <div class="table-responsive">
-	<div class="align-center">UNLISTED SUMMARY REPORT</div>
-	<br />
-	UIRR No. : U-7000-{{ time() }}<br />
-	Actual Delivery Date : <br />
-	Print Date : {{ date('m/d/Y') }}<br />
+			<div style="text-align: center">
+				<h1>Casual Clothing Retailers Inc.<br/>UNLISTED SUMMARY REPORT</h1>
+				UIRR No. : U-7000-{{ time() }}<br />
+				Actual Delivery Date : <br />
+				Print Date: {{ date('m/d/y h:i A')}}
+			</div>
 
 	<br /><br />
 	<table class="table table-striped table-bordered">
