@@ -258,7 +258,7 @@ class storeReturn extends jdaCustomClass
 				if(parent::$jda->screenCheck('=Msg')) {
 					for($i=0; $i < $offset; $i++)
 					{
-						print_r($top_sku);
+						$top_sku=$transfer_nos[$new]['sku'];
 						echo "\nCounter of i is: {$offset} \n";
 						echo "\nEntered ROLLUP: Page: {$offset} with offset of: {$new} and row {$row} \n";
 						while($tries3++ < 5 && !parent::$jda->screenCheck("{$top_sku}")){
@@ -268,8 +268,11 @@ class storeReturn extends jdaCustomClass
 						$tries3=0;
 						parent::display(parent::$jda->screen,132);					
 					}
-						parent::$jda->write5250($formValues,F10,true);
-						parent::$jda->write5250($formValues,ENTER,true);
+						while($tries3++ < 5 && (!parent::$jda->screenCheck("Transfer Number") || !parent::$jda->screenCheck("All Recieved Quantities are ZERO."))){
+								echo "\nF10 not yet processed pressed F1 & tries: {$tries3} \n";
+								parent::$jda->write5250($formValues,F10,true);
+							}
+						$tries3=0;
 						print_r($formValues);
 						echo "\n pressed F10 after F1\n";
 						parent::display(parent::$jda->screen,132);
@@ -311,15 +314,26 @@ class storeReturn extends jdaCustomClass
 				if(parent::$jda->screenCheck('=Msg')) {
 					for($i=0; $i < $offset; $i++)
 					{
+						$top_sku=$transfer_nos[$new]['sku'];
 						echo "\nCounter of i is: {$offset} \n";
 						echo "\nEntered ROLLUP: Page: {$offset} with offset of: {$new} and row {$row} \n";
-						parent::$jda->write5250(null,ROLLUP,true);
+						while($tries3++ < 5 && !parent::$jda->screenCheck("{$top_sku}")){
+							echo "\nROLLUP not yet processed pressed F1 & tries: {$tries3} \n";
+							parent::$jda->write5250(null,ROLLUP,true);
+						}
 						parent::display(parent::$jda->screen,132);
 						if($offset==2)
 							die();
 					}
-					parent::$jda->write5250($formValues,F7,true);
-					parent::$jda->write5250($formValues,ENTER,true);
+					while($tries3++ < 5 && (!parent::$jda->screenCheck("Transfer Number") || !parent::$jda->screenCheck("All Recieved Quantities are ZERO."))){
+						echo "\nF7 not yet processed pressed F1 & tries: {$tries3} \n";
+						parent::$jda->write5250($formValues,F7,true);
+					}
+						while($tries3++ < 5 && parent::$jda->screenCheck("Transfer Number")){
+								echo "\nENTER not yet processed pressed F1 & tries: {$tries3} \n";
+								parent::$jda->write5250($formValues,ENTER,true);
+							}
+						$tries3=0;
 						print_r($formValues);
 						echo "\n pressed F7 after F1\n";
 						parent::display(parent::$jda->screen,132);
