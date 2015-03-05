@@ -227,7 +227,8 @@ class pdoConnection
 			$result[] =  array(
 				'transfer_no' => $value['so_no'],
 				'received_qty' => $value['received_qty'],
-				'slot_code' => $value['slot_code']);
+				'slot_code' => $value['slot_code'],
+				'sku' => $value['sku']);
 		}
 
 		return $result;
