@@ -237,7 +237,7 @@ class storeReturn extends jdaCustomClass
 			if($offset == $count-1){
 				while($tries3++ < 5 && (!parent::$jda->screenCheck("Transfer Number") || !parent::$jda->screenCheck("All Recieved Quantities are ZERO."))){
 					echo "\nF10 not yet processed pressed F10 & tries: {$tries3} \n";
-					parent::$jda->write5250($formValues,F10,true);
+					parent::$jda->write5250($formValues,F7,true);
 				}
 				$tries3=0;
 				echo "\n pressed F10 \n";
@@ -248,9 +248,15 @@ class storeReturn extends jdaCustomClass
 						parent::$jda->write5250(NULL,F1,true);
 					}
 					$tries3=0;
+					while($tries3++ < 5 && parent::$jda->screenWait("You have requested to Exit")){
+						echo "\n Found *********** WARNING *********** pressed F12 & tries: {$tries2} \n";
+						parent::$jda->set_pos(17,24);
+						parent::$jda->write5250(null,F12,true);
+					}
+					$tries3=0;
 					while($tries3++ < 5 && parent::$jda->screenCheck("Update of product receipts in progress")){
 						echo "\n waiting and pressed F10 & tries: {$tries3} \n";
-						parent::$jda->write5250($formValues,F10,true);
+						parent::$jda->write5250($formValues,F7,true);
 					}
 					$tries3=0;
 					echo "\n pressed F1 \n";
@@ -269,14 +275,15 @@ class storeReturn extends jdaCustomClass
 						}
 						$tries3=0;				
 					}
-					while($tries3++ < 5 && (!parent::$jda->screenCheck("Transfer Number") || !parent::$jda->screenCheck("All Recieved Quantities are ZERO."))){
-						echo "\nF10 not yet processed pressed nF10 & tries: {$tries3} \n";
-						parent::$jda->write5250($formValues,F10,true);
-					}
-					$tries3=0;
 					echo "\n pressed F10 after F1\n";
 					parent::display(parent::$jda->screen,132);
-				}				
+				}
+
+					while($tries3++ < 5 && (!parent::$jda->screenCheck("Transfer Number") || !parent::$jda->screenCheck("All Recieved Quantities are ZERO."))){
+						echo "\nF10 not yet processed pressed nF10 & tries: {$tries3} \n";
+						parent::$jda->write5250($formValues,F7,true);
+					}
+					$tries3=0;				
 			}
 			//other pages
 			else{
@@ -291,6 +298,12 @@ class storeReturn extends jdaCustomClass
 					while($tries3++ < 5 && parent::$jda->screenCheck("All Recieved Quantities are ZERO.")){
 						echo "\nF1 not yet processed pressed F1 & tries: {$tries3} \n";
 						parent::$jda->write5250(NULL,F1,true);
+					}
+					$tries3=0;
+					while($tries3++ < 5 && parent::$jda->screenWait("You have requested to Exit")){
+						echo "\n Found *********** WARNING *********** pressed F12 & tries: {$tries2} \n";
+						parent::$jda->set_pos(17,24);
+						parent::$jda->write5250(null,F12,true);
 					}
 					$tries3=0;
 					while($tries3++ < 5 && parent::$jda->screenCheck("Update of product receipts in progress")){
@@ -320,13 +333,14 @@ class storeReturn extends jdaCustomClass
 					}
 					$tries3=0;
 					echo "\n pressed F7 after F1\n";
+				}
+
 					parent::display(parent::$jda->screen,132);
 					while($tries3++ < 5 && !parent::$jda->screenCheck("Transfer Receipt Maintenance-SKU")){
 						echo "\nENTER not yet processed pressed ENTER & tries: {$tries3} \n";
 						parent::$jda->write5250(null,ENTER,true);
 					}	
 					$tries3=0;
-				}	
 			}			
 			$offset++;
 		}
