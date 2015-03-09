@@ -7,6 +7,7 @@ class StoreController extends BaseController {
 
 	public function __construct()
     {
+    	date_default_timezone_set('Asia/Manila');
     	$this->beforeFilter('csrf', array('on' => 'post'));
     	$this->beforeFilter('auth', array('only' => array('Dashboard')));
 

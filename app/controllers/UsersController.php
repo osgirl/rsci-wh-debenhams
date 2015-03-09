@@ -8,6 +8,7 @@ class UsersController extends BaseController {
 	protected $allowedUserRoles = array('1', '2', '5');
 
 	public function __construct() {
+    	date_default_timezone_set('Asia/Manila');
 		$this->beforeFilter('csrf', array('on' => 'post'));
 		$this->beforeFilter('auth', array('only'=> array('Dashboard')));
 		$this->apiUrl = Config::get('constant.api_url');
