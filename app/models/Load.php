@@ -131,10 +131,12 @@ public static function getPackingDetails($loadCode)
     {
         // get load date
         $rs = DB::table('load')
-                    ->select(DB::raw("date_format(created_at,'%m/%d/%y') as load_date "))
+                    ->select(DB::raw("date_format(created_at,'%m/%d/%y') as load_date "),DB::raw("date_format(updated_at,'%m/%d/%y') as ship_date"),'is_shipped')
                     ->where('load_code', '=', $loadCode)
                     ->first();
         $data['load_date'] = $rs->load_date;
+        $data['ship_date'] = $rs->ship_date;
+        $data['is_shipped'] = $rs->is_shipped;
 
         // get box codes and details based on pallet code
             $rs = DB::table('pallet_details')

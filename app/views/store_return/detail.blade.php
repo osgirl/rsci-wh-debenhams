@@ -66,7 +66,7 @@
     <!-- /widget-header -->
     <div class="widget-content">
     	<div class="table-responsive">
-			<table class="table table-striped table-bordered">
+			<table class="table table-bordered">
 				<thead>
 					<tr>
 						<th>{{ $col_id }}</th>
@@ -75,6 +75,7 @@
 						<th><a href="{{ $sort_short_name }}" class="@if( $sort_detail=='short_name' ) {{ $order_detail }} @endif">{{ $col_short_name }}</a></th>
 						<th><a href="{{ $sort_delivered_quantity }}" class="@if( $sort_detail=='delivered_quantity' ) {{ $order_detail }} @endif">{{ $col_delivered_quantity }}</a></th>
 						<th> RECEIVED QTY </th>
+						<th> VARIANCE QTY </th>
 					</tr>
 				</thead>
 				@if( !CommonHelper::arrayHasValue($store_return) )
@@ -83,13 +84,18 @@
 				</tr>
 				@else
 					@foreach( $store_return as $so )
-					<tr class="font-size-13">
+					<tr class="font-size-13"
+					@if ( $so['received_qty'] !== $so['delivered_qty'] )
+						style="background-color:#F29F9F"
+					@endif
+					>
 						<td>{{ $counter++ }}</td>
 						<td>{{ $so['sku'] }}</td>
 						<td>{{ $so['upc'] }}</td>
 						<td>{{ $so['description'] }}</td>
 						<td>{{ $so['delivered_qty'] }}</td>
 						<td>{{ $so['received_qty'] }}</td>
+						<td>{{ $so['received_qty'] - $so['delivered_qty']  }}</td>
 					</tr>
 					@endforeach
 				@endif

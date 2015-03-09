@@ -77,7 +77,10 @@ td.underline {padding-bottom: 0; }
 		@endforeach
 		@if(!in_array($boxNo, $boxarray))
 		<section class="soContainer" style="width:375px; height:225px" >
-			Box {{$counter .' of '. $totalBox }}
+			<h1>Box {{$counter .' of '. $totalBox }}</h1>
+			@if($records['is_shipped'])
+				Ship by: {{$records['ship_date']}}
+			@endif
 		<header>
 			<div class="doctitle">
 				<h1>Box No:<br/>{{$boxNo}}</h1>
@@ -92,7 +95,7 @@ td.underline {padding-bottom: 0; }
 					<th>Quantity</th>
 				</tr>
 					<tr>
-						<td>{{$items[0]->description}}</td>
+						<td>{{$items[0]->sub_dept.' - '.$items[0]->description}}</td>
 								<td> 
 								@foreach($sonoarray[$boxNo] as $so_no)
 									@if(count($sonoarray[$boxNo])>1)
@@ -102,7 +105,7 @@ td.underline {padding-bottom: 0; }
 									@endif
 								@endforeach
 								</td>
-							<td>Warehouse</td>
+							<td>7000 - Warehouse</td>
 							<td>{{ $val['store_code'] .' - ' . $val['store_name']}}</td>
 							<td align="right"> {{$boxTotal}} </td>
 					</tr>
