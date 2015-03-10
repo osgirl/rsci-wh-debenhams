@@ -10,6 +10,7 @@ class BaseController extends Controller {
 	 */
 	protected function setupLayout()
 	{
+		date_default_timezone_set('Asia/Manila');
 		if ( ! is_null($this->layout))
 		{
 			$this->data['menu_wh_receiving'] = Lang::get('general.menu_wh_receiving');
