@@ -18,6 +18,7 @@ return array(
 	"modify_po_status"	=> "Update Purchase Order Status",
 	"update_po_detail"	=> "Update Purchase Order Detail",
 	"save_not_in_po"	=> "Added sku/s that are not in purchase order",
+	"save_not_in_transfer"	=> "Added sku/s that are not in transfer",
 	"unlisted"			=> "Unlisted",
 	"save_po"			=> "Save Received PO",
 	"post_letdown"		=> 'Put away to picking zone',

@@ -229,10 +229,10 @@ class ApiBox extends BaseController {
 			$storeCode = Request::get('store');
 			$numberOfBoxes = 1;
 
-			if(strlen($storeCode) == 1) $newStoreCodeFormat = "000{$storeCode}-";
-			else if(strlen($storeCode) == 2) $newStoreCodeFormat = "00{$storeCode}-";
-			else if(strlen($storeCode) == 3) $newStoreCodeFormat = "0{$storeCode}-";
-			else if(strlen($storeCode) == 4) $newStoreCodeFormat = "{$storeCode}-";
+			if(strlen($storeCode) == 1) $newStoreCodeFormat = "000{$storeCode}";
+			else if(strlen($storeCode) == 2) $newStoreCodeFormat = "00{$storeCode}";
+			else if(strlen($storeCode) == 3) $newStoreCodeFormat = "0{$storeCode}";
+			else if(strlen($storeCode) == 4) $newStoreCodeFormat = "{$storeCode}";
 			else throw new Exception("Invalid store");
 
 			#check if a record exist in that store

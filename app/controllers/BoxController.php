@@ -582,10 +582,10 @@ class BoxController extends BaseController {
 			$storeCode = $input['store'];
 			$numberOfBoxes = (int)$input['box_range'];
 
-			if(strlen($storeCode) == 1) $newStoreCodeFormat = "000{$storeCode}-";
-			else if(strlen($storeCode) == 2) $newStoreCodeFormat = "00{$storeCode}-";
-			else if(strlen($storeCode) == 3) $newStoreCodeFormat = "0{$storeCode}-";
-			else if(strlen($storeCode) == 4) $newStoreCodeFormat = "{$storeCode}-";
+			if(strlen($storeCode) == 1) $newStoreCodeFormat = "000{$storeCode}";
+			else if(strlen($storeCode) == 2) $newStoreCodeFormat = "00{$storeCode}";
+			else if(strlen($storeCode) == 3) $newStoreCodeFormat = "0{$storeCode}";
+			else if(strlen($storeCode) == 4) $newStoreCodeFormat = "{$storeCode}";
 			else throw new Exception("Invalid store");
 
 			#check if a record exist in that store
@@ -603,7 +603,8 @@ class BoxController extends BaseController {
 				$formattedBoxCode[$number]['created_at'] = date('Y-m-d H:i:s');
 				$containerBox[] = $newStoreCodeFormat . sprintf("%05s", (int)$boxCode);
 			}
-
+			/*print_r($formattedBoxCode);
+			die();*/
 			Box::insert($formattedBoxCode);
 
 			$storeName = Store::getStoreName($storeCode);
