@@ -289,11 +289,11 @@ if(! empty($poNos) )
 		echo " \n No receiver_nos found!. \n";
 	}
 }
-/*else {
+else {
 	echo " \n No rows found!. Proceed to Closing of PO...\n";
 	$formattedString = "{$execParams['poNo']}";
 	$db->daemon('close_po', $formattedString);
-}*/
+}
 $db->close(); //close db connection
 /*
 $receivePO = new poReceiving();

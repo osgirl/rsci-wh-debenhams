@@ -560,4 +560,16 @@ class PicklistDetails extends Eloquent {
 		);
 		AuditTrail::addAuditTrail($arrParams);
 	}
+
+	public static function getPicklistLoad($docNo)
+	{
+		$query = PicklistDetails::select('load_details.load_code')
+			->where('move_doc_number', '=', $docNo)
+			->join('box_details', 'box_details.picklist_detail_id', '=', 'picklist_details.id')
+			->join('pallet_details', 'pallet_details.box_code', '=', 'box_details.box_code')
+			->join('load_details', 'load_details.pallet_code', '=', 'pallet_details.pallet_code')
+			->distinct()->get()->toArray();
+
+		return $query[0]['load_code'];
+	}
 }

@@ -3,11 +3,11 @@
 include_once(__DIR__.'/../core/jda5250_helper.php');
 include_once(__DIR__.'/../sql/mysql.php');
 
-class palletizingStep2 extends jdaCustomClass 
-{	
+class palletizingStep2 extends jdaCustomClass
+{
 	private static $formMsg = "";
 	private static $palletType = "S"; //default
-	public static $warehouseNo = "9005 ";
+	public static $warehouseNo = "7000 ";
 	public static $user = 'SYS';
 
 
@@ -21,7 +21,7 @@ Palletizing Maintaining of Cartoon Pallet
 	Enter Pallet type: S (default)
 	press ENter
 	Enter Pallet Id: PLCTNXXYY
-	press Enter 
+	press Enter
 	Enter create clerk: SYS
 	Enter from loc: 9005 (default)
 	Enter to loc: 20
@@ -39,7 +39,7 @@ Palletizing Maintaining of Cartoon Pallet
 		parent::$jda->screenWait("Pallet Header Maintenance");
 		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("06",22,44)),ENTER,true);
-		echo "Entered: Pallet Header Maintenance \n";	
+		echo "Entered: Pallet Header Maintenance \n";
 	}
 
 	private static function enterPalletType($pallet_code)
@@ -55,7 +55,7 @@ Palletizing Maintaining of Cartoon Pallet
 			$formValues[] = array(sprintf("%9s", $empty_pallet),11,40); //enter pallet id
 		}
 		parent::$jda->write5250($formValues,ENTER,true);
-		echo "Entered: Pallet Type \n";	
+		echo "Entered: Pallet Type \n";
 
 		return self::checkResponse($pallet_code,__METHOD__);
 	}
@@ -68,7 +68,7 @@ Palletizing Maintaining of Cartoon Pallet
 		$formValues = array();//values to enter to form
 		$formValues[] = array(sprintf("%9s", $pallet_code),11,40); //enter pallet id
 		parent::$jda->write5250($formValues,ENTER,true);
-		echo "Entered: Pallet I.D \n";	
+		echo "Entered: Pallet I.D \n";
 
 		return self::checkResponse($pallet_code,__METHOD__);
 	}
@@ -81,7 +81,7 @@ Palletizing Maintaining of Cartoon Pallet
 
 		parent::$jda->screenWait("Create Clerk");
 		parent::display(parent::$jda->screen,132);
-		
+
 		$formValues = array();//values to enter to form
 		$formValues[] = array(self::$user, 8, 57);// enter create clerk
 		$formValues[] = array(sprintf("%5s", self::$warehouseNo), 9, 17); //enter from location
@@ -92,7 +92,7 @@ Palletizing Maintaining of Cartoon Pallet
 		return self::checkResponse($pallet_code,__METHOD__);
 	}
 
-	public function save($pallet) 
+	public function save($pallet)
 	{
 		$pallet_code = $pallet['pallet_code'];
 		self::enterPalletType($pallet_code);
@@ -117,7 +117,7 @@ Palletizing Maintaining of Cartoon Pallet
 			parent::logError(self::$formMsg, __METHOD__);
 			return false;
 		}
-		
+
 		if(parent::$jda->screenCheck('The clerk entered is not valid for the from location')) {
             $receiver_message="The clerk entered is not valid for the from location";
 			self::$formMsg = "{self::$user}: {$receiver_message}";
@@ -127,7 +127,7 @@ Palletizing Maintaining of Cartoon Pallet
 			parent::enterWarning();
 			return false;
 		}
-		
+
 		#success
 		if(parent::$jda->screenCheck('Record added to system')) {
 			self::$formMsg = "{$pallet_code}: Record added to system";
@@ -139,7 +139,7 @@ Palletizing Maintaining of Cartoon Pallet
 			self::$formMsg = "{$pallet_code}: The selected record has been updated";
 			self::updateSyncStatus($pallet_code);
 		}
-		
+
 		echo self::$formMsg;
 
 		return true;
@@ -148,12 +148,12 @@ Palletizing Maintaining of Cartoon Pallet
 	/*
 	* Get all open pallets
 	*/
-	/*public function getPallets() 
+	/*public function getPallets()
 	{
 		$db = new pdoConnection();
 
 		echo "\n Getting box codes from db \n";
-		$sql = "SELECT p.pallet_code, p.store_code 
+		$sql = "SELECT p.pallet_code, p.store_code
 				FROM wms_pallet p
 				RIGHT JOIN wms_pallet_details pd ON p.pallet_code = pd.pallet_code
 				RIGHT JOIN wms_box_details bd ON pd.box_code = bd.box_code AND bd.sync_status = 1
@@ -176,7 +176,7 @@ Palletizing Maintaining of Cartoon Pallet
 	/*
 	* Update ewms trasaction_to_jda sync_status
 	*/
-	/*private static function updateSyncStatus($pallet_code, $isError = FALSE) 
+	/*private static function updateSyncStatus($pallet_code, $isError = FALSE)
 	{
 		$db = new pdoConnection();
 		$date_today = date('Y-m-d H:i:s');
@@ -202,7 +202,7 @@ Palletizing Maintaining of Cartoon Pallet
 		$status = ($isError) ? parent::$errorFlag : parent::$successFlag;
 
 		echo "\n Getting receiver no from db \n";
-		$sql 	= "UPDATE wms_transactions_to_jda 
+		$sql 	= "UPDATE wms_transactions_to_jda
 					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}', error_message = '{$error_message}'
 					WHERE sync_status = 0 AND module = 'Pallet Header' AND jda_action='Creation' AND reference = '{$reference}'";
 		$query 	= $db->exec($sql);
@@ -214,7 +214,7 @@ Palletizing Maintaining of Cartoon Pallet
 	* On done only via android
 	*/
 	public function enterUpToPalletHeaderMaintenance()
-	{	
+	{
 		//TODO::checkvalues
 		//TODO::how to know if error
 		try {
@@ -226,12 +226,12 @@ Palletizing Maintaining of Cartoon Pallet
 			parent::enterWarehouseMaintenance();
 			parent::enterCartonPalletLoadMaintenance();
 			self::enterPalletHeaderMaintenance();
-			
+
 		} catch (Exception $e) {
 			//send fail status
 			echo 'Error: '. $e->getMessage();
 		}
-		
+
 	}
 
 	private static function syncLoadHeader($params)
@@ -245,11 +245,11 @@ Palletizing Maintaining of Cartoon Pallet
 	}
 
 	public function logout($params = array())
-	{	
+	{
 		parent::logout();
 		self::syncLoadHeader($params);
 	}
-	
+
 }
 
 $db = new pdoConnection(); //open db connection
@@ -265,12 +265,12 @@ if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
 
 $getPallets = $db->getJdaTransactionPallet($jdaParams);
 print_r($getPallets);
-if(! empty($getPallets) ) 
+if(! empty($getPallets) )
 {
 	$palletsInfo = $db->getPalletsInfo($getPallets);
 	$palletizing = new palletizingStep2();
 	$palletizing->enterUpToPalletHeaderMaintenance();
-	
+
 	foreach($palletsInfo as $pallet) {
 		$palletizing->save($pallet);
 	}

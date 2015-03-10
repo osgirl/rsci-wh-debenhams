@@ -1,4 +1,0 @@
-vendor,receiver_no,po_no,destination,carton_id,total_qty,back_order,shipment_reference_no,po_status
-811,3310,3722,7000,4567891011120,70,0,BH-GAP12345,3
-813,3311,3723,7000,7980504948859500,225,0,BH-21245458454,3
-811,3314,3726,7000,457869200,10,1,BH-POBOTEST1,3

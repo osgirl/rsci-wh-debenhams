@@ -174,11 +174,14 @@ GROUP BY box.box_code
 					WHERE bd.sync_status = 0 AND pl_status = 2
 					GROUP BY pl.move_doc_number
 					ORDER BY pl.move_doc_number, sequence_no ASC*/
+
+		$arrParams = array('data_code' => 'PICKLIST_STATUS_TYPE', 'data_value'=> 'done');
+		$status = Dataset::getType($arrParams)->toArray();
 		$query = BoxDetails::select(DB::raw('DISTINCT wms_picklist.move_doc_number, wms_box.store_code, MIN(wms_box_details.box_code) box_code'))
 			->join('box', 'box.box_code', '=', 'box_details.box_code')
 			->join('picklist_details', 'box_details.picklist_detail_id', '=', 'picklist_details.id')
 			->join('picklist', 'picklist.move_doc_number', '=', 'picklist_details.move_doc_number')
-			->where('pl_status', '=', '2')
+			->where('pl_status', '=', $status['id'])
 			->where('picklist.move_doc_number', '=', $docNo)
 			->groupBy('picklist.move_doc_number')
 			->orderBy('picklist.move_doc_number', 'sequence_no')

@@ -466,7 +466,7 @@ user: STRATPGMR pass: PASSWORD
 				echo "Entered: counter: {$key}  \n";
 
 				$tries4 = 0;
-				while($tries4++ < 5 && parent::$jda->screenCheck("Sku not on order")){
+				while($tries4++ < 5 && parent::$jda->screenWait("Sku not on order")){
 					echo "\n Found Sku not in order: {$tries4} \n";
 					parent::$jda->write5250(null,F9,true);
 				}
@@ -490,7 +490,7 @@ user: STRATPGMR pass: PASSWORD
         parent::pressF1();
         //close dialog box
 		$tries = 0;
-		while($tries++ < 5 && parent::$jda->screenCheck("Receiving Data Entry")){
+		while($tries++ < 5 && parent::$jda->screenWait("Receiving Data Entry")){
 			echo "\n Found Receiving Data Entry pressed F1 & tries: {$tries} \n";
 			parent::$jda->set_pos(18,28);
 			parent::$jda->write5250(null,F1,true);
@@ -639,8 +639,6 @@ if($argv[1]) $params['reference'] = $execParams['poNo'];
 
 $poNos = $db->getJdaTransaction($params);
 
-// $receiver_nos = $closePO->getReceiverNo();
-// print_r($poNos);
 if(! empty($poNos) )
 {
 	$receiver_nos = $db->getReceiverNo($poNos);
