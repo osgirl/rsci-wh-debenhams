@@ -9,16 +9,23 @@ class StoreReturnDetail extends Eloquent {
 
 
 	public static function getSODetails($so_no,$data = array()){
+		// print_r($data); die();
 		$query =  StoreReturnDetail::join('product_lists', 'store_return_detail.sku', '=', 'product_lists.upc')
 					->join('store_return', 'store_return.so_no', '=', 'store_return_detail.so_no', 'LEFT')
 					// ->join('dataset', 'store_return.so_status', '=', 'dataset.id');
 					->where('store_return_detail.so_no', '=', $so_no);
+
+		if( CommonHelper::hasValue($data['filter_so_no']) ) $query->where('store_return.so_no', 'LIKE', '%'.$data['filter_so_no'].'%');
+		if( CommonHelper::hasValue($data['filter_store']) ) $query->where('store_code', 'LIKE', '%'.$data['filter_store'].'%');
+		if( CommonHelper::hasValue($data['filter_created_at']) ) $query->where('store_return.created_at', 'LIKE', '%'.$data['filter_created_at'].'%');
+		if( CommonHelper::hasValue($data['filter_status']) ) $query->where('so_status', 'LIKE', '%'.$data['filter_status'].'%');
 
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if ($data['sort']=='sku') $data['sort'] = 'product_lists.upc';
 			if ($data['sort']=='short_name') $data['sort'] = 'product_lists.short_description';
 			if ($data['sort']=='ordered_quantity') $data['sort'] = 'store_return_detail.ordered_qty';
 			if ($data['sort']=='delivered_quantity') $data['sort'] = 'store_return_detail.delivered_qty';
+			if ($data['sort']=='so_no') $data['sort'] = 'store_return.so_no';
 
 			$query->orderBy($data['sort'], $data['order']);
 		}
@@ -27,7 +34,7 @@ class StoreReturnDetail extends Eloquent {
 			$query->skip($data['limit'] * ($data['page'] - 1))
 		          ->take($data['limit']);
 		}
-
+		// DebugHelper::log(__METHOD__, $result);
 		$result = $query->get();
 
 		return $result;

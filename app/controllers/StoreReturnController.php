@@ -111,7 +111,7 @@ class StoreReturnController extends BaseController {
 
 		// URL
 		$this->data['url_export']         = URL::to('store_return/export_detail');
-		$this->data['url_back']           = URL::to('store_return' . $this->setURL());
+		$this->data['url_back']           = URL::to('store_return' . $this->setURL(false, true));
 		$this->data['url_assign']         = URL::to('store_return/assign');
 
 		// Message
@@ -146,26 +146,33 @@ class StoreReturnController extends BaseController {
 		$filter_created_at = Input::get('filter_created_at', NULL);
 		$filter_status = Input::get('filter_status', NULL);
 
-		$sort = Input::get('sort', 'so_no');
-		$order = Input::get('order', 'ASC');
-		$page = Input::get('page', 1);
+		//for back
+		$sort_back  = Input::get('sort_back', 'so_no');
+		$order_back = Input::get('order_back', 'ASC');
+		$page_back  = Input::get('page_back', 1);
 
 		// Details
-		$sort_detail = Input::get('sort_detail', 'sku');
-		$order_detail = Input::get('order_detail', 'ASC');
-		$page_detail = Input::get('page_detail', 1);
+		$sort_detail  = Input::get('sort', 'sku');
+		$order_detail = Input::get('order', 'ASC');
+		$page_detail  = Input::get('page', 1);
 
 		//Data
 		$so_id = Input::get('id', NULL);
 		$so_no = Input::get('so_no', NULL);
 
 		$this->data['so_info'] = StoreReturn::getSOInfo($so_id);
-// echo '<pre>';		print_r($this->data['so_info']); die();
+
 		$arrParams = array(
-						'sort'		=> $sort_detail,
-						'order'		=> $order_detail,
-						'page'		=> $page_detail,
-						'limit'		=> 30
+						'id'             => $so_id,
+						'sort'              => $sort_detail,
+						'order'             => $order_detail,
+						'page'              => $page_detail,
+						'so_no'             => $so_no,
+						'filter_so_no'      => $filter_so_no,
+						'filter_store'      => $filter_store,
+						'filter_created_at' => $filter_created_at,
+						'filter_status'     => $filter_status,
+						'limit'             => 30
 					);
 
 
@@ -173,8 +180,17 @@ class StoreReturnController extends BaseController {
 		$results_total 	= StoreReturnDetail::getCountSODetails($so_no, $arrParams);
 		// Pagination
 		$this->data['arrFilters'] = array(
-									'sort'		=> $sort_detail,
-									'order'		=> $order_detail
+									'id'             => $so_id,
+									'sort_back'         => $sort_back,
+									'order_back'        => $order_back,
+									'page_back'         => $page_back,
+									'sort'              => $sort_detail,
+									'order'             => $order_detail,
+									'so_no'             => $so_no,
+									'filter_so_no'      => $filter_so_no,
+									'filter_store'      => $filter_store,
+									'filter_created_at' => $filter_created_at,
+									'filter_status'     => $filter_status
 								);
 
 		$this->data['store_return'] = Paginator::make($results, $results_total, 30);
@@ -188,19 +204,22 @@ class StoreReturnController extends BaseController {
 		$this->data['filter_created_at'] = $filter_created_at;
 		$this->data['filter_status'] = $filter_status;
 
-		$this->data['sort'] = $sort;
-		$this->data['order'] = $order;
-		$this->data['page'] = $page;
+		$this->data['sort'] = $sort_detail;
+		$this->data['order'] = $order_detail;
+		$this->data['page'] = $page_detail;
 
 		// Details
 		$this->data['sort_detail'] = $sort_detail;
 		$this->data['order_detail'] = $order_detail;
-		$this->data['page_detail'] = $page_detail;
+		// $this->data['page_detail'] = $page_detail;
+		$this->data['sort_back']             = $sort_back;
+		$this->data['order_back']            = $order_back;
+		$this->data['page_back']             = $page_back;
 
 		$url = '?filter_so_no=' . $filter_so_no . '&filter_store=' . $filter_store;
 		// $url .= '&filter_delivered_date=' . $filter_delivered_date;
 		$url .= '&filter_status=' . $filter_status;
-		$url .= '&sort=' . $sort . '&order=' . $order . '&page=' . $page;
+		$url .= '&sort=' . $sort_back . '&order=' . $order_back . '&page=' . $page_back;
 		$url .= '&page_detail=' . $page_detail . '&id=' . $so_id . '&so_no=' . $so_no;
 
 
@@ -327,7 +346,32 @@ class StoreReturnController extends BaseController {
 		$this->layout->content = View::make('store_return.list', $this->data);
 	}
 
-	protected function setURL() {
+	protected function setURL($forDetail = false, $forBackToList = false) {
+		// Search Filters
+		// http://local.ccri.com/picking/list?filter_doc_no=&filter_status=&filter_store=26&sort=doc_no&order=ASC
+		$url = '?filter_so_no=' . Input::get('filter_so_no', NULL);
+		$url .= '&filter_store=' . Input::get('filter_store', NULL);
+		$url .= '&filter_created_at=' . Input::get('filter_created_at', NULL);
+		$url .= '&filter_status=' . Input::get('filter_status', NULL);
+		if($forDetail) {
+			$url .= '&sort_back=' . Input::get('sort', 'so_no');
+			$url .= '&order_back=' . Input::get('order', 'ASC');
+			$url .= '&page_back=' . Input::get('page', 1);
+		} else {
+			if($forBackToList == true) {
+				$url .= '&sort=' . Input::get('sort_back', 'so_no');
+				$url .= '&order=' . Input::get('order_back', 'ASC');
+				$url .= '&page=' . Input::get('page_back', 1);
+			} else {
+				$url .= '&sort=' . Input::get('sort', 'so_no');
+				$url .= '&order=' . Input::get('order', 'ASC');
+				$url .= '&page=' . Input::get('page', 1);
+			}
+		}
+		return $url;
+	}
+
+	/*protected function setURL() {
 		// Search Filters
 		$url = '?filter_so_no=' . Input::get('filter_so_no', NULL);
 		$url .= '&filter_store=' . Input::get('filter_store', NULL);
@@ -338,7 +382,7 @@ class StoreReturnController extends BaseController {
 		$url .= '&page=' . Input::get('page', 1);
 
 		return $url;
-	}
+	}*/
 
 	public function assignPilerForm() {
 		if (Session::has('permissions')) {
