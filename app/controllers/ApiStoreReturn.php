@@ -170,6 +170,59 @@ class ApiStoreReturn extends BaseController {
 		}
 	}
 
+	/**
+	 * Items in master file but not in transfer will be inserted to store return
+	 * @param  int		 $soNo 	store order number
+	 * @return boolean
+	 */
+	public function notInTransfer($soNo) {
+		try {
+			DB::beginTransaction();
+			CommonHelper::setRequiredFields(array('data'));
+			if(! CommonHelper::hasValue($soNo) ) throw new Exception( 'Missing store order number parameter.');
+
+			$data = json_decode(Request::get('data'), true);
+
+			foreach ($data as $value) {
+				$detail = StoreReturnDetail::firstOrNew(array('sku'=>$value['upc'], 'so_no'=>$soNo));
+				$detail->sku          = $value['upc'];
+				$detail->so_no        = $soNo;
+				$detail->received_qty = $value['received_qty']; //($detail->exists) ? ($detail->quantity_delivered) :
+				$detail->updated_at   = date('Y-m-d H:i:s');
+				$detail->save();
+			}
+
+			DebugHelper::log(__METHOD__, $detail);
+
+
+			//Audit trail
+			$user_id              = Authorizer::getResourceOwnerId();
+			$arr                  = array_map(function($el){ return $el['upc']; }, $data);
+			$comma_separated_skus = implode(',', $arr);
+			$data_after           = 'Store Return No #' . $soNo . ' skus ' .$comma_separated_skus. ' with quantity 1 has been added by Stock Piler #' . $user_id  . '.';
+
+			$arrParams = array(
+				'module'		=> Config::get("audit_trail_modules.store_return"),
+				'action'		=> Config::get("audit_trail.save_not_in_transfer"),
+				'reference'		=> 'Store Return Order #' . $soNo,
+				'data_before'	=> '',
+				'data_after'	=> $data_after,
+				'user_id'		=> $user_id,
+				'created_at'	=> date('Y-m-d H:i:s'),
+				'updated_at'	=> date('Y-m-d H:i:s')
+			);
+			AuditTrail::addAuditTrail($arrParams);
+
+			DB::commit();
+			return CommonHelper::return_success();
+
+		}catch(Exception $e) {
+			Log::error(__METHOD__ .' Something went wrong: '.print_r($e->getMessage(),true));
+			DB::rollback();
+			return CommonHelper::return_fail($e->getMessage());
+		}
+	}
+
 
 }
 

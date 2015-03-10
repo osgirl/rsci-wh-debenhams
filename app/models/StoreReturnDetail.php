@@ -3,6 +3,7 @@
 class StoreReturnDetail extends Eloquent {
 
 	protected $table = 'store_return_detail';
+	protected $fillable = array('sku', 'so_no');
 
 	/********************Methods for CMS only**************************/
 
