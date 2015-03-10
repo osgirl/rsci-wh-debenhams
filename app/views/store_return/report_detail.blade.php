@@ -23,6 +23,7 @@
 				<th>{{ $col_short_name }}</th>
 				<th>{{ $col_delivered_quantity }}</th>
 				<th> RECEIVED QTY </th>
+				<th> VARIANCE QTY </th>
 			</tr>
 		</thead>
 		@if( !CommonHelper::arrayHasValue($results) )
@@ -37,6 +38,7 @@
 				<td>{{ $so['description'] }}</td>
 				<td>{{ $so['delivered_qty'] }}</td>
 				<td>{{ $so['received_qty'] }}</td>
+				<td>{{ $so['received_qty'] - $so['delivered_qty']  }}</td>
 			</tr>
 			@endforeach
 		@endif
