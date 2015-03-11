@@ -1,8 +1,7 @@
-#!/usr/local/bin/php -q
 <?php
 
 chdir(dirname(__FILE__));
-include_once('ewms_cron_class.php');
+include_once(__DIR__.'/../ewms_cron_class.php');
 include_once('db2_cron_class.php');
 
 $ewms 		= new cronEWMS();

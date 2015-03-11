@@ -192,7 +192,7 @@ class PurchaseOrderController extends BaseController {
 			return Redirect::to('purchase_order/detail' . $url)->with('message', Lang::get('purchase_order.text_success_close_po'));
 		} else {
 
-			return Redirect::to('purchase_order')->with('message', Lang::get('purchase_order.text_success_close_po'));
+			return Redirect::to('purchase_order'. $this->setURL())->with('message', Lang::get('purchase_order.text_success_close_po'));
 		}
 	}
 
@@ -679,7 +679,7 @@ class PurchaseOrderController extends BaseController {
 		$filter_division       = Input::get('filter_division', NULL);
 		$filter_shipment_reference_no = Input::get('filter_shipment_reference_no', NULL);
 
-		$sort               = Input::get('sort', 'purchase_order_lists.created_at');
+		$sort               = Input::get('sort', 'purchase_order_lists.purchase_order_no');
 		$order              = Input::get('order', 'DESC');
 		$page               = Input::get('page', 1);
 
