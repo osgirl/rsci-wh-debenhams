@@ -2,9 +2,11 @@
 
 return array(
 	'heading_title' 				=> 'Items with Expiry',
-	'heading_title_po_contents'	=> 'PO Contents',
+	'heading_title_po_contents'	=> 'Items with Expiry',
 	'label_purchase_no'			=> 'PO No.:',
 	'label_shipment_reference_no' => 'Shipment Reference No.',
+	'label_date_from' => 'Date From: ',
+	'label_date_to' => 'Date To: ',
 
 	'col_id' 					=> 'No.',
 	'col_po_no'					=> 'PO No.',
@@ -25,10 +27,11 @@ return array(
 	'col_received_no'			=> 'Receiver No.',
 	'col_shipment_ref_no'			=> 'Shipment Ref No.',
 	'col_purchase_order_no'			=> 'PO No.',
+	'col_received_by'			=> 'Received By',
 
 	'col_sku' 					=> 'SKU',
 	'col_upc' 					=> 'UPC',
-	'col_short_name' 			=> 'Short Name',
+	'col_short_name' 			=> 'Item Description',
 	'col_expected_quantity'		=> 'Expected_quantity',
 	'col_received_quantity'		=> 'Received Quantity',
 );

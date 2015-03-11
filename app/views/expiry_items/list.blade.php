@@ -8,7 +8,7 @@
           <div class="accordion-group" style="background-color: #FFFFFF;">
             {{ Form::open(array('url'=>'expiry_items', 'class'=>'form-signin', 'id'=>'form-expiry-items', 'role'=>'form', 'method' => 'get')) }}
             <div id="collapseOne" class="accordion-body collapse in" style="padding-top: 20px;">
-	                <div class="span4">
+	                <div class="span3">
 			        	<div>
 				        	<span class="search-po-left-pane">{{ $label_purchase_no }}</span>
 				        	<span class="search-po-right-pane">
@@ -16,12 +16,28 @@
 				        	</span>
 				        </div>
 			      	</div>
-			      	<div class="span6">
+			      	<div class="span4">
 				        <div>
 				        	<span class="search-po-left-pane">{{ $label_shipment_reference_no }}</span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::text('filter_shipment_reference_no', $filter_shipment_reference_no, array('class'=>'back-order', 'placeholder'=>'', 'id'=>"filter_shipment_reference_no")) }}
 				        	</span>
+				        </div>
+			      	</div>
+	                <div class="span3">
+			        	<div>
+				        	<span class="search-po-left-pane">{{ $label_date_from }}</span>
+				        	<div class="search-po-right-pane input-append date">
+								{{ Form::text('filter_from_date', null, array('class'=>'span2', 'id'=>"filter_from_date", 'readonly'=>'readonly')) }}
+								<span class="add-on"><i class="icon-th"></i></span>
+				        	</div>
+				        </div>
+			        	<div>
+				        	<span class="search-po-left-pane">{{ $label_date_to }}</span>
+				        	<div class="search-po-right-pane input-append date">
+								{{ Form::text('filter_to_date', null, array('class'=>'span2', 'id'=>"filter_to_date", 'readonly'=>'readonly')) }}
+								<span class="add-on"><i class="icon-th"></i></span>
+				        	</div>
 				        </div>
 			      	</div>
 			      	<div class="span11 control-group collapse-border-top">
@@ -72,6 +88,7 @@
 						<th>{{ $col_purchase_order_no }}</th>
 						<th>{{ $col_sku }}</th>
 						<th>{{ $col_upc }}</th>
+						<th>{{ $col_slot }}</th>
 						<th>{{ $col_short_name }}</th>
 						<th>{{ $col_expiry_date }}</th>
 						<!-- <th>{{ $col_expected_quantity }}</th> -->
@@ -91,6 +108,7 @@
 						<td>{{ $po->purchase_order_no }}</td>
 						<td>{{ $po->sku }}</td>
 						<td>{{ $po->upc }}</td>
+						<td>{{ $po->slot_code }}</td>
 						<td>{{ $po->short_description }}</td>
 						<td>
 							@if ($po->expiry_date == '0000-00-00 00:00:00' )
@@ -123,6 +141,9 @@ $(document).ready(function() {
 	// Submit Form
     $('#submitForm').click(function() {
     	$('#form-expiry-items').submit();
+    });
+    $('.date').datepicker({
+      format: 'yyyy-mm-dd'
     });
 
 });

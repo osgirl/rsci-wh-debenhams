@@ -177,6 +177,9 @@ class PurchaseOrderDetail extends Eloquent {
 
 		if( CommonHelper::hasValue($data['filter_po_no']) ) $query->where('purchase_order_no', 'LIKE', '%'.$data['filter_po_no'].'%');
 		if( CommonHelper::hasValue($data['filter_shipment_reference_no']) ) $query->where('shipment_reference_no', 'LIKE', '%'.$data['filter_shipment_reference_no'].'%');
+		if( CommonHelper::hasValue($data['filter_from_date']) ) $query->where('expiry_date', '>=', $data['filter_from_date']);
+		if( CommonHelper::hasValue($data['filter_to_date']) ) $query->where('expiry_date', '<=', $data['filter_to_date']);
+		if( CommonHelper::hasValue($data['filter_to_date']) && CommonHelper::hasValue($data['filter_from_date'])) $query->where('expiry_date', '<=', $data['filter_to_date'])->where('expiry_date', '>=', $data['filter_from_date']);
 
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if ($data['sort']=='sku') $data['sort'] = 'product_lists.sku';

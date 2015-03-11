@@ -49,6 +49,8 @@ class ExpiryItemsController extends BaseController {
 		$arrParams = array(
 							'filter_shipment_reference_no'	=> Input::get('filter_shipment_reference_no', NULL),
 							'filter_po_no'	=> Input::get('filter_po_no', NULL),
+							'filter_from_date' => Input::get('filter_from_date', NULL),
+							'filter_to_date' => Input::get('filter_to_date', NULL),
 							'sort'				=> Input::get('sort', 'sku'),
 							'order'				=> Input::get('order', 'ASC'),
 							'page'				=> NULL,
@@ -80,6 +82,8 @@ class ExpiryItemsController extends BaseController {
 		// Search Filters
 		$filter_po_no = Input::get('filter_po_no', NULL);
 		$filter_shipment_reference_no = Input::get('filter_shipment_reference_no', NULL);
+		$filter_from_date = Input::get('filter_from_date', NULL);
+		$filter_to_date = Input::get('filter_to_date', NULL);
 
 		$sort = Input::get('sort', 'purchase_order_lists.receiver_no');
 		$order = Input::get('order', 'ASC');
@@ -89,6 +93,8 @@ class ExpiryItemsController extends BaseController {
 		$arrParams = array(
 							'filter_shipment_reference_no'	=> $filter_shipment_reference_no,
 							'filter_po_no'	=> $filter_po_no,
+							'filter_from_date'	=> $filter_from_date,
+							'filter_to_date'	=> $filter_to_date,
 							'sort'				=> $sort,
 							'order'				=> $order,
 							'page'				=> $page,
@@ -101,6 +107,8 @@ class ExpiryItemsController extends BaseController {
 		$this->data['arrFilters'] = array(
 										'filter_shipment_reference_no'	=> $filter_shipment_reference_no,
 										'filter_po_no'	=> $filter_po_no,
+										'filter_from_date'	=> $filter_from_date,
+										'filter_to_date'	=> $filter_to_date,
 										'sort'				=> $sort,
 										'order'				=> $order
 									);
@@ -136,6 +144,8 @@ class ExpiryItemsController extends BaseController {
 		// http://local.ccri.com/picking/list?filter_doc_no=&filter_status=&filter_store=26&sort=doc_no&order=ASC
 		$url = '?filter_po_no=' . Input::get('filter_po_no', NULL);
 		$url .= '&filter_shipment_reference_no=' . Input::get('filter_shipment_reference_no', NULL);
+		$url .= '&filter_from_date=' . Input::get('filter_from_date', NULL);
+		$url .= '&filter_to_date=' . Input::get('filter_to_date', NULL);
 		$url .= '&sort=' . Input::get('sort', 'sku');
 		$url .= '&order=' . Input::get('order', 'ASC');
 		$url .= '&page=' . Input::get('page', 1);

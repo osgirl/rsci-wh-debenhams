@@ -12,7 +12,7 @@
 <body>
 <div class="table-responsive">
 			<div style="text-align: center">
-				<h1>Casual Clothing Retailers Inc.<br/>EXPIRY ITEMS REPORT</h1>
+				<h1>Casual Clothing Retailers Inc.<br/>EXPIRY REPORT</h1>
 				Print Date: {{ date('m/d/y h:i A')}}
 			</div>
 	<table class="table table-striped table-bordered">
@@ -22,10 +22,12 @@
 				<th>{{ $col_purchase_order_no }}</th>
 				<th>{{ $col_sku }}</th>
 				<th>{{ $col_upc }}</th>
+				<th>{{ $col_slot }}</th>
 				<th>{{ $col_short_name }}</th>
 				<th>{{ $col_expiry_date }}</th>
 				<!-- <th>{{ $col_expected_quantity }}</th> -->
 				<th>{{ $col_received_quantity }}</th>
+				<th>{{ $col_received_by }}</th>
 				<!-- <th> VARIANCE </th> -->
 			</tr>
 		</thead>
@@ -40,6 +42,7 @@
 				<td>{{ $po->purchase_order_no }}</td>
 				<td>{{ $po->sku }}</td>
 				<td>{{ $po->upc }}</td>
+				<td>{{ $po->slot_code }}</td>
 				<td>{{ $po->short_description }}</td>
 				<td>
 					@if ($po->expiry_date == '0000-00-00 00:00:00' )
@@ -50,6 +53,7 @@
 				</td>
 				<!-- <td>{{ $po->quantity_ordered }}</td> -->
 				<td>{{ $po->quantity_delivered }}</td>
+				<td></td>
 				<!-- <td>{{ $po->quantity_ordered- $po->quantity_delivered }}</td> -->
 			</tr>
 			@endforeach
