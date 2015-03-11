@@ -173,6 +173,13 @@ class DatasetSeeder extends Seeder {
 						'description' => 'Store return status is now closed',
 						'created_at' => date('Y-m-d H:i:s')
 					),
+					array(
+						'data_code' => 'UIRR_FORMAT',
+						'data_value' => '0000000',
+						'data_display' => '0000000',
+						'description' => 'UIRR unlisted format in series',
+						'created_at' => date('Y-m-d H:i:s')
+					),
 			);
 
 		foreach ($data as $d) {

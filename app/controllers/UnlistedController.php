@@ -191,4 +191,15 @@ class UnlistedController extends BaseController {
 		}
 		return $url;
 	}
+
+	protected function uirrGeneration() {
+		$uirr             = Dataset::firstOrNew(array('data_code'=>'UIRR_FORMAT'));
+		$uirrNo           = sprintf("%07s", (int)$uirr->data_value + 1);
+		$uirr->data_value = $uirrNo;
+		$uirr->updated_at = date('Y-m-d H:i:s');
+		$uirr->save();
+		$uirr_code        = Dataset::find($uirr->id);
+
+		return $uirrNo;
+	}
 }
