@@ -161,8 +161,8 @@ class storeReturn extends jdaCustomClass
 			return false;
 		}
 
-		if(parent::$jda->screenCheck('Invalid slot - does not exist.')) {
-            $transfer_message='Invalid slot - does not exist.';
+		if(parent::$jda->screenCheck('Invalid slot')) {
+            $transfer_message='Invalid slot';
             self::$formMsg = "{$transfer_no}: {$transfer_message}";
 			parent::logError(self::$formMsg, __METHOD__);
 			self::updateSyncStatus($transfer_no,"{$source}: {$transfer_message}", TRUE);
@@ -202,6 +202,52 @@ class storeReturn extends jdaCustomClass
 		$formValues[] = array(sprintf("%-8s", $slot_code),7,12);
 		parent::$jda->write5250($formValues,F7,true);
 
+		foreach($transfer_nos as $transfer_no){
+			if($transfer_no['delivered_qty']==0){
+				print_r($transfer_no);
+				while($tries3++ < 5 && !parent::$jda->screenCheck("Add Items To Transfer")){
+					echo "\n F9 not yet processed pressed F9 & tries: {$tries3} \n";
+					parent::$jda->write5250(null,F9,true);
+				}
+				$tries3=0;
+				echo "\n press F9 \n";
+
+				if(parent::$jda->screenCheck("You have requested to Exit")){
+					while($tries3++ < 5 && parent::$jda->screenWait("You have requested to Exit")){
+						echo "\n Found *********** WARNING *********** pressed F12 & tries: {$tries2} \n";
+						parent::$jda->set_pos(17,24);
+						parent::$jda->write5250(null,F12,true);
+						$tries3=0;
+					}
+					while($tries3++ < 5 && !parent::$jda->screenCheck("Add Items To Transfer")){
+						echo "\n F9 not yet processed pressed F9 & tries: {$tries3} \n";
+						parent::$jda->write5250(null,F9,true);
+					}
+					$tries3=0;
+				}
+				if(parent::$jda->screenCheck("Add Items To Transfer")){
+					$formValues[] = array(sprintf("%10d", $transfer_no['sku']),16,38);
+					$formValues[] = array(sprintf("%10d", $transfer_no['received_qty']),19,34);
+					while($tries3++ < 5 && !parent::$jda->screenCheck("Sku accepted")){
+						echo "\n F7 not yet processed pressed F7 & tries: {$tries3} \n";
+						parent::$jda->write5250($formValues,F7,true);
+					}
+					$tries3=0;
+					$validate = self::checkTransferNumber($transferer,__METHOD__);
+					if(!$validate)
+						return $validate;
+					if(parent::$jda->screenCheck("Sku accepted")){
+						while($tries3++ < 5 && parent::$jda->screenCheck("Add Items To Transfer")){
+							echo "\n F1 not yet processed pressed F1 & tries: {$tries3} \n";
+							parent::$jda->write5250(null,F1,true);
+						}
+						$tries3=0;
+					}
+					$formValues = array();
+				}
+				parent::display(parent::$jda->screen,132);
+			}
+		}
 		while($offset < $count) {
 			echo "\n Count: {$count} \n";
 			$new = $offset;
@@ -240,6 +286,19 @@ class storeReturn extends jdaCustomClass
 					parent::$jda->write5250($formValues,F10,true);
 				}
 				$tries3=0;
+				if(parent::$jda->screenCheck("You have requested to Exit")){
+					while($tries3++ < 5 && parent::$jda->screenWait("You have requested to Exit")){
+						echo "\n Found *********** WARNING *********** pressed F12 & tries: {$tries2} \n";
+						parent::$jda->set_pos(17,24);
+						parent::$jda->write5250(null,F12,true);
+					}
+					$tries3=0;
+					while($tries3++ < 5 && (!parent::$jda->screenCheck("Transfer Number") || !parent::$jda->screenCheck("All Recieved Quantities are ZERO."))){
+						echo "\nF10 not yet processed pressed F10 & tries: {$tries3} \n";
+						parent::$jda->write5250($formValues,F10,true);
+					}
+					$tries3=0;
+				}
 				echo "\n pressed F10 \n";
 				if(parent::$jda->screenCheck('All Recieved Quantities are ZERO.')) {
 					echo "\n All Recieved Quantities are ZERO. \n";
@@ -292,6 +351,19 @@ class storeReturn extends jdaCustomClass
 					parent::$jda->write5250($formValues,F7,true);
 				}
 				$tries3=0;
+				if(parent::$jda->screenCheck("You have requested to Exit")){
+					while($tries3++ < 5 && parent::$jda->screenWait("You have requested to Exit")){
+						echo "\n Found *********** WARNING *********** pressed F12 & tries: {$tries2} \n";
+						parent::$jda->set_pos(17,24);
+						parent::$jda->write5250(null,F12,true);
+					}
+					$tries3=0;
+					while($tries3++ < 5 && (!parent::$jda->screenCheck("Transfer Number") || !parent::$jda->screenCheck("All Recieved Quantities are ZERO."))){
+						echo "\nF7 not yet processed pressed F7 & tries: {$tries3} \n";
+						parent::$jda->write5250($formValues,F7,true);
+					}
+					$tries3=0;
+				}
 				echo "\n pressed F7 \n";
 				if(parent::$jda->screenCheck('All Recieved Quantities are ZERO.')) {
 					echo "\n All Recieved Quantities are ZERO. \n";
