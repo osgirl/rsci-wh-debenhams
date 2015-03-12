@@ -99,7 +99,7 @@
 				</thead>
 				@if( !CommonHelper::arrayHasValue($expiry_items) )
 				<tr class="font-size-13">
-					<td colspan="8" class="align-center">{{ $text_empty_results }}</td>
+					<td colspan="10" class="align-center">{{ $text_empty_results }}</td>
 				</tr>
 				@else
 					@foreach( $expiry_items as $po )

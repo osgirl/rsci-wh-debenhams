@@ -80,7 +80,7 @@ td.underline {padding-bottom: 0; }
 							<td>_____________</td>
 						</tr><tr>
 							<th>MTS Date:</th>
-							<td>{{$val['order_date']}}</td>
+							<td>{{date('m/d/Y',strtotime($val['order_date'])) }}</td>
 						</tr><tr>
 							<th>User ID:</th>
 							<td>{{Auth::user()->username;}}</td>
@@ -147,16 +147,15 @@ td.underline {padding-bottom: 0; }
 
 		<div class="signatories">
 			<div>
-				Checked By / Issued By / Date: <hr/><br/>
+				Checked By / Issued By / Date: <hr/>
 				Issuance Validated by:<hr/><br/>
 			</div>
 			<div>
-				Delivered By / Date: <hr/><br/>
-				Received by / Date:<hr/><br/>
+				<br/>
 			</div>
 			<div>
-				<br/><br/><br/><br/>
-				Posted By / Date:<hr/><br/>
+				Delivered By / Date: <hr/>
+				Received by / Date:<hr/><br/>
 			</div>
 		</div>
 			Copy 1 - ICG &nbsp&nbsp&nbsp    Copy 2 - Receiving / To  &nbsp&nbsp&nbsp   Copy 3 - From Location   &nbsp&nbsp&nbsp  Copy 4 - From Location

@@ -86,7 +86,7 @@ class Load extends Eloquent {
         foreach($rs as $val){
             $box =  DB::table('box_details')
                     ->select('box_details.moved_qty',
-                            'picklist_details.sku as upc','picklist_details.store_code','picklist_details.so_no','picklist_details.store_code',
+                            'picklist_details.sku as upc','picklist_details.created_at as order_date','picklist_details.store_code','picklist_details.so_no','picklist_details.store_code',
                             'product_lists.description')
                     ->join('picklist_details','picklist_details.id','=','box_details.picklist_detail_id','LEFT')
                     ->join('product_lists','product_lists.upc','=','picklist_details.sku','LEFT')
@@ -98,6 +98,7 @@ class Load extends Eloquent {
             if(!empty($box)){
                 $data['StoreOrder'][$box[0]->so_no]['store_code'] = $box[0]->store_code;
                 $data['StoreOrder'][$box[0]->so_no]['items'][$val->box_code] = $box;
+                $data['StoreOrder'][$box[0]->so_no]['order_date'] = $box[0]->order_date;
             }
         }
         // echo '<pre>'; dd($data);
@@ -110,11 +111,6 @@ class Load extends Eloquent {
 
                 // get so date created
                 // echo '<pre>'; dd($soNo);
-                $so = DB::table('store_order')
-                    ->select(DB::raw("date_format(order_date,'%m/%d/%y') as order_date "))
-                    ->where('so_no','=',$soNo)
-                    ->first();
-                $data['StoreOrder'][$soNo]['order_date'] = $so->order_date;
             }
         // echo '<pre>'; dd($data);
         // $data['StoreOrder'][]

@@ -65,17 +65,20 @@
 						<th width="10%">{{ $col_id }}</th>
 						<th><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif"> {{ $col_upc }} </a></th>
 						<th><a href="{{ $sort_reference }}" class="@if( $sort=='reference_no' ) {{ $order }} @endif">{{ $col_reference }}</a></th>
+						<th>{{ $col_shipment_reference }}</th>
+						<th>{{ $col_delivery_date }}</th>
 						<th>{{ $col_quantity_received }}</th>
 						<th>{{ $col_description }}</th>
 						<th>{{ $col_style_no }}</th>
 						<th>{{ $col_brand }}</th>
 						<th>{{ $col_division }}</th>
+						<th>{{ $col_scanned_by }}</th>
 					</tr>
 				</thead>
 				<tbody>
 				@if( !CommonHelper::arrayHasValue($unlisted) )
 					<tr class="font-size-13">
-						<td colspan="9" class="align-center">{{ $text_empty_results }}</td>
+						<td colspan="11" class="align-center">{{ $text_empty_results }}</td>
 					</tr>
 				@else
 					@foreach($unlisted as $unlist)
@@ -83,11 +86,14 @@
 						<td>{{ $counter++ }}</td>
 						<td>{{ $unlist['sku'] }}</td>
 						<td>{{ $unlist['reference_no'] }}</td>
+						<td>{{ $unlist['shipment_reference_no'] }}</td>
+						<td>{{ date('m/d/Y',strtotime($unlist['delivery_date'])) }}</td>
 						<td>{{ $unlist['quantity_received'] }}</td>
 						<td>{{ $unlist['description'] }}</td>
 						<td>{{ $unlist['style_no'] }}</td>
 						<td>{{ $unlist['brand'] }}</td>
 						<td>{{ $unlist['division'] }}</td>
+						<td>{{ $unlist['firstname'] .' '. $unlist['lastname']}}</td>
 					</tr>
 					@endforeach
 				@endif

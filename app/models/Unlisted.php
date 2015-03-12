@@ -2,7 +2,7 @@
 
 class Unlisted extends Eloquent {
 
-	protected $table = 'unlisted';
+    protected $table = 'unlisted';
     protected $fillable = array('sku', 'reference_no');
 
     public static function createUpdate($data = array()) {
@@ -34,7 +34,11 @@ class Unlisted extends Eloquent {
             ->join('pallet', 'pallet.pallet_code', '=', 'load_details.pallet_code')
             ->groupBy('load.load_code');*/
 
-        $query = Unlisted::where('deleted_at', '=', '0000-00-00 00:00:00');
+        $query = Unlisted::select('unlisted.*','users.firstname','users.lastname','purchase_order_lists.shipment_reference_no','purchase_order_lists.destination','purchase_order_lists.delivery_date')
+                ->join('purchase_order_lists', 'unlisted.reference_no',
+                        '=', 'purchase_order_lists.purchase_order_no')
+                ->join('users', 'purchase_order_lists.assigned_to_user_id', '=', 'users.id', 'RIGHT')
+                ->where('unlisted.deleted_at', '=', '0000-00-00 00:00:00');
 
         // echo "<pre>"; print_r($data); die();
 

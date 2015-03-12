@@ -1,7 +1,7 @@
 <?php
 
 return array(
-	'heading_title' 			=> 'Unlisted',
+	'heading_title' 			=> 'Unlisted Items Receiving Report',
 
 	'text_success_shipped'		=> 'Successfully shipped',
 	'text_warning'				=> 'Close PO?',
@@ -11,7 +11,7 @@ return array(
 	'text_shipped'				=> 'Yes',
 	'text_empty_results'		=> 'Empty results',
 
-	'label_filter_reference_no'	=> 'Reference No.',
+	'label_filter_reference_no'	=> 'PO No.',
 	'label_filter_sku'			=> 'Sku No.',
 	'label_filter_upc'			=> 'Upc No.',
 
@@ -26,13 +26,18 @@ return array(
 	'col_id'					=> 'Id.',
 	'col_sku'					=> 'Sku',
 	'col_upc'					=> 'Upc',
-	'col_reference'				=> 'Reference No.',
+	'col_reference'				=> 'PO No.',
+	'col_po_created'			=> 'PO No. Created',
+	'col_shipment_reference'	=> 'Shipment Ref. No.',
+	'col_delivery_date'			=> 'Actual Delivery Date',
 	'col_quantity_received'		=> 'Quantity Received',
 	'col_action'				=> 'Action',
 	'col_description'			=> 'Description',
 	'col_style_no'				=> 'Style No.',
 	'col_brand'					=> 'Brand',
 	'col_division'				=> 'Division',
+	'col_scanned_by'			=> 'Scanned By',
+	'col_remarks'				=> 'Remarks',
 
 	'error_cancel'		=> 'Canceled transaction.',
 
