@@ -93,12 +93,13 @@
 						<th>{{ $col_expiry_date }}</th>
 						<!-- <th>{{ $col_expected_quantity }}</th> -->
 						<th>{{ $col_received_quantity }}</th>
+						<th>{{ $col_received_by }}</th>
 						<!-- <th> VARIANCE </th> -->
 					</tr>
 				</thead>
 				@if( !CommonHelper::arrayHasValue($expiry_items) )
 				<tr class="font-size-13">
-					<td colspan="8" class="align-center">{{ $text_empty_results }}</td>
+					<td colspan="10" class="align-center">{{ $text_empty_results }}</td>
 				</tr>
 				@else
 					@foreach( $expiry_items as $po )
@@ -119,6 +120,7 @@
 						</td>
 						<!-- <td>{{ $po->quantity_ordered }}</td> -->
 						<td>{{ $po->quantity_delivered }}</td>
+						<td>{{ $po->firstname .' '. $po->lastname}}</td>
 						<!-- <td>{{ $po->quantity_ordered- $po->quantity_delivered }}</td> -->
 					</tr>
 					@endforeach
@@ -148,3 +150,4 @@ $(document).ready(function() {
 
 });
 </script>
+	

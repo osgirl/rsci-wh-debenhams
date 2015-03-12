@@ -172,6 +172,7 @@ class PurchaseOrderDetail extends Eloquent {
 	public static function getPODetailsWithExpiration($data = array(), $getCount = false) {
 		$query = DB::table('purchase_order_lists')
 					->join('purchase_order_details', 'purchase_order_lists.receiver_no', '=', 'purchase_order_details.receiver_no', 'RIGHT')
+					->join('users', 'purchase_order_lists.assigned_to_user_id', '=', 'users.id', 'RIGHT')
 					->join('product_lists', 'purchase_order_details.sku', '=', 'product_lists.upc')
 					->where('expiry_date', '<>', '0000-00-00 00:00:00');
 

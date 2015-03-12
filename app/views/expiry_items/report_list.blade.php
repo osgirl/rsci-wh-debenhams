@@ -33,7 +33,7 @@
 		</thead>
 		@if( !CommonHelper::arrayHasValue($results) )
 		<tr class="font-size-13">
-			<td colspan="7" class="align-center">{{ $text_empty_results }}</td>
+			<td colspan="9" class="align-center">{{ $text_empty_results }}</td>
 		</tr>
 		@else
 			@foreach( $results as $po )
@@ -53,7 +53,7 @@
 				</td>
 				<!-- <td>{{ $po->quantity_ordered }}</td> -->
 				<td>{{ $po->quantity_delivered }}</td>
-				<td></td>
+				<td>{{ $po->firstname .' '. $po->lastname}}</td>
 				<!-- <td>{{ $po->quantity_ordered- $po->quantity_delivered }}</td> -->
 			</tr>
 			@endforeach

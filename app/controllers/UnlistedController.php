@@ -98,6 +98,7 @@ class UnlistedController extends BaseController {
 						);
 
 		$results = Unlisted::getList($arrParams);
+		$this->data['uirr_no'] = self::uirrGeneration();
 		$this->data['results'] = $results;
 
 		$pdf = App::make('dompdf');
