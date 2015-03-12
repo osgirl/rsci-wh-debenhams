@@ -93,6 +93,7 @@
 						<th>{{ $col_expiry_date }}</th>
 						<!-- <th>{{ $col_expected_quantity }}</th> -->
 						<th>{{ $col_received_quantity }}</th>
+						<th>{{ $col_received_by }}</th>
 						<!-- <th> VARIANCE </th> -->
 					</tr>
 				</thead>
@@ -119,6 +120,7 @@
 						</td>
 						<!-- <td>{{ $po->quantity_ordered }}</td> -->
 						<td>{{ $po->quantity_delivered }}</td>
+						<td>{{ $po->firstname .' '. $po->lastname}}</td>
 						<!-- <td>{{ $po->quantity_ordered- $po->quantity_delivered }}</td> -->
 					</tr>
 					@endforeach
@@ -148,3 +150,4 @@ $(document).ready(function() {
 
 });
 </script>
+	

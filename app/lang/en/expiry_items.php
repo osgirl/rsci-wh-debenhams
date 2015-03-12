@@ -2,7 +2,7 @@
 
 return array(
 	'heading_title' 				=> 'Items with Expiry',
-	'heading_title_po_contents'	=> 'Items with Expiry',
+	'heading_title_po_contents'	=> 'Expiry Report',
 	'label_purchase_no'			=> 'PO No.:',
 	'label_shipment_reference_no' => 'Shipment Reference No.',
 	'label_date_from' => 'Date From: ',
