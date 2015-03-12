@@ -82,7 +82,9 @@
 							@endif
 						</td>
 						<td>
-							@if( $load['is_shipped'] == 0 )
+							@if( $load['pl_status'] == 17 )
+								<a disabled class="btn btn-info">{{ $button_ship }}</a>
+							@elseif( $load['is_shipped'] == 0 )
 								@if ( CommonHelper::valueInArray('CanAccessShipping', $permissions))
 								<a class="btn btn-info shipLoad" data-id="{{ $load['id'] }}">{{ $button_ship }}</a>
 						  		{{ Form::open(array('url'=>$url_ship_load,'id' => 'formLoadShip_' . $load['id'], 'style' => 'margin: 0px;display:none;', 'method'=> 'post')) }}

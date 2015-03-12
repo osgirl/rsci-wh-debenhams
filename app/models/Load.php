@@ -23,9 +23,13 @@ class Load extends Eloquent {
 
     public static function getLoadList($data = array(), $getCount = false)
     {
-        $query = Load::select(DB::raw("wms_load.id, wms_load.load_code, wms_load.is_shipped, group_concat(wms_pallet.store_code SEPARATOR ',') stores"))
+        $query = Load::select(DB::raw("wms_load.id, wms_load.load_code, wms_load.is_shipped, group_concat(DISTINCT wms_pallet.store_code SEPARATOR ',') stores,wms_picklist.pl_status"))
             ->join('load_details', 'load_details.load_code', '=', 'load.load_code')
             ->join('pallet', 'pallet.pallet_code', '=', 'load_details.pallet_code')
+            ->join('pallet_details','load_details.pallet_code','=','pallet_details.pallet_code','RIGHT')
+            ->join('box_details','box_details.box_code','=','pallet_details.box_code','LEFT')
+            ->join('picklist_details','picklist_details.id','=','box_details.picklist_detail_id','LEFT')
+            ->join('picklist','picklist.move_doc_number','=','picklist_details.move_doc_number','LEFT')
             ->groupBy('load.load_code');
 
         if( CommonHelper::hasValue($data['filter_load_code']) ) $query->where('load.load_code', 'LIKE', '%'. $data['filter_load_code'] . '%');
@@ -175,14 +179,6 @@ public static function getPackingDetails($loadCode)
                     ->first();
                 $data['store_name'] = $store->store_name;
                 $data['StoreOrder'][$soNo]['store_name'] = $store->store_name;
-
-                // get so date created
-                // echo '<pre>'; dd($soNo);
-                $so = DB::table('store_order')
-                    ->select(DB::raw("date_format(order_date,'%m/%d/%y') as order_date "))
-                    ->where('so_no','=',$soNo)
-                    ->first();
-                $data['StoreOrder'][$soNo]['order_date'] = $so->order_date;
             }
         // echo '<pre>'; dd($data);
         // $data['StoreOrder'][]
