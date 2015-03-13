@@ -8,7 +8,7 @@ class storeReturn extends jdaCustomClass
 	public static $user = 'SYS';
 
 	/*
-	STORE RETURN 
+	STORE RETURN
 
 	NOTES
 	>first attempt: all rows must have received qty (bug)
@@ -51,7 +51,7 @@ class storeReturn extends jdaCustomClass
 	29
 	06
 
-	check slot 
+	check slot
 	13
 	24
 	03
@@ -185,13 +185,13 @@ class storeReturn extends jdaCustomClass
 		// 	if(parent::$jda->screenCheck('All Recieved Quantities are ZERO.')) {
 		// 		parent::$jda->write5250(NULL,F1,true);
 		// 		parent::display(parent::$jda->screen,132);
-		// 	}				
+		// 	}
 		// }
 		self::enterSoTransferReceipt($transferer, $slot_code, $transfer_nos);
 	}
 	private static function enterSoTransferReceipt($transferer, $slot_code, $transfer_nos) {
 		$invoice_amt = 1; //set 1 for now
-		$formValues = array();//values to enter to form //enter slot
+		// $formValues = array();//values to enter to form //enter slot
 		$column 	= 78;
 		$row 		= 10;
 		$limit      = 12;
@@ -199,26 +199,54 @@ class storeReturn extends jdaCustomClass
 		$offset     = 0;
 		$count      = ceil($total / $limit);
 		$formValues = array();
-		$formValues[] = array(sprintf("%-8s", $slot_code),7,12);
-		parent::$jda->write5250($formValues,ENTER,true);
-		parent::$jda->write5250($formValues,F7,true);
-					parent::display(parent::$jda->screen,132);
+		// $formValues[] = array(sprintf("%-8s", $slot_code),7,12);
+		// parent::$jda->write5250($formValues,ENTER,true);
+		// parent::$jda->write5250($formValues,F7,true);
+		// parent::$jda->write5250(array(sprintf("%-8s", $slot_code),7,12),ENTER,true);
+		echo "\nSlot code: {$slot_code} \n";
+		parent::$jda->write5250(array(array(sprintf("%-8s", $slot_code),7,12)),F7,true);//enter sku
+		parent::display(parent::$jda->screen,132);
 
-		if(parent::$jda->screenCheck('All Recieved Quantities are ZERO.')) {
-					echo "\n All Recieved Quantities are ZERO. \n";
-					while($tries3++ < 5 && parent::$jda->screenCheck("All Recieved Quantities are ZERO.")){
-						echo "\nF1 not yet processed pressed F1 & tries: {$tries3} \n";
-						parent::$jda->write5250($formValues,F1,true);
-					}
-					$tries3=0;
-					while($tries3++ < 5 && parent::$jda->screenWait("You have requested to Exit")){
-						echo "\n Found *********** WARNING *********** pressed F12 & tries: {$tries2} \n";
-						parent::$jda->set_pos(17,24);
-						parent::$jda->write5250(null,F12,true);
-					}
-					$tries3=0;
-					parent::display(parent::$jda->screen,132);
-				}
+		$tries=0;
+		while($tries++ < 5 && !parent::$jda->screenWait("All Recieved Quantities are ZERO.")){
+			echo "\nF1 not yet processed pressed F1 & tries: {$tries} \n";
+			parent::$jda->write5250(null,F7,true);
+			parent::display(parent::$jda->screen,132);
+		}
+
+		if(parent::$jda->screenWait('All Recieved Quantities are ZERO.')) {
+			echo "\n All Recieved Quantities are ZERO. \n";
+			parent::$jda->write5250(null,F1,true);
+			echo "\nEntered: Press F1 Key. \n";
+			parent::display(parent::$jda->screen,132);
+
+			if(parent::$jda->screenWait('=Msg')) {
+				parent::$jda->write5250(array(array(sprintf("%-8s", $slot_code),7,12)),F7,true);//enter sku
+				echo "\nEntered: Press F7 Key. \n";
+				parent::display(parent::$jda->screen,132);
+			}
+
+			if(parent::$jda->screenWait("Transfer Receipt Maintenance-SKU")) {
+				parent::$jda->write5250(null,ENTER,true);
+				echo "\nEntered: Press ENTER Key. \n";
+				parent::display(parent::$jda->screen,132);
+			}
+
+			/*$tries2=0;
+			while($tries2++ < 5 && parent::$jda->screenCheck("All Recieved Quantities are ZERO.")){
+				echo "\nF1 not yet processed pressed F1 & tries: {$tries2} \n";
+				parent::$jda->write5250(null,F1,true);
+				parent::$jda->write5250(null,F7,true);
+			}*/
+			$tries3=0;
+			while($tries3++ < 5 && parent::$jda->screenWait("You have requested to Exit")){
+				echo "\n Found *********** WARNING *********** pressed F12 & tries: {$tries3} \n";
+				parent::$jda->set_pos(17,24);
+				parent::$jda->write5250(null,F12,true);
+			}
+			$tries3=0;
+			parent::display(parent::$jda->screen,132);
+		}
 
 		foreach($transfer_nos as $transfer_no){
 			if($transfer_no['delivered_qty']==0){
@@ -338,7 +366,7 @@ class storeReturn extends jdaCustomClass
 					$tries3=0;
 					echo "\n pressed F1 \n";
 					parent::display(parent::$jda->screen,132);
-				}				
+				}
 
 				if(parent::$jda->screenCheck('=Msg')) {
 					for($i=0; $i < $offset; $i++)
@@ -350,7 +378,7 @@ class storeReturn extends jdaCustomClass
 							echo "\nROLLUP not yet processed pressed ROLLUP & tries: {$tries3} \n";
 							parent::$jda->write5250(null,ROLLUP,true);
 						}
-						$tries3=0;				
+						$tries3=0;
 					}
 					echo "\n pressed F10 after F1\n";
 					parent::display(parent::$jda->screen,132);
@@ -360,7 +388,7 @@ class storeReturn extends jdaCustomClass
 						echo "\nF10 not yet processed pressed nF10 & tries: {$tries3} \n";
 						parent::$jda->write5250($formValues,F10,true);
 					}
-					$tries3=0;				
+					$tries3=0;
 			}
 			//other pages
 			else{
@@ -403,7 +431,7 @@ class storeReturn extends jdaCustomClass
 					$tries3=0;
 					echo "\n pressed F1 \n";
 					parent::display(parent::$jda->screen,132);
-				}				
+				}
 
 				if(parent::$jda->screenCheck('=Msg')) {
 					for($i=0; $i < $offset; $i++)
@@ -429,51 +457,11 @@ class storeReturn extends jdaCustomClass
 					while($tries3++ < 5 && !parent::$jda->screenCheck("Transfer Receipt Maintenance-SKU")){
 						echo "\nENTER not yet processed pressed ENTER & tries: {$tries3} \n";
 						parent::$jda->write5250(null,ENTER,true);
-					}	
+					}
 					$tries3=0;
-			}			
+			}
 			$offset++;
 		}
-
-		// for ($i=0; $i < count($transfer_nos); $i++) {
-		// 	if($i>0 && $i%12==0){
-		// 		parent::$jda->write5250($formValues,F7,true);
-
-		// 		if(parent::$jda->screenCheck('All Recieved Quantities are ZERO.')) {
-		// 			parent::$jda->write5250(NULL,F1,true);
-		// 		}				
-
-		// 		if(parent::$jda->screenCheck('=Msg')) {
-		// 			parent::$jda->write5250(NULL,F7,true);
-		// 		}				
-		// 		parent::display(parent::$jda->screen,132);
-		// 		$formValues = array();
-
-		// 		parent::$jda->write5250(NULL,ROLLUP,true);
-		// 		$row = 10;
-		// 		$currentpage++;
-		// 	}
-		// 	echo "\n page is: {$currentpage} \n";
-		// 	echo "\n value of row is: {$row} \n";
-		// 	echo "value of quantity received is: {$transfer_nos[$i]['received_qty']} \n";
-		// 	$formValues[] = array(sprintf("%10d", $transfer_nos[$i]['received_qty']),$row,$column); //enter moved_qty
-		// 	$row++;
-		// }
-
-		// parent::$jda->write5250($formValues,F10,true);
-		// parent::$jda->write5250(NULL,F10,true);
-
-		// if(parent::$jda->screenCheck("This is a WARNING")) {
-		// 	parent::$jda->write5250(NULL,F1,true);
-		// 	if(parent::$jda->screenCheck("F5=Msg") && count($transfer_nos)==1){
-		// 		echo 'found f5';
-		// 		parent::$jda->write5250($formValues,F10,true);
-		// 		parent::$jda->write5250(NULL,F10,true);
-		// 	}
-		// 	else
-		// 		parent::$jda->write5250(NULL,F10,true);
-		// 	parent::display(parent::$jda->screen,132);
-		// }
 
 		$validate = self::checkTransferNumber($transferer,__METHOD__);
 
