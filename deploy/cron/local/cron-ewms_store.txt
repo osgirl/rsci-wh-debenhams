@@ -1,0 +1,1 @@
+*/5 * * * * php /var/www/html/ssi-wms-portal/app/jda/store_receiving.php

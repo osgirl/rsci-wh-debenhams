@@ -1,0 +1,10 @@
+00 21 * * * php /var/www/html/ssi-wms-portal/app/cron/cron_9am.php
+00 10 * * * php /var/www/html/ssi-wms-portal/app/cron/cron_10am.php
+00 12 * * * php /var/www/html/ssi-wms-portal/app/cron/cron_12pm.php
+30 9 * * * php /var/www/html/ssi-wms-portal/app/cron/ewms_cron_930am.php
+30 10 * * * php /var/www/html/ssi-wms-portal/app/cron/ewms_cron_1030am.php
+30 12 * * * php /var/www/html/ssi-wms-portal/app/cron/ewms_cron_1230pm.php
+
+*/15 * * * * php /var/www/html/ssi-wms-portal/app/cron/jda/receive_po.php
+*/15 * * * * php /var/www/html/ssi-wms-portal/app/cron/jda/picklist.php
+*/15 * * * * php /var/www/html/ssi-wms-portal/app/cron/jda/palletizing_step1.php

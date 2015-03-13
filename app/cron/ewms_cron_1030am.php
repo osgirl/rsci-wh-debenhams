@@ -8,5 +8,7 @@ $ewms = new cronEWMS();
 
 $ewms->purchaseOrder();			sleep(10);
 $ewms->purchaseOrderDetails();	sleep(10);
-$ewms->inventory();				sleep(10);
+$ewms->storeReturn();			sleep(10);
+$ewms->storeReturnDetail();
+// $ewms->inventory();				sleep(10);
 $ewms->close();
