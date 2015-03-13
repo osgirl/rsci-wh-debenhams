@@ -244,24 +244,34 @@ $execParams 			= array();
 $execParams['loadNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
 
 print_r($execParams);
-if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
 
-$getBoxes = $db->getJdaTransactionBoxHeader($jdaParams);
-print_r($getBoxes);
+$result=$db->getPicklistStatusInLoad($execParams['loadNo']);
+$pl_status=$result[0]['pl_status'];
 
-if(! empty($getBoxes) ) 
-{
-	$palletizing = new palletizingStep1();
-	$palletizing->enterUpToCartonHeaderMaintenance();
-	// $getBoxes = $palletizing->getBoxes();
-	foreach($getBoxes as $box) {
-		$palletizing->save($box);
+
+if($pl_status!=17){
+	if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
+
+	$getBoxes = $db->getJdaTransactionBoxHeader($jdaParams);
+	print_r($getBoxes);
+
+	if(! empty($getBoxes) ) 
+	{
+		$palletizing = new palletizingStep1();
+		$palletizing->enterUpToCartonHeaderMaintenance();
+		// $getBoxes = $palletizing->getBoxes();
+		foreach($getBoxes as $box) {
+			$palletizing->save($box);
+		}
+		$palletizing->logout($execParams);
 	}
-	$palletizing->logout($execParams);
+	else {
+		echo " \n No rows found!. Proceed to Pallet Header Creation\n";
+		$formattedString = "{$execParams['loadNo']}";
+		$db->daemon('palletizing_step2', $formattedString);
+	}
 }
-else {
-	echo " \n No rows found!. Proceed to Pallet Header Creation\n";
-	$formattedString = "{$execParams['loadNo']}";
-	$db->daemon('palletizing_step2', $formattedString);
-}
+else
+	echo " \n Picklist not yet closed \n";
+
 $db->close(); //close db connection

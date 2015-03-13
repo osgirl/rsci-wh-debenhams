@@ -349,6 +349,24 @@ class pdoConnection
 		self::$pdo = NULL;
 	}
 
+	public function getPicklistStatusInLoad($load_code){	
+		echo "Getting picklist status from db \n";
+	    $sql 	= "SELECT wms_picklist.pl_status FROM `wms_load` INNER JOIN `wms_load_details` ON 
+	    `wms_load_details`.`load_code` = `wms_load`.`load_code` INNER JOIN `wms_pallet` ON 
+	    `wms_pallet`.`pallet_code` = `wms_load_details`.`pallet_code` RIGHT JOIN `wms_pallet_details` ON 
+	    `wms_load_details`.`pallet_code` = `wms_pallet_details`.`pallet_code` LEFT JOIN `wms_box_details` ON 
+	    `wms_box_details`.`box_code` = `wms_pallet_details`.`box_code` LEFT join `wms_picklist_details` ON 
+	    `wms_picklist_details`.`id` = `wms_box_details`.`picklist_detail_id` LEFT JOIN `wms_picklist` ON 
+	    `wms_picklist`.`move_doc_number` = `wms_picklist_details`.`move_doc_number` 
+	    WHERE wms_load.load_code='$load_code'";
+		 $query = self::query($sql);
+		 $result = array();
+		 foreach ($query as $value ) {
+		 	$result[] = $value;
+		 }
+		 return $result;
+	}
+
 }
 
 /*$pdo = new pdoConnection();
