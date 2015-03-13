@@ -35,7 +35,7 @@ return array(
 	'col_description'			=> 'Description',
 	'col_style_no'				=> 'Style No.',
 	'col_brand'					=> 'Brand',
-	'col_division'				=> 'Division',
+	'col_division'				=> 'Division No.',
 	'col_scanned_by'			=> 'Scanned By',
 	'col_remarks'				=> 'Remarks',
 
