@@ -77,15 +77,15 @@
 		<div class="signatories">
 			<div>
 				Checked by/Date: <hr/>
-				Signature over Printed Name / Date<br/>
+				Printed name/Signature/Date<br/>
 			</div>
 			<div>
 				Validated by/Date: <hr/>
-				Signature over Printed Name / Date<br/>
+				Printed name/Signature/Date<br/>
 			</div>
 			<div>
 				PO Created by/Date: <hr/>
-				Signature over Printed Name / Date<br/>
+				Printed name/Signature/Date<br/>
 			</div>
 		</div>
 		<footer>

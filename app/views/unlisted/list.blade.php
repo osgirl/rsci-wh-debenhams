@@ -130,15 +130,20 @@ $(document).ready(function() {
 
 	// Export List
     $('#exportList').click(function() {
-    	url = '';
+    	@if( !CommonHelper::arrayHasValue($unlisted) )
+    		alert('Empty Data. There is nothing to export');
+    	@else{
+	    	url = '';
 
-		var filter_reference_no = $('#filter_reference_no').val();
-		url += '?filter_reference_no=' + encodeURIComponent(filter_reference_no);
+			var filter_reference_no = $('#filter_reference_no').val();
+			url += '?filter_reference_no=' + encodeURIComponent(filter_reference_no);
 
-		url += '&sort=' + encodeURIComponent('{{ $sort }}');
-		url += '&order=' + encodeURIComponent('{{ $order }}');
+			url += '&sort=' + encodeURIComponent('{{ $sort }}');
+			url += '&order=' + encodeURIComponent('{{ $order }}');
 
-      	location = "{{ $url_export }}" + url;
+	      	location = "{{ $url_export }}" + url;
+	    }
+	    @endif
     });
 });
 </script>

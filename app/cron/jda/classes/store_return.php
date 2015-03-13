@@ -202,6 +202,73 @@ class storeReturn extends jdaCustomClass
 		$formValues[] = array(sprintf("%-8s", $slot_code),7,12);
 		parent::$jda->write5250($formValues,F7,true);
 
+				while($tries3++ < 5 && (!parent::$jda->screenCheck("Transfer Number") || !parent::$jda->screenCheck("All Recieved Quantities are ZERO."))){
+					echo "\nF7 not yet processed pressed F7 & tries: {$tries3} \n";
+					parent::$jda->write5250($formValues,F7,true);
+				}
+				$tries3=0;
+				if(parent::$jda->screenCheck("You have requested to Exit")){
+					while($tries3++ < 5 && parent::$jda->screenWait("You have requested to Exit")){
+						echo "\n Found *********** WARNING *********** pressed F12 & tries: {$tries2} \n";
+						parent::$jda->set_pos(17,24);
+						parent::$jda->write5250(null,F12,true);
+					}
+					$tries3=0;
+					while($tries3++ < 5 && (!parent::$jda->screenCheck("Transfer Number") || !parent::$jda->screenCheck("All Recieved Quantities are ZERO."))){
+						echo "\nF7 not yet processed pressed F7 & tries: {$tries3} \n";
+						parent::$jda->write5250($formValues,F7,true);
+					}
+					$tries3=0;
+				}
+				echo "\n pressed F7 \n";
+				if(parent::$jda->screenCheck('All Recieved Quantities are ZERO.')) {
+					echo "\n All Recieved Quantities are ZERO. \n";
+					while($tries3++ < 5 && parent::$jda->screenCheck("All Recieved Quantities are ZERO.")){
+						echo "\nF1 not yet processed pressed F1 & tries: {$tries3} \n";
+						parent::$jda->write5250(NULL,F1,true);
+					}
+					$tries3=0;
+					while($tries3++ < 5 && parent::$jda->screenWait("You have requested to Exit")){
+						echo "\n Found *********** WARNING *********** pressed F12 & tries: {$tries2} \n";
+						parent::$jda->set_pos(17,24);
+						parent::$jda->write5250(null,F12,true);
+					}
+					$tries3=0;
+					while($tries3++ < 5 && parent::$jda->screenCheck("Update of product receipts in progress")){
+						echo "\n waiting & tries: {$tries3} \n";
+						parent::$jda->write5250($formValues,F7,true);
+					}
+					$tries3=0;
+					echo "\n pressed F1 \n";
+					parent::display(parent::$jda->screen,132);
+				}				
+
+				if(parent::$jda->screenCheck('=Msg')) {
+					for($i=0; $i < $offset; $i++)
+					{
+						$top_sku=$transfer_nos[$new]['sku'];
+						echo "\nCounter of i is: {$offset} \n";
+						echo "\nEntered ROLLUP: Page: {$offset} with offset of: {$new} and row {$row} \n";
+						while($tries3++ < 5 && !parent::$jda->screenCheck("{$top_sku}")){
+							echo "\nROLLUP not yet processed pressed ROLLUP & tries: {$tries3} \n";
+							parent::$jda->write5250(null,ROLLUP,true);
+						}
+						parent::display(parent::$jda->screen,132);
+					}
+					while($tries3++ < 5 && (!parent::$jda->screenCheck("Transfer Number") || !parent::$jda->screenCheck("All Recieved Quantities are ZERO."))){
+						echo "\nF7 not yet processed pressed F7 & tries: {$tries3} \n";
+						parent::$jda->write5250($formValues,F7,true);
+					}
+					$tries3=0;
+					echo "\n pressed F7 after F1\n";
+				}
+
+					parent::display(parent::$jda->screen,132);
+					while($tries3++ < 5 && !parent::$jda->screenCheck("Transfer Receipt Maintenance-SKU")){
+						echo "\nENTER not yet processed pressed ENTER & tries: {$tries3} \n";
+						parent::$jda->write5250(null,ENTER,true);
+					}	
+					$tries3=0;
 		foreach($transfer_nos as $transfer_no){
 			if($transfer_no['delivered_qty']==0){
 				print_r($transfer_no);
