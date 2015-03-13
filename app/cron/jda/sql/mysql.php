@@ -215,7 +215,7 @@ class pdoConnection
 	public function getTransferNo($soNo) {
 		$soNo = join(',', $soNo);
 		echo "\n Getting transfer no from db \n";
-		$sql 	= "SELECT wms_store_return.so_no,slot_code,wms_store_return_detail.received_qty,wms_product_lists.sku FROM wms_store_return
+		$sql 	= "SELECT wms_store_return.so_no,slot_code,wms_store_return_detail.delivered_qty,wms_store_return_detail.received_qty,wms_product_lists.sku FROM wms_store_return
 					INNER JOIN wms_store_return_detail ON wms_store_return.so_no = wms_store_return_detail.so_no
 					INNER JOIN wms_product_lists ON wms_store_return_detail.sku = wms_product_lists.upc
 					WHERE wms_store_return.so_no IN ({$soNo})
@@ -226,6 +226,7 @@ class pdoConnection
 		foreach ($query as $value ) {
 			$result[] =  array(
 				'transfer_no' => $value['so_no'],
+				'delivered_qty' => $value['delivered_qty'],
 				'received_qty' => $value['received_qty'],
 				'slot_code' => $value['slot_code'],
 				'sku' => $value['sku']);
