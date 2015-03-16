@@ -78,9 +78,6 @@ td.underline {padding-bottom: 0; }
 					    <td>_____________</td>
 						</tr>
 						<tr>
-							<th style="text-align: right">Manual PL#:</th>
-							<td>_____________</td>
-					    </tr><tr>
 					    <th style="text-align: right">PL#:</th>
 					    <td>_____________</td>
 					    </tr>

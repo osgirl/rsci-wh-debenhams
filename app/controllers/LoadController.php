@@ -187,9 +187,16 @@ class LoadController extends BaseController {
 			$this->data['loadCode'] = $loadCode;
 			$this->data['records'] = Load::getLoadDetails($loadCode);
 			$this->data['permissions'] = unserialize(Session::get('permissions'));
+            $load=Load::select('printMTS')->where('load_code','=',$loadCode)->get();
+            $this->data['print_status']=$load[0]['printMTS'];
+		Load::where('load_code', '=', $loadCode)
+                ->update(array(
+                    "printMTS" => 1
+                ));
 
-			$this->layout = View::make('layouts.print');
-			$this->layout->content = View::make('loads.printmts', $this->data);
+		$pdf = App::make('dompdf');
+		$pdf->loadView('loads.printmts', $this->data)->setPaper('a4')->setOrientation('landscape');
+		return $pdf->download('loadsMTS_' . date('Ymd') . '.pdf');
 
 		} catch (Exception $e) {
 			return Redirect::to('load/list'. $this->setURL())->withErrors(Lang::get('loads.text_fail_load'));
@@ -202,9 +209,16 @@ class LoadController extends BaseController {
             $this->data['loadCode'] = $loadCode;
             $this->data['records'] = Load::getPackingDetails($loadCode);
             $this->data['permissions'] = unserialize(Session::get('permissions'));
+            $load=Load::select('printPacking')->where('load_code','=',$loadCode)->get();
+            $this->data['print_status']=$load[0]['printPacking'];
+		Load::where('load_code', '=', $loadCode)
+                ->update(array(
+                    "printPacking" => 1
+                ));
 
-            $this->layout = View::make('layouts.print');
-            $this->layout->content = View::make('loads.print_packing_list', $this->data);
+		$pdf = App::make('dompdf');
+		$pdf->loadView('loads.print_packing_list', $this->data)->setPaper('a4')->setOrientation('landscape');
+		return $pdf->download('loadsPackingList_' . date('Ymd') . '.pdf');
 
         } catch (Exception $e) {
             return Redirect::to('load/list'. $this->setURL())->withErrors(Lang::get('loads.text_fail_load'));

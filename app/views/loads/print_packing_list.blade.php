@@ -42,15 +42,18 @@ td.underline {padding-bottom: 0; }
 </style>
 
 <div id="actionButtons">
-	<a href="#" onclick="window.print();">PRINT THIS</a>
-	<a href="{{url('load/list')}}">BACK TO LOAD LIST</a>
 
 </div>
 	<section class="soContainer">
 		<header>
 			<div class="doctitle">
 				<h1>Casual Clothing Retailers Inc.<br/>PACKING LIST</h1>
-				Print Date: {{ date('m/d/y h:i A')}}
+				Print Date: {{ date('m/d/y h:i A')}} <br>
+				@if($print_status == 0)
+				ORIGINAL
+				@else
+				REPRINT
+				@endif
 			</div>
 		</header>
 		<table class="commonInfo">
@@ -188,5 +191,5 @@ td.underline {padding-bottom: 0; }
 				Driver:<hr/><br/>
 			</div>
 		</div>
-		Copy 1 &  2 - WH-OS (for checking), then to WH-DC (for Posting) and then to WH-SCC (for IMS update)  <br>   Copy 3 - WH-SCC (file copy upon release)
+		Copy 1 &  2 - WH-OS (for checking), then to WH-DC (for Posting) and then to WH-SCC (for IMS update) &nbsp;&nbsp;&nbsp;   Copy 3 - WH-SCC (file copy upon release)
 	</section>

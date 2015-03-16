@@ -15,6 +15,17 @@
 				<h1>Casual Clothing Retailers Inc.<br/>EXPIRY REPORT</h1>
 				Print Date: {{ date('m/d/y h:i A')}}
 			</div>
+
+	<table class="commonInfo" >
+		<tr>
+			<th style="text-align: right">Date From:</th>
+			<td>{{$filter_from_date}}</td>
+		</tr>
+		<tr>
+			<th style="text-align: right">Date To:</th>
+			<td>{{$filter_to_date}} </td>
+		</tr>
+	</table>
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>

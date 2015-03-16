@@ -41,8 +41,6 @@ td.underline {padding-bottom: 0; }
 
 </style>
 <div id="actionButtons">
-	<a href="#" onclick="window.print();">PRINT THIS</a>
-	<a href="{{url('load/list')}}">BACK TO LOAD LIST</a>
 
 </div>
 @foreach($records['StoreOrder'] as $soNo => $val)
@@ -51,7 +49,12 @@ td.underline {padding-bottom: 0; }
 		<header>
 			<div class="doctitle">
 				<h1>Casual Clothing Retailers Inc.<br/>MTS REPORT</h1>
-				Print Date: {{ date('m/d/y h:i A')}}
+				Print Date: {{ date('m/d/y h:i A')}} <br>
+				@if($print_status == 0)
+				ORIGINAL
+				@else
+				REPRINT
+				@endif
 			</div>
 		</header>
 		<table class="commonInfo">
@@ -158,7 +161,7 @@ td.underline {padding-bottom: 0; }
 				Received by / Date:<hr/><br/>
 			</div>
 		</div>
-			Copy 1 - ICG &nbsp&nbsp&nbsp    Copy 2 - Receiving / To  &nbsp&nbsp&nbsp   Copy 3 - From Location   &nbsp&nbsp&nbsp  Copy 4 - From Location
+			Copy 1 - ICG &nbsp;&nbsp;&nbsp;    Copy 2 - Receiving / To  &nbsp;&nbsp;&nbsp;   Copy 3 - From Location   &nbsp;&nbsp;&nbsp;  Copy 4 - From Location
 	</section>
 @endforeach
 

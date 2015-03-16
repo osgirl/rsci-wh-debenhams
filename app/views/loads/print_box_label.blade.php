@@ -78,14 +78,9 @@ td.underline {padding-bottom: 0; }
 		@if(!in_array($boxNo, $boxarray))
 		<section class="soContainer" style="width:375px; height:225px" >
 			<h1>Box {{$counter .' of '. $totalBox }}</h1>
-			@if($records['is_shipped'])
-				Ship by: {{$records['ship_date']}}
-			@endif
-		<header>
 			<div class="doctitle">
 				<h1>Box No:<br/>{{$boxNo}}</h1>
 			</div>
-		</header>
 			<table class="contents">
 				<tr>
 					<th>Category</th>
@@ -113,6 +108,12 @@ td.underline {padding-bottom: 0; }
 			<?php 
 				array_push($boxarray, $boxNo);
 			?>
+
+			@if($records['is_shipped'])
+				Shipped by date: {{$records['ship_date']}}
+			@else
+				This box is not yet shipped
+			@endif
 		</section>
 			<?php $counter++; ?>
 		@endif

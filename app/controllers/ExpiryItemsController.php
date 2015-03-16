@@ -57,6 +57,8 @@ class ExpiryItemsController extends BaseController {
 							'limit'				=> NULL
 						);
 		$results = PurchaseOrderDetail::getPODetailsWithExpiration($arrParams);
+		$this->data['filter_from_date'] = Input::get('filter_from_date', NULL);
+		$this->data['filter_to_date'] = Input::get('filter_to_date', NULL);
 		$this->data['results'] = $results;
 
 		$pdf = App::make('dompdf');
@@ -120,6 +122,8 @@ class ExpiryItemsController extends BaseController {
 
 		$this->data['filter_po_no'] = $filter_po_no;
 		$this->data['filter_shipment_reference_no'] = $filter_shipment_reference_no;
+		$this->data['filter_from_date'] = $filter_from_date;
+		$this->data['filter_to_date'] = $filter_to_date;
 		// $this->data['po_info'] = PurchaseOrder::getPOInfo($receiver_no);
 
 		$this->data['sort'] = $sort;
