@@ -44,6 +44,7 @@ class Unlisted extends Eloquent {
 
         if( CommonHelper::hasValue($data['filter_reference_no']) ) $query->where('reference_no', 'LIKE', '%'. $data['filter_reference_no'] . '%');
         if( CommonHelper::hasValue($data['filter_sku']) ) $query->where('sku', 'LIKE', '%'. $data['filter_sku'] . '%');
+        if( CommonHelper::hasValue($data['filter_shipment_reference_no']) ) $query->where('shipment_reference_no', 'LIKE', '%'. $data['filter_shipment_reference_no'] . '%');
 
         if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
             if ($data['sort'] == 'reference_no') $data['sort'] = 'reference_no';
