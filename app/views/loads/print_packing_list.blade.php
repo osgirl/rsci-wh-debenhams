@@ -26,6 +26,11 @@ header {margin-bottom: 20px;}
 .contents th {text-align: left; padding: 5px;}
 .contents th {background-color: #F0F0F0}
 
+.contents2 {margin-top: 10px; width: 100%;}
+.contents2 th, .contents td { padding: 2px; margin: 0; }
+.contents2 th {text-align: left; padding: 5px;}
+.contents2 th {background-color: #F0F0F0}
+
 .comments {width: 100%; margin-top: 15px;}
 .comments hr{ margin-top:25px;}
 
@@ -168,28 +173,67 @@ td.underline {padding-bottom: 0; }
 			<tr>
 				<th style="text-align: right">Seal #1:</th>
 				<td>_____________</td>
-					<td>&nbsp&nbsp&nbsp</td>
+					<td>&nbsp;&nbsp;&nbsp;</td>
 				<th style="text-align: right">Seal #2:</th>
 				<td>_____________</td>
 			</tr>
 		</table>
 
-		<div class="signatories">
-			<div>
-				Prepared By / Date: <hr/><br/>
-				Issued By / Date: <hr/><br/>
-				Plate No.: <hr/><br/>
-			</div>
-			<div>
-				Other Remarks: <hr/><br/>
-				Issuance/Validated By / Date:<hr/><br/>
-				Deliveryman:<hr/><br/>
-			</div>
-			<div>
-				Delivery Van Opened By / Date:<hr/><br/>
-				Posted By / Date:<hr/><br/>
-				Driver:<hr/><br/>
-			</div>
-		</div>
+		<table class="contents2">
+			<tr>
+				<td colspan='3'>
+				Prepared By / Date:
+				</td>
+				<td colspan='3'>
+				Other Remarks:
+				</td>
+				<td colspan='3'>
+				Delivery Van Opened By / Date:
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="underline"><hr/></td>
+				<td></td>
+				<td colspan='2' class="underline"><hr/></td>
+				<td></td>
+				<td colspan='2' class="underline"><hr/></td>
+			</tr>
+			<tr>
+				<td colspan='3'>
+				Issued By / Date:
+				</td>
+				<td colspan='3'>
+				Issuance/Validated By / Date:
+				</td>
+				<td  colspan='3'>
+				Posted By / Date:
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="underline"><hr/></td>
+				<td></td>
+				<td colspan='2' class="underline"><hr/></td>
+				<td></td>
+				<td colspan='2' class="underline"><hr/></td>
+			</tr>
+			<tr>
+				<td colspan='3'>
+				Plate No.:
+				</td>
+				<td colspan='3'>
+				Deliveryman:
+				</td>
+				<td colspan='3'>
+				Driver:
+				</td>
+			</tr>
+			<tr>
+				<td colspan='2' class="underline"><hr/></td>
+				<td></td>
+				<td colspan='2' class="underline"><hr/></td>
+				<td></td>
+				<td colspan='2' class="underline"><hr/></td>
+			</tr>
+		</table>
 		Copy 1 &  2 - WH-OS (for checking), then to WH-DC (for Posting) and then to WH-SCC (for IMS update) &nbsp;&nbsp;&nbsp;   Copy 3 - WH-SCC (file copy upon release)
 	</section>

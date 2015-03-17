@@ -26,6 +26,11 @@ header {margin-bottom: 20px;}
 .contents th {text-align: left; padding: 5px;}
 .contents th {background-color: #F0F0F0}
 
+.contents2 {margin-top: 10px; width: 100%;}
+.contents2 th, .contents td { padding: 2px; margin: 0; }
+.contents2 th {text-align: left; padding: 5px;}
+.contents2 th {background-color: #F0F0F0}
+
 .comments {width: 100%; margin-top: 15px;}
 .comments hr{ margin-top:25px;}
 
@@ -148,19 +153,37 @@ td.underline {padding-bottom: 0; }
 
 		</div>
 
-		<div class="signatories">
-			<div>
-				Checked By / Issued By / Date: <hr/>
-				Issuance Validated by:<hr/><br/>
-			</div>
-			<div>
-				<br/>
-			</div>
-			<div>
-				Delivered By / Date: <hr/>
-				Received by / Date:<hr/><br/>
-			</div>
-		</div>
+		
+		<table class="contents2">
+			<tr>
+				<td colspan='2'>
+				Checked By / Issued By / Date:
+				</td>
+				<td colspan='2'>
+				Issuance Validated by:
+				</td>
+			</tr>
+			<tr>
+				<td class="underline"><hr/></td>
+				<td></td>
+				<td class="underline"><hr/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan='2'>
+				Delivered By / Date:
+				</td>
+				<td colspan='2'>
+				Received by / Date:
+				</td>
+			</tr>
+			<tr>
+				<td class="underline"><hr/></td>
+				<td></td>
+				<td class="underline"><hr/></td>
+				<td></td>
+			</tr>
+		</table>
 			Copy 1 - ICG &nbsp;&nbsp;&nbsp;    Copy 2 - Receiving / To  &nbsp;&nbsp;&nbsp;   Copy 3 - From Location   &nbsp;&nbsp;&nbsp;  Copy 4 - From Location
 	</section>
 @endforeach

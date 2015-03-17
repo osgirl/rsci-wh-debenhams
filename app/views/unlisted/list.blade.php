@@ -4,7 +4,7 @@
 			<div class="accordion-group search-panel">
 				{{ Form::open(array('url'=>'unlisted', 'class'=>'form-signin', 'id'=>'form-unlisted', 'role'=>'form', 'method' => 'get')) }}
 				<div id="collapseOne" class="accordion-body collapse in search-panel-content">
-					<div class="span4">
+					<div class="span6">
 						<div>
 							<span class="search-po-left-pane">{{ $label_filter_reference_no }}</span>
 							<span class="search-po-right-pane">

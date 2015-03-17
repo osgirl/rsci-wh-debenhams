@@ -1,7 +1,10 @@
 <style type="text/css">
-	.signatories {width: 100%; margin-top: 25px; line-height: 20px;  }
-	.signatories div {float: left; width: 30%; margin-right: 3%;}
-	.signatories hr{margin-top:25px;}
+
+	.contents2 {margin-top: 10px; width: 100%;}
+	.contents2 th, .contents td { padding: 2px; margin: 0; }
+	.contents2 th {text-align: left; padding: 5px;}
+	.contents2 th {background-color: #F0F0F0}
+
 	td.underline hr{ margin-top: 20px; border: none; border-bottom: solid 1px #000;}
 	td.underline {padding-bottom: 0; }
 	footer {
@@ -71,20 +74,38 @@
 	</table>
 </div>
 
-		<div class="signatories">
-			<div>
-				Checked by/Date: <hr/>
-				Printed name/Signature/Date<br/>
-			</div>
-			<div>
-				Validated by/Date: <hr/>
-				Printed name/Signature/Date<br/>
-			</div>
-			<div>
-				PO Created by/Date: <hr/>
-				Printed name/Signature/Date<br/>
-			</div>
-		</div>
+		<table class="contents2">
+			<tr>
+				<td colspan='3'>
+				Checked by/Date:
+				</td>
+				<td colspan='3'>
+				Validated by/Date:
+				</td>
+				<td colspan='3'>
+				PO Created by/Date:
+				</td>
+			</tr>
+			<tr>
+				<td class="underline" colspan='2'><hr/></td>
+				<td></td>
+				<td class="underline" colspan='2'><hr/></td>
+				<td></td>
+				<td class="underline" colspan='2'><hr/></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td colspan='3'>
+				Printed name/Signature/Date
+				</td>
+				<td colspan='3'>
+				Printed name/Signature/Date
+				</td>
+				<td colspan='3'>
+				Printed name/Signature/Date
+				</td>
+			</tr>
+		</table>
 		<footer>
 		Copy 1-Merchandising &emsp;&emsp;&emsp;	Copy 2- ICG &emsp;&emsp;&emsp; Copy 3- Warehouse
 		</footer>
