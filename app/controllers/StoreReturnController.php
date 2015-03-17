@@ -68,16 +68,40 @@ class StoreReturnController extends BaseController {
 		}
 
 		if (StoreReturn::find(Input::get('id', NULL))!=NULL) {
+			$filter_so_no = Input::get('filter_so_no', NULL);
+			$filter_store = Input::get('filter_store', NULL);
+			$filter_created_at = Input::get('filter_created_at', NULL);
+			$filter_status = Input::get('filter_status', NULL);
+
+			//for back
+			$sort_back  = Input::get('sort_back', 'so_no');
+			$order_back = Input::get('order_back', 'ASC');
+			$page_back  = Input::get('page_back', 1);
+
+			// Details
+			$sort_detail  = Input::get('sort', 'sku');
+			$order_detail = Input::get('order', 'ASC');
+			$page_detail  = Input::get('page', 1);
+
+			//Data
 			$so_id = Input::get('id', NULL);
+			$so_no = Input::get('so_no', NULL);
 			$this->data = Lang::get('store_return');
 			$this->data['so_status_type'] = Dataset::getTypeWithValue("SR_STATUS_TYPE");
 			$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
+
 			$arrParams = array(
-							'sort'		=> Input::get('sort_detail', 'sku'),
-							'order'		=> Input::get('order_detail', 'ASC'),
-							'page'		=> NULL,
-							'limit'		=> NULL
-						);
+					'id'             => $so_id,
+					'sort'              => $sort_detail,
+					'order'             => $order_detail,
+					'page'              => $page_detail,
+					'so_no'             => $so_no,
+					'filter_so_no'      => $filter_so_no,
+					'filter_store'      => $filter_store,
+					'filter_created_at' => $filter_created_at,
+					'filter_status'     => $filter_status,
+					'limit' => NULL
+				);
 
 			$so_info = StoreReturn::getSOInfo($so_id);
 			$results = StoreReturnDetail::getSODetails($so_info->so_no, $arrParams)->toArray();
