@@ -91,6 +91,7 @@ class UnlistedController extends BaseController {
 		$arrParams = array(
 							'filter_reference_no'	=> Input::get('filter_reference_no', NULL),
 							'filter_sku' 		=> Input::get('filter_sku', NULL),
+							'filter_shipment_reference_no' 		=> Input::get('filter_shipment_reference_no', NULL),
 							'sort'				=> Input::get('sort', 'reference_no'),
 							'order'				=> Input::get('order', 'ASC'),
 							'page'				=> NULL,
@@ -100,6 +101,8 @@ class UnlistedController extends BaseController {
 		$results = Unlisted::getList($arrParams);
 		$this->data['uirr_no'] = self::uirrGeneration();
 		$this->data['results'] = $results;
+		$this->data['shipment_reference_no'] = $results[0]['shipment_reference_no'];
+		$this->data['delivery_date'] = $results[0]['delivery_date'];
 
 		$pdf = App::make('dompdf');
 		$pdf->loadView('unlisted.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
@@ -117,6 +120,7 @@ class UnlistedController extends BaseController {
 		// Search Filters
 		$filter_sku = Input::get('filter_sku', NULL);
 		$filter_reference_no = Input::get('filter_reference_no', NULL);
+		$filter_shipment_reference_no = Input::get('filter_shipment_reference_no', NULL);
 
 		$sort = Input::get('sort', 'reference_no');
 		$order = Input::get('order', 'ASC');
@@ -126,6 +130,7 @@ class UnlistedController extends BaseController {
 		$arrParams = array(
 							'filter_reference_no'	=> $filter_reference_no,
 							'filter_sku'		=> $filter_sku,
+							'filter_shipment_reference_no'=> $filter_shipment_reference_no,
 							'sort'				=> $sort,
 							'order'				=> $order,
 							'page'				=> $page,
@@ -139,6 +144,7 @@ class UnlistedController extends BaseController {
 		$this->data['arrFilters'] = array(
 										'filter_reference_no'	=> $filter_reference_no,
 										'filter_sku'		=> $filter_sku,
+										'filter_shipment_reference_no'=> $filter_shipment_reference_no,
 										'sort'				=> $sort,
 										'order'				=> $order
 									);
@@ -150,6 +156,7 @@ class UnlistedController extends BaseController {
 
 		$this->data['filter_reference_no'] = $filter_reference_no;
 		$this->data['filter_sku'] = $filter_sku;
+		$this->data['filter_shipment_reference_no'] = $filter_shipment_reference_no;
 
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
@@ -157,6 +164,7 @@ class UnlistedController extends BaseController {
 
 		$url = '?filter_reference_no=' . $filter_reference_no;
 		$url .= '&filter_sku=' . $filter_sku;
+		$url .= '&filter_shipment_reference_no=' . $filter_shipment_reference_no;
 		$url .= '&page=' . $page;
 
 		$order_reference = ($sort=='reference_no' && $order=='ASC') ? 'DESC' : 'ASC';

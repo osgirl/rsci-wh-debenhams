@@ -27,7 +27,10 @@
 <div class="table-responsive">
 			<div style="text-align: center">
 				<h1>Casual Clothing Retailers Inc.<br/>UNLISTED ITEMS RECEIVING REPORT</h1>
+				{{ $col_shipment_reference ." ". $shipment_reference_no }}<br />
+				{{ $col_po_created }}____________<br />
 				UIRR No. : {{$results[0]['destination']}}-{{$uirr_no}}<br />
+				{{ $col_delivery_date." ".date('m/d/Y',strtotime($delivery_date)) }}<br />
 				Print Date: {{ date('m/d/y h:i A')}}
 			</div>
 
@@ -35,10 +38,7 @@
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
-				<th>{{ $col_po_created }}</th>
 				<th>{{ $col_reference }}</th>
-				<th>{{ $col_shipment_reference }}</th>
-				<th>{{ $col_delivery_date }}</th>
 				<th>{{ $col_upc }}</th>
 				<th>{{ $col_quantity_received }}</th>
 				<th>{{ $col_description }}</th>
@@ -51,15 +51,12 @@
 		</thead>
 		@if( !CommonHelper::arrayHasValue($results) )
 			<tr class="font-size-13">
-				<td colspan="12" class="align-center">{{ $text_empty_results }}</td>
+				<td colspan="9" class="align-center">{{ $text_empty_results }}</td>
 			</tr>
 		@else
 			@foreach($results as $unlist)
 			<tr class="font-size-13">
-				<td></td>
 				<td>{{ $unlist['reference_no'] }}</td>
-				<td>{{ $unlist['shipment_reference_no'] }}</td>
-				<td>{{ date('m/d/Y',strtotime($unlist['delivery_date'])) }}</td>
 				<td>{{ $unlist['sku'] }}</td>
 				<td>{{ $unlist['quantity_received'] }}</td>
 				<td>{{ $unlist['description'] }}</td>

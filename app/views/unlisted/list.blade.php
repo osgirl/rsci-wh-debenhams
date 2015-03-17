@@ -17,6 +17,12 @@
 								{{ Form::text('filter_sku', $filter_sku, array('id'=>'filter_sku', 'placeholder'=>'')) }}
 							</span>
 						</div>
+						<div>
+							<span class="search-po-left-pane">{{ $label_filter_shipment_reference_no }}</span>
+							<span class="search-po-right-pane">
+								{{ Form::text('filter_shipment_reference_no', $filter_shipment_reference_no, array('id'=>'filter_shipment_reference_no', 'placeholder'=>'')) }}
+							</span>
+						</div>
 					</div>
 
 					<div class="span11 control-group collapse-border-top" style="margin-top: 6px;">
@@ -124,7 +130,7 @@ $(document).ready(function() {
 
     // Clear Form
     $('#clearForm').click(function() {
-    	$('#filter_reference_no, #filter_sku').val('');
+    	$('#filter_reference_no, #filter_sku, #filter_shipment_reference_no').val('');
     	$('#form-unlisted').submit();
     });
 
@@ -132,11 +138,17 @@ $(document).ready(function() {
     $('#exportList').click(function() {
     	@if( !CommonHelper::arrayHasValue($unlisted) )
     		alert('Empty Data. There is nothing to export');
+    	@elseif($filter_shipment_reference_no==NULL)
+    		alert('Shipment Reference Number is a required filter. There is nothing to export');
     	@else{
 	    	url = '';
 
 			var filter_reference_no = $('#filter_reference_no').val();
 			url += '?filter_reference_no=' + encodeURIComponent(filter_reference_no);
+			var filter_sku = $('#filter_sku').val();
+			url += '&filter_sku=' + encodeURIComponent(filter_sku);
+			var filter_shipment_reference_no = $('#filter_shipment_reference_no').val();
+			url += '&filter_shipment_reference_no=' + encodeURIComponent(filter_shipment_reference_no);
 
 			url += '&sort=' + encodeURIComponent('{{ $sort }}');
 			url += '&order=' + encodeURIComponent('{{ $order }}');

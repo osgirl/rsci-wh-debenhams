@@ -14,6 +14,7 @@ return array(
 	'label_filter_reference_no'	=> 'PO No.',
 	'label_filter_sku'			=> 'Sku No.',
 	'label_filter_upc'			=> 'Upc No.',
+	'label_filter_shipment_reference_no'	=> 'Shipment Reference No.',
 
 	'button_close_po'				=> 'Close PO',
 	'button_assign_to_stock_piler' 	=> 'Assign to Stock Piler',
