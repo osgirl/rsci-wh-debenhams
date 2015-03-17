@@ -1,8 +1,10 @@
-# m h  dom mon dow   command
+00 21 * * * php /var/www/html/stratpoint_ssi-ewms-cr1/app/cron/cron_9am.php
+00 10 * * * php /var/www/html/stratpoint_ssi-ewms-cr1/app/cron/cron_10am.php
+00 12 * * * php /var/www/html/stratpoint_ssi-ewms-cr1/app/cron/cron_12pm.php
+30 9 * * * php /var/www/html/stratpoint_ssi-ewms-cr1/app/cron/ewms_cron_930am.php
+30 10 * * * php /var/www/html/stratpoint_ssi-ewms-cr1/app/cron/ewms_cron_1030am.php
+30 12 * * * php /var/www/html/stratpoint_ssi-ewms-cr1/app/cron/ewms_cron_1230pm.php
 
-30 9 * * * php /var/www/stratpoint_ssi-wms-portal/app/cron/ewms_cron_master_lists.php
-30 9,10 * * * php /var/www/stratpoint_ssi-wms-portal/app/cron/ewms_cron_po_so.php
-*/15 12,13,14,15,16,17,18,19,20,21,22,23 * * * php /var/www/stratpoint_ssi-wms-portal/app/cron/ewms_cron_picklist.php
-0 19 * * * php /var/www/stratpoint_ssi-wms-portal/app/cron/jda/classes/receive_po.php
-0 19 * * * php /var/www/stratpoint_ssi-wms-portal/app/cron/jda/classes/letdown.php
-0 19 * * * php /var/www/stratpoint_ssi-wms-portal/app/cron/jda/classes/picklist.php
+*/15 * * * * php /var/www/html/stratpoint_ssi-ewms-cr1/app/cron/jda/receive_po.php
+*/15 * * * * php /var/www/html/stratpoint_ssi-ewms-cr1/app/cron/jda/picklist.php
+*/15 * * * * php /var/www/html/stratpoint_ssi-ewms-cr1/app/cron/jda/palletizing_step1.php
