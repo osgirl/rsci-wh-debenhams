@@ -68,7 +68,7 @@
 			<table class="table table-striped table-bordered">
 				<thead>
 					<tr>
-						<th width="10%">{{ $col_id }}</th>
+						<th>{{ $col_id }}</th>
 						<th><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif"> {{ $col_upc }} </a></th>
 						<th><a href="{{ $sort_reference }}" class="@if( $sort=='reference_no' ) {{ $order }} @endif">{{ $col_reference }}</a></th>
 						<th>{{ $col_shipment_reference }}</th>
@@ -138,8 +138,8 @@ $(document).ready(function() {
     $('#exportList').click(function() {
     	@if( !CommonHelper::arrayHasValue($unlisted) )
     		alert('Empty Data. There is nothing to export');
-    	@elseif($filter_shipment_reference_no==NULL)
-    		alert('Shipment Reference Number is a required filter. There is nothing to export');
+    	@elseif($ship_ref_count>1)
+    		alert('Multiple Shipment Reference Number is invalid. Search for specific Shipment Reference Number.');
     	@else{
 	    	url = '';
 

@@ -100,9 +100,9 @@ class UnlistedController extends BaseController {
 
 		$results = Unlisted::getList($arrParams);
 		$this->data['uirr_no'] = self::uirrGeneration();
-		$this->data['results'] = $results;
-		$this->data['shipment_reference_no'] = $results[0]['shipment_reference_no'];
-		$this->data['delivery_date'] = $results[0]['delivery_date'];
+		$this->data['results'] = $results['result'];
+		$this->data['shipment_reference_no'] = $results['result'][0]['shipment_reference_no'];
+		$this->data['delivery_date'] = $results['result'][0]['delivery_date'];
 
 		$pdf = App::make('dompdf');
 		$pdf->loadView('unlisted.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
@@ -136,7 +136,7 @@ class UnlistedController extends BaseController {
 							'page'				=> $page,
 							'limit'				=> 30
 						);
-		$results = Unlisted::getList($arrParams)->toArray();
+		$results = Unlisted::getList($arrParams);
 		// echo '<pre>'; dd($results);
 		$results_total = count($results);
 
@@ -149,8 +149,9 @@ class UnlistedController extends BaseController {
 										'order'				=> $order
 									);
 
-		$this->data['unlisted'] = Paginator::make($results, $results_total, 30);
+		$this->data['unlisted'] = Paginator::make($results['result'], $results_total, 30);
 		$this->data['unlisted_count'] = $results_total;
+		$this->data['ship_ref_count'] = $results['ship_ref_count'];
 
 		$this->data['counter'] 	= $this->data['unlisted']->getFrom();
 

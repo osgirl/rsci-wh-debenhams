@@ -59,7 +59,8 @@ class Unlisted extends Eloquent {
                   ->take($data['limit']);
         }
 
-        $result = $query->get();
+        $result['result'] = $query->get()->toArray();
+        $result['ship_ref_count'] = $query->groupBy('shipment_reference_no')->get()->count();
         if($getCount) {
             $result = count($result);
         }
