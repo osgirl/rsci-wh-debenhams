@@ -39,6 +39,7 @@ header {margin-bottom: 20px;}
 .signatories hr{margin-top:25px;}
 td.underline hr{ margin-top: 20px; border: none; border-bottom: solid 1px #000;}
 td.underline {padding-bottom: 0; }
+td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 
 #actionButtons { top:0; left: 0; background-color: #DFF1F7; padding: 5px;}
 #actionButtons a {display: inline-block; padding: 1em; background-color: #3199BE; text-decoration: none; font: bold 1em Verdana ; color: #FFF;}
@@ -47,6 +48,8 @@ td.underline {padding-bottom: 0; }
 </style>
 
 <div id="actionButtons">
+	<a href="{{url('load/printpacklist/update/'.$loadCode)}}" onclick="window.print();">PRINT THIS</a>
+	<a href="{{url('load/list')}}">BACK TO LOAD LIST</a>
 
 </div>
 	<section class="soContainer">
@@ -145,10 +148,10 @@ td.underline {padding-bottom: 0; }
 			    <td align="center"> {{ $numOfBoxTotal }} </td>
 			    <td align="center">{{$grandTotal}}</td>
 				<td class="underline"><hr/></td>
-				<td class="underline"><hr/></td>
+				<td class="plain"><hr/></td>
 			</tr>
 			<tr>
-				<td>.</td>
+				<td class="plain"><br></td>
 			</tr>
 			<tr>
 					<td></td>
@@ -158,7 +161,7 @@ td.underline {padding-bottom: 0; }
 				<td class="underline"><hr/></td>
 			</tr>
 			<tr>
-				<td>.</td>
+				<td class="plain"><br></td>
 			</tr>
 			<tr><th colspan="6">Inter-Transfers</th></tr>
 			<tr>
@@ -166,7 +169,6 @@ td.underline {padding-bottom: 0; }
 				<th style="text-align: center">Grand Total: </th>
 				<td class="underline"><hr/></td>
 				<td class="underline"><hr/></td>
-				<td></td>
 			</tr>
 		</table>
 		<table>
@@ -184,56 +186,132 @@ td.underline {padding-bottom: 0; }
 				<td colspan='3'>
 				Prepared By / Date:
 				</td>
-				<td colspan='3'>
+				<td></td>
+				<td colspan='4'>
 				Other Remarks:
-				</td>
-				<td colspan='3'>
-				Delivery Van Opened By / Date:
 				</td>
 			</tr>
 			<tr>
-				<td colspan='2' class="underline"><hr/></td>
+				<td colspan='3' class="underline"><hr/></td>
 				<td></td>
-				<td colspan='2' class="underline"><hr/></td>
-				<td></td>
-				<td colspan='2' class="underline"><hr/></td>
+				<td colspan='5' class="underline"><hr/></td>
 			</tr>
+			<tr>
+				<td colspan='3'>
+					<br>
+				</td>
+			<tr>
 			<tr>
 				<td colspan='3'>
 				Issued By / Date:
 				</td>
+				<td></td>
 				<td colspan='3'>
 				Issuance/Validated By / Date:
 				</td>
-				<td  colspan='3'>
-				Posted By / Date:
+				<td></td>
+				<td colspan='3'>
+				Delivery Van Opened By / Date:
+				</td>
+			</tr>
+				<td colspan='3' class="underline"><hr/></td>
+				<td></td>
+				<td colspan='3' class="underline"><hr/></td>
+				<td></td>
+				<td colspan='2' class="underline"><hr/></td>
+			</tr>
+			<tr>
+				<td colspan='3'>
+				Signature over Printed Name
+				</td>
+				<td></td>
+				<td colspan='3'>
+				Signature over Printed Name
+				</td>
+				<td></td>
+				<td colspan='3'>
+				Signature over Printed Name
 				</td>
 			</tr>
 			<tr>
-				<td colspan='2' class="underline"><hr/></td>
-				<td></td>
-				<td colspan='2' class="underline"><hr/></td>
-				<td></td>
-				<td colspan='2' class="underline"><hr/></td>
-			</tr>
+				<td colspan='3'>
+					<br>
+				</td>
+			<tr>
 			<tr>
 				<td colspan='3'>
 				Plate No.:
 				</td>
+				<td></td>
 				<td colspan='3'>
 				Deliveryman:
 				</td>
+				<td></td>
 				<td colspan='3'>
 				Driver:
 				</td>
 			</tr>
 			<tr>
-				<td colspan='2' class="underline"><hr/></td>
+				<td colspan='3' class="underline"><hr/></td>
 				<td></td>
-				<td colspan='2' class="underline"><hr/></td>
+				<td colspan='3' class="underline"><hr/></td>
 				<td></td>
 				<td colspan='2' class="underline"><hr/></td>
 			</tr>
+			<tr>
+				<td colspan='3'>
+				</td>
+				<td></td>
+				<td colspan='3'>
+				Signature over Printed Name
+				</td>
+				<td></td>
+				<td colspan='3'>
+				Signature over Printed Name
+				</td>
+			</tr>
+			<tr>
+				<td colspan='3'>
+					<br>
+				</td>
+			<tr>
+			<tr>
+				<td colspan='3'>
+				</td>
+				<td></td>
+				<td colspan='3'>
+				</td>
+				<td></td>
+				<td  colspan='3'>
+				Posted By / Date:
+				</td>
+			</tr>
+			<tr>
+				<td colspan='3'>
+				</td>
+				<td></td>
+				<td colspan='3'>
+				</td>
+				<td></td>
+				<td colspan='2' class="underline"><hr/></td>
+			</tr>
+			<tr>
+				<td colspan='3'>
+				</td>
+				<td></td>
+				<td colspan='3'>
+				</td>
+				<td></td>
+				<td colspan='3'>
+				Signature over Printed Name
+				</td>
+			</tr>
+			<tr>
+				<td colspan='3'>
+					<br>
+				</td>
+			<tr>
+
 		</table>
-		Copy 1 &  2 - WH-OS (for checking), then to WH-DC (for Posting) and then to WH-SCC (for IMS update) &nbsp;&nbsp;&nbsp;   Copy 3 - WH-SCC (file copy upon release)
+		Copy 1 &  2 - WH-OS (for checking), then to WH-DC (for Posting) and then to WH-SCC (for IMS update) <br>   Copy 3 - WH-SCC (file copy upon release)
 	</section>
