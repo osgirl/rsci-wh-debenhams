@@ -143,18 +143,18 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 				<?php 
 					$numOfBoxTotal=count($boxarray);
 				?>
-					<td></td>
-			    <td style="text-align: center"><strong>Box Total:</strong></td>
+					<td class="plain"></td>
+			    <th style="text-align: center">Box Total:</td>
 			    <td align="center"> {{ $numOfBoxTotal }} </td>
 			    <td align="center">{{$grandTotal}}</td>
 				<td class="underline"><hr/></td>
-				<td class="plain"><hr/></td>
+				<td class="plain underline"><hr/></td>
 			</tr>
 			<tr>
 				<td class="plain"><br></td>
 			</tr>
 			<tr>
-					<td></td>
+					<td class="plain"></td>
 				<th style="text-align: center">Grand Total: </th>
 			    <td align="center">{{$numOfBoxTotal}}</td>
 			    <td align="center">{{$grandTotal}}</td>
@@ -163,21 +163,21 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 			<tr>
 				<td class="plain"><br></td>
 			</tr>
-			<tr><th colspan="6">Inter-Transfers</th></tr>
+			<tr><th colspan="6">INTER-TRANSFERS</th></tr>
 			<tr>
-					<td></td>
+					<td class="plain"></td>
 				<th style="text-align: center">Grand Total: </th>
 				<td class="underline"><hr/></td>
 				<td class="underline"><hr/></td>
 			</tr>
-		</table>
-		<table>
 			<tr>
-				<th style="text-align: right">Seal #1:</th>
-				<td>_____________</td>
-					<td>&nbsp;&nbsp;&nbsp;</td>
-				<th style="text-align: right">Seal #2:</th>
-				<td>_____________</td>
+				<td class="plain"><br></td>
+			</tr>
+			<tr>
+				<td class="plain" style="text-align: right">Seal #1:</th>
+				<td colspan="2" class="plain underline"><hr/></td>
+				<td class="plain" style="text-align: right">Seal #2:</th>
+				<td colspan="2" class="plain underline"><hr/></td>
 			</tr>
 		</table>
 
