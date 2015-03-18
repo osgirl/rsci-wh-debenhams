@@ -26,11 +26,6 @@ header {margin-bottom: 20px;}
 .contents th {text-align: left; padding: 5px;}
 .contents th {background-color: #F0F0F0}
 
-.contents2 {margin-top: 10px; width: 100%;}
-.contents2 th, .contents td { padding: 2px; margin: 0; }
-.contents2 th {text-align: left; padding: 5px;}
-.contents2 th {background-color: #F0F0F0}
-
 .comments {width: 100%; margin-top: 15px;}
 .comments hr{ margin-top:25px;}
 
@@ -168,28 +163,18 @@ td.underline {padding-bottom: 0; }
 			</tr>
 		</table>
 
-		<table class="contents2">
-			<tr>
-				<td colspan='2'>
-				Prepared by:
-				</td>
-				<td colspan='2'>
-				Checked by:
-				</td>
-			</tr>
-			<tr>
-				<td class="underline"><hr/></td>
-				<td></td>
-				<td class="underline"><hr/></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td colspan='2'>
-				Signature over Printed Name
-				</td>
-				<td colspan='2'>
-				Signature over Printed Name
-				</td>
-			</tr>
-		</table>
+		<div class="signatories">
+			<div>
+				Prepared by: <hr/>
+				Signature over Printed Name<br/>
+			</div>
+			<div>
+				<br/>
+			</div>
+
+			<div>
+				Checked by: <hr/>
+				Signature over Printed Name<br/>
+			</div>
+		</div>
 	</section>

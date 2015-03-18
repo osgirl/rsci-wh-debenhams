@@ -146,7 +146,9 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::get('load/export', 'LoadController@exportCSV');
 	Route::post('load/ship', 'LoadController@shipLoad');
 	Route::get('load/print/{loadCode}', 'LoadController@printLoad');
+	Route::get('load/print/update/{loadCode}', 'LoadController@updatePrintLoad');
     Route::get('load/printpacklist/{loadCode}', 'LoadController@printPackingList');
+    Route::get('load/printpacklist/update/{loadCode}', 'LoadController@updatePrintPackingList');
     Route::get('load/printloadingsheet/{loadCode}', 'LoadController@printLoadingSheet');
     Route::get('load/printboxlabel/{loadCode}', 'LoadController@printBoxLabel');
 
