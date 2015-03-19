@@ -138,7 +138,7 @@ class UnlistedController extends BaseController {
 						);
 		$results = Unlisted::getList($arrParams);
 		// echo '<pre>'; dd($results);
-		$results_total = count($results);
+		$results_total = count($results['result']);
 
 		// Pagination
 		$this->data['arrFilters'] = array(
