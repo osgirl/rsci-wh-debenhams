@@ -21,6 +21,7 @@
 				<th>{{ $col_back_order }}</th>
 				<th>{{ $col_carton_id }}</th>
 				<th>{{ $col_po_no }}</a></th>
+				<th>{{ $col_shipment_ref }}</a></th>
 				<th>{{ $col_receiver_no }}</th>
 				<th>{{ $col_total_qty }}</th>
 				<th>{{ $col_receiving_stock_piler }}</th>
@@ -38,6 +39,7 @@
 					<td>{{ $po->back_order }}</td>
 					<td>{{ $po->carton_id }}</td>
 					<td>{{ $po->purchase_order_no }}</td>
+					<td>{{ $po->shipment_reference_no }}</td>
 					<td>{{$po->receiver_no}}</td>
 					<td>{{ $po->total_qty }}</td>
 					<td>{{ $po->fullname }}</td>

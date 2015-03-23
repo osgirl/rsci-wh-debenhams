@@ -67,14 +67,14 @@ class PurchaseOrderController extends BaseController {
 			return Redirect::to('users/logout');
 		}
 
-		$pilers = implode(',' , Input::get('stock_piler'));
+		$pilers = implode(', ' , Input::get('stock_piler'));
 
 
 		//get moved_to_reserve id
 		$arrParams = array('data_code' => 'PO_STATUS_TYPE', 'data_value'=> 'assigned');
 		$po_status = Dataset::getType($arrParams)->toArray();
 
-		$arrPO = explode(',', Input::get("po_no"));
+		$arrPO = explode(', ', Input::get("po_no"));
 
 		foreach ($arrPO as $purchase_order_no) {
 			$arrParams = array(
@@ -271,6 +271,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['col_receiver_no'] = Lang::get('purchase_order.col_receiver_no');
 		$this->data['col_supplier'] = Lang::get('purchase_order.col_supplier');
 		$this->data['col_receiving_stock_piler'] = Lang::get('purchase_order.col_receiving_stock_piler');
+		$this->data['col_shipment_ref'] = Lang::get('purchase_order.col_shipment_ref');
 		$this->data['col_invoice_number'] = Lang::get('purchase_order.col_invoice_number');
 		$this->data['col_invoice_amount'] = Lang::get('purchase_order.col_invoice_amount');
 		$this->data['col_entry_date'] = Lang::get('purchase_order.col_entry_date');
@@ -893,7 +894,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['button_cancel']           = Lang::get('general.button_cancel');
 		$this->data['url_back']                = URL::to('purchase_order');
 		$this->data['error_assign_po']         = Lang::get('purchase_order.error_assign_po');
-		$this->data['params']                  = explode(',', Input::get('po_no'));
+		$this->data['params']                  = explode(', ', Input::get('po_no'));
 		$this->data['po_info']                 = PurchaseOrder::getPOInfoByPoNos($this->data['params']);
 
 		$this->layout->content                 = View::make('purchase_order.assign_piler_form', $this->data);

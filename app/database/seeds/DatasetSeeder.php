@@ -180,6 +180,13 @@ class DatasetSeeder extends Seeder {
 						'description' => 'UIRR unlisted format in series',
 						'created_at' => date('Y-m-d H:i:s')
 					),
+					array(
+						'data_code' => 'PL_NUM_FORMAT',
+						'data_value' => '0000000',
+						'data_display' => '0000000',
+						'description' => 'Packing list mumber format in series',
+						'created_at' => date('Y-m-d H:i:s')
+					),
 			);
 
 		foreach ($data as $d) {

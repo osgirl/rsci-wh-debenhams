@@ -45,6 +45,7 @@ return array(
 
 	'col_id' 					=> 'No.',
 	'col_po_no'					=> 'PO No.',
+	'col_shipment_ref'			=> 'Shipment Ref',
 	'col_receiver_no'			=> 'Receiver No.',
 	'col_total_qty'				=> 'Total Qty.',
 	'col_supplier'				=> 'Supplier',

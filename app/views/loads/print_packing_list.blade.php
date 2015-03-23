@@ -82,7 +82,7 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 							<td>{{Auth::user()->username;}}</td>
 						</tr><tr>
 							<th>PL Number:</th>
-							<td>_____________</td>
+							<td>{{$pl_num}}</td>
 						</tr>
 					</table>
 				</td>

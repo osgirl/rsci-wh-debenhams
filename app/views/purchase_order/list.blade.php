@@ -135,6 +135,7 @@
 						@endif
 						<th>{{ $col_id }}</th>
 						<th><a href="{{ $sort_po_no }}" class="@if( $sort=='po_no' ) {{ $order }} @endif">{{ $col_po_no }}</a></th>
+						<th>{{ $col_shipment_ref }}</th>
 						<th>{{ $col_back_order }}</th>
 						<th>{{ $col_total_qty }}</th>
 						<th>{{ $col_carton_id }}</th>
@@ -162,6 +163,7 @@
 						@endif
 						<td>{{ $counter++ }}</td>
 						<td><a href="{{ $url_detail . '&receiver_no=' . $po->receiver_no }}">{{ $po->purchase_order_no }}</a></td>
+						<td>{{ $po->shipment_reference_no }}</td>
 						<td>{{ $po->back_order }}</td>
 						<td>{{ $po->total_qty }}</td>
 						<td>{{ $po->carton_id }}</td>

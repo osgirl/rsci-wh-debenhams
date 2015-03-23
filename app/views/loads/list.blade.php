@@ -96,10 +96,18 @@
 								<a disabled class="btn btn-danger">{{ $button_shipped }}</a>
 							@endif
 
+							@if( $load['is_shipped'] == 0 )
+								&nbsp;&nbsp;<a disabled target="_blank" class="btn btn-danger">Print MTS</a>
+							@else
 								&nbsp;&nbsp;<a href="{{url('load/print/' . $load['load_code'])}}" target="_blank" class="btn btn-danger">Print MTS</a>
-								&nbsp;&nbsp;<a href="{{url('load/printboxlabel/' .$load['load_code'] )}}" target="_blank" class="btn btn-success">Print Box Label</a>
+							@endif
 								&nbsp;&nbsp;<a href="{{url('load/printloadingsheet/' . $load['load_code'])}}" target="_blank" class="btn btn-info">Print Loading Sheet</a>
+							
+							@if( $load['is_shipped'] == 0 )
+								&nbsp;&nbsp;<a disabled target="_blank" class="btn btn-default">Print Packing List</a>
+							@else
 								&nbsp;&nbsp;<a href="{{url('load/printpacklist/' . $load['load_code'])}}" target="_blank" class="btn btn-default">Print Packing List</a>
+							@endif
 						</td>
 					</tr>
 					@endforeach
