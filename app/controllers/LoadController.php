@@ -166,21 +166,6 @@ class LoadController extends BaseController {
 		die();
 	}
 
-	public function printBoxLabel($loadCode)
-	{
-		try {
-			$this->data['loadCode'] = $loadCode;
-			$this->data['records'] = Load::getPackingDetails($loadCode);
-			$this->data['permissions'] = unserialize(Session::get('permissions'));
-
-			$this->layout = View::make('layouts.print');
-			$this->layout->content = View::make('loads.print_box_label', $this->data);
-
-		} catch (Exception $e) {
-			return Redirect::to('load/list'. $this->setURL())->withErrors(Lang::get('loads.text_fail_load'));
-		}
-	}
-
 	public function printLoad($loadCode)
 	{
 		try {
@@ -200,18 +185,24 @@ class LoadController extends BaseController {
 
     public function printPackingList($loadCode)
     {
-        try {
             $this->data['loadCode'] = $loadCode;
             $this->data['records'] = Load::getPackingDetails($loadCode);
             $this->data['permissions'] = unserialize(Session::get('permissions'));
             $load=Load::select('printPacking')->where('load_code','=',$loadCode)->get();
             $this->data['print_status']=$load[0]['printPacking'];
 
+            $pl=Load::select('pl_number')->where('load_code','=',$loadCode)->get();
+            $pl_num=$pl[0]['pl_number'];
+            if($pl_num==''){
+            	$pl_num= self::plNumberGeneration();
+            	Load::where('load_code','=',$loadCode)->update(array('pl_number'=>$pl_num));
+            	$this->data['pl_num'] = $pl_num;
+            }
+            else
+            	$this->data['pl_num'] = $pl_num;
+
             $this->layout = View::make('layouts.print');
             $this->layout->content = View::make('loads.print_packing_list', $this->data);
-        } catch (Exception $e) {
-            return Redirect::to('load/list'. $this->setURL())->withErrors(Lang::get('loads.text_fail_load'));
-        }
     }
 
 	public function updatePrintLoad($loadCode)
@@ -308,5 +299,16 @@ class LoadController extends BaseController {
 		);
 
 		AuditTrail::addAuditTrail($arrParams);
+	}
+
+	protected function plNumberGeneration() {
+		$pl             = Dataset::firstOrNew(array('data_code'=>'PL_NUM_FORMAT'));
+		$plNo           = sprintf("%07s", (int)$pl->data_value + 1);
+		$pl->data_value = $plNo;
+		$pl->updated_at = date('Y-m-d H:i:s');
+		$pl->save();
+		$pl_code        = Dataset::find($pl->id);
+
+		return $plNo;
 	}
 }
