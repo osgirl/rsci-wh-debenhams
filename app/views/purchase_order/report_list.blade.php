@@ -64,9 +64,9 @@
 			<td colspan="11" style="text-align: center;">{{ $text_empty_results }}</td>
 		</tr>
 		@else
-			@foreach( $results as $po )
+			@foreach( $results as $key=>$po )
 				<tr class="font-size-13 tblrow" data-id="{{ $po->purchase_order_no }}">
-					<td>{{ $po->id }}</td>
+					<td>{{ $key+1 }}</td>
 					<td>{{ $po->back_order }}</td>
 					<td>{{ $po->carton_id }}</td>
 					<td>{{ $po->purchase_order_no }}</td>
