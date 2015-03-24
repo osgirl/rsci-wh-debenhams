@@ -56,7 +56,6 @@ class Picklist extends Eloquent {
 	{
 		// $query = Picklist::select(DB::raw('wms_picklist.*, sum(wms_picklist_details.move_to_shipping_area) as sum_moved, sum(wms_picklist_details.assigned_user_id) as sum_assigned, store_code' ))
 		$query = Picklist::join('picklist_details', 'picklist_details.move_doc_number', '=', 'picklist.move_doc_number')
-			->join('box_details', 'picklist_details.id', '=', 'box_details.picklist_detail_id')
 			->join('dataset', 'picklist.pl_status', '=', 'dataset.id');
 
 		if( CommonHelper::hasValue($data['filter_doc_no']) ) $query->where('picklist.move_doc_number', 'LIKE', '%'. $data['filter_doc_no'] . '%');
