@@ -162,18 +162,19 @@
 							<td class="align-center">
 								@if($value['data_display'] === 'Posted')
 									<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_posted }}</a>
+									<a href="{{url('picking/printboxlabel/' .$value['move_doc_number'] )}}" target="_blank" class="btn btn-success">Print Box Label</a>
 									 <!-- && ($value['quantity_to_pick'] != $value['moved_qty']) -->
 								@elseif ( $value['data_display'] === 'Done' )
 									<a style="width: 70px;" class="btn btn-success closePicklist" data-id="{{ $value['move_doc_number'] }}">{{ $button_close_picklist }}</a>
+									<a href="{{url('picking/printboxlabel/' .$value['move_doc_number'] )}}" target="_blank" class="btn btn-success">Print Box Label</a>
 								@else
 									<a style="width: 70px;" disabled="disabled" class="btn">{{ $button_close_picklist }}</a>
 								@endif
 
-								<a href="{{url('picking/printboxlabel/' .$value['move_doc_number'] )}}" target="_blank" class="btn btn-success">Print Box Label</a>
 								{{ Form::open(array('url'=>'picking/close', 'id' => 'closePicklist_' . $value['move_doc_number'], 'style' => 'margin: 0px;')) }}
 									{{ Form::hidden('doc_no', $value['move_doc_number']) }}
 									{{ Form::hidden('module', 'picklist') }}
-						  		{{ Form::close() }}
+						  		{{ Form::close() }} 
 							</td>
 
 						</tr>
