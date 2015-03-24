@@ -968,16 +968,11 @@ class PicklistController extends BaseController {
 
 	public function printBoxLabel($doc_num)
 	{
-		try {
 			$this->data['doc_num'] = $doc_num;
 			$this->data['records'] = Picklist::getPicklistBoxes($doc_num);
 			$this->data['permissions'] = unserialize(Session::get('permissions'));
 
 			$this->layout = View::make('layouts.print');
 			$this->layout->content = View::make('loads.print_box_label', $this->data);
-
-		} catch (Exception $e) {
-			return Redirect::to('load/list'. $this->setURL())->withErrors(Lang::get('loads.text_fail_load'));
-		}
 	}
 }
