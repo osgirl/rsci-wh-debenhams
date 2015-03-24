@@ -50,32 +50,34 @@ td.underline {padding-bottom: 0; }
 		$tempboxarray=[];
 		$counter=1;
 	?>
-@foreach($records['StoreOrder'] as $soNo => $val)
-	@foreach($val['items'] as $boxNo => $items)
+@foreach($records as $boxNo => $val)
+	@foreach($val['items'] as $item)
 		<?php 
 			if(!in_array($boxNo, $tempboxarray)){
 				$sonoarray[$boxNo] =[];
-				array_push($sonoarray[$boxNo], $soNo);
+				if( $item->box_code== $boxNo)
+					array_push($sonoarray[$boxNo], $item->so_no);
 				array_push($tempboxarray, $boxNo);
 			}
-			else
-				array_push($sonoarray[$boxNo], $soNo);
+			else if( $item->box_code== $boxNo)
+				array_push($sonoarray[$boxNo], $item->so_no);
 
 			$totalBox=count($tempboxarray);
 		?>
 	@endforeach
 @endforeach
-@foreach($records['StoreOrder'] as $soNo => $val)
-	@foreach($val['items'] as $boxNo => $items)
+@foreach($records as $boxNo => $val)
 		<?php 
 			$boxTotal=0;
 		?>
-		@foreach($items as $item)
+	@foreach($val['items'] as $item)
 			<?php
+			if( $item->box_code== $boxNo)
 				$boxTotal += $item->moved_qty;
 			?>
-		@endforeach
-		@if(!in_array($boxNo, $boxarray))
+	@endforeach
+	@foreach($val['items'] as $item)
+		@if(!in_array($boxNo, $boxarray) && $item->box_code== $boxNo)
 		<section class="soContainer" style="width:375px; height:225px" >
 			<h1>Box {{$counter .' of '. $totalBox }}</h1>
 			<div class="doctitle">
@@ -90,7 +92,7 @@ td.underline {padding-bottom: 0; }
 					<th>Quantity</th>
 				</tr>
 					<tr>
-						<td>{{$items[0]->sub_dept.' - '.$items[0]->description}}</td>
+						<td>{{$item->sub_dept.' - '.$item->description}}</td>
 								<td> 
 								@foreach($sonoarray[$boxNo] as $so_no)
 									@if(count($sonoarray[$boxNo])>1)
@@ -109,11 +111,6 @@ td.underline {padding-bottom: 0; }
 				array_push($boxarray, $boxNo);
 			?>
 
-			@if($records['is_shipped'])
-				Shipped by date: {{$records['ship_date']}}
-			@else
-				This box is not yet shipped
-			@endif
 		</section>
 			<?php $counter++; ?>
 		@endif

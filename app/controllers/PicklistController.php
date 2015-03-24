@@ -540,7 +540,7 @@ class PicklistController extends BaseController {
 		try {
 			$data = Input::all();
 			if(!isset($data['lock_tag'])) throw new Exception("Lock tag empty.");
-			$lockTags = explode(',',$data['lock_tag']);
+			$lockTags = explode(', ',$data['lock_tag']);
 			if(empty($lockTags)) throw new Exception("Lock tag empty.");
 			DB::beginTransaction();
 			PicklistDetails::unlockTag($lockTags);
@@ -568,7 +568,7 @@ class PicklistController extends BaseController {
 			$data = Input::all();
 			DB::beginTransaction();
 			if(!isset($data['picklist_doc_no'])) throw new Exception("Document number empty.");
-			$docNo = explode(',', $data['picklist_doc_no']);
+			$docNo = explode(', ', $data['picklist_doc_no']);
 			Picklist::changeToStore($docNo);
 			self::changeToStoreAuditTrail($docNo);
 			DB::commit();
@@ -586,7 +586,7 @@ class PicklistController extends BaseController {
 			$data = Input::all();
 
 			if(!isset($data['picklist_docs'])) throw new Exception("Document number empty.");
-			$picklistDocs = explode(',', $data['picklist_docs']);
+			$picklistDocs = explode(', ', $data['picklist_docs']);
 			$loadCode =$data['load_codes'];
 			DB::beginTransaction();
 			foreach ($picklistDocs as $picklist) {
@@ -750,7 +750,7 @@ class PicklistController extends BaseController {
 	*/
 	private function unlockPicklistTagAuditTrail($lockTags)
 	{
-		$lockTags = implode(',', $lockTags);
+		$lockTags = implode(', ', $lockTags);
 		$data_after = 'Locktags# '.$lockTags . ' unlocked by' . Auth::user()->username;
 		$arrParams = array(
 			'module'		=> Config::get("audit_trail_modules.picking"),
@@ -800,7 +800,7 @@ class PicklistController extends BaseController {
 	*/
 	private function changeToStoreAuditTrail($picklistDocNo)
 	{
-		$picklistDocNo = implode(',', $picklistDocNo);
+		$picklistDocNo = implode(', ', $picklistDocNo);
 		$data_after = 'Picklist document # '.$picklistDocNo . '  change to type store by ' . Auth::user()->username;
 		$arrParams = array(
 			'module'		=> Config::get("audit_trail_modules.picking"),
@@ -856,7 +856,7 @@ class PicklistController extends BaseController {
 		$this->data['button_assign']    = Lang::get('general.button_assign');
 		$this->data['button_cancel']    = Lang::get('general.button_cancel');
 		$this->data['url_back']         = URL::to('picking/list');
-		$this->data['params']           = explode(',', Input::get('doc_no'));
+		$this->data['params']           = explode(', ', Input::get('doc_no'));
 		$this->data['info']             = Picklist::getInfoByDocNos($this->data['params']);
 
 		$this->layout->content          = View::make('picking.assign_piler_form', $this->data);
@@ -873,14 +873,14 @@ class PicklistController extends BaseController {
 	*/
 	public function assignToStockPiler() {
 		// Check Permissions
-		$pilers = implode(',' , Input::get('stock_piler'));
+		$pilers = implode(', ' , Input::get('stock_piler'));
 
 
 		//get moved_to_reserve id
 		$arrParams = array('data_code' => 'PICKLIST_STATUS_TYPE', 'data_value'=> 'assigned');
 		$picklistStatus = Dataset::getType($arrParams)->toArray();
 
-		$arrDocNo = explode(',', Input::get("doc_no"));
+		$arrDocNo = explode(', ', Input::get("doc_no"));
 
 		foreach ($arrDocNo as $docNo) {
 			$arrParams = array(
@@ -964,5 +964,20 @@ class PicklistController extends BaseController {
 		}
 
 		return Redirect::to('picking/list' . $this->setURL())->with('message', Lang::get('picking.text_success_posted'));
+	}
+
+	public function printBoxLabel($doc_num)
+	{
+		try {
+			$this->data['doc_num'] = $doc_num;
+			$this->data['records'] = Picklist::getPicklistBoxes($doc_num);
+			$this->data['permissions'] = unserialize(Session::get('permissions'));
+
+			$this->layout = View::make('layouts.print');
+			$this->layout->content = View::make('loads.print_box_label', $this->data);
+
+		} catch (Exception $e) {
+			return Redirect::to('load/list'. $this->setURL())->withErrors(Lang::get('loads.text_fail_load'));
+		}
 	}
 }

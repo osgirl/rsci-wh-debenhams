@@ -92,6 +92,7 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::get('picking/assign', 'PicklistController@assignPilerForm');
 	Route::post('picking/assign_to_piler', 'PicklistController@assignToStockPiler');
 	Route::post('picking/close', 'PicklistController@closePicklist');
+    Route::get('picking/printboxlabel/{doc_num}', 'PicklistController@printBoxLabel');
 
 	Route::get('inventory', 'InventoryController@showIndex');
 	Route::get('inventory/export', 'InventoryController@exportCSV');
@@ -150,8 +151,6 @@ Route::group(array("before"=>"auth.basic"), function()
     Route::get('load/printpacklist/{loadCode}', 'LoadController@printPackingList');
     Route::get('load/printpacklist/update/{loadCode}', 'LoadController@updatePrintPackingList');
     Route::get('load/printloadingsheet/{loadCode}', 'LoadController@printLoadingSheet');
-    Route::get('load/printboxlabel/{loadCode}', 'LoadController@printBoxLabel');
-
 
 	Route::get('unlisted', 'UnlistedController@showIndex');
 	Route::get('unlisted/export', 'UnlistedController@exportCSV');

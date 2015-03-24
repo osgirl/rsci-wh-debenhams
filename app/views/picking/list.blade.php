@@ -173,6 +173,7 @@
 									{{ Form::hidden('doc_no', $value['move_doc_number']) }}
 									{{ Form::hidden('module', 'picklist') }}
 						  		{{ Form::close() }}
+								&nbsp;&nbsp;<a href="{{url('picking/printboxlabel/' .$value['move_doc_number'] )}}" target="_blank" class="btn btn-success">Print Box Label</a>
 							</td>
 
 						</tr>

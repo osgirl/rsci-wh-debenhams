@@ -56,6 +56,7 @@ class Picklist extends Eloquent {
 	{
 		// $query = Picklist::select(DB::raw('wms_picklist.*, sum(wms_picklist_details.move_to_shipping_area) as sum_moved, sum(wms_picklist_details.assigned_user_id) as sum_assigned, store_code' ))
 		$query = Picklist::join('picklist_details', 'picklist_details.move_doc_number', '=', 'picklist.move_doc_number')
+			->join('box_details', 'picklist_details.id', '=', 'box_details.picklist_detail_id')
 			->join('dataset', 'picklist.pl_status', '=', 'dataset.id');
 
 		if( CommonHelper::hasValue($data['filter_doc_no']) ) $query->where('picklist.move_doc_number', 'LIKE', '%'. $data['filter_doc_no'] . '%');
@@ -161,5 +162,32 @@ class Picklist extends Eloquent {
 
 
 		echo "<pre>"; print_r($query); die();
+	}
+
+	public static function getPicklistBoxes($doc_num){
+		$box = Picklist::select('box_details.box_code','box_details.moved_qty',
+                            'picklist_details.sku as upc','picklist_details.store_code','picklist_details.so_no','picklist_details.store_code',
+                            'product_lists.description','product_lists.dept_code','product_lists.sub_dept','product_lists.class','product_lists.sub_class')
+            ->join('picklist_details', 'picklist_details.move_doc_number', '=', 'picklist.move_doc_number')
+			->join('box_details', 'picklist_details.id', '=', 'box_details.picklist_detail_id')
+            ->join('product_lists','product_lists.upc','=','picklist_details.sku','LEFT')
+			->where('picklist.move_doc_number','=', $doc_num)
+			->get();
+
+		if(!empty($box)){
+                    $res= Department::getBrand($box[0]->dept_code,$box[0]->sub_dept,$box[0]->class,$box[0]->sub_class);
+                    $data[$box[0]->box_code]['brand'] = $res[0]['description'];
+                $counter=count($box);
+                for($i=0;$i<$counter;$i++){
+	                $store = Store::select('store_name')
+	                    ->where('store_code','=',$box[$i]->store_code)
+	                    ->first();
+
+                    $data[$box[$i]->box_code]['store_name'] = $store['store_name'];
+                    $data[$box[$i]->box_code]['store_code'] = $box[$i]->store_code;
+                    $data[$box[$i]->box_code]['items'] = $box;
+                }
+            }
+		return $data;
 	}
 }
