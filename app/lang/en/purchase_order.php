@@ -60,6 +60,8 @@ return array(
 	'col_carton_id'				=> 'Carton Id',
 	'col_expiry_date'			=> 'Expiry date',
 	'col_slot'					=> 'Slot',
+	'col_box_code'				=> 'Box No.',
+	'col_sticker_by'			=> 'Sticker By',
 
 	'col_sku' 					=> 'SKU',
 	'col_upc' 					=> 'UPC',

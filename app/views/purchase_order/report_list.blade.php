@@ -1,3 +1,12 @@
+<style type="text/css">
+	.contents2 {margin-top: 10px; width: 100%;}
+	.contents2 th, .contents td { padding: 2px; margin: 0; }
+	.contents2 th {text-align: left; padding: 5px;}
+	.contents2 th {background-color: #F0F0F0}
+
+	td.underline hr{ margin-top: 20px; border: none; border-bottom: solid 1px #000;}
+	td.underline {padding-bottom: 0; }
+</style>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,11 +22,31 @@
 <div class="table-responsive">
 			<div style="text-align: center">
 				<h1>Casual Clothing Retailers Inc.<br/>PURCHASE ORDER REPORT</h1>
+				Printed By: {{Auth::user()->username}} <br>
 				Print Date: {{ date('m/d/y h:i A')}}
 			</div>
+	<table>
+		<tr>
+			<td>
+				Brand ID / Description:
+			</td>
+			<td>
+				{{$brand.' - '. $brand_description}}
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Division ID / Description:
+			</td>
+			<td>
+				{{$division.' - '. $div_description}}
+			</td>
+		</tr>
+	</table>
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
+				<th>{{ $col_box_code }}</th>
 				<th>{{ $col_back_order }}</th>
 				<th>{{ $col_carton_id }}</th>
 				<th>{{ $col_po_no }}</a></th>
@@ -27,6 +56,7 @@
 				<th>{{ $col_receiving_stock_piler }}</th>
 				<th>{{ $col_entry_date }}</th>
 				<th>{{ $col_status }}</th>
+				<th>{{ $col_sticker_by }}</th>
 			</tr>
 		</thead>
 		@if( !CommonHelper::arrayHasValue($results) )
@@ -36,6 +66,7 @@
 		@else
 			@foreach( $results as $po )
 				<tr class="font-size-13 tblrow" data-id="{{ $po->purchase_order_no }}">
+					<td>{{ $po->id }}</td>
 					<td>{{ $po->back_order }}</td>
 					<td>{{ $po->carton_id }}</td>
 					<td>{{ $po->purchase_order_no }}</td>
@@ -45,9 +76,29 @@
 					<td>{{ $po->fullname }}</td>
 					<td>{{ date("M d, Y", strtotime($po->created_at)) }}</td>
 					<td>{{ $po->data_display }}</td>
+					<td>{{ $po->fullname }}</td>
 				</tr>
 				@endforeach
 		@endif
+		<tr>
+			<td>Subtotal = {{count($results) }} </td>
+		</tr>
+	</table>
+	<table class="contents2">
+		<tr>
+			<td colspan='3'>
+				Received and Putaway By / Date:
+			</td>
+			<td colspan='3'>
+				POs Closed By / Date:
+			</td>
+		</tr>
+		<tr>
+			<td class="underline" colspan='2'><hr/></td>
+			<td></td>
+			<td class="underline" colspan='2'><hr/></td>
+			<td></td>
+		</tr>
 	</table>
 </div>
 

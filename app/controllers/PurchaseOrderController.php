@@ -268,6 +268,8 @@ class PurchaseOrderController extends BaseController {
 
 		$this->data['col_id'] = Lang::get('purchase_order.col_id');
 		$this->data['col_po_no'] = Lang::get('purchase_order.col_po_no');
+		$this->data['col_box_code'] = Lang::get('purchase_order.col_box_code');
+		$this->data['col_sticker_by'] = Lang::get('purchase_order.col_sticker_by');
 		$this->data['col_receiver_no'] = Lang::get('purchase_order.col_receiver_no');
 		$this->data['col_supplier'] = Lang::get('purchase_order.col_supplier');
 		$this->data['col_receiving_stock_piler'] = Lang::get('purchase_order.col_receiving_stock_piler');
@@ -301,7 +303,18 @@ class PurchaseOrderController extends BaseController {
 		// echo '<pre>'; print_r($arrParams); die();
 		$results = PurchaseOrder::getPoLists($arrParams);
 		$this->data['results'] = $results;
-
+		$this->data['brand'] = Input::get('filter_brand', NULL);
+		if($this->data['brand'] != null){
+			$brand_desc = Department::select('description')->where('dept_code','=',$this->data['brand'])->get();
+			$this->data['brand_description']=$brand_desc[0]->description;
+		}
+		$this->data['brand_description']=null;
+		$this->data['division'] = Input::get('filter_division', NULL);
+		if($this->data['division'] != null){
+			$div_desc = Department::select('description')->where('sub_dept','=',$this->data['division'])->get();
+			$this->data['div_description']=$div_desc[0]->description;
+		}
+		$this->data['div_description']=null;
 		$pdf = App::make('dompdf');
 		$pdf->loadView('purchase_order.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
 		/*return $pdf->stream();*/
