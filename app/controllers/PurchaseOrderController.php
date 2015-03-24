@@ -308,13 +308,15 @@ class PurchaseOrderController extends BaseController {
 			$brand_desc = Department::select('description')->where('dept_code','=',$this->data['brand'])->get();
 			$this->data['brand_description']=$brand_desc[0]->description;
 		}
-		$this->data['brand_description']=null;
+		else
+			$this->data['brand_description']=null;
 		$this->data['division'] = Input::get('filter_division', NULL);
 		if($this->data['division'] != null){
 			$div_desc = Department::select('description')->where('sub_dept','=',$this->data['division'])->get();
 			$this->data['div_description']=$div_desc[0]->description;
 		}
-		$this->data['div_description']=null;
+		else
+			$this->data['div_description']=null;
 		$pdf = App::make('dompdf');
 		$pdf->loadView('purchase_order.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
 		/*return $pdf->stream();*/
