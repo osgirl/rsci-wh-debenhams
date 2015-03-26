@@ -608,7 +608,9 @@ class BoxController extends BaseController {
 			Box::insert($formattedBoxCode);
 
 			$storeName = Store::getStoreName($storeCode);
-			$boxCodeInString = implode(',', $containerBox);
+			$max = max(array_keys($containerBox));
+			if(count($containerBox) > 2) $boxCodeInString = $containerBox[0] . " - " . $containerBox[$max];
+			else $boxCodeInString = implode(',', $containerBox);
 
 			self::postCreateBoxAuditTrail($boxCodeInString, $storeName);
 			DB::commit();
@@ -657,6 +659,7 @@ class BoxController extends BaseController {
 
 	protected function postCreateBoxAuditTrail($boxCode, $storeName)
 	{
+		// echo '<pre>'; print_r($boxCode); die();
 		$dataBefore = '';
 		$dataAfter = 'User '. $this->user->username . ' created a box with code ' . $boxCode. ' for ' . $storeName;
 

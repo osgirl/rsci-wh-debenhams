@@ -101,15 +101,15 @@
 
     <div class="widget-content">
     	<div class="table-responsive">
-			<table class="table table-striped table-bordered">
+			<table class="table table-striped table-bordered" style="table-layout: fixed;">
 				<thead>
 					<tr>
-						<th>{{ $col_id }}</th>
-						<th><a href="{{ $sort_date }}" class="@if( $sort=='date' ) {{ $order }} @endif">{{ $col_transaction_date }}</a></th>
-						<th><a href="{{ $sort_module }}" class="@if( $sort=='module' ) {{ $order }} @endif">{{ $col_module }}</a></th>
+						<th style="width: 30px; max-width: 30px;">{{ $col_id }}</th>
+						<th style="width: 150px; max-width: 150px;"><a href="{{ $sort_date }}" class="@if( $sort=='date' ) {{ $order }} @endif">{{ $col_transaction_date }}</a></th>
+						<th style="width: 100px; max-width: 100px;"><a href="{{ $sort_module }}" class="@if( $sort=='module' ) {{ $order }} @endif">{{ $col_module }}</a></th>
 						<th><a href="{{ $sort_reference }}" class="@if( $sort=='reference' ) {{ $order }} @endif">{{ $col_reference }}</a></th>
-						<th><a href="{{ $sort_username }}" class="@if( $sort=='username' ) {{ $order }} @endif">{{ $col_username }}</a></th>
-						<th><a href="{{ $sort_action }}" class="@if( $sort=='action' ) {{ $order }} @endif">{{ $col_action }}</a></th>
+						<th style="width: 100px; max-width: 100px;"><a href="{{ $sort_username }}" class="@if( $sort=='username' ) {{ $order }} @endif">{{ $col_username }}</a></th>
+						<th style="width: 100px; max-width: 100px;"><a href="{{ $sort_action }}" class="@if( $sort=='action' ) {{ $order }} @endif">{{ $col_action }}</a></th>
 						<th><a href="{{ $sort_details }}" class="@if( $sort=='details' ) {{ $order }} @endif">{{ $col_details }}</a></th>
 					</tr>
 				</thead>
