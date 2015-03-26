@@ -124,10 +124,10 @@
 						<td>{{ $counter++ }}</td>
 						<td>{{ $audit_trail->created_at }}</td>
 						<td>{{ $audit_trail->module }}</td>
-						<td>{{ $audit_trail->reference }}</td>
+						<td style="word-wrap: break-word;">{{ $audit_trail->reference }}</td>
 						<td>{{ $audit_trail->username }}</td>
 						<td>{{ $audit_trail->action }}</td>
-						<td>{{ $audit_trail->data_after }}</td>
+						<td style="word-wrap: break-word;">{{ $audit_trail->data_after }}</td>
 					</tr>
 					@endforeach
 				@endif
