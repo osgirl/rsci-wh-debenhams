@@ -18,6 +18,9 @@ class CreateLoadTable extends Migration {
 			$table->string('load_code', 9);
 			$table->tinyInteger('is_shipped')->default(0);
 			$table->tinyInteger('sync_status')->default(0);
+			$table->tinyInteger('printMTS')->default(0);
+            $table->tinyInteger('printPacking')->default(0);
+            $table->string('pl_number');
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 			$table->timestamp('updated_at')->default('0000-00-00 00:00:00');
 			$table->timestamp('jda_sync_date')->default('0000-00-00 00:00:00');
