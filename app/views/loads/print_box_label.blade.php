@@ -55,11 +55,11 @@ td.underline {padding-bottom: 0; }
 		<?php 
 			if(!in_array($boxNo, $tempboxarray)){
 				$sonoarray[$boxNo] =[];
-				if( $item->box_code== $boxNo)
+				if( $item->box_code== $boxNo && !in_array($item->so_no, $sonoarray[$boxNo]))
 					array_push($sonoarray[$boxNo], $item->so_no);
 				array_push($tempboxarray, $boxNo);
 			}
-			else if( $item->box_code== $boxNo)
+			else if( $item->box_code== $boxNo && !in_array($item->so_no, $sonoarray[$boxNo]))
 				array_push($sonoarray[$boxNo], $item->so_no);
 
 			$totalBox=count($tempboxarray);
