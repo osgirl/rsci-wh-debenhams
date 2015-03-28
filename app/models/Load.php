@@ -158,9 +158,9 @@ public static function getPackingDetails($loadCode)
 
             if(!empty($box)){
                     $res= Department::getBrand($box[0]->dept_code,$box[0]->sub_dept,$box[0]->class,$box[0]->sub_class);
+                    $data['brand'] = $res[0]['description'];
                 $counter=count($box);
                 for($i=0;$i<$counter;$i++){
-                    $data['StoreOrder'][$box[$i]->so_no]['brand'] = $res[0]['description'];
                     $data['store_code'] = $box[$i]->store_code;
                     $data['StoreOrder'][$box[$i]->so_no]['store_code'] = $box[$i]->store_code;
                     $data['StoreOrder'][$box[$i]->so_no]['items'][$val->box_code] = $box;

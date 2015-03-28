@@ -103,6 +103,7 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 			<?php 
 				$boxarray=[];
 				$grandTotal = 0;
+				$rowcount=0;
 			?>
 			@foreach($records['StoreOrder'] as $soNo => $val)
 				<?php 
@@ -110,7 +111,11 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 					$counter=0;
 				?>
 				<tr>
-					<td align="center">{{$val['brand']}}</td>
+					@if($rowcount==0)
+					<td align="center">{{$records['brand']}}</td>
+					@else
+					<td></td>
+					@endif
 					<td align="center"><strong>{{$soNo}}</strong></td>
 			    @foreach($val['items'] as $boxNo => $items)
 					<?php 
@@ -143,6 +148,7 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 					@if($counter>1)
 						</tr>
 					@endif
+					<?php $rowcount++; ?>
 			    @endforeach
 				</tr>
 			@endforeach
