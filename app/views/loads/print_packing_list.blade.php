@@ -103,18 +103,25 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 			<?php 
 				$boxarray=[];
 				$grandTotal = 0;
-				$counter=0;
 			?>
 			@foreach($records['StoreOrder'] as $soNo => $val)
+				<?php 
+					$boxes[$soNo]=[];
+					$counter=0;
+				?>
 				<tr>
 					<td align="center">{{$val['brand']}}</td>
 					<td align="center"><strong>{{$soNo}}</strong></td>
 			    @foreach($val['items'] as $boxNo => $items)
 					<?php 
-						if(!in_array($boxNo, $boxarray))
+						if(!in_array($boxNo, $boxarray)){
 							array_push($boxarray, $boxNo);
-	    				$boxTotal = 0;
-						$counter++;
+						}
+						if(!in_array($boxNo, $boxes[$soNo])){
+							array_push($boxes[$soNo], $boxNo);
+		    				$boxTotal = 0;
+							$counter++;
+						}
 					?>
 					@if($counter>1)
 						<tr>
