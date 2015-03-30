@@ -291,7 +291,7 @@ class ApiBox extends BaseController {
 	* @example  www.example.com/api/{version}/boxes/all
 	* @return boxes
 	*/
-	public static function getBoxes()
+	public static function getAllBoxes()
 	{
 		try {
 			$boxes = BoxDetails::getAllBoxes();
