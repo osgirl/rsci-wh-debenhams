@@ -148,6 +148,14 @@ $(document).ready(function() {
       format: 'yyyy-mm-dd'
     });
 
+    // Clear Form
+    $('#clearForm').click(function() {
+    	$('#filter_po_no, #filter_shipment_reference_no').val('');
+		$('#filter_from_date, #filter_to_date').val('');
+
+		$('select').val('');
+		$('#form-purchase-order').submit();
+    });
+
 });
 </script>
-	
