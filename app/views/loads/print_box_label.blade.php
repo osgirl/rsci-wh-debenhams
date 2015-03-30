@@ -80,10 +80,10 @@ td.underline {padding-bottom: 0; }
                 $boxTotal += $item->moved_qty;
             ?>
     @endforeach
-    
+
 	@foreach($val['items'] as $item)
 		@if(!in_array($boxNo, $boxarray) && $item->box_code== $boxNo)
-			<section style="width:375px; height:225px; border: solid 1px #000; padding: 10px;" >
+			<div style="width:375px; height:225px; border: solid 1px #000; padding: 10px;" >
 				<h1>Box {{$counter+1 .' of '. $totalBox }}</h1>
 				<div class="doctitle">
 					<h1>Box No:<br/>{{$boxNo}}</h1>
@@ -116,7 +116,7 @@ td.underline {padding-bottom: 0; }
 					array_push($boxarray, $boxNo);
 				?>
 
-			</section>
+			</div>
 			<?php $counter++; ?>
 		@endif
 	@endforeach
