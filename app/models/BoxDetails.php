@@ -191,4 +191,16 @@ GROUP BY box.box_code
 
 		return $query;
     }
+
+    public static function getAllBoxes()
+    {
+        $query = BoxDetails::where('box.in_use', '=', 0)
+        	->leftJoin('picklist_details', 'picklist_details.id', '=', 'box_details.picklist_detail_id')
+        	->leftJoin('box', 'box.box_code', '=', 'box_details.box_code')
+        	->join('stores', 'stores.store_code', '=', 'box.store_code', 'LEFT')
+        	->groupBy('box.box_code')
+        	->get();
+        DebugHelper::log(__METHOD__, $query);
+        return $query;
+    }
 }
