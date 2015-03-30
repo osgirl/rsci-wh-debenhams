@@ -112,9 +112,11 @@ td.underline {padding-bottom: 0; }
 	<?php 
 		$boxarray=[];
 		$grandTotal = 0;
-		$counter=0;
 	?>
 			@foreach($records['StoreOrder'] as $soNo => $val)
+				<?php 
+					$counter=0;
+				?>
 				<tr>
 					<td align="center"><strong>{{$soNo}}</strong></td>
 			    @foreach($val['items'] as $boxNo => $items)
