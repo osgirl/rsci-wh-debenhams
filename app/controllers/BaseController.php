@@ -10,6 +10,7 @@ class BaseController extends Controller {
 	 */
 	protected function setupLayout()
 	{
+		CommonHelper::globalXssClean();
 		date_default_timezone_set('Asia/Manila');
 		if ( ! is_null($this->layout))
 		{
