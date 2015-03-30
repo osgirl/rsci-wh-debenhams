@@ -284,4 +284,22 @@ class ApiBox extends BaseController {
 						);
 		AuditTrail::addAuditTrail($arrParams);
 	}
+
+	/**
+	* Get boxes that are not empty
+	*
+	* @example  www.example.com/api/{version}/boxes/all
+	* @return boxes
+	*/
+	public static function getAllBoxes()
+	{
+		try {
+			$boxes = BoxDetails::getAllBoxes();
+			return CommonHelper::return_success_message($boxes);
+		} catch (Exception $e) {
+			return CommonHelper::return_fail($e->getMessage());
+		}
+
+	}
+
 }
