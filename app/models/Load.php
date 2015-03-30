@@ -95,7 +95,12 @@ class Load extends Eloquent {
 
 
 
-            if(!empty($box)){
+            if(!empty($box)){$counter=count($box);
+                for($i=0;$i<$counter;$i++){
+                    $data['StoreOrder'][$box[$i]->so_no]['store_code'] = $box[$i]->store_code;
+                    $data['StoreOrder'][$box[$i]->so_no]['items'][$val->box_code] = $box;
+                    $data['StoreOrder'][$box[$i]->so_no]['order_date'] = $box[$i]->order_date;
+                }
                 $data['StoreOrder'][$box[0]->so_no]['store_code'] = $box[0]->store_code;
                 $data['StoreOrder'][$box[0]->so_no]['items'][$val->box_code] = $box;
                 $data['StoreOrder'][$box[0]->so_no]['order_date'] = $box[0]->order_date;

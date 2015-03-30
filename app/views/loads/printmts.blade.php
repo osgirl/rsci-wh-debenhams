@@ -109,21 +109,25 @@ td.underline {padding-bottom: 0; }
 					<td rowpan="3"><strong>{{$boxNo}}</strong></td>
 				@foreach($items as $item)
 					<?php
-						$boxTotal += $item->moved_qty;
-						$grandTotal += $item->moved_qty;
-						$counter++;
+						if($item->so_no == $soNo){
+							$boxTotal += $item->moved_qty;
+							$grandTotal += $item->moved_qty;
+							$counter++;
+						}
 					?>
-					@if($counter>1)
-						<tr>
-							<td></td>
-					@endif
-						<td>{{$item->upc}}</td>
-						<td>{{$item->description}}</td>
-						<td align="right">{{$item->moved_qty}}</td>
-						<td class="underline"><hr/></td>
-						<td class="underline"><hr/></td>
-					@if($counter>1)
-						</tr>
+					@if($item->so_no == $soNo)
+						@if($counter>1)
+							<tr>
+								<td></td>
+						@endif
+							<td>{{$item->upc}}</td>
+							<td>{{$item->description}}</td>
+							<td align="right">{{$item->moved_qty}}</td>
+							<td class="underline"><hr/></td>
+							<td class="underline"><hr/></td>
+						@if($counter>1)
+							</tr>
+						@endif
 					@endif
 				@endforeach
 				</tr>
