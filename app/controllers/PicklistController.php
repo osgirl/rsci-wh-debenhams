@@ -80,6 +80,7 @@ class PicklistController extends BaseController {
 	{
 		$this->checkPermissions('CanExportPacking');
 		$this->data = Lang::get('picking');
+		$this->data['text_empty_results']     = Lang::get('general.text_empty_results');
 		$arrParams = array(
 							'filter_type'   => Input::get('filter_type', NULL),
 							'filter_doc_no' => Input::get('filter_doc_no', NULL),
