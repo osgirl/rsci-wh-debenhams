@@ -199,7 +199,7 @@ GROUP BY box.box_code
         	->leftJoin('box', 'box.box_code', '=', 'box_details.box_code')
         	->join('stores', 'stores.store_code', '=', 'box.store_code', 'LEFT')
         	->groupBy('box.box_code')
-        	->get();
+        	->get(array('box.box_code', 'store_name'));
         DebugHelper::log(__METHOD__, $query);
         return $query;
     }
