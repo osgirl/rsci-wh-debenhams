@@ -5,7 +5,7 @@
 
 }
 @media screen {
-    #mainContainer {width: 750px; }
+    #mainContainer {width: 800px; }
 
 }
 body { font: normal 12px arial; margin: 0; counter-reset:pageNumber;}
@@ -48,7 +48,7 @@ td.underline {padding-bottom: 0; }
 	<?php 
 		$boxarray=[];
 		$tempboxarray=[];
-		$counter=1;
+		$counter=0;
 	?>
 @foreach($records as $boxNo => $val)
 	@foreach($val['items'] as $item)
@@ -70,51 +70,59 @@ td.underline {padding-bottom: 0; }
 		<?php 
 			$boxTotal=0;
 		?>
+	@if($counter%3==0)
+	<section class="soContainer" style="width:400px;">
+	@endif
+
 	@foreach($val['items'] as $item)
-			<?php
-			if( $item->box_code== $boxNo)
-				$boxTotal += $item->moved_qty;
-			?>
-	@endforeach
+            <?php
+            if( $item->box_code== $boxNo)
+                $boxTotal += $item->moved_qty;
+            ?>
+    @endforeach
+
 	@foreach($val['items'] as $item)
 		@if(!in_array($boxNo, $boxarray) && $item->box_code== $boxNo)
-		<section class="soContainer" style="width:375px; height:225px" >
-			<h1>Box {{$counter .' of '. $totalBox }}</h1>
-			<div class="doctitle">
-				<h1>Box No:<br/>{{$boxNo}}</h1>
-			</div>
-			<table class="contents">
-				<tr>
-					<th>Category</th>
-					<th>MTS No</th>
-					<th>From</th>
-					<th>To</th>
-					<th>Quantity</th>
-				</tr>
+			<div style="width:375px; height:225px; border: solid 1px #000; padding: 10px;" >
+				<h1>Box {{$counter+1 .' of '. $totalBox }}</h1>
+				<div class="doctitle">
+					<h1>Box No:<br/>{{$boxNo}}</h1>
+				</div>
+				<table class="contents">
 					<tr>
-						<td>{{$item->sub_dept.' - '.$item->description}}</td>
-								<td> 
-								@foreach($sonoarray[$boxNo] as $so_no)
-									@if(count($sonoarray[$boxNo])>1)
-										{{$so_no}}, 
-									@else
-										{{$so_no}}
-									@endif
-								@endforeach
-								</td>
+						<th>Category</th>
+						<th>MTS No</th>
+						<th>From</th>
+						<th>To</th>
+						<th>Quantity</th>
+					</tr>
+						<tr>
+							<td>{{$item->sub_dept.' - '.$item->description}}</td>
+							<td> 
+							@foreach($sonoarray[$boxNo] as $so_no)
+								@if(count($sonoarray[$boxNo])>1)
+								{{$so_no}}, 
+								@else
+								{{$so_no}}
+								@endif
+							@endforeach
+							</td>
 							<td>7000 - Warehouse</td>
 							<td>{{ $val['store_code'] .' - ' . $val['store_name']}}</td>
 							<td align="right"> {{$boxTotal}} </td>
-					</tr>
-			</table>
-			<?php 
-				array_push($boxarray, $boxNo);
-			?>
+						</tr>
+				</table>
+				<?php 
+					array_push($boxarray, $boxNo);
+				?>
 
-		</section>
+			</div>
 			<?php $counter++; ?>
 		@endif
 	@endforeach
+	@if($counter%3==0)
+	</section>
+	@endif
 @endforeach
 
 
