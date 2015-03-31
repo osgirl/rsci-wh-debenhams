@@ -5,7 +5,7 @@
 
 }
 @media screen {
-    #mainContainer {width: 800px; }
+    #mainContainer {width: 780px; }
 
 }
 body { font: normal 12px arial; margin: 0; counter-reset:pageNumber;}
@@ -13,7 +13,7 @@ table {padding: 0; border-collapse: collapse;}
 h1 {margin-bottom: 5px;}
 header {margin-bottom: 20px;}
 
-.soContainer { border: solid 1px #000; padding: 10px;}
+.soContainer { padding: 10px;}
 .soContainer:after { content:""; display:block; clear:both; }
 
 .doctitle {text-align: center;}
