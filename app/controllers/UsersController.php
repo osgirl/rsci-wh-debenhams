@@ -195,6 +195,7 @@ class UsersController extends BaseController {
 		$this->data['col_user_role'] = Lang::get('users.col_user_role');
 		$this->data['col_brand'] = Lang::get('users.col_brand');
 		$this->data['col_date'] = Lang::get('users.col_date');
+		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 
 		$arrParams = array(
 							'filter_username'	=> Input::get('filter_username', NULL),

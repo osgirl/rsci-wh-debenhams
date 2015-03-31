@@ -74,7 +74,7 @@
 				<tbody>
 				@if( !CommonHelper::arrayHasValue($stores) )
 					<tr class="font-size-13">
-						<td colspan="2" class="align-center">{{ $text_empty_results }}</td>
+						<td colspan="4" class="align-center">{{ $text_empty_results }}</td>
 					</tr>
 				@else
 					@foreach($stores as $store)
