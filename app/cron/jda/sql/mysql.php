@@ -95,20 +95,26 @@ class pdoConnection
 
 		if(!empty($data['reference']))
 		{
-			$sql = "SELECT DISTINCT reference FROM wms_transactions_to_jda trans
+			/*$sql = "SELECT DISTINCT reference FROM wms_transactions_to_jda trans
 					INNER JOIN wms_picklist_details pick_d ON pick_d.move_doc_number = trans.reference
 					INNER JOIN wms_box_details bd ON bd.picklist_detail_id = pick_d.id
 					INNER JOIN wms_pallet_details pd ON bd.box_code = pd.box_code
 					INNER JOIN wms_load_details ld ON ld.pallet_code = pd.pallet_code AND ld.load_code = '{$data['reference']}'
-					WHERE module = '{$module}' AND jda_action = '{$jdaAction}' AND trans.sync_status = 0";
+					WHERE module = '{$module}' AND jda_action = '{$jdaAction}' AND trans.sync_status = 0";*/
+			$sql = "SELECT DISTINCT reference FROM wms_transactions_to_jda trans
+					INNER JOIN wms_picklist_details pick_d ON pick_d.move_doc_number = trans.reference
+					INNER JOIN wms_box_details bd ON bd.picklist_detail_id = pick_d.id
+					WHERE module = '{$module}' AND jda_action = '{$jdaAction}' AND reference = {$data['reference']} AND trans.sync_status = 0";
+					// INNER JOIN wms_pallet_details pd ON bd.box_code = pd.box_code
+					// INNER JOIN wms_load_details ld ON ld.pallet_code = pd.pallet_code
 		}
 		else {
 			$sql = "SELECT DISTINCT reference FROM wms_transactions_to_jda trans
 					INNER JOIN wms_picklist_details pick_d ON pick_d.move_doc_number = trans.reference
 					INNER JOIN wms_box_details bd ON bd.picklist_detail_id = pick_d.id
-					INNER JOIN wms_pallet_details pd ON bd.box_code = pd.box_code
-					INNER JOIN wms_load_details ld ON ld.pallet_code = pd.pallet_code
 					WHERE module = '{$module}' AND jda_action = '{$jdaAction}' AND trans.sync_status = 0";
+					// INNER JOIN wms_pallet_details pd ON bd.box_code = pd.box_code
+					// INNER JOIN wms_load_details ld ON ld.pallet_code = pd.pallet_code
 		}
 
 		$query = self::query($sql);
@@ -156,11 +162,11 @@ class pdoConnection
 	}
 
 
-	public function getPicklistStatusInLoad($box_code){	
-		    $sql 	= "SELECT wms_box_details.box_code FROM `wms_box_details` LEFT JOIN `wms_pallet_details` ON 
-		    `wms_box_details`.`box_code` = `wms_pallet_details`.`box_code` LEFT join `wms_picklist_details` ON 
-		    `wms_picklist_details`.`id` = `wms_box_details`.`picklist_detail_id` LEFT JOIN `wms_picklist` ON 
-		    `wms_picklist`.`move_doc_number` = `wms_picklist_details`.`move_doc_number` 
+	public function getPicklistStatusInLoad($box_code){
+		    $sql 	= "SELECT wms_box_details.box_code FROM `wms_box_details` LEFT JOIN `wms_pallet_details` ON
+		    `wms_box_details`.`box_code` = `wms_pallet_details`.`box_code` LEFT join `wms_picklist_details` ON
+		    `wms_picklist_details`.`id` = `wms_box_details`.`picklist_detail_id` LEFT JOIN `wms_picklist` ON
+		    `wms_picklist`.`move_doc_number` = `wms_picklist_details`.`move_doc_number`
 		    WHERE wms_picklist.pl_status=18 AND wms_box_details.box_code='{$box_code}'";
 			 $query = self::query($sql);
 			 foreach ($query as $value ) {

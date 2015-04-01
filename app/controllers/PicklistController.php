@@ -959,8 +959,8 @@ class PicklistController extends BaseController {
 		// run daemon command: php app/cron/jda/classes/picklist.php
 		if( $isSuccess )
 		{
-			$loadCode = PicklistDetails::getPicklistLoad($docNo);
-			$daemon = "classes/picklist.php {$loadCode}";
+			// $loadCode = PicklistDetails::getPicklistLoad($docNo);
+			$daemon = "classes/picklist.php {$docNo}";
 			CommonHelper::execInBackground($daemon);
 		}
 

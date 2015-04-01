@@ -154,7 +154,7 @@ $(document).ready(function() {
 		$('#filter_from_date, #filter_to_date').val('');
 
 		$('select').val('');
-		$('#form-purchase-order').submit();
+		$('#form-expiry-items').submit();
     });
 
 });
