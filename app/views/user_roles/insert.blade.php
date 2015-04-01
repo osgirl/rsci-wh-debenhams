@@ -333,7 +333,7 @@
                         <td class="align-center">--</td>
                         <td class="align-center">--</td>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                         <td class="align-center font-12">{{ $module_settings }}</td>
                         <td class="align-center"><input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessSettings" @if(CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessSettings', Input::old('permissions')) ) checked="checked" @endif /></td>
                         <td class="align-center"><input type="checkbox" class="checkbox" name="permissions[]" value="CanInsertSettings" @if(CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanInsertSettings', Input::old('permissions')) ) checked="checked" @endif /></td>
@@ -346,7 +346,7 @@
                         <td class="align-center">--</td>
                         <td class="align-center">--</td>
                         <td class="align-center">--</td>
-                    </tr>
+                    </tr> -->
                     <!-- <tr>
                         <td class="align-center font-12">{{ $module_stock_piler }}</td>
                         <td class="align-center"><input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessStockPiler" @if(CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessStockPiler', Input::old('permissions')) ) checked="checked" @endif /></td>
