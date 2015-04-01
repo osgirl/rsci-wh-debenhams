@@ -227,6 +227,8 @@ Route::group(array('prefix'=>'api/v1', 'before'=>'oauth|auth.piler'), function()
 	Route::post('store_return/save', 'ApiStoreReturn@postSaveDetail');
 	Route::post('store_return/change_status/{soNo}', 'ApiStoreReturn@updateStatus');
 	Route::post('store_return/not_in_transfer/{soNo}', 'ApiStoreReturn@notInTransfer');
+
+	Route::post('inter_transfer/add', 'ApiInterTransfer@insertRecord');
 });
 
 Route::group(array('prefix'=>'api/v1', 'before'=>'oauth'), function()
