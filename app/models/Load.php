@@ -162,24 +162,21 @@ public static function getPackingDetails($loadCode)
 
 
             if(!empty($box)){
-                    $res= Department::getBrand($box[0]->dept_code,$box[0]->sub_dept,$box[0]->class,$box[0]->sub_class);
-                    $data['brand'] = $res[0]['description'];
                 $counter=count($box);
                 for($i=0;$i<$counter;$i++){
-                    $data['store_code'] = $box[$i]->store_code;
-                    $data['StoreOrder'][$box[$i]->so_no]['store_code'] = $box[$i]->store_code;
-                    $data['StoreOrder'][$box[$i]->so_no]['items'][$val->box_code] = $box;
+                    $res= Department::getBrand($box[$i]->dept_code,$box[$i]->sub_dept,$box[$i]->class,$box[$i]->sub_class);
+                    $data['StoreCode'][$box[$i]->store_code]['brand'] = $res[0]['description'];
+                    $data['StoreCode'][$box[$i]->store_code]['StoreOrder'][$box[$i]->so_no]['items'][$val->box_code] = $box;
                 }
             }
         }
         // echo '<pre>'; dd($data);
-            foreach ($data['StoreOrder'] as $soNo => $value) {
+            foreach ($data['StoreCode'] as $storeCode => $value) {
                 $store = DB::table('stores')
                     ->select('store_name')
-                    ->where('store_code','=', $value['store_code'])
+                    ->where('store_code','=', $storeCode)
                     ->first();
-                $data['store_name'] = $store->store_name;
-                $data['StoreOrder'][$soNo]['store_name'] = $store->store_name;
+                $data['StoreCode'][$storeCode]['store_name'] = $store->store_name;
             }
         // echo '<pre>'; dd($data);
         // $data['StoreOrder'][]

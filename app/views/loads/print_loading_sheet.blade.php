@@ -46,6 +46,7 @@ td.underline {padding-bottom: 0; }
 	<a href="{{url('load/list')}}">BACK TO LOAD LIST</a>
 
 </div>
+@foreach($records['StoreCode'] as $storeCode => $value)
 	<section class="soContainer">
 		<header>
 			<div class="doctitle">
@@ -62,7 +63,7 @@ td.underline {padding-bottom: 0; }
 					    <td>_____________</td>
 						</tr><tr>
 							<th style="text-align: right">Destination:</th>
-							<td>{{ $records['store_code'] .' - ' . $records['store_name']}}</td>
+							<td>{{ $storeCode .' - ' . $value['store_name']}}</td>
 					    </tr>
 					</table>
 				</td>
@@ -80,6 +81,10 @@ td.underline {padding-bottom: 0; }
 						<tr>
 					    <th style="text-align: right">PL#:</th>
 					    <td>_____________</td>
+					    </tr>
+						<tr>
+					    <th style="text-align: right">Load ID:</th>
+					    <td>{{$loadCode}}</td>
 					    </tr>
 					</table>
 				</td>
@@ -113,7 +118,7 @@ td.underline {padding-bottom: 0; }
 		$boxarray=[];
 		$grandTotal = 0;
 	?>
-			@foreach($records['StoreOrder'] as $soNo => $val)
+			@foreach($value['StoreOrder'] as $soNo => $val)
 				<?php 
 					$counter=0;
 				?>
@@ -180,3 +185,4 @@ td.underline {padding-bottom: 0; }
 			</div>
 		</div>
 	</section>
+@endforeach

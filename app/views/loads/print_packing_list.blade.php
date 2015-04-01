@@ -52,6 +52,7 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 	<a href="{{url('load/list')}}">BACK TO LOAD LIST</a>
 
 </div>
+@foreach($records['StoreCode'] as $storeCode => $value)
 	<section class="soContainer">
 		<header>
 			<div class="doctitle">
@@ -72,17 +73,23 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 							<td>Warehouse</td>
 						</tr><tr>
 							<th>To Location:</th>
-							<td>{{ $records['store_code'] .' - ' . $records['store_name']}}</td>
+							<td>{{ $storeCode .' - ' . $value['store_name']}}</td>
 						</tr>
 					</table>
 				</td>
 				<td>
-					<table><tr>
+					<table>
+						<tr>
 							<th>Username:</th>
 							<td>{{Auth::user()->username;}}</td>
-						</tr><tr>
+						</tr>
+						<tr>
 							<th>PL Number:</th>
 							<td>{{$pl_num}} - Shipped</td>
+						</tr>
+						<tr>
+							<th>Load ID:</th>
+							<td>{{$loadCode}}</td>
 						</tr>
 					</table>
 				</td>
@@ -105,14 +112,14 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 				$grandTotal = 0;
 				$rowcount=0;
 			?>
-			@foreach($records['StoreOrder'] as $soNo => $val)
+			@foreach($value['StoreOrder'] as $soNo => $val)
 				<?php 
 					$boxes[$soNo]=[];
 					$counter=0;
 				?>
 				<tr>
 					@if($rowcount==0)
-					<td align="center">{{$records['brand']}}</td>
+					<td align="center">{{$value['brand']}}</td>
 					@else
 					<td></td>
 					@endif
@@ -288,43 +295,8 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 					<br>
 				</td>
 			<tr>
-			<tr>
-				<td colspan='3'>
-				</td>
-				<td></td>
-				<td colspan='3'>
-				</td>
-				<td></td>
-				<td  colspan='3'>
-				Posted By / Date:
-				</td>
-			</tr>
-			<tr>
-				<td colspan='3'>
-				</td>
-				<td></td>
-				<td colspan='3'>
-				</td>
-				<td></td>
-				<td colspan='2' class="underline"><hr/></td>
-			</tr>
-			<tr>
-				<td colspan='3'>
-				</td>
-				<td></td>
-				<td colspan='3'>
-				</td>
-				<td></td>
-				<td colspan='3'>
-				Signature over Printed Name
-				</td>
-			</tr>
-			<tr>
-				<td colspan='3'>
-					<br>
-				</td>
-			<tr>
 
 		</table>
 		Copy 1 &  2 - WH-OS (for checking), then to WH-DC (for Posting) and then to WH-SCC (for IMS update) <br>   Copy 3 - WH-SCC (file copy upon release)
 	</section>
+@endforeach

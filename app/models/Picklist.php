@@ -174,10 +174,24 @@ class Picklist extends Eloquent {
 			->get();
 
 		if(!empty($box)){
-                    $res= Department::getBrand($box[0]->dept_code,$box[0]->sub_dept,$box[0]->class,$box[0]->sub_class);
-                    $data[$box[0]->box_code]['brand'] = $res[0]['description'];
+                $res= Department::getBrand($box[0]->dept_code,$box[0]->sub_dept,$box[0]->class,$box[0]->sub_class);
+                $data[$box[0]->box_code]['brand'] = $res[0]['description'];
                 $counter=count($box);
                 for($i=0;$i<$counter;$i++){
+		            $loadCodes = DB::table('pallet_details')
+		                        ->select('load_code')
+		                        ->join('box_details','box_details.box_code','=','pallet_details.box_code')
+		                        ->join('load_details','load_details.pallet_code','=','pallet_details.pallet_code')
+		                        ->where('box_details.box_code', '=', $box[$i]->box_code)
+		                        ->get();
+			        foreach($loadCodes as $loadCode){
+			        	$rs=DB::table('load')
+                    ->select(DB::raw("date_format(updated_at,'%m/%d/%y') as ship_date"),'is_shipped')
+                    ->where('load_code', '=', $loadCode->load_code)
+                    ->first();
+				        $data[$box[$i]->box_code]['ship_date'] = $rs->ship_date;
+				        $data[$box[$i]->box_code]['is_shipped'] = $rs->is_shipped;
+			        }
 	                $store = Store::select('store_name')
 	                    ->where('store_code','=',$box[$i]->store_code)
 	                    ->first();

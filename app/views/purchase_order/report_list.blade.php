@@ -21,7 +21,7 @@
 <body>
 <div class="table-responsive">
 			<div style="text-align: center">
-				<h1>Casual Clothing Retailers Inc.<br/>PURCHASE ORDER REPORT</h1>
+				<h1>Casual Clothing Retailers Inc.<br/>RECEIVING WORK SHEET</h1>
 				Printed By: {{Auth::user()->username}} <br>
 				Print Date: {{ date('m/d/y h:i A')}}
 			</div>

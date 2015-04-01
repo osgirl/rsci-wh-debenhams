@@ -52,7 +52,7 @@ return array(
 	'col_upc'					=> 'UPC',
 	'col_short_name' 			=> 'Short Name',
 	'col_allocated_quantity'	=> 'Allocated Quantity',
-	'col_delivered_quantity'	=> 'Delivered Qty',
+	'col_delivered_quantity'	=> 'Shipped Qty',
 	'col_picked_quantity'		=> 'Packed Quantity',
 	'col_packed_quantity'		=> 'Packed Quantity',
 	'col_slot_no' 				=> 'Slot No.',
