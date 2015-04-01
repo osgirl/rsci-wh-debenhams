@@ -194,13 +194,14 @@ GROUP BY box.box_code
 
     public static function getAllBoxes()
     {
-        $query = BoxDetails::where('box.in_use', '=', 0)
+        $query = BoxDetails::select('box.box_code', 'store_name', 'picklist_details.created_at as order_date')
+        	->where('box.in_use', '=', 0)
         	->leftJoin('picklist_details', 'picklist_details.id', '=', 'box_details.picklist_detail_id')
-        	->leftJoin('store_order', 'picklist_details.so_no', '=', 'store_order.so_no')
+        	// ->leftJoin('store_order', 'picklist_details.so_no', '=', 'store_order.so_no')
         	->leftJoin('box', 'box.box_code', '=', 'box_details.box_code')
         	->join('stores', 'stores.store_code', '=', 'box.store_code', 'LEFT')
         	->groupBy('box.box_code')
-        	->get(array('box.box_code', 'store_name', 'order_date'));
+        	->get();
         DebugHelper::log(__METHOD__, $query);
         return $query;
     }
