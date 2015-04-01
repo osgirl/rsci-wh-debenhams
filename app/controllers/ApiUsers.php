@@ -56,6 +56,7 @@ class ApiUsers extends BaseController {
 			}
 
 		}catch(Exception $e) {
+			Log::error(__METHOD__ .$e->getMessage());
 			return Response::json(array(
 				"error" => true,
 				"message" => $e->getMessage()),

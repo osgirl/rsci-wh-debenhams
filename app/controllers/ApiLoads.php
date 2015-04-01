@@ -87,6 +87,7 @@ class ApiLoads extends BaseController {
 			$loadCode = Request::get('load_code');
 
 			DB::beginTransaction();
+
 			// print_r($boxLists); die();
 			foreach ($boxLists as $boxCode)
 			{
@@ -98,24 +99,29 @@ class ApiLoads extends BaseController {
 				StoreOrder::updateLoadCode($soNos, $loadCode);
 
 				$pallete = Pallet::getOrCreatePallete($boxInfo['store_code'], $loadCode);
+				Log::info(__METHOD__ .' dump pallet: '.print_r($pallete,true));
 				PalletDetails::create(array(
-					'box_code' 		=> $boxCode, //$boxInfo['box_code'],
+					'box_code' 		=> $boxCode,
 					'pallet_code'	=> $pallete['pallet_code']
 					));
+				Log::info(__METHOD__ .' dump PalletDetails: '.print_r(array('box_code'=> $boxCode,'pallet_code'=> $pallete['pallet_code']),true));
+
 				$useBox = Box::updateBox(array(
 					"box_code"	=> $boxInfo['box_code'],
 					"store"		=> $boxInfo['store_code'],
 					"in_use"	=> Config::get('box_statuses.in_use')
 					));
-
+				Log::info(__METHOD__ . 'dump boxInfo: ' .print_r($boxInfo, true));
 				self::createJdaTransaction($boxInfo);
 			}
 			self::loadBoxesAuditTrail(Request::get('data'), $loadCode);
 			DB::commit();
 
+
 			return CommonHelper::return_success();
 		} catch (Exception $e) {
 			DB::rollback();
+			Log::error(__METHOD__ .$e->getMessage());
 			return CommonHelper::return_fail($e->getMessage());
 		}
 	}
@@ -160,56 +166,62 @@ class ApiLoads extends BaseController {
 	{
 		Log::info(__METHOD__ .' dump: '.print_r($data,true));
 		$getUniqueBox = BoxDetails::getUniqueBoxPerDocNo($data['move_doc_number']);
-		Log::info(__METHOD__ .' dump: '.print_r($getUniqueBox,true));
+		// Log::info(__METHOD__ .' dump: '.print_r($getUniqueBox,true));
 		$boxParams = array(
 			'module' 		=> Config::get('transactions.module_box'),
 			'jda_action'	=> Config::get('transactions.jda_action_box'),
 			'reference'		=> $getUniqueBox['box_code']
 		);
 		//create jda transaction for box header
+		Log::info(__METHOD__ .' dump boxParams: '.print_r($boxParams,true));
 		$boxResp = JdaTransaction::insert($boxParams);
 
 		if(is_array($getUniqueBox)) {
 
 			$getPallet = PalletDetails::getPallet($getUniqueBox['box_code']);
-			$palletParams = array(
-				'module' 		=> Config::get('transactions.module_pallet'),
-				'jda_action'	=> Config::get('transactions.jda_action_pallet'),
-				'reference'		=> $getPallet['pallet_code']
-			);
-			//create jda transaction for pallet header
-			$palletResp = JdaTransaction::insert($palletParams);
+			Log::info(__METHOD__ .' dump getPallet: '. $getUniqueBox['box_code'] . ' ' .print_r($getPallet,true));
+
+			if(is_array($getPallet)) {
+				$palletParams = array(
+					'module' 		=> Config::get('transactions.module_pallet'),
+					'jda_action'	=> Config::get('transactions.jda_action_pallet'),
+					'reference'		=> $getPallet['pallet_code']
+				);
+				//create jda transaction for pallet header
+				$palletResp = JdaTransaction::insert($palletParams);
+
+				$getLoad = LoadDetails::getLoad($getPallet['pallet_code']);
+				$loadParams = array(
+					'module' 		=> Config::get('transactions.module_load'),
+					'jda_action'	=> Config::get('transactions.jda_action_load'),
+					'reference'		=> $getLoad['load_code']
+				);
+				//create jda transaction for load header
+				$loadResp = JdaTransaction::insert($loadParams);
+
+				$palletizeBoxParams = array(
+					'module' 		=> Config::get('transactions.module_palletize_box'),
+					'jda_action'	=> Config::get('transactions.jda_action_palletize_box'),
+					'reference'		=> $getPallet['pallet_code']
+				);
+				//create jda transaction for pallete to box
+				$palletBoxResp = JdaTransaction::insert($palletizeBoxParams);
+
+
+				$loadingParams = array(
+					'module' 		=> Config::get('transactions.module_loading'),
+					'jda_action'	=> Config::get('transactions.jda_action_loading'),
+					'reference'		=> $getLoad['load_code']
+				);
+				//create jda transaction for loading
+				$insertLoad 		= JdaTransaction::insert($loadingParams);
+
+				$docNo 				= $data['move_doc_number'];
+				$boxNo 				= $getUniqueBox['box_code'];
+				$palletNo 			= $getPallet['pallet_code'];
+				$loadNo 			= $getLoad['load_code'];
+
+			}
 		}
-
-		$getLoad = LoadDetails::getLoad($getPallet['pallet_code']);
-		$loadParams = array(
-			'module' 		=> Config::get('transactions.module_load'),
-			'jda_action'	=> Config::get('transactions.jda_action_load'),
-			'reference'		=> $getLoad['load_code']
-		);
-		//create jda transaction for load header
-		$loadResp = JdaTransaction::insert($loadParams);
-
-		$palletizeBoxParams = array(
-			'module' 		=> Config::get('transactions.module_palletize_box'),
-			'jda_action'	=> Config::get('transactions.jda_action_palletize_box'),
-			'reference'		=> $getPallet['pallet_code']
-		);
-		//create jda transaction for pallete to box
-		$palletBoxResp = JdaTransaction::insert($palletizeBoxParams);
-
-
-		$loadingParams = array(
-			'module' 		=> Config::get('transactions.module_loading'),
-			'jda_action'	=> Config::get('transactions.jda_action_loading'),
-			'reference'		=> $getLoad['load_code']
-		);
-		//create jda transaction for loading
-		$insertLoad 		= JdaTransaction::insert($loadingParams);
-
-		$docNo 				= $data['move_doc_number'];
-		$boxNo 				= $getUniqueBox['box_code'];
-		$palletNo 			= $getPallet['pallet_code'];
-		$loadNo 			= $getLoad['load_code'];
 	}
 }
