@@ -206,6 +206,30 @@ class CommonHelper {
         // exec($cmd . " > /dev/null &");
     }
 
+    /**
+    * Execute command in the background without PHP waiting for it to finish for Unix
+    *
+    * @example  Commonhelper::execInBackground();
+    *
+    * @param  $cmd       string command to execute
+    * @return
+    */
+    public static function archiveLogs()
+    {
+        $file       = __DIR__.'/../../archive_logs/audit_trail_'.time().'.sql';
+        $cmd        = 'mysqldump -uroot -proot ccri wms_audit_trail > ' . $file;
+        $outputfile = __DIR__.'/../../archive_logs/output.log';
+        $pidfile    = __DIR__.'/../../archive_logs/pidfile.log';
+
+        exec($cmd, $outputfile, $pidfile);
+
+        if($pidfile) {
+            return FALSE;
+        }
+
+        return TRUE;
+    }
+
     /*
      * Method to strip tags globally.
      */

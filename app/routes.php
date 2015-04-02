@@ -135,6 +135,7 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::get('audit_trail', 'AuditTrailController@showIndex');
 	Route::get('audit_trail/insert', 'AuditTrailController@insertData');
 	Route::get('audit_trail/export', 'AuditTrailController@exportCSV');
+	Route::get('audit_trail/archive_logs', 'AuditTrailController@archive');
 
 	Route::get('settings', 'SettingsController@showIndex');
 	Route::get('settings/insert', 'SettingsController@insertDataForm');

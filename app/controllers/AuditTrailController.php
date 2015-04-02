@@ -225,4 +225,15 @@ class AuditTrailController extends BaseController {
 					'User Roles' 		=> 'User Roles'
 				);
 	}
+
+	//pull JDA
+	public function archive() {
+		try {
+			$result = CommonHelper::archiveLogs();
+			if($result) AuditTrail::truncate();
+			return Redirect::to('audit_trail')->with('message', Lang::get('audit_trail.text_success_archive'));
+		} catch (Exception $e) {
+			return Redirect::to('audit_trail')->withErrors(Lang::get('audit_trail.text_success_archive_error'));
+		}
+	}
 }
