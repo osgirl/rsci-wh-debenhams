@@ -192,6 +192,9 @@ class Picklist extends Eloquent {
 				        $data[$box[$i]->box_code]['ship_date'] = $rs->ship_date;
 				        $data[$box[$i]->box_code]['is_shipped'] = $rs->is_shipped;
 			        }
+			        if($loadCodes==null)
+				        $data[$box[$i]->box_code]['is_shipped'] = 2;
+
 	                $store = Store::select('store_name')
 	                    ->where('store_code','=',$box[$i]->store_code)
 	                    ->first();
