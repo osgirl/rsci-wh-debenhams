@@ -87,7 +87,7 @@
 		<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
 		@endif
 		@if ( CommonHelper::valueInArray('CanArchiveAuditTrail', $permissions) )
-		<a class="btn btn-info btn-darkblue">{{ $button_archive }}</a>
+		<a class="btn btn-info btn-darkblue" href={{URL::to('audit_trail/archive_logs')}}>{{ $button_archive }}</a>
 		@endif
 	</div>
 </div>

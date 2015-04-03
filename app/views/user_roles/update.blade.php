@@ -732,7 +732,7 @@
 						<td class="align-center">--</td>
                     </tr>
 
-                    <tr>
+                    <!-- <tr>
 						<td class="align-center font-12">{{ $module_settings }}</td>
 						<td class="align-center">
 							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessSettings', Input::old('permissions'))) || CommonHelper::valueInArray('CanAccessSettings', json_decode($user_role->permissions)))
@@ -769,7 +769,7 @@
                     	<td class="align-center">--</td>
                     	<td class="align-center">--</td>
 						<td class="align-center">--</td>
-                    </tr>
+                    </tr> -->
 
                     <!-- <tr>
 						<td class="align-center font-12">{{ $module_stock_piler }}</td>

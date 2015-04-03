@@ -288,7 +288,7 @@ class cronDB2 {
 
 			$filename 		= 'store_order_header';
 		    // so_no | store_name | so_status | order_date | created_at
-			$header_column = array('so_no','store_code', 'so_status');
+			$header_column = array('so_no','store_code', 'so_status', 'order_date');
 			$this->_export($query_result, $filename, $header_column, __METHOD__);
 		}
 		else {

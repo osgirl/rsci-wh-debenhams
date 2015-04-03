@@ -135,6 +135,7 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::get('audit_trail', 'AuditTrailController@showIndex');
 	Route::get('audit_trail/insert', 'AuditTrailController@insertData');
 	Route::get('audit_trail/export', 'AuditTrailController@exportCSV');
+	Route::get('audit_trail/archive_logs', 'AuditTrailController@archive');
 
 	Route::get('settings', 'SettingsController@showIndex');
 	Route::get('settings/insert', 'SettingsController@insertDataForm');
@@ -227,6 +228,8 @@ Route::group(array('prefix'=>'api/v1', 'before'=>'oauth|auth.piler'), function()
 	Route::post('store_return/save', 'ApiStoreReturn@postSaveDetail');
 	Route::post('store_return/change_status/{soNo}', 'ApiStoreReturn@updateStatus');
 	Route::post('store_return/not_in_transfer/{soNo}', 'ApiStoreReturn@notInTransfer');
+
+	Route::post('inter_transfer/add', 'ApiInterTransfer@insertRecord');
 });
 
 Route::group(array('prefix'=>'api/v1', 'before'=>'oauth'), function()

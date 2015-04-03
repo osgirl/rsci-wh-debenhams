@@ -13,5 +13,6 @@ return array(
 	"users"			=> "Users",
 	"settings"		=> "Settings",
 	"user_roles"	=> "User Roles",
-	"store_return"	=> "Store Return"
+	"store_return"	=> "Store Return",
+	"inter_transfer"=> "Inter Transfer"
 );

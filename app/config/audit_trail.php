@@ -41,4 +41,5 @@ return array(
 	"assign_store_return"			=> "Assigned Store Return",
 	"modify_store_return_status"	=> "Update Store Return Status",
 	"done_store_return"	=> "Done Store Return",
+	"post_inter_transfer"	=> "Saved inter transfer",
 );
