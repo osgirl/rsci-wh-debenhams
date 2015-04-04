@@ -73,7 +73,7 @@
 				<tbody>
 				@if( !CommonHelper::arrayHasValue($vendors) )
 					<tr class="font-size-13">
-						<td colspan="2" class="align-center">{{ $text_empty_results }}</td>
+						<td colspan="3" class="align-center">{{ $text_empty_results }}</td>
 					</tr>
 				@else
 					@foreach($vendors as $vendor)
