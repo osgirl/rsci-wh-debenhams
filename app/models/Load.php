@@ -170,6 +170,8 @@ public static function getPackingDetails($loadCode)
                 }
             }
         }
+
+
         // echo '<pre>'; dd($data);
             foreach ($data['StoreCode'] as $storeCode => $value) {
                 $store = DB::table('stores')
@@ -178,6 +180,12 @@ public static function getPackingDetails($loadCode)
                     ->first();
                 $data['StoreCode'][$storeCode]['store_name'] = $store->store_name;
             }
+        $rs = DB::table('inter_transfer')
+            ->select('mts_number','no_of_boxes')
+            ->where('load_code', '=', $loadCode)
+            ->get();
+
+        $data['InterTransfer'] = $rs;
         // echo '<pre>'; dd($data);
         // $data['StoreOrder'][]
         // arrange array based on store order
