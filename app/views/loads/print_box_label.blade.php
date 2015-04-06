@@ -115,9 +115,11 @@ td.underline {padding-bottom: 0; }
 				<?php 
 					array_push($boxarray, $boxNo);
 				?>
-				@if($val['is_shipped'])
+				@if($val['is_shipped']==2)
+					This box is not yet loaded
+				@elseif($val['is_shipped']==1)
 					Shipped by date: {{$val['ship_date']}}
-				@else
+				@elseif($val['is_shipped']==0)
 					This box is not yet shipped
 				@endif
 			</div>

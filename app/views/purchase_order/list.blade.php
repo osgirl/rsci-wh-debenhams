@@ -149,7 +149,7 @@
 				</thead>
 				@if( !CommonHelper::arrayHasValue($purchase_orders) )
 				<tr class="font-size-13">
-					<td colspan="12" style="text-align: center;">{{ $text_empty_results }}</td>
+					<td colspan="13" style="text-align: center;">{{ $text_empty_results }}</td>
 				</tr>
 				@else
 					@foreach( $purchase_orders as $po )

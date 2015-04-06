@@ -9,7 +9,7 @@ return array(
 	'text_total'				=> 'Total:',
 	'text_ship'					=> 'No',
 	'text_shipped'				=> 'Yes',
-	'text_empty_results'		=> 'Empty results',
+	'text_empty_results'		=> 'No Results Found',
 
 	'label_load'				=> 'Load no.',
 	'label_status'				=> 'Shipped Status',

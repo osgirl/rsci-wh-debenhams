@@ -183,12 +183,28 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 			<tr>
 				<td class="plain"><br></td>
 			</tr>
-			<tr><th colspan="6">INTER-TRANSFERS</th></tr>
+			<tr><th style="text-align: center" colspan="6">INTER-TRANSFERS</th></tr>
 			<tr>
-					<td class="plain"></td>
-				<th style="text-align: center">Grand Total: </th>
-				<td class="underline"><hr/></td>
-				<td class="underline"><hr/></td>
+				<th style="text-align: center" colspan="3">MTS No.</th>
+				<th style="text-align: center" colspan="3">No. of Boxes</th>
+			</tr>
+			<?php
+				$grandTotal = 0;
+			?>
+			<tr>
+			@foreach($records['InterTransfer'] as $val)
+				<tr>
+					<td align="center" colspan="3"><strong>{{$val->mts_number}}</strong></td>
+					<?php
+						$grandTotal += $val->no_of_boxes;
+					?>
+			    	<td align="center" colspan="3">{{$val->no_of_boxes}}</td>
+				</tr>
+			@endforeach
+		</tr>
+			<tr>
+				<th style="text-align: center" colspan="3">Grand Total: </th>
+				<td align="center" colspan="3">{{$grandTotal}}</td>
 			</tr>
 			<tr>
 				<td class="plain"><br></td>
