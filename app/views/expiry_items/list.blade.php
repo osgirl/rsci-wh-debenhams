@@ -80,7 +80,7 @@
     <!-- /widget-header -->
     <div class="widget-content">
     	<div class="table-responsive">
-			<table class="table table-bordered">
+			<table class="table table-striped table-bordered">
 				<thead>
 					<tr>
 						<th>{{ $col_id }}</th>
