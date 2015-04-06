@@ -133,6 +133,8 @@
 						<td>{{ $so['slot_code'] }}</td>
 						<td>{{ $so['data_display'] }}</td>
 						<td class="align-center">
+						@if ( CommonHelper::valueInArray('CanCloseStoreReturn', $permissions) )
+
 							@if($so['data_display'] === 'Posted')
 								<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_posted }}</a>
 								 <!-- && ($so['quantity_to_pick'] != $so['moved_qty']) -->
@@ -146,6 +148,7 @@
 								{{ Form::hidden('so_no', $so['so_no']) }}
 								{{ Form::hidden('module', 'store_return') }}
 					  		{{ Form::close() }}
+					  	@endif
 						</td>
 					</tr>
 					@endforeach
