@@ -112,7 +112,7 @@
 				</thead>
 				@if( !CommonHelper::arrayHasValue($store_return) )
 				<tr class="font-size-13">
-					<td colspan="9" style="text-align: center;">{{ $text_empty_results }}</td>
+					<td colspan="10" style="text-align: center;">{{ $text_empty_results }}</td>
 				</tr>
 				@else
 					@foreach( $store_return as $so )

@@ -107,7 +107,7 @@
     <!-- /widget-header -->
     <div class="widget-content">
     	<div class="table-responsive">
-			<table class="table table-bordered">
+			<table class="table table-striped table-bordered">
 				<thead>
 					@if ( CommonHelper::valueInArray('CanAssignPacking', $permissions))
 			  		{{ Form::open(array('url'=>$url_change_to_store,'id' => 'form-picking-change', 'style' => 'margin: 0px;', 'method'=> 'post')) }}
