@@ -284,13 +284,7 @@
 						</td>
 						<td class="align-center">--</td>
 						<td class="align-center">--</td>
-						<td class="align-center">
-							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanCloseStoreOrders', Input::old('permissions'))) || CommonHelper::valueInArray('CanCloseStoreOrders', json_decode($user_role->permissions)))
-								<input type="checkbox" class="checkbox" name="permissions[]" value="CanCloseStoreOrders" checked="checked" />
-							@else
-								<input type="checkbox" class="checkbox" name="permissions[]" value="CanCloseStoreOrders" />
-							@endif
-						</td>
+						<td class="align-center">--</td>
 						<!-- <td class="align-center">
 							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanGenerateLetdownStoreOrders', Input::old('permissions'))) || CommonHelper::valueInArray('CanGenerateLetdownStoreOrders', json_decode($user_role->permissions)))
 								<input type="checkbox" class="checkbox" name="permissions[]" value="CanGenerateLetdownStoreOrders" checked="checked" />
@@ -330,7 +324,13 @@
 							@endif
 						</td>
 						<td class="align-center">--</td>
-						<td class="align-center">--</td>
+						<td class="align-center">
+							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanCloseStoreReturn', Input::old('permissions'))) || CommonHelper::valueInArray('CanCloseStoreReturn', json_decode($user_role->permissions)))
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanCloseStoreReturn" checked="checked" />
+							@else
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanCloseStoreReturn" />
+							@endif
+						</td>
                     </tr>
 
                     <!-- <tr>
