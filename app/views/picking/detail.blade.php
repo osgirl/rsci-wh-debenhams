@@ -103,7 +103,7 @@
 				</thead>
 				@if( !CommonHelper::arrayHasValue($picklist_detail) )
 				<tr class="font-size-13">
-					<td colspan="10" class="align-center">{{ $text_empty_results }}</td>
+					<td colspan="10" class="align-center" style="background-color:#f6f6f6">{{ $text_empty_results }}</td>
 				</tr>
 				@else
 					@foreach( $picklist_detail as $pd )
