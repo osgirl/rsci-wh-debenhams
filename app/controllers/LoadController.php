@@ -233,6 +233,15 @@ class LoadController extends BaseController {
             $load=Load::select('printPacking')->where('load_code','=',$loadCode)->get();
             $this->data['print_status']=$load[0]['printPacking'];
 
+            $pl=Load::select('pl_number')->where('load_code','=',$loadCode)->get();
+            $pl_num=$pl[0]['pl_number'];
+            if($pl_num==''){
+            	$pl_num= self::plNumberGeneration();
+            	Load::where('load_code','=',$loadCode)->update(array('pl_number'=>$pl_num));
+            	$this->data['pl_num'] = $pl_num;
+            }
+            else
+            	$this->data['pl_num'] = $pl_num;
         
             $this->layout = View::make('layouts.print');
             $this->layout->content = View::make('loads.print_packing_list', $this->data);
