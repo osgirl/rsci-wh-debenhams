@@ -1,4 +1,4 @@
-00 21 * * * php /var/www/html/stratpoint_ssi-ewms-cr1/app/cron/db2_master_list.php
+00 22 * * * php /var/www/html/stratpoint_ssi-ewms-cr1/app/cron/db2_master_list.php
 30 9 * * * php /var/www/html/stratpoint_ssi-ewms-cr1/app/cron/ewms_cron_master_list.php
 
 */10 * * * * php /var/www/html/stratpoint_ssi-ewms-cr1/app/cron/db2_modules.php
