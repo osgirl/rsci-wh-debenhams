@@ -171,6 +171,7 @@ class Picklist extends Eloquent {
 			->join('box_details', 'picklist_details.id', '=', 'box_details.picklist_detail_id')
             ->join('product_lists','product_lists.upc','=','picklist_details.sku','LEFT')
 			->where('picklist.move_doc_number','=', $doc_num)
+			->orderBy('box_details.box_code')
 			->get();
 
 		if(!empty($box)){
