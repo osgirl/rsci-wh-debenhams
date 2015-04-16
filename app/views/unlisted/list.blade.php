@@ -70,12 +70,12 @@
 					<tr>
 						<th style="width: 30px; max-width: 30px;">{{ $col_id }}</th>
 						<th style="width: 100px; max-width: 100px;"><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif"> {{ $col_upc }} </a></th>
-						<th style="width: 100px; max-width: 50px;"><a href="{{ $sort_reference }}" class="@if( $sort=='reference_no' ) {{ $order }} @endif">{{ $col_reference }}</a></th>
+						<th style="width: 80px; max-width: 80px;"><a href="{{ $sort_reference }}" class="@if( $sort=='reference_no' ) {{ $order }} @endif">{{ $col_reference }}</a></th>
 						<th style="width: 100px; max-width: 100px;">{{ $col_shipment_reference }}</th>
 						<th style="width: 100px; max-width: 100px;">{{ $col_delivery_date }}</th>
-						<th style="width: 100px; max-width: 100px;">{{ $col_quantity_received }}</th>
-						<th style="width: 150px; max-width: 110px;">{{ $col_description }}</th>
-						<th style="width: 150px; max-width: 100px;">{{ $col_style_no }}</th>
+						<th style="width: 80px; max-width: 100px;">{{ $col_quantity_received }}</th>
+						<th style="width: 100px; max-width: 110px;">{{ $col_description }}</th>
+						<th style="width: 100px; max-width: 100px;">{{ $col_style_no }}</th>
 						<th style="width: 100px; max-width: 100px;">{{ $col_brand }}</th>
 						<th style="width: 100px; max-width: 100px;">{{ $col_division }}</th>
 						<th style="width: 100px; max-width: 100px;">{{ $col_scanned_by }}</th>
