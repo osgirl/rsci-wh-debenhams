@@ -142,7 +142,6 @@ public static function getPackingDetails($loadCode)
         $data['load_date'] = $rs->load_date;
         $data['ship_date'] = $rs->ship_date;
         $data['is_shipped'] = $rs->is_shipped;
-
         // get box codes and details based on pallet code
             $rs = DB::table('pallet_details')
                         ->select('box_code')
@@ -165,7 +164,12 @@ public static function getPackingDetails($loadCode)
                 $counter=count($box);
                 for($i=0;$i<$counter;$i++){
                     $res= Department::getBrand($box[$i]->dept_code,$box[$i]->sub_dept,$box[$i]->class,$box[$i]->sub_class);
-                    $data['StoreCode'][$box[$i]->store_code]['brand'] = $res[0]['description'];
+                    try{
+                        $data['StoreCode'][$box[$i]->store_code]['brand'] = $res[0]['description'];
+                    }
+                    catch(Exception $e){
+                        continue;
+                    }
                     $data['StoreCode'][$box[$i]->store_code]['StoreOrder'][$box[$i]->so_no]['items'][$val->box_code] = $box;
                 }
             }
