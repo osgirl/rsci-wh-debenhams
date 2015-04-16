@@ -355,6 +355,7 @@ class ApiPurchaseOrder extends BaseController {
 				$unlisted->reference_no      = $po_order_no;
 				$unlisted->quantity_received = $value['quantity_received']; //($unlisted->exists) ? ($unlisted->quantity_received + 1) : $value['quantity_received'];
 				$unlisted->updated_at        = date('Y-m-d H:i:s');
+				$unlisted->scanned_by		 = Authorizer::getResourceOwnerId();
 				$unlisted->save();
 			}
 

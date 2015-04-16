@@ -37,7 +37,7 @@ class Unlisted extends Eloquent {
         $query = Unlisted::select('unlisted.*','users.firstname','users.lastname','purchase_order_lists.shipment_reference_no','purchase_order_lists.destination','purchase_order_lists.delivery_date')
                 ->join('purchase_order_lists', 'unlisted.reference_no',
                         '=', 'purchase_order_lists.purchase_order_no')
-                ->join('users', 'purchase_order_lists.assigned_to_user_id', '=', 'users.id', 'RIGHT')
+                ->join('users', 'purchase_order_lists.scanned_by', '=', 'users.id', 'RIGHT')
                 ->where('unlisted.deleted_at', '=', '0000-00-00 00:00:00');
 
         // echo "<pre>"; print_r($data); die();
