@@ -65,20 +65,20 @@
 
     <div class="widget-content">
     	<div class="table-responsive">
-			<table class="table table-striped table-bordered">
+			<table class="table table-striped table-bordered" style="table-layout: fixed;">
 				<thead>
 					<tr>
-						<th>{{ $col_id }}</th>
-						<th><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif"> {{ $col_upc }} </a></th>
-						<th><a href="{{ $sort_reference }}" class="@if( $sort=='reference_no' ) {{ $order }} @endif">{{ $col_reference }}</a></th>
-						<th>{{ $col_shipment_reference }}</th>
-						<th>{{ $col_delivery_date }}</th>
-						<th>{{ $col_quantity_received }}</th>
-						<th>{{ $col_description }}</th>
-						<th>{{ $col_style_no }}</th>
-						<th>{{ $col_brand }}</th>
-						<th>{{ $col_division }}</th>
-						<th>{{ $col_scanned_by }}</th>
+						<th style="width: 30px; max-width: 30px;">{{ $col_id }}</th>
+						<th style="width: 100px; max-width: 100px;"><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif"> {{ $col_upc }} </a></th>
+						<th style="width: 100px; max-width: 50px;"><a href="{{ $sort_reference }}" class="@if( $sort=='reference_no' ) {{ $order }} @endif">{{ $col_reference }}</a></th>
+						<th style="width: 100px; max-width: 100px;">{{ $col_shipment_reference }}</th>
+						<th style="width: 100px; max-width: 100px;">{{ $col_delivery_date }}</th>
+						<th style="width: 100px; max-width: 100px;">{{ $col_quantity_received }}</th>
+						<th style="width: 150px; max-width: 110px;">{{ $col_description }}</th>
+						<th style="width: 150px; max-width: 100px;">{{ $col_style_no }}</th>
+						<th style="width: 100px; max-width: 100px;">{{ $col_brand }}</th>
+						<th style="width: 100px; max-width: 100px;">{{ $col_division }}</th>
+						<th style="width: 100px; max-width: 100px;">{{ $col_scanned_by }}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -95,8 +95,8 @@
 						<td>{{ $unlist['shipment_reference_no'] }}</td>
 						<td>{{ date('m/d/Y',strtotime($unlist['delivery_date'])) }}</td>
 						<td>{{ $unlist['quantity_received'] }}</td>
-						<td>{{ $unlist['description'] }}</td>
-						<td>{{ $unlist['style_no'] }}</td>
+						<td style="word-wrap:break-word">{{ $unlist['description'] }}</td>
+						<td style="word-wrap:break-word">{{ $unlist['style_no'] }}</td>
 						<td>{{ $unlist['brand'] }}</td>
 						<td>{{ $unlist['division'] }}</td>
 						<td>{{ $unlist['firstname'] .' '. $unlist['lastname']}}</td>
