@@ -97,7 +97,7 @@ td.underline {padding-bottom: 0; }
 						<th>Quantity</th>
 					</tr>
 						<tr>
-							<td>{{$item->sub_dept.' - '.$item->description}}</td>
+							<td>{{$val['brand']['id'].' - '.$val['brand']['description']}}</td>
 							<td> 
 							@foreach($sonoarray[$boxNo] as $so_no)
 								@if(count($sonoarray[$boxNo])>1)

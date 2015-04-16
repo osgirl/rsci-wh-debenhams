@@ -175,10 +175,15 @@ class Picklist extends Eloquent {
 			->get();
 
 		if(!empty($box)){
-                $res= Department::getBrand($box[0]->dept_code,$box[0]->sub_dept,$box[0]->class,$box[0]->sub_class);
-                $data[$box[0]->box_code]['brand'] = $res[0]['description'];
                 $counter=count($box);
                 for($i=0;$i<$counter;$i++){
+	                $res= Department::getBrand($box[$i]->dept_code,$box[$i]->sub_dept,$box[$i]->class,$box[$i]->sub_class);
+	                try{
+		                $data[$box[$i]->box_code]['brand'] = $res[0];
+		            }
+		            catch(Exception $e){
+		            	continue;
+		            }
 		            $loadCodes = DB::table('pallet_details')
 		                        ->select('load_code')
 		                        ->join('box_details','box_details.box_code','=','pallet_details.box_code')
