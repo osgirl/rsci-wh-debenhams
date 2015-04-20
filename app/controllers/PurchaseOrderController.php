@@ -798,7 +798,7 @@ class PurchaseOrderController extends BaseController {
 				$url .= '&page=' . Input::get('page_back', 1);
 			} else {
 				$url .= '&sort=' . Input::get('sort', 'po_no');
-				$url .= '&order=' . Input::get('order', 'ASC');
+				$url .= '&order=' . Input::get('order', 'DESC');
 				$url .= '&page=' . Input::get('page', 1);
 			}
 

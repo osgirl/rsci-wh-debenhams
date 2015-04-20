@@ -22,8 +22,12 @@
 <title></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
+{{ HTML::style('resources/css/bootstrap.min.css') }}
+{{ HTML::style('resources/css/bootstrap-responsive.min.css') }}
+{{ HTML::style('resources/css/style.css') }}
 </head>
 <body>
+	<div class="widget-content">
 <div class="table-responsive">
 			<div style="text-align: center">
 				<h1>Casual Clothing Retailers Inc.<br/>UNLISTED ITEMS RECEIVING REPORT</h1>
@@ -35,18 +39,18 @@
 			</div>
 
 	<br /><br />
-	<table class="table table-striped table-bordered">
+	<table class="table table-striped table-bordered" style="table-layout: fixed; width: 100%">
 		<thead>
 			<tr>
-				<th>{{ $col_reference }}</th>
-				<th>{{ $col_upc }}</th>
-				<th>{{ $col_quantity_received }}</th>
-				<th>{{ $col_description }}</th>
-				<th>{{ $col_style_no }}</th>
-				<th>{{ $col_brand }}</th>
-				<th>{{ $col_division }}</th>
-				<th>{{ $col_scanned_by }}</th>
-				<th>{{ $col_remarks }}</th>
+				<th style="width: 30px; max-width: 30px;">{{ $col_reference }}</th>
+				<th style="width: 30px; max-width: 30px;">{{ $col_upc }}</th>
+				<th style="width: 30px; max-width: 30px;">{{ $col_quantity_received }}</th>
+				<th style="width: 30px; max-width: 30px;">{{ $col_description }}</th>
+				<th style="width: 30px; max-width: 30px;">{{ $col_style_no }}</th>
+				<th style="width: 30px; max-width: 30px;">{{ $col_brand }}</th>
+				<th style="width: 30px; max-width: 30px;">{{ $col_division }}</th>
+				<th style="width: 30px; max-width: 30px;">{{ $col_scanned_by }}</th>
+				<th style="width: 30px; max-width: 30px;">{{ $col_remarks }}</th>
 			</tr>
 		</thead>
 		@if( !CommonHelper::arrayHasValue($results) )
@@ -56,19 +60,20 @@
 		@else
 			@foreach($results as $unlist)
 			<tr class="font-size-13">
-				<td>{{ $unlist['reference_no'] }}</td>
-				<td>{{ $unlist['sku'] }}</td>
-				<td>{{ $unlist['quantity_received'] }}</td>
-				<td>{{ $unlist['description'] }}</td>
-				<td>{{ $unlist['style_no'] }}</td>
-				<td>{{ $unlist['brand'] }}</td>
-				<td>{{ $unlist['division'] }}</td>
-				<td>{{ $unlist['firstname'] .' '. $unlist['lastname']}}</td>
-				<td></td>
+				<td style="width: 30px; max-width: 30px;">{{ $unlist['reference_no'] }}</td>
+				<td style="width: 30px; max-width: 30px;">{{ $unlist['sku'] }}</td>
+				<td style="width: 30px; max-width: 30px;">{{ $unlist['quantity_received'] }}</td>
+				<td style="width: 30px; max-width: 30px; word-wrap:break-word">{{ $unlist['description'] }}</td>
+				<td style="width: 30px; max-width: 30px; word-wrap:break-word">{{ $unlist['style_no'] }}</td>
+				<td style="width: 30px; max-width: 30px;">{{ $unlist['brand'] }}</td>
+				<td style="width: 30px; max-width: 30px;">{{ $unlist['division'] }}</td>
+				<td style="width: 30px; max-width: 30px;">{{ $unlist['firstname'] .' '. $unlist['lastname']}}</td>
+				<td style="width: 30px; max-width: 30px; word-wrap:break-word"></td>
 			</tr>
 			@endforeach
 		@endif
 	</table>
+</div>
 </div>
 
 		<table class="contents2">
