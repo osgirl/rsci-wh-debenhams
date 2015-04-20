@@ -37,8 +37,8 @@ class SlotList extends Eloquent {
 
 	public static function isSlotExist($slotCode) {
 		$query = SlotList::where('slot_code', '=', $slotCode)->first();
-
-		if (! empty($query) ) return true;
+		// print_r($query);
+		if (! empty($query) ) return $query['slot_code'];
 
 		return false;
 	}
