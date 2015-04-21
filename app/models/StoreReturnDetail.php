@@ -18,7 +18,12 @@ class StoreReturnDetail extends Eloquent {
 		if( CommonHelper::hasValue($data['filter_so_no']) ) $query->where('store_return.so_no', 'LIKE', '%'.$data['filter_so_no'].'%');
 		if( CommonHelper::hasValue($data['filter_store']) ) $query->where('store_code', 'LIKE', '%'.$data['filter_store'].'%');
 		if( CommonHelper::hasValue($data['filter_created_at']) ) $query->where('store_return.created_at', 'LIKE', '%'.$data['filter_created_at'].'%');
-		if( CommonHelper::hasValue($data['filter_status']) ) $query->where('so_status', 'LIKE', '%'.$data['filter_status'].'%');
+		if( CommonHelper::hasValue($data['filter_status']) ) {
+			$arrParams = array('data_code' => 'SR_STATUS_TYPE', 'data_value'=> $data['filter_status']);
+			$sr_status = Dataset::getType($arrParams)->toArray();
+
+			$query->where('so_status', 'LIKE', '%'.$sr_status['id'].'%');
+		}
 
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if ($data['sort']=='sku') $data['sort'] = 'product_lists.upc';
@@ -34,8 +39,8 @@ class StoreReturnDetail extends Eloquent {
 			$query->skip($data['limit'] * ($data['page'] - 1))
 		          ->take($data['limit']);
 		}
-		// DebugHelper::log(__METHOD__, $result);
 		$result = $query->get();
+		DebugHelper::log(__METHOD__, $result);
 
 		return $result;
 	}
