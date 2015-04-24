@@ -84,44 +84,41 @@ td.underline {padding-bottom: 0; }
 	@foreach($val['items'] as $item)
 		@if(!in_array($boxNo, $boxarray) && $item->box_code== $boxNo)
 			<div style="width:375px; height:225px; border: solid 1px #000; padding: 10px;" >
-				<h1>Box {{$counter+1 .' of '. $totalBox }}</h1>
+				<h1>Box {{$counter+1 .' of '. $totalBox }} - 
+					@foreach($sonoarray[$boxNo] as $so_no)
+						@if(count($sonoarray[$boxNo])>1)
+							<?php $lastElement = end($sonoarray[$boxNo]); ?>
+							@if($so_no == $lastElement)
+								{{$so_no}}
+							@else
+								{{$so_no}}, 
+							@endif
+						@else
+							{{$so_no}}
+						@endif
+					@endforeach
+				</h1>
 				<div class="doctitle">
-					<h1>Box No:<br/>{{$boxNo}}</h1>
+					<h1>Box Ref:<br/>{{$boxNo}}</h1>
 				</div>
 				<table class="contents">
 					<tr>
 						<th>Category</th>
-						<th>MTS No</th>
 						<th>From</th>
 						<th>To</th>
 						<th>Quantity</th>
 					</tr>
 						<tr>
-							<td>{{$val['brand']['id'].' - '.$val['brand']['description']}}</td>
-							<td> 
-							@foreach($sonoarray[$boxNo] as $so_no)
-								@if(count($sonoarray[$boxNo])>1)
-								{{$so_no}}, 
-								@else
-								{{$so_no}}
-								@endif
-							@endforeach
-							</td>
+							<td>{{$val['brand']['sub_dept'].' - '.$val['brand']['description']}}</td>
 							<td>7000 - Warehouse</td>
 							<td>{{ $val['store_code'] .' - ' . $val['store_name']}}</td>
-							<td align="right"> {{$boxTotal}} </td>
+							<td align="center"><h1> {{$boxTotal}} </h1></td>
 						</tr>
 				</table>
 				<?php 
 					array_push($boxarray, $boxNo);
 				?>
-				@if($val['is_shipped']==2)
-					This box is not yet loaded
-				@elseif($val['is_shipped']==1)
-					Shipped by date: {{$val['ship_date']}}
-				@elseif($val['is_shipped']==0)
-					This box is not yet shipped
-				@endif
+				Shipped by date: {{$val['ship_date']}}
 			</div>
 			<?php $counter++; ?>
 		@endif

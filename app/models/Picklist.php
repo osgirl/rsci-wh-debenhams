@@ -177,7 +177,7 @@ class Picklist extends Eloquent {
 		if(!empty($box)){
                 $counter=count($box);
                 for($i=0;$i<$counter;$i++){
-	                $res= Department::getBrand($box[$i]->dept_code,$box[$i]->sub_dept,$box[$i]->class,$box[$i]->sub_class);
+	                $res= Department::getBrand($box[$i]->dept_code,$box[$i]->sub_dept,0,0);
 	                try{
 		                $data[$box[$i]->box_code]['brand'] = $res[0];
 		            }
