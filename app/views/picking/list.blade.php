@@ -119,6 +119,7 @@
 					<th><a href="{{ $sort_doc_no }}" class="@if( $sort=='doc_no' ) {{ $order }} @endif">{{ $col_doc_no }}</a></th>
 					<th>STORE</th>
 					<th>{{ $col_receiving_stock_piler }}</th>
+					<th>ENTRY DATE</th>
 					<th>{{ $col_status }}</th>
 					<th>{{ $col_action }}</th>
 				</thead>
@@ -151,6 +152,7 @@
 							</td>
 							<td>{{ Store::getStoreName($value['store_code']) }}</td>
 							<td>{{ $value['fullname'] }}</td>
+							<td>{{ date("M d, Y", strtotime($value['created_at'])) }}</td>
 							<td>{{ $value['data_display'] }}</td>
 							<td class="align-center">
 								@if($value['data_display'] === 'Posted')
