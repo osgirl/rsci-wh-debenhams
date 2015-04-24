@@ -111,13 +111,6 @@
 				<thead>
 					@if ( CommonHelper::valueInArray('CanAssignPacking', $permissions))
 			  		{{ Form::open(array('url'=>$url_change_to_store,'id' => 'form-picking-change', 'style' => 'margin: 0px;', 'method'=> 'post')) }}
-						{{ Form::hidden('filter_type', $filter_type) }}
-						{{ Form::hidden('filter_doc_no', $filter_doc_no) }}
-						{{ Form::hidden('filter_status', $filter_status) }}
-				  		{{ Form::hidden('sort', $sort) }}
-						{{ Form::hidden('order', $order) }}
-						{{ Form::hidden('page', $page) }}
-						{{ Form::hidden('module', 'picklist') }}
 						{{ Form::hidden('picklist_doc_no', '', array('id'=>'picklist-docno-change' )) }}
 			  		{{ Form::close() }}
 					<th style="width: 20px;" class="align-center"><input type="checkbox" id="main-selected" /></th>
@@ -173,8 +166,15 @@
 
 								{{ Form::open(array('url'=>'picking/close', 'id' => 'closePicklist_' . $value['move_doc_number'], 'style' => 'margin: 0px;')) }}
 									{{ Form::hidden('doc_no', $value['move_doc_number']) }}
+									{{ Form::hidden('filter_doc_no', $filter_doc_no) }}
+									{{ Form::hidden('filter_status', $filter_status) }}
+									{{ Form::hidden('filter_store', $filter_store) }}
+									{{ Form::hidden('filter_stock_piler', $filter_stock_piler) }}
+							  		{{ Form::hidden('sort', $sort) }}
+									{{ Form::hidden('order', $order) }}
+									{{ Form::hidden('page', $page) }}
 									{{ Form::hidden('module', 'picklist') }}
-						  		{{ Form::close() }} 
+						  		{{ Form::close() }}
 							</td>
 
 						</tr>
