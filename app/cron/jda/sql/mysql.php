@@ -231,14 +231,18 @@ class pdoConnection
 		return $result;
 	}
 
-	public function getTransferNo($soNo) {
-		$soNo = join(',', $soNo);
+	public function getTransferNo($soNo, $getNotInTransfer = FALSE) {
+
 		echo "\n Getting transfer no from db \n";
 		$sql 	= "SELECT wms_store_return.so_no,slot_code,wms_store_return_detail.delivered_qty,wms_store_return_detail.received_qty,wms_product_lists.sku FROM wms_store_return
 					INNER JOIN wms_store_return_detail ON wms_store_return.so_no = wms_store_return_detail.so_no
 					INNER JOIN wms_product_lists ON wms_store_return_detail.sku = wms_product_lists.upc
-					WHERE wms_store_return.so_no IN ({$soNo})
-					ORDER BY sku ASC";
+					WHERE wms_store_return.so_no = {$soNo}";
+
+		if ($getNotInTransfer) $sql .= " AND delivered_qty = 0";
+		else $sql .= " AND delivered_qty <> 0";
+
+		$sql .= " ORDER BY sku ASC";
 		$query 	= self::query($sql);
 
 		$result = array();
