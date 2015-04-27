@@ -346,12 +346,13 @@ class pdoConnection
     * @param  $cmd       string command to execute
     * @return
     */
-    private static function execInBackground($cmd)
+    private static function execInBackground($cmd,$source)
     {
         $cmd = 'nohup php -q ' . __DIR__.'/../../jda/' . $cmd;
-    	$outputfile = __DIR__.'/../../jda/logs/output.log';
     	$pidfile = __DIR__.'/../../jda/logs/pidfile.log';
 
+    	$filename=$source . "_" . date('m_d_y');
+    	$outputfile = __DIR__.'/../../jda/logs/'.$filename.'.log';
         exec(sprintf("%s > %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));
         // exec($cmd . " </dev/null 2> /dev/null & echo $!");
         // exec($cmd . " > /dev/null &");
@@ -360,7 +361,7 @@ class pdoConnection
     // TODO: validation
     public function daemon($filename, $data = NULL)
 	{
-		self::execInBackground("classes/{$filename}.php {$data}");
+		self::execInBackground("classes/{$filename}.php {$data}",$filename);
 	}
 
 	public function close() {

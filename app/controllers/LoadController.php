@@ -151,7 +151,7 @@ class LoadController extends BaseController {
 				//if success run daemon command: php app/cron/jda/picklist.php
 				if( $jda ) {
 					$shipping	= "classes/palletizing_step1.php {$data['load_code']}";
-					CommonHelper::execInBackground($shipping);
+					CommonHelper::execInBackground($shipping,'palletizing_step1');
 				}
 			}
 			self::shipLoadToBoxAuditTrail($data['load_code']);

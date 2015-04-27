@@ -551,7 +551,7 @@ class StoreReturnController extends BaseController {
 		if( $isSuccess )
 		{
 			$daemon = "classes/store_return.php {$soNo}";
-			CommonHelper::execInBackground($daemon);
+			CommonHelper::execInBackground($daemon,'store_return');
 		}
 
 		return Redirect::to('store_return' . $this->setURL())->with('message', Lang::get('store_return.text_success_posted'));

@@ -51,7 +51,7 @@ class LetDownController extends BaseController {
 		{
 			// $letdown = 'daemon_closing_letdown.php';
 			$letdown  = "classes/letdown.php {$docNo}";
-			CommonHelper::execInBackground($letdown);
+			CommonHelper::execInBackground($letdown,'letdown');
 		}
 
 		return $this->redirectCloseLetdown( Input::get('module', NULL),  Input::get('page_back', 1),Input::get('sort_back', 'doc_no'),Input::get('order_back', 'ASC'), Input::get('filter_sku', NULL),Input::get('filter_store', NULL),  Input::get('filter_slot', NULL), Input::get('sort', 'doc_no'), Input::get('order', 'ASC'), Input::get('page', 1),Input::get('filter_doc_no', NULL),$docNo, Input::get("id"), Lang::get('letdown.text_success_close_letdown'));

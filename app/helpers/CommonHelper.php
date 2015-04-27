@@ -194,10 +194,11 @@ class CommonHelper {
     * @param  $cmd       string command to execute
     * @return
     */
-    public static function execInBackground($cmd)
+    public static function execInBackground($cmd,$source)
     {
         $cmd = 'nohup php -q ' . __DIR__.'/../../app/cron/jda/' . $cmd;
-    	$outputfile = __DIR__.'/../../app/cron/jda/logs/output.log';
+        $filename=$source . "_" . date('m_d_y');
+        $outputfile = __DIR__.'/../../app/cron/jda/logs/'.$filename.'.log';
     	$pidfile = __DIR__.'/../../app/cron/jda/logs/pidfile.log';
 
         exec(sprintf("%s > %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));

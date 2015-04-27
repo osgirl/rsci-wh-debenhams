@@ -960,7 +960,7 @@ class PicklistController extends BaseController {
 		{
 			// $loadCode = PicklistDetails::getPicklistLoad($docNo);
 			$daemon = "classes/picklist.php {$docNo}";
-			CommonHelper::execInBackground($daemon);
+			CommonHelper::execInBackground($daemon,'picklist');
 		}
 
 		return Redirect::to('picking/list' . $this->setURL())->with('message', Lang::get('picking.text_success_posted'));

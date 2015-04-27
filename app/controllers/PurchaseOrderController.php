@@ -38,7 +38,7 @@ class PurchaseOrderController extends BaseController {
 	public function pullJDA() {
 		try {
 			$pullPurchaseOrder	= "daemon_pulling_po.php";
-			CommonHelper::execInBackground($pullPurchaseOrder);
+			CommonHelper::execInBackground($pullPurchaseOrder,'daemon_pulling_po');
 			return Redirect::to('purchase_order'. $this->setURL())->with('message', Lang::get('purchase_order.text_success_pull'));
 		} catch (Exception $e) {
 			DB::rollback();
@@ -181,7 +181,7 @@ class PurchaseOrderController extends BaseController {
 		if( $isSuccess )
 		{
 			$daemonReceivingClosingPo = "classes/receive_po.php {$purchase_order_no}";
-			CommonHelper::execInBackground($daemonReceivingClosingPo);
+			CommonHelper::execInBackground($daemonReceivingClosingPo,'receive_po');
 		}
 
 		if (Input::get('module') == 'purchase_order_detail') {
