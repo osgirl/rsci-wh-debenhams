@@ -201,7 +201,7 @@ class CommonHelper {
         $outputfile = __DIR__.'/../../app/cron/jda/logs/'.$filename.'.log';
     	$pidfile = __DIR__.'/../../app/cron/jda/logs/pidfile.log';
 
-        exec(sprintf("%s > %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));
+        exec(sprintf("%s >> %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));
         // exec($cmd . " >/dev/null 2> /dev/null & echo $!");
 
         // exec($cmd . " > /dev/null &");
