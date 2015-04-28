@@ -193,67 +193,80 @@ class storeReturn extends jdaCustomClass
 
 		parent::$jda->write5250(array(array(sprintf("%-8s", $slot_code),7,12)),F7, true);//enter sku
 		self::showWarning($formValues);
-		self::captureWarning();
-		self::enterTransferReceiptMaintenanceSkuAgain($transferer);
+		$validate = self::checkTransferNumber($transferer,__METHOD__);
 
-		//enter not in transfer quantities
-		if(is_array($not_in_transfer_details) && !empty($not_in_transfer_details)) {
-			echo "\n Has not in transfer data \n";
-			// self::enterTransferReceiptMaintenanceSkuAgain($transferer);
-			self::enterAddItems();
-
-			if(parent::$jda->screenCheck("Add Items To Transfer"))
-			{
-				foreach ($not_in_transfer_details as $not_in_transfer_detail) {
-					$formValues = array();
-					$formValues[] = array(sprintf("%10d", $not_in_transfer_detail['sku']),16,38);
-					$formValues[] = array(sprintf("%10d", $not_in_transfer_detail['received_qty']),19,34);
-					parent::$jda->write5250($formValues,F7,true);
-					parent::display(parent::$jda->screen,132);
-				}
-				parent::$jda->write5250(null,F1,true);
-				parent::display(parent::$jda->screen,132);
-				echo "\n Entered not in transfer \n";
-			}
-		}
-
-		// paginate
-		//enter first default quantites
-		while($offset < $count) {
-			echo "\n Count: {$count} \n";
-			$new = $offset;
-
-			if ($new !== 0) {
-				$new = $new * $limit;
-
-				for($i=0; $i < $offset; $i++)
-				{
-					echo "\nCounter of i is: {$offset} \n";
-					echo "\nEntered ROLLUP: Page: {$offset} with offset of: {$new} and row {$row} \n";
-					parent::$jda->write5250(null,ROLLUP,true);
-					parent::display(parent::$jda->screen,132);
-				}
-			}
-			$page = array_slice( $transfer_nos, $new, $limit );
-			$formValues = array();
-			foreach ($page as $key => $value) {
-				$new_column = $key + $column;
-				echo "\n value of new_col is: {$new_column} \n";
-				echo "value of transfer_nos is: {$value['received_qty']} \n";
-				$formValues[] = array(sprintf("%10d", $value['received_qty']),$new_column,$row); //enter qty_delivered
-
-			}
-			parent::display(parent::$jda->screen,132);
-			self::showWarning($formValues);
+		// if slot is valid continue transaction
+		if ($validate)
+		{
 			self::captureWarning();
-			self::reenterValues($formValues);
 			self::enterTransferReceiptMaintenanceSkuAgain($transferer);
 
-			$offset++;
-		}
-		// self::captureWarning();
-		parent::display(parent::$jda->screen,132);
+			//enter not in transfer quantities
+			if(is_array($not_in_transfer_details) && !empty($not_in_transfer_details)) {
+				echo "\n Has not in transfer data \n";
+				// self::enterTransferReceiptMaintenanceSkuAgain($transferer);
+				self::enterAddItems();
 
+				if(parent::$jda->screenCheck("Add Items To Transfer"))
+				{
+					foreach ($not_in_transfer_details as $not_in_transfer_detail) {
+						$formValues = array();
+						$formValues[] = array(sprintf("%10d", $not_in_transfer_detail['sku']),16,38);
+						$formValues[] = array(sprintf("%10d", $not_in_transfer_detail['received_qty']),19,34);
+						parent::$jda->write5250($formValues,F7,true);
+						parent::display(parent::$jda->screen,132);
+					}
+					parent::$jda->write5250(null,F1,true);
+					parent::display(parent::$jda->screen,132);
+					echo "\n Entered not in transfer \n";
+				}
+			}
+
+			// paginate
+			//enter first default quantites
+			while($offset < $count) {
+				echo "\n Count: {$count} \n";
+				$new = $offset;
+
+				if ($new !== 0) {
+					$new = $new * $limit;
+
+					for($i=0; $i < $offset; $i++)
+					{
+						echo "\nCounter of i is: {$offset} \n";
+						echo "\nEntered ROLLUP: Page: {$offset} with offset of: {$new} and row {$row} \n";
+						parent::$jda->write5250(null,ROLLUP,true);
+						parent::display(parent::$jda->screen,132);
+					}
+				}
+				$page = array_slice( $transfer_nos, $new, $limit );
+				$formValues = array();
+				foreach ($page as $key => $value) {
+					$new_column = $key + $column;
+					echo "\n value of new_col is: {$new_column} \n";
+					echo "value of transfer_nos is: {$value['received_qty']} \n";
+					$formValues[] = array(sprintf("%10d", $value['received_qty']),$new_column,$row); //enter qty_delivered
+
+				}
+				parent::display(parent::$jda->screen,132);
+				self::showWarning($formValues);
+				self::captureWarning();
+				self::reenterValues($formValues, $offset);
+				self::enterTransferReceiptMaintenanceSkuAgain($transferer);
+
+				$offset++;
+			}
+			parent::display(parent::$jda->screen,132);
+
+			self::closeTransaction($transferer);
+		}
+	}
+
+	private static function enterAddItems() {
+		parent::$jda->write5250(null,F9,true);
+	}
+
+	private static function closeTransaction($transferer) {
 		parent::$jda->write5250(null,F10,true);
 		if (parent::$jda->screenCheck("All Recieved Quantities are ZERO.")){
 			parent::$jda->write5250(null,F1,true);
@@ -262,22 +275,29 @@ class storeReturn extends jdaCustomClass
 			parent::display(parent::$jda->screen,132);
 		}
 
-		if (parent::$jda->screenWait("Press ENTER to return")){
-			parent::$jda->write5250(null,ENTER,true);
-			echo "\nENTER pressed \n";
-			parent::display(parent::$jda->screen,132);
-		}
-		/*$validate = self::checkTransferNumber($transferer,__METHOD__);
-
-		if ($validate)
-		{
-			echo "Entered: Store Return Transfer Receipt  \n";
-			self::checkTransferLanding($transferer,__METHOD__);
-		}*/
+		self::checkTransferLanding($transferer,__METHOD__);
 	}
 
-	private static function enterAddItems() {
-		parent::$jda->write5250(null,F9,true);
+	private static function rescroll($count) {
+		echo "\nEntered rescroll parameter count values is : {$count} \n";
+
+		for($i=0; $i < $count; $i++)
+		{
+			echo "\nCounter of i is: {$i} \n";
+			echo "\nEntered ROLLUP: Page: {$i} with offset of: {$count} \n";
+			parent::$jda->write5250(null,ROLLUP,true);
+			parent::display(parent::$jda->screen,132);
+		}
+
+	}
+
+	private static function reenterValues($formValues, $offset) {
+		if (! parent::$jda->screenWait("Transfer Number") && parent::$jda->screenCheck("F5=Msg")) {
+			echo "\n Found F5=Msg!!! reenter values: {$tries} \n";
+			self::rescroll($offset);
+			parent::$jda->write5250($formValues,F7,true);
+			parent::display(parent::$jda->screen,132);
+		}
 	}
 
 	private static function showWarning($formValues) {
@@ -287,8 +307,6 @@ class storeReturn extends jdaCustomClass
 		{
 			echo "\nF1 not yet processed pressed F7 & tries: {$tries} \n";
 			if (! parent::$jda->screenCheck("Transfer Number")) {
-				parent::$jda->write5250($formValues,F7,true);
-				parent::$jda->write5250($formValues,F7,true);
 				parent::$jda->write5250($formValues,F7,true); // doesn't affect if we press multiple F7 key
 				parent::display(parent::$jda->screen,132);
 			} else {
@@ -297,25 +315,10 @@ class storeReturn extends jdaCustomClass
 		}
 	}
 
-	private static function reenterValues($formValues) {
-		if (! parent::$jda->screenWait("Transfer Number")) {
-			parent::$jda->screenCheck("F5");
-			echo "\n Found F5!!! reenter values: {$tries} \n";
-			// parent::$jda->write5250(null,F7,true);
-			parent::$jda->write5250($formValues,F7,true);
-			parent::$jda->write5250($formValues,F7,true);
-			parent::$jda->write5250(null,F1,true);
-			parent::display(parent::$jda->screen,132);
-		}
-	}
-
 	private static function captureWarning() {
 		if (! parent::$jda->screenWait("Transfer Number")) {
 			parent::$jda->screenCheck("This is a WARNING");
 			echo "\n Found This is a WARNING!!! pressed F1 to exit tries: {$tries} \n";
-			// parent::$jda->write5250(null,F7,true);
-			parent::$jda->write5250(null,F7,true);
-			parent::$jda->write5250(null,F7,true);
 			parent::$jda->write5250(null,F1,true);
 			parent::display(parent::$jda->screen,132);
 		}
@@ -337,7 +340,7 @@ class storeReturn extends jdaCustomClass
 	}
 
 	private static function checkTransferLanding($transferer,$source) {
-		if(parent::$jda->screenCheck('This job has been placed on a batch Job Queue')) {
+		if(parent::$jda->screenWait('This job has been placed on a batch Job Queue')) {
 			echo 'This job has been placed on a batch Job Queue';
 			parent::display(parent::$jda->screen,132);
 			parent::$jda->write5250(NULL,ENTER,true);
