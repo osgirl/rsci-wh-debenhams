@@ -204,7 +204,6 @@ class storeReturn extends jdaCustomClass
 			//enter not in transfer quantities
 			if(is_array($not_in_transfer_details) && !empty($not_in_transfer_details)) {
 				echo "\n Has not in transfer data \n";
-				// self::enterTransferReceiptMaintenanceSkuAgain($transferer);
 				self::enterAddItems();
 
 				if(parent::$jda->screenCheck("Add Items To Transfer"))
@@ -216,14 +215,31 @@ class storeReturn extends jdaCustomClass
 						parent::$jda->write5250($formValues,F7,true);
 						parent::display(parent::$jda->screen,132);
 					}
+					parent::$jda->set_pos(21,24);
 					parent::$jda->write5250(null,F1,true);
 					parent::display(parent::$jda->screen,132);
 					echo "\n Entered not in transfer \n";
+				}
+
+				$tries=0;
+				while($tries++ < 5 && parent::$jda->screenCheck("Add Items To Transfer"))
+				{
+					echo "\n Found Add Items To Transfer pressed F1 \n";
+					parent::$jda->write5250(null,F1,true);
+				}
+
+				$tries3=0;
+				while($tries3++ < 5 && parent::$jda->screenWait("You have requested to Exit")){
+					echo "\n Found *********** WARNING *********** pressed F12 & tries: {$tries3} \n";
+					parent::$jda->set_pos(17,24);
+					parent::$jda->write5250(null,F12,true);
 				}
 			}
 
 			// paginate
 			//enter first default quantites
+			// if(! parent::$jda->screenCheck("Add Items To Transfer")) {
+
 			while($offset < $count) {
 				echo "\n Count: {$count} \n";
 				$new = $offset;
@@ -259,6 +275,7 @@ class storeReturn extends jdaCustomClass
 			parent::display(parent::$jda->screen,132);
 
 			self::closeTransaction($transferer);
+			// }
 		}
 	}
 
@@ -266,8 +283,11 @@ class storeReturn extends jdaCustomClass
 		parent::$jda->write5250(null,F9,true);
 	}
 
-	private static function closeTransaction($transferer) {
+	private static function closeTransaction($transferer)
+	{
+		parent::$jda->set_pos(27,80);
 		parent::$jda->write5250(null,F10,true);
+
 		if (parent::$jda->screenCheck("All Recieved Quantities are ZERO.")){
 			parent::$jda->write5250(null,F1,true);
 			parent::$jda->write5250(null,F10,true);
@@ -275,6 +295,13 @@ class storeReturn extends jdaCustomClass
 			parent::display(parent::$jda->screen,132);
 		}
 
+		echo "Enter closing of store return \n";
+		$tries3=0;
+		while($tries3++ < 5 && !parent::$jda->screenWait("This job has been placed on a batch Job Queue")){
+			echo "\n Unable to find This job has been placed on a batch Job Queue & tries: {$tries3} \n";
+			parent::$jda->set_pos(27,80);
+			parent::$jda->write5250(null,F10,true);
+		}
 		self::checkTransferLanding($transferer,__METHOD__);
 	}
 
@@ -302,7 +329,6 @@ class storeReturn extends jdaCustomClass
 
 	private static function showWarning($formValues) {
 		$tries=0;
-
 		while($tries++ < 5 && !parent::$jda->screenWait("All Recieved Quantities are ZERO."))
 		{
 			echo "\nF1 not yet processed pressed F7 & tries: {$tries} \n";
