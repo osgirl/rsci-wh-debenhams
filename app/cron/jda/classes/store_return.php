@@ -196,6 +196,27 @@ class storeReturn extends jdaCustomClass
 		self::captureWarning();
 		self::enterTransferReceiptMaintenanceSkuAgain($transferer);
 
+		//enter not in transfer quantities
+		if(is_array($not_in_transfer_details) && !empty($not_in_transfer_details)) {
+			echo "\n Has not in transfer data \n";
+			// self::enterTransferReceiptMaintenanceSkuAgain($transferer);
+			self::enterAddItems();
+
+			if(parent::$jda->screenCheck("Add Items To Transfer"))
+			{
+				foreach ($not_in_transfer_details as $not_in_transfer_detail) {
+					$formValues = array();
+					$formValues[] = array(sprintf("%10d", $not_in_transfer_detail['sku']),16,38);
+					$formValues[] = array(sprintf("%10d", $not_in_transfer_detail['received_qty']),19,34);
+					parent::$jda->write5250($formValues,F7,true);
+					parent::display(parent::$jda->screen,132);
+				}
+				parent::$jda->write5250(null,F1,true);
+				parent::display(parent::$jda->screen,132);
+				echo "\n Entered not in transfer \n";
+			}
+		}
+
 		// paginate
 		//enter first default quantites
 		while($offset < $count) {
@@ -225,46 +246,27 @@ class storeReturn extends jdaCustomClass
 			parent::display(parent::$jda->screen,132);
 			self::showWarning($formValues);
 			self::captureWarning();
+			self::reenterValues($formValues);
 			self::enterTransferReceiptMaintenanceSkuAgain($transferer);
-			/*parent::$jda->write5250($formValues,F7,true);
-			parent::$jda->write5250($formValues,F7,true);
-			//confirmation for zero quantity
-
-			$tries = 0;
-			while($tries++ < 5 && parent::$jda->screenWait('All Recieved Quantities are ZERO.')) {
-				echo "\n Found All Recieved Quantities are ZERO \n";
-				parent::$jda->write5250(null,F7,true);
-				parent::$jda->write5250(null,F1,true);
-				parent::display(parent::$jda->screen,132);
-			}*/
 
 			$offset++;
 		}
 		// self::captureWarning();
 		parent::display(parent::$jda->screen,132);
 
-		//enter not in transfer quantities
-		if(is_array($not_in_transfer_details) && !empty($not_in_transfer_details)) {
-			echo "\n Has not in transfer data \n";
-			// self::enterTransferReceiptMaintenanceSkuAgain($transferer);
-			self::enterAddItems();
-
-			if(parent::$jda->screenCheck("Add Items To Transfer"))
-			{
-				foreach ($not_in_transfer_details as $not_in_transfer_detail) {
-					$formValues = array();
-					$formValues[] = array(sprintf("%10d", $not_in_transfer_detail['sku']),16,38);
-					$formValues[] = array(sprintf("%10d", $not_in_transfer_detail['received_qty']),19,34);
-					parent::$jda->write5250($formValues,F7,true);
-					parent::display(parent::$jda->screen,132);
-				}
-				parent::$jda->write5250(null,F1,true);
-				parent::display(parent::$jda->screen,132);
-				echo "\n Entered not in transfer \n";
-			}
+		parent::$jda->write5250(null,F10,true);
+		if (parent::$jda->screenCheck("All Recieved Quantities are ZERO.")){
+			parent::$jda->write5250(null,F1,true);
+			parent::$jda->write5250(null,F10,true);
+			echo "\nF10 pressed \n";
+			parent::display(parent::$jda->screen,132);
 		}
 
-
+		if (parent::$jda->screenWait("Press ENTER to return")){
+			parent::$jda->write5250(null,ENTER,true);
+			echo "\nENTER pressed \n";
+			parent::display(parent::$jda->screen,132);
+		}
 		/*$validate = self::checkTransferNumber($transferer,__METHOD__);
 
 		if ($validate)
@@ -290,14 +292,26 @@ class storeReturn extends jdaCustomClass
 				parent::$jda->write5250($formValues,F7,true); // doesn't affect if we press multiple F7 key
 				parent::display(parent::$jda->screen,132);
 			} else {
-				continue;
+				break;
 			}
 		}
 	}
 
+	private static function reenterValues($formValues) {
+		if (! parent::$jda->screenWait("Transfer Number")) {
+			parent::$jda->screenCheck("F5");
+			echo "\n Found F5!!! reenter values: {$tries} \n";
+			// parent::$jda->write5250(null,F7,true);
+			parent::$jda->write5250($formValues,F7,true);
+			parent::$jda->write5250($formValues,F7,true);
+			parent::$jda->write5250(null,F1,true);
+			parent::display(parent::$jda->screen,132);
+		}
+	}
+
 	private static function captureWarning() {
-		if (! parent::$jda->screenCheck("Transfer Number")) {
-			parent::$jda->screenWait("This is a WARNING");
+		if (! parent::$jda->screenWait("Transfer Number")) {
+			parent::$jda->screenCheck("This is a WARNING");
 			echo "\n Found This is a WARNING!!! pressed F1 to exit tries: {$tries} \n";
 			// parent::$jda->write5250(null,F7,true);
 			parent::$jda->write5250(null,F7,true);

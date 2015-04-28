@@ -240,7 +240,7 @@ class pdoConnection
 					WHERE wms_store_return.so_no = {$soNo}";
 
 		if ($getNotInTransfer) $sql .= " AND delivered_qty = 0";
-		else $sql .= " AND delivered_qty <> 0";
+		// else $sql .= " AND delivered_qty <> 0";
 
 		$sql .= " ORDER BY sku ASC";
 		$query 	= self::query($sql);
