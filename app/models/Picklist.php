@@ -177,6 +177,11 @@ class Picklist extends Eloquent {
 		if(!empty($box)){
                 $counter=count($box);
                 for($i=0;$i<$counter;$i++){
+                	$ship_date=StoreOrder::where('so_no',$box[$i]->so_no)->select(DB::raw("date_format(order_date,'%m/%d/%y') as order_date"))->get();
+	                if(!$ship_date->isEmpty())
+	                	$data[$box[$i]->box_code]['ship_date'] = $ship_date[0]->order_date;
+	                else
+	                	$data[$box[$i]->box_code]['ship_date'] = '';
 	                $res= Department::getBrand($box[$i]->dept_code,$box[$i]->sub_dept,0,0);
 	                try{
 		                $data[$box[$i]->box_code]['brand'] = $res[0];
@@ -192,10 +197,9 @@ class Picklist extends Eloquent {
 		                        ->get();
 			        foreach($loadCodes as $loadCode){
 			        	$rs=DB::table('load')
-                    ->select(DB::raw("date_format(updated_at,'%m/%d/%y') as ship_date"),'is_shipped')
+                    ->select('is_shipped')
                     ->where('load_code', '=', $loadCode->load_code)
                     ->first();
-				        $data[$box[$i]->box_code]['ship_date'] = $rs->ship_date;
 				        $data[$box[$i]->box_code]['is_shipped'] = $rs->is_shipped;
 			        }
 			        if($loadCodes==null)
