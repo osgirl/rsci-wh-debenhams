@@ -460,7 +460,6 @@ class PurchaseOrderController extends BaseController {
 
 		$results = PurchaseOrder::getPoLists($arrParams);
 		$this->data['results'] = $results;
-
 		$pdf = App::make('dompdf');
 		$pdf->loadView('purchase_order.report_backorder', $this->data)->setPaper('a4')->setOrientation('landscape');
 		// return $pdf->stream();
@@ -662,7 +661,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['button_cancel']      = Lang::get('general.button_cancel');
 		// URL
 		$this->data['url_export']                   = URL::to('purchase_order/export' . $this->setURL());
-		$this->data['url_export_backorder']         = URL::to('purchase_order/export_backorder');
+		$this->data['url_export_backorder']         = URL::to('purchase_order/export_backorder' . $this->setURL());
 		$this->data['url_reopen']                   = URL::to('purchase_order/reopen');
 		$this->data['url_assign']                   = URL::to('purchase_order/assign' . $this->setURL(false, true));
 		$this->data['url_detail']                   = URL::to('purchase_order/detail' . $this->setURL(true));
