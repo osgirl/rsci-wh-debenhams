@@ -76,8 +76,8 @@
 						<th style="width: 80px; max-width: 100px;">{{ $col_quantity_received }}</th>
 						<th style="width: 110px; max-width: 110px;">{{ $col_description }}</th>
 						<th style="width: 100px; max-width: 100px;">{{ $col_style_no }}</th>
-						<th style="width: 100px; max-width: 100px;">{{ $col_brand }}</th>
-						<th style="width: 100px; max-width: 100px;">{{ $col_division }}</th>
+						<th style="width: 90px; max-width: 90px;">{{ $col_brand }}</th>
+						<th style="width: 90px; max-width: 90px;">{{ $col_division }}</th>
 						<th style="width: 100px; max-width: 100px;">{{ $col_scanned_by }}</th>
 					</tr>
 				</thead>
@@ -90,7 +90,7 @@
 					@foreach($unlisted as $unlist)
 					<tr class="font-size-13">
 						<td>{{ $counter++ }}</td>
-						<td>{{ $unlist['sku'] }}</td>
+						<td style="word-wrap:break-word">{{ $unlist['sku'] }}</td>
 						<td>{{ $unlist['reference_no'] }}</td>
 						<td style="word-wrap:break-word">{{ $unlist['shipment_reference_no'] }}</td>
 						<td>{{ date('m/d/Y',strtotime($unlist['delivery_date'])) }}</td>
@@ -99,7 +99,7 @@
 						<td style="word-wrap:break-word">{{ $unlist['style_no'] }}</td>
 						<td>{{ $unlist['brand'] }}</td>
 						<td>{{ $unlist['division'] }}</td>
-						<td>{{ $unlist['firstname'] .' '. $unlist['lastname']}}</td>
+						<td style="word-wrap:break-word">{{ $unlist['firstname'] .' '. $unlist['lastname']}}</td>
 					</tr>
 					@endforeach
 				@endif
