@@ -84,7 +84,7 @@ td.underline {padding-bottom: 0; }
 	@foreach($val['items'] as $item)
 		@if(!in_array($boxNo, $boxarray) && $item->box_code== $boxNo)
 			<div style="width:375px; height:225px; border: solid 1px #000; padding: 10px;" >
-				<h1>Box {{$counter+1 .' of '. $totalBox }} - 
+				<h1>Box {{$counter+1 .' of '. $totalBox }} - MTS No:
 					@foreach($sonoarray[$boxNo] as $so_no)
 						@if(count($sonoarray[$boxNo])>1)
 							<?php $lastElement = end($sonoarray[$boxNo]); ?>
