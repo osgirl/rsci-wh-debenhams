@@ -249,17 +249,17 @@ class LoadController extends BaseController {
 
     public function printLoadingSheet($loadCode)
     {
-        try {
+        // try {
             $this->data['loadCode'] = $loadCode;
-            $this->data['records'] = Load::getPackingDetails($loadCode);
+            $this->data['records'] = Load::getLoadingDetails($loadCode);
             $this->data['permissions'] = unserialize(Session::get('permissions'));
 
             $this->layout = View::make('layouts.print');
             $this->layout->content = View::make('loads.print_loading_sheet', $this->data);
 
-        } catch (Exception $e) {
-            return Redirect::to('load/list'. $this->setURL())->withErrors(Lang::get('loads.text_fail_load'));
-        }
+        // } catch (Exception $e) {
+        //     return Redirect::to('load/list'. $this->setURL())->withErrors(Lang::get('loads.text_fail_load'));
+        // }
     }
 
 	protected function setURL($forDetail = false, $forBackToList = false) {

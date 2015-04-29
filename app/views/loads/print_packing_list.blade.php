@@ -163,8 +163,7 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 				<?php 
 					$numOfBoxTotal=count($boxarray);
 				?>
-					<td class="plain"></td>
-			    <th style="text-align: center">Box Total:</td>
+			    <th style="text-align: center" colspan="2">Box Total:</td>
 			    <td align="center"> {{ $numOfBoxTotal }} </td>
 			    <td align="center">{{$grandTotal}}</td>
 				<td class="underline"><hr/></td>
@@ -174,8 +173,7 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 				<td class="plain"><br></td>
 			</tr>
 			<tr>
-					<td class="plain"></td>
-				<th style="text-align: center">Grand Total: </th>
+				<th style="text-align: center" colspan="2">Grand Total: </th>
 			    <td align="center">{{$numOfBoxTotal}}</td>
 			    <td align="center">{{$grandTotal}}</td>
 				<td class="underline"><hr/></td>
@@ -185,27 +183,64 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 			</tr>
 			<tr><th style="text-align: center" colspan="6">INTER-TRANSFERS</th></tr>
 			<tr>
-				<th style="text-align: center" colspan="3">MTS No.</th>
-				<th style="text-align: center" colspan="3">No. of Boxes</th>
+				<th style="text-align: center" colspan="2">MTS No.</th>
+				<th style="text-align: center" colspan="2">Box No.</th>
+				<th style="text-align: center" colspan="2">No. of Boxes</th>
 			</tr>
 			<?php
+				$boxarray=[];
 				$grandTotal = 0;
 			?>
-			<tr>
-			@foreach($records['InterTransfer'] as $val)
+			@foreach($value['InterTransfer'] as $soNo => $val)
+				<?php 
+					$boxes[$soNo]=[];
+					$counter=0;
+				?>
 				<tr>
-					<td align="center" colspan="3"><strong>{{$val->mts_number}}</strong></td>
-					<?php
-						$grandTotal += $val->no_of_boxes;
+					<td align="center" colspan="2"><strong>{{$soNo}}</strong></td>
+			    @foreach($val['items'] as $boxNo => $items)
+					<?php 
+						if(!in_array($boxNo, $boxarray)){
+							array_push($boxarray, $boxNo);
+						}
+						if(!in_array($boxNo, $boxes[$soNo])){
+							array_push($boxes[$soNo], $boxNo);
+		    				$boxTotal = 0;
+							$counter++;
+						}
 					?>
-			    	<td align="center" colspan="3">{{$val->no_of_boxes}}</td>
+					@if($counter>1)
+						<tr>
+							<td colspan="2"></td>
+					@endif
+			    
+			    	<td align="center" colspan="2">{{$boxNo}}</td>
+					@foreach($items as $item)
+						<?php
+							if($item->mts_number == $soNo){
+								$boxTotal += $item->no_of_boxes;
+								$grandTotal += $item->no_of_boxes;
+							}
+						?>
+					@endforeach
+				    <td align="center" colspan="2">{{$boxTotal}}</td>
+					@if($counter>1)
+						</tr>
+					@endif
+			    @endforeach
 				</tr>
 			@endforeach
-		</tr>
+			@if($value['InterTransfer']==null)
+				<tr>
+					<td align="center" colspan="6">N/A</td>
+				</tr>
+			@else
 			<tr>
-				<th style="text-align: center" colspan="3">Grand Total: </th>
-				<td align="center" colspan="3">{{$grandTotal}}</td>
+				<th style="text-align: center" colspan="2">Grand Total: </th>
+				<td align="center" colspan="2">{{count($boxarray)}}</td>
+				<td align="center" colspan="2">{{$grandTotal}}</td>
 			</tr>
+			@endif
 			<tr>
 				<td class="plain"><br></td>
 			</tr>

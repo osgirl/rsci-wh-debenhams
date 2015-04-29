@@ -46,7 +46,6 @@ td.underline {padding-bottom: 0; }
 	<a href="{{url('load/list')}}">BACK TO LOAD LIST</a>
 
 </div>
-@foreach($records['StoreCode'] as $storeCode => $value)
 	<section class="soContainer">
 		<header>
 			<div class="doctitle">
@@ -63,7 +62,7 @@ td.underline {padding-bottom: 0; }
 					    <td>_____________</td>
 						</tr><tr>
 							<th style="text-align: right">Destination:</th>
-							<td>{{ $storeCode .' - ' . $value['store_name']}}</td>
+							<td></td>
 					    </tr>
 					</table>
 				</td>
@@ -102,23 +101,18 @@ td.underline {padding-bottom: 0; }
 		<table class="contents">
 			<tr>
 				<th colspan="3" style="text-align: center">Regular Transfer from Warehouse</th>
-				<th colspan="4" style="text-align: center">Inter-Store Transfer (IT)</th>
 			</tr>
             <tr>
 				<th style="text-align: center">MTS No.</th>
 				<th style="text-align: center">Box #</th>
 				<th style="text-align: center">QTY</th>
-				<th style="text-align: center">MTS No.</th>
-				<th style="text-align: center">Box #</th>
-				<th style="text-align: center">QTY</th>
-				<th style="text-align: center">Remarks</th>
 			</tr>
             <tr>
 	<?php 
 		$boxarray=[];
 		$grandTotal = 0;
 	?>
-			@foreach($value['StoreOrder'] as $soNo => $val)
+			@foreach($records['StoreOrder'] as $soNo => $val)
 				<?php 
 					$counter=0;
 				?>
@@ -145,10 +139,6 @@ td.underline {padding-bottom: 0; }
 						?>
 					@endforeach
 					<td align="center"> {{$boxTotal}} </td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
 					@if($counter>1)
 						</tr>
 					@endif
@@ -160,14 +150,78 @@ td.underline {padding-bottom: 0; }
 				<?php 
 					$numOfBoxTotal=count($boxarray);
 				?>
-				<th align="right">Total: </th>
+				<th style="text-align: center">Total: </th>
 				<td align="center">{{$numOfBoxTotal}}</td>
 				<td align="center">{{$grandTotal}}</td>
-				<td></td>
-				<td></td>
-				<td></td>
+			</tr>
+		</table>
+		<table class="contents">
+			<tr>
+				<th colspan="4" style="text-align: center">Inter-Store Transfer (IT)</th>
+			</tr>
+            <tr>
+				<th style="text-align: center">MTS No.</th>
+				<th style="text-align: center">Box #</th>
+				<th style="text-align: center">QTY</th>
+				<th style="text-align: center">Remarks</th>
+			</tr>
+            <tr>
+			<?php 
+				$boxarray=[];
+				$grandTotal = 0;
+			?>
+			@foreach($records['InterTransfer'] as $soNo => $val)
+				<?php 
+					$boxes[$soNo]=[];
+					$counter=0;
+				?>
+				<tr>
+					<td align="center"><strong>{{$soNo}}</strong></td>
+			    @foreach($val['items'] as $boxNo => $items)
+					<?php 
+						if(!in_array($boxNo, $boxarray)){
+							array_push($boxarray, $boxNo);
+						}
+						if(!in_array($boxNo, $boxes[$soNo])){
+							array_push($boxes[$soNo], $boxNo);
+		    				$boxTotal = 0;
+							$counter++;
+						}
+					?>
+					@if($counter>1)
+						<tr>
+							<td></td>
+					@endif
+			    
+			    	<td align="center">{{$boxNo}}</td>
+					@foreach($items as $item)
+						<?php
+							if($item->mts_number == $soNo){
+								$boxTotal += $item->no_of_boxes;
+								$grandTotal += $item->no_of_boxes;
+							}
+						?>
+					@endforeach
+				    <td align="center">{{$boxTotal}}</td>
+				    <td></td>
+					@if($counter>1)
+						</tr>
+					@endif
+			    @endforeach
+				</tr>
+			@endforeach
+			@if($records['InterTransfer']==null)
+				<tr>
+					<td align="center" colspan="4">N/A</td>
+				</tr>
+			@else
+			<tr>
+				<th style="text-align: center">Total: </th>
+				<td align="center">{{count($boxarray)}}</td>
+				<td align="center">{{$grandTotal}}</td>
 				<td></td>
 			</tr>
+			@endif
 		</table>
 
 		<div class="signatories">
@@ -185,4 +239,3 @@ td.underline {padding-bottom: 0; }
 			</div>
 		</div>
 	</section>
-@endforeach

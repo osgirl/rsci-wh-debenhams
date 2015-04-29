@@ -132,6 +132,7 @@ class Load extends Eloquent {
 
         return $data;
     }
+
 public static function getPackingDetails($loadCode)
     {
         // get load date
@@ -158,12 +159,10 @@ public static function getPackingDetails($loadCode)
                     ->where('box_details.box_code','=', $val->box_code)
                     ->get();
 
-
-
             if(!empty($box)){
                 $counter=count($box);
                 for($i=0;$i<$counter;$i++){
-                    $res= Department::getBrand($box[$i]->dept_code,$box[$i]->sub_dept,$box[$i]->class,$box[$i]->sub_class);
+                    $res= Department::getBrand($box[$i]->dept_code,0,0,0);
                     try{
                         $data['StoreCode'][$box[$i]->store_code]['brand'] = $res[0]['description'];
                     }
@@ -171,9 +170,24 @@ public static function getPackingDetails($loadCode)
                         continue;
                     }
                     $data['StoreCode'][$box[$i]->store_code]['StoreOrder'][$box[$i]->so_no]['items'][$val->box_code] = $box;
+                    if(!array_key_exists('InterTransfer', $data['StoreCode'][$box[$i]->store_code]))
+                        $data['StoreCode'][$box[$i]->store_code]['InterTransfer']=array();
                 }
             }
-        }
+
+            $rs = DB::table('inter_transfer')
+                ->select('mts_number','no_of_boxes','box.store_code')
+                ->join('box','box.box_code','=','inter_transfer.box_code')
+                ->where('inter_transfer.box_code', '=', $val->box_code)
+                ->get();
+
+            if(!empty($rs)){
+                $counter=count($rs);
+                for($i=0;$i<$counter;$i++){
+                    $data['StoreCode'][$rs[$i]->store_code]['InterTransfer'][$rs[$i]->mts_number]['items'][$val->box_code] = $rs;
+                }
+            }
+        
 
 
         // echo '<pre>'; dd($data);
@@ -184,12 +198,7 @@ public static function getPackingDetails($loadCode)
                     ->first();
                 $data['StoreCode'][$storeCode]['store_name'] = $store->store_name;
             }
-        $rs = DB::table('inter_transfer')
-            ->select('mts_number','no_of_boxes')
-            ->where('load_code', '=', $loadCode)
-            ->get();
-
-        $data['InterTransfer'] = $rs;
+        }
         // echo '<pre>'; dd($data);
         // $data['StoreOrder'][]
         // arrange array based on store order
@@ -206,6 +215,65 @@ public static function getPackingDetails($loadCode)
         return $data;
     }
 
+    public static function getLoadingDetails($loadCode)
+    {
+        // get load date
+        $rs = DB::table('load')
+                    ->select(DB::raw("date_format(created_at,'%m/%d/%y') as load_date "),DB::raw("date_format(updated_at,'%m/%d/%y') as ship_date"),'is_shipped')
+                    ->where('load_code', '=', $loadCode)
+                    ->first();
+        $data['load_date'] = $rs->load_date;
+        $data['ship_date'] = $rs->ship_date;
+        $data['is_shipped'] = $rs->is_shipped;
+        // get box codes and details based on pallet code
+            $rs = DB::table('pallet_details')
+                        ->select('box_code')
+                        ->join('load_details','load_details.pallet_code','=','pallet_details.pallet_code','RIGHT')
+                        ->where('load_code', '=', $loadCode)
+                        ->get();
+        foreach($rs as $val){
+            $box =  DB::table('box_details')
+                    ->select('box_details.moved_qty',
+                            'picklist_details.sku as upc','picklist_details.store_code','picklist_details.so_no','picklist_details.store_code',
+                            'product_lists.description','product_lists.dept_code','product_lists.sub_dept','product_lists.class','product_lists.sub_class')
+                    ->join('picklist_details','picklist_details.id','=','box_details.picklist_detail_id','LEFT')
+                    ->join('product_lists','product_lists.upc','=','picklist_details.sku','LEFT')
+                    ->where('box_details.box_code','=', $val->box_code)
+                    ->get();
+
+            if(!empty($box)){
+                $counter=count($box);
+                for($i=0;$i<$counter;$i++){
+                    $res= Department::getBrand($box[$i]->dept_code,0,0,0);
+                    try{
+                        $data['brand'] = $res[0]['description'];
+                    }
+                    catch(Exception $e){
+                        continue;
+                    }
+                    $data['StoreOrder'][$box[$i]->so_no]['items'][$val->box_code] = $box;
+                    if(!array_key_exists('InterTransfer', $data))
+                        $data['InterTransfer']=array();
+                }
+            }
+
+            $rs = DB::table('inter_transfer')
+                ->select('mts_number','no_of_boxes','box.store_code')
+                ->join('box','box.box_code','=','inter_transfer.box_code')
+                ->where('inter_transfer.box_code', '=', $val->box_code)
+                ->get();
+
+            if(!empty($rs)){
+                $counter=count($rs);
+                for($i=0;$i<$counter;$i++){
+                    $data['InterTransfer'][$rs[$i]->mts_number]['items'][$val->box_code] = $rs;
+                }
+            }
+        
+        }
+
+        return $data;
+    }
     /*public static function getCountLoadList($data = array(), $getCount = false)
     {
         $query = DB::table('loads');
