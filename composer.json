@@ -7,7 +7,8 @@
 	"require": {
 		"laravel/framework": "4.2.*",
 		"lucadegasperi/oauth2-server-laravel": "3.*",
-		"barryvdh/laravel-dompdf": "0.4.*"
+		"barryvdh/laravel-dompdf": "0.4.*",
+		"doctrine/dbal": "~2.3"
 	},
 	"autoload": {
 		"classmap": [
