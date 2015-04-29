@@ -1,6 +1,6 @@
 <style>
 @media print {
-    .soContainer {page-break-after: always; page-break-inside: avoid;}
+    .pageContainer {page-break-after: always; page-break-inside: avoid;}
     #actionButtons {display: none;}
 
 }
@@ -44,6 +44,7 @@ td.underline {padding-bottom: 0; }
 	<a href="{{url('load/print/update/'.$loadCode)}}" onclick="window.print();">PRINT THIS</a>
 	<a href="{{url('load/list')}}">BACK TO LOAD LIST</a>
 </div>
+<section class="pageContainer">
 @foreach($records['StoreOrder'] as $soNo => $val)
 	<?php $grandTotal = 0;?>
 	<section class="soContainer">
@@ -171,5 +172,4 @@ td.underline {padding-bottom: 0; }
 			Copy 1 - ICG &nbsp;&nbsp;&nbsp;    Copy 2 - Receiving / To  &nbsp;&nbsp;&nbsp;   Copy 3 - From Location   &nbsp;&nbsp;&nbsp;  Copy 4 - From Location
 	</section>
 @endforeach
-
-
+</section>
