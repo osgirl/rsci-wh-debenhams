@@ -22,8 +22,8 @@ header {margin-bottom: 20px;}
 .commonInfo th {width: 150px;}
 
 .contents {margin-top: 10px; width: 100%;}
-.contents th, .contents td { padding: 2px;  border: solid 1px #F0F0F0; margin: 0; }
-.contents th {text-align: left; padding: 5px;}
+.contents th, .contents td {  border: solid 1px #F0F0F0; margin: 0; }
+.contents th {text-align: left;}
 .contents th {background-color: #F0F0F0}
 
 .comments {width: 100%; margin-top: 15px;}
@@ -33,7 +33,7 @@ header {margin-bottom: 20px;}
 .signatories div {float: left; width: 30%; margin-right: 3%;}
 .signatories hr{margin-top:25px;}
 td.underline hr{ margin-top: 10px; border: none; }
-td.underline {padding-bottom: 0; border-bottom: solid 1px #000;}
+td.underline {border-bottom: solid 1px #000;}
 
 #actionButtons { top:0; left: 0; background-color: #DFF1F7; padding: 5px;}
 #actionButtons a {display: inline-block; padding: 1em; background-color: #3199BE; text-decoration: none; font: bold 1em Verdana ; color: #FFF;}
