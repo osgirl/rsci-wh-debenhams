@@ -425,6 +425,8 @@ class PurchaseOrderController extends BaseController {
 			return Redirect::to('users/logout');
 		}
 
+		if(Input::get('filter_shipment_reference_no') == NULL) return Redirect::to('purchase_order')->withError('Shipment Reference cannot be empty');
+
 		$this->data['col_id'] = Lang::get('purchase_order.col_id');
 		$this->data['col_po_no'] = Lang::get('purchase_order.col_po_no');
 		$this->data['col_receiver_no'] = Lang::get('purchase_order.col_receiver_no');
