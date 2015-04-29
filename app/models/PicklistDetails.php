@@ -570,6 +570,6 @@ class PicklistDetails extends Eloquent {
 			->join('load_details', 'load_details.pallet_code', '=', 'pallet_details.pallet_code')
 			->distinct()->get()->toArray();
 
-		return $query[0]['load_code'];
+		return $query;
 	}
 }
