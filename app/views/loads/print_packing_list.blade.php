@@ -1,6 +1,6 @@
 <style>
 @media print {
-    .soContainer {page-break-after: always; page-break-inside: avoid;}
+    .pageContainer {page-break-after: always; page-break-inside: avoid;}
     #actionButtons {display: none;}
 
 }
@@ -52,6 +52,7 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 	<a href="{{url('load/list')}}">BACK TO LOAD LIST</a>
 
 </div>
+<section class="pageContainer">
 @foreach($records['StoreCode'] as $storeCode => $value)
 	<section class="soContainer">
 		<header>
@@ -119,7 +120,7 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 				?>
 				<tr>
 					@if($rowcount==0)
-					<td align="center">{{$value['brand']}}</td>
+					<td align="center">{{$val['brand']}}</td>
 					@else
 					<td></td>
 					@endif
@@ -351,3 +352,4 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 		Copy 1 &  2 - WH-OS (for checking), then to WH-DC (for Posting) and then to WH-SCC (for IMS update) <br>   Copy 3 - WH-SCC (file copy upon release)
 	</section>
 @endforeach
+</section>

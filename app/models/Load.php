@@ -164,7 +164,7 @@ public static function getPackingDetails($loadCode)
                 for($i=0;$i<$counter;$i++){
                     $res= Department::getBrand($box[$i]->dept_code,0,0,0);
                     try{
-                        $data['StoreCode'][$box[$i]->store_code]['brand'] = $res[0]['description'];
+                        $data['StoreCode'][$box[$i]->store_code]['StoreOrder'][$box[$i]->so_no]['brand'] = $res[0]['description'];
                     }
                     catch(Exception $e){
                         continue;
