@@ -116,7 +116,7 @@
 					<th style="width: 20px;" class="align-center"><input type="checkbox" id="main-selected" /></th>
 					@endif
 					<th>{{ $col_no }}</th>
-					<th><a href="{{ $sort_doc_no }}" class="@if( $sort=='doc_no' ) {{ $order }} @endif">{{ $col_doc_no }}</a></th>
+					<th style="width: 20px;"><a href="{{ $sort_doc_no }}" class="@if( $sort=='doc_no' ) {{ $order }} @endif">{{ $col_doc_no }}</a></th>
 					<th>STORE</th>
 					<th>{{ $col_receiving_stock_piler }}</th>
 					<th>ENTRY DATE</th>
