@@ -74,7 +74,7 @@
 						<th style="width: 100px; max-width: 100px;">{{ $col_shipment_reference }}</th>
 						<th style="width: 100px; max-width: 100px;">{{ $col_delivery_date }}</th>
 						<th style="width: 80px; max-width: 100px;">{{ $col_quantity_received }}</th>
-						<th style="width: 100px; max-width: 110px;">{{ $col_description }}</th>
+						<th style="width: 110px; max-width: 110px;">{{ $col_description }}</th>
 						<th style="width: 100px; max-width: 100px;">{{ $col_style_no }}</th>
 						<th style="width: 100px; max-width: 100px;">{{ $col_brand }}</th>
 						<th style="width: 100px; max-width: 100px;">{{ $col_division }}</th>
@@ -92,7 +92,7 @@
 						<td>{{ $counter++ }}</td>
 						<td>{{ $unlist['sku'] }}</td>
 						<td>{{ $unlist['reference_no'] }}</td>
-						<td>{{ $unlist['shipment_reference_no'] }}</td>
+						<td style="word-wrap:break-word">{{ $unlist['shipment_reference_no'] }}</td>
 						<td>{{ date('m/d/Y',strtotime($unlist['delivery_date'])) }}</td>
 						<td>{{ $unlist['quantity_received'] }}</td>
 						<td style="word-wrap:break-word">{{ $unlist['description'] }}</td>
