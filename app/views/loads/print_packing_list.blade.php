@@ -1,6 +1,6 @@
 <style>
 @media print {
-    .pageContainer {page-break-after: always; page-break-inside: avoid;}
+    .soContainer {page-break-after: always; page-break-inside: avoid;}
     #actionButtons {display: none;}
 
 }
@@ -37,8 +37,8 @@ header {margin-bottom: 20px;}
 .signatories {width: 100%; margin-top: 25px; line-height: 20px;  }
 .signatories div {float: left; width: 30%; margin-right: 3%;}
 .signatories hr{margin-top:25px;}
-td.underline hr{ margin-top: 20px; border: none; border-bottom: solid 1px #000;}
-td.underline {padding-bottom: 0; }
+td.underline hr{ margin-top: 10px; border: none;}
+td.underline {padding-bottom: 0;  border-bottom: solid 1px #000;}
 td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 
 #actionButtons { top:0; left: 0; background-color: #DFF1F7; padding: 5px;}
@@ -52,7 +52,6 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 	<a href="{{url('load/list')}}">BACK TO LOAD LIST</a>
 
 </div>
-<section class="pageContainer">
 @foreach($records['StoreCode'] as $storeCode => $value)
 	<section class="soContainer">
 		<header>
@@ -352,4 +351,3 @@ td.plain { padding: 2px;  border: 1px #F0F0F0; margin: 0;}
 		Copy 1 &  2 - WH-OS (for checking), then to WH-DC (for Posting) and then to WH-SCC (for IMS update) <br>   Copy 3 - WH-SCC (file copy upon release)
 	</section>
 @endforeach
-</section>

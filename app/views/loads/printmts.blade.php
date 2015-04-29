@@ -1,6 +1,6 @@
 <style>
 @media print {
-    .pageContainer {page-break-after: always; page-break-inside: avoid;}
+    .soContainer {page-break-after: always; page-break-inside: avoid;}
     #actionButtons {display: none;}
 
 }
@@ -32,8 +32,8 @@ header {margin-bottom: 20px;}
 .signatories {width: 100%; margin-top: 25px; line-height: 20px;  }
 .signatories div {float: left; width: 30%; margin-right: 3%;}
 .signatories hr{margin-top:25px;}
-td.underline hr{ margin-top: 20px; border: none; border-bottom: solid 1px #000;}
-td.underline {padding-bottom: 0; }
+td.underline hr{ margin-top: 10px; border: none; }
+td.underline {padding-bottom: 0; border-bottom: solid 1px #000;}
 
 #actionButtons { top:0; left: 0; background-color: #DFF1F7; padding: 5px;}
 #actionButtons a {display: inline-block; padding: 1em; background-color: #3199BE; text-decoration: none; font: bold 1em Verdana ; color: #FFF;}
@@ -44,7 +44,6 @@ td.underline {padding-bottom: 0; }
 	<a href="{{url('load/print/update/'.$loadCode)}}" onclick="window.print();">PRINT THIS</a>
 	<a href="{{url('load/list')}}">BACK TO LOAD LIST</a>
 </div>
-<section class="pageContainer">
 @foreach($records['StoreOrder'] as $soNo => $val)
 	<?php $grandTotal = 0;?>
 	<section class="soContainer">
@@ -172,4 +171,5 @@ td.underline {padding-bottom: 0; }
 			Copy 1 - ICG &nbsp;&nbsp;&nbsp;    Copy 2 - Receiving / To  &nbsp;&nbsp;&nbsp;   Copy 3 - From Location   &nbsp;&nbsp;&nbsp;  Copy 4 - From Location
 	</section>
 @endforeach
-</section>
+
+
