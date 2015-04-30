@@ -198,7 +198,7 @@ user: STRATPGMR pass: PASSWORD
 				INNER JOIN wms_purchase_order_lists po_lists ON po_lists.purchase_order_no = trans.reference
 				INNER JOIN wms_purchase_order_details po_details ON po_lists.receiver_no = po_details.receiver_no
 				INNER JOIN wms_product_lists prod ON po_details.sku = prod.upc
-				WHERE module = 'Purchase Order' AND jda_action='Closing' AND trans.sync_status = 0 AND po_lists.receiver_no = {$receiver_no}
+				WHERE module = 'Purchase Order' AND jda_action='Closing' AND trans.sync_status = 0 AND po_lists.receiver_no = {$receiver_no} AND quantity_delivered <> 0
 				ORDER BY prod.sku ASC";
  // AND po_details.quantity_ordered <> 0
 		$query 	= $db->query($sql);
@@ -245,46 +245,6 @@ user: STRATPGMR pass: PASSWORD
 
 		return $result;
 	}
-
-	// enter not in po data
-	/*public static function enterDataEntryMode($receiver_no) {
-		$notInPo    = self::getNotInPoQtyDelivered($receiver_no);
-
-		// if there is data insert item that is not in po
-		if ( count($notInPo) > 0 )
-		{
-			foreach ($notInPo as $po)
-			{
-				parent::$jda->write5250(null,F10,true);
-				echo "Entered: Pressed F10 Key.  \n";
-				// parent::$jda->screenWait("Receiving Data Entry");
-				if (parent::$jda->screenWait("Receiving Data Entry")) {
-					print_r($po);
-					$form   = array();
-					$form[] = array($po['sku'],14,44);  //enter sku
-					$form[] = array($po['quantity_delivered'],15,44);  //enter quantity
-					$form[] = array($po['slot_code'],16,44);  //enter slot
-
-					parent::display(parent::$jda->screen,132);
-					parent::$jda->write5250($form,ENTER,true);
-
-					if(parent::$jda->screenCheck('Sku not on order. Press F9 to add')) {
-						parent::pressF9();
-					}
-				}
-				else {
-					echo "Screen: Receiving Data Entry NOT FOUND -------------------------------  \n";
-				}
-
-				parent::pressF1();
-				// self::checkResponse($receiver_no,__METHOD__);
-			}
-
-			echo "Entered: Data Entry Mode  \n";
-			parent::display(parent::$jda->screen,132);
-		}
-
-	}*/
 
 	public static function enterDataEntryMode($receiver_no)
     {
@@ -363,77 +323,6 @@ user: STRATPGMR pass: PASSWORD
 		parent::display(parent::$jda->screen,132);
 		echo "Entered: PO Receipt Detail by SKU  \n";
 	}
-
-	/*public function enterQtyPerItem($receiver_no)
-	{
-		$column 	= 10;
-		$row 		= 100;
-		$quantity 	= self::getQtyDelivered($receiver_no);
-		$total      = count($quantity);
-		$formValues = array();
-		$limit      = 12;
-		$offset     = 0;
-		$count      = ceil($total / $limit);
-
-		// process not in po items
-		self::enterDataEntryMode($receiver_no);
-		if (parent::$jda->screenWait("Receiving Data Entry")) {
-			echo "Screen: Receiving Data Entry FOUND -------------------------------  \n";
-			parent::pressF1();
-		}
-
-		if (parent::$jda->screenCheck("*********** WARNING ***********")) {
-			parent::display(parent::$jda->screen,132);
-			self::$jda->write5250(NULL,F12,true);
-			echo "Entered: Pressed F12 Key \n";
-		}
-		//end process not in po items
-
-		//enter quantities in the po
-		while($offset < $count) {
-			echo "\n Count: {$count} \n";
-			$new = $offset;
-
-			if ($new !== 0) {
-				$new = $new * $limit;
-
-				parent::pressF1();
-				if (parent::$jda->screenCheck("*********** WARNING ***********"))
-				{
-					parent::display(parent::$jda->screen,132);
-					self::$jda->write5250(NULL,F12,true);
-					echo "Entered: Pressed F12 Key \n";
-				}
-
-				for($i=0; $i < $offset; $i++)
-				{
-					echo "\nCounter of i is: {$offset} \n";
-					echo "\nEntered ROLLUP: Page: {$offset} with offset of: {$new} and row {$row} \n";
-					parent::$jda->write5250(null,ROLLUP,true);
-					parent::display(parent::$jda->screen,132);
-				}
-			}
-
-			$page = array_slice( $quantity, $new, $limit );
-			foreach ($page as $key => $value) {
-				$new_column = $key + $column;
-				echo "\n value of new_col is: {$new_column} \n";
-				echo "value of quantity is: {$value} \n";
-				$formValues[] = array(sprintf("%10d", $value),$new_column,$row); //enter qty_delivered
-
-			}
-			parent::display(parent::$jda->screen,132);
-			$offset++;
-		}
-
-		print_r($formValues);
-		parent::$jda->write5250($formValues,F7,true);
-		// parent::$jda->write5250(null,F7,true);
-		parent::display(parent::$jda->screen,132);
-		echo "Entered: Quantity per item/sku  \n";
-
-		self::checkResponse($receiver_no,__METHOD__);
-	}*/
 
 	public function enterQtyPerItem($receiver_no)
 	{
