@@ -83,9 +83,9 @@ class ApiPurchaseOrder extends BaseController {
 
 			$data 		= json_decode(Request::get('data'), true);
 
-			if(empty($data)) {
+			/*if(empty($data)) {
 				throw new Exception("Empty data parameter");
-			}
+			}*/
 
 			DebugHelper::log(__METHOD__, $data);
 			$po_status   = "done";
@@ -99,11 +99,13 @@ class ApiPurchaseOrder extends BaseController {
 
 
 			//save purcase order detail
-			foreach($data as $row) {
-				$row['po_order_no'] = $po_order_no;
-				PurchaseOrderDetail::updateSKUs($row, $receiver_no); //update po_detail table for the received qty
+			if (CommonHelper::arrayHasValue($data)) {
+				foreach($data as $row) {
+					$row['po_order_no'] = $po_order_no;
+					PurchaseOrderDetail::updateSKUs($row, $receiver_no); //update po_detail table for the received qty
+				}
+				self::validatePassedPODetails($receiver_no, $po_order_no);
 			}
-			self::validatePassedPODetails($receiver_no, $po_order_no);
 
 			//update po status
 			PurchaseOrder::updatePO($po_order_no, $po_status, $date_done, $slot_code); //update po_list status to done
