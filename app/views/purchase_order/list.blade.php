@@ -75,7 +75,10 @@
 				        <div>
 				        	<span class="search-po-left-pane">{{ $label_division }}</span>
 				        	<span class="search-po-right-pane">
-				        		{{ Form::select('filter_division', array('' => $text_select) + $divisions_list, $filter_division, array('class'=>'select-width', 'id'=>"filter_division")) }}
+				        		{{-- Form::select('filter_division', array('' => $text_select) + $divisions_list, $filter_division, array('class'=>'select-width', 'id'=>"filter_division")) --}}
+				        		<select class="select-width" id="filter_division" name="filter_division">
+				        			<option value="" selected="selected">Please Select</option>
+				        		</select>
 				        	</span>
 				        </div>
 			      	</div>
@@ -531,5 +534,45 @@ $(document).ready(function() {
 
       	location = "{{ $url_reopen }}" + url;*/
     });
+	dataVal = { brand : $('#filter_brand').val()};
+	getDivision(dataVal);
+
+	$('#filter_brand').click(function() {
+		var value = $(this).val();
+		var dataVal = { brand : value };
+
+		getDivision(dataVal);
+
+        return false;
+	});
+
+	function getDivision(dataVal) {
+		var select = $("#filter_division");
+		select.html('');
+		if (dataVal.brand == '') {
+			select.append('<option value="" selected="selected">Please Select</option>');
+		} else {
+			$.ajax({
+	            url: 'purchase_order/get_division',
+	            type: 'GET',
+	            cache: false,
+	            data: dataVal,
+	            dataType: 'json',
+	            success: function(result) {
+	            	// select.html('');
+	            	$.each(result, function(key, val) {
+	            		select.append('<option value="' + key + '">' + val + '</option>');
+	            	})
+	            },
+	            error: function(xhr, textstatus, errorthrown){
+	            	return false;
+	            },
+	            complete: function() {
+	            	return false;
+	            }
+
+	        });
+		}
+	}
 });
 </script>

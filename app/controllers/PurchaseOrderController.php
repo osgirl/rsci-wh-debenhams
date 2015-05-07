@@ -852,11 +852,28 @@ class PurchaseOrderController extends BaseController {
 	private function getDivisions()
 	{
 		$division = array();
+		// echo '<pre>'; print_r(Department::getDivisions()); die();
 		foreach (Department::getDivisions() as $item) {
 			$division[$item['sub_dept']] = $item['description'];
 		}
 		return array('' => Lang::get('general.text_select')) + $division;
 	}
+
+	public function getDivisionv2()
+	{
+		$division = array();
+		$brand = Input::get('brand');
+		$divisionList = Department::getSubDepartments($brand)->toArray();
+
+		foreach ($divisionList as $item) {
+			$division[$item['sub_dept']] = $item['description'];
+		}
+		// $values =  array('' => Lang::get('general.text_select')) + $division;
+		$values = $division;
+
+		 return Response::json($values);
+	}
+
 
 	/**
 	 * Clear/Reopen a purchase order
