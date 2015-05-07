@@ -37,7 +37,7 @@ header {margin-bottom: 20px;}
 .signatories {width: 100%; margin-top: 25px; line-height: 20px;  }
 .signatories div {float: left; width: 30%; margin-right: 3%;}
 .signatories hr{margin-top:25px;}
-td.underline hr{ margin-top: 10px; border: none;}
+td.underline hr{ margin-top: 10px; border: none;border-bottom: solid 1px #000;}
 td.underline {border-bottom: solid 1px #000;}
 td.plain {border: 1px #F0F0F0; margin: 0;}
 
@@ -151,7 +151,7 @@ td.plain {border: 1px #F0F0F0; margin: 0;}
 						?>
 					@endforeach
 				    <td align="center">{{$boxTotal}}</td>
-					<td class="underline"><hr/></td>
+					<td class="underline"></td>
 					@if($counter>1)
 						</tr>
 					@endif
@@ -166,7 +166,7 @@ td.plain {border: 1px #F0F0F0; margin: 0;}
 			    <th style="text-align: center" colspan="2">Box Total:</td>
 			    <td align="center"> {{ $numOfBoxTotal }} </td>
 			    <td align="center">{{$grandTotal}}</td>
-				<td class="underline"><hr/></td>
+				<td class="underline"></td>
 				<td class="plain underline"><hr/></td>
 			</tr>
 			<tr>
@@ -176,7 +176,7 @@ td.plain {border: 1px #F0F0F0; margin: 0;}
 				<th style="text-align: center" colspan="2">Grand Total: </th>
 			    <td align="center">{{$numOfBoxTotal}}</td>
 			    <td align="center">{{$grandTotal}}</td>
-				<td class="underline"><hr/></td>
+				<td class="underline"></td>
 			</tr>
 			<tr>
 				<td class="plain"><br></td>
@@ -246,9 +246,9 @@ td.plain {border: 1px #F0F0F0; margin: 0;}
 			</tr>
 			<tr>
 				<td class="plain" style="text-align: right">Seal #1:</th>
-				<td colspan="2" class="plain underline"><hr/></td>
+				<td colspan="2" class="plain underline"></td>
 				<td class="plain" style="text-align: right">Seal #2:</th>
-				<td colspan="2" class="plain underline"><hr/></td>
+				<td colspan="2" class="plain underline"></td>
 			</tr>
 		</table>
 
@@ -263,9 +263,9 @@ td.plain {border: 1px #F0F0F0; margin: 0;}
 				</td>
 			</tr>
 			<tr>
-				<td colspan='3' class="underline"><hr/></td>
+				<td colspan='3' class="underline"><br/></td>
 				<td></td>
-				<td colspan='5' class="underline"><hr/></td>
+				<td colspan='5' class="underline"></td>
 			</tr>
 			<tr>
 				<td colspan='3'>
@@ -285,11 +285,11 @@ td.plain {border: 1px #F0F0F0; margin: 0;}
 				Delivery Van Opened By / Date:
 				</td>
 			</tr>
-				<td colspan='3' class="underline"><hr/></td>
+				<td colspan='3' class="underline"><br/></td>
 				<td></td>
-				<td colspan='3' class="underline"><hr/></td>
+				<td colspan='3' class="underline"></td>
 				<td></td>
-				<td colspan='2' class="underline"><hr/></td>
+				<td colspan='2' class="underline"></td>
 			</tr>
 			<tr>
 				<td colspan='3'>
@@ -323,11 +323,11 @@ td.plain {border: 1px #F0F0F0; margin: 0;}
 				</td>
 			</tr>
 			<tr>
-				<td colspan='3' class="underline"><hr/></td>
+				<td colspan='3' class="underline"><br/></td>
 				<td></td>
-				<td colspan='3' class="underline"><hr/></td>
+				<td colspan='3' class="underline"></td>
 				<td></td>
-				<td colspan='2' class="underline"><hr/></td>
+				<td colspan='2' class="underline"></td>
 			</tr>
 			<tr>
 				<td colspan='3'>
