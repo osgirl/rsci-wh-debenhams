@@ -40,6 +40,7 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::post('purchase_order/reopen', 'PurchaseOrderController@reopen');
 	Route::get('purchase_order/assign', 'PurchaseOrderController@assignPilerForm');
 	Route::get('purchase_order/pulljda', 'PurchaseOrderController@pullJDA');
+	Route::get('purchase_order/get_division', 'PurchaseOrderController@getDivisionv2');
 
 	Route::get('store_order', 'StoreOrderController@showIndex');
 	Route::get('store_order/detail', 'StoreOrderController@getSODetails');
