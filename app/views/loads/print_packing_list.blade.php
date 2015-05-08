@@ -40,6 +40,7 @@ header {margin-bottom: 20px;}
 td.underline hr{ margin-top: 10px; border: none;border-bottom: solid 1px #000;}
 td.underline {border-bottom: solid 1px #000;}
 td.plain {border: 1px #F0F0F0; margin: 0;}
+td.plainUnderline {border: 1px #F0F0F0; margin: 0;border-bottom: solid 1px #000;}
 
 #actionButtons { top:0; left: 0; background-color: #DFF1F7; padding: 5px;}
 #actionButtons a {display: inline-block; padding: 1em; background-color: #3199BE; text-decoration: none; font: bold 1em Verdana ; color: #FFF;}
@@ -101,7 +102,7 @@ td.plain {border: 1px #F0F0F0; margin: 0;}
 				<th rowspan="2" style="text-align: center">Ref MTS No.</th>
 				<th rowspan="2" style="text-align: center">Boxes</th>
 				<th colspan="2" style="text-align: center">Quantity</th>
-				<th rowspan="2" style="text-align: center">Received By/ Date</th>
+				<th rowspan="2" colspan="3" style="text-align: center">Received By/ Date</th>
 			</tr>
             <tr>
 				<th style="text-align: center">Issued</th>
@@ -167,7 +168,9 @@ td.plain {border: 1px #F0F0F0; margin: 0;}
 			    <td align="center"> {{ $numOfBoxTotal }} </td>
 			    <td align="center">{{$grandTotal}}</td>
 				<td class="underline"></td>
-				<td class="plain underline"><hr/></td>
+				<td class='plain' style='width: 1%'></td>
+				<td class="plainUnderline"></td>
+				<td class='plain' style='width: 1%'></td>
 			</tr>
 			<tr>
 				<td class="plain"><br></td>
@@ -181,11 +184,11 @@ td.plain {border: 1px #F0F0F0; margin: 0;}
 			<tr>
 				<td class="plain"><br></td>
 			</tr>
-			<tr><th style="text-align: center" colspan="6">INTER-TRANSFERS</th></tr>
+			<tr><th style="text-align: center" colspan="8">INTER-TRANSFERS</th></tr>
 			<tr>
 				<th style="text-align: center" colspan="2">MTS No.</th>
 				<th style="text-align: center" colspan="2">Box No.</th>
-				<th style="text-align: center" colspan="2">No. of Boxes</th>
+				<th style="text-align: center" colspan="4">No. of Boxes</th>
 			</tr>
 			<?php
 				$boxarray=[];
@@ -223,7 +226,7 @@ td.plain {border: 1px #F0F0F0; margin: 0;}
 							}
 						?>
 					@endforeach
-				    <td align="center" colspan="2">{{$boxTotal}}</td>
+				    <td align="center" colspan="4">{{$boxTotal}}</td>
 					@if($counter>1)
 						</tr>
 					@endif
@@ -232,13 +235,13 @@ td.plain {border: 1px #F0F0F0; margin: 0;}
 			@endforeach
 			@if($value['InterTransfer']==null)
 				<tr>
-					<td align="center" colspan="6">N/A</td>
+					<td align="center" colspan="8">N/A</td>
 				</tr>
 			@else
 			<tr>
 				<th style="text-align: center" colspan="2">Grand Total: </th>
 				<td align="center" colspan="2">{{count($boxarray)}}</td>
-				<td align="center" colspan="2">{{$grandTotal}}</td>
+				<td align="center" colspan="4">{{$grandTotal}}</td>
 			</tr>
 			@endif
 			<tr>
@@ -246,9 +249,9 @@ td.plain {border: 1px #F0F0F0; margin: 0;}
 			</tr>
 			<tr>
 				<td class="plain" style="text-align: right">Seal #1:</th>
-				<td colspan="2" class="plain underline"></td>
+				<td colspan="2" class="plainUnderline"></td>
 				<td class="plain" style="text-align: right">Seal #2:</th>
-				<td colspan="2" class="plain underline"></td>
+				<td colspan="4" class="plainUnderline"></td>
 			</tr>
 		</table>
 
