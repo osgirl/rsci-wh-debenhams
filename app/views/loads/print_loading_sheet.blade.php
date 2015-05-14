@@ -160,7 +160,7 @@ header {margin-bottom: 20px;}
             <tr>
 				<th style="text-align: center">MTS No.</th>
 				<th style="text-align: center">Box #</th>
-				<th style="text-align: center">QTY</th>
+				<th style="text-align: center">No. of Boxes</th>
 				<th style="text-align: center">Remarks</th>
 			</tr>
             <tr>

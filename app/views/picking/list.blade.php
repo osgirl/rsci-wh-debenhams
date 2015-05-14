@@ -117,6 +117,7 @@
 					@endif
 					<th>{{ $col_no }}</th>
 					<th style="width: 20px;"><a href="{{ $sort_doc_no }}" class="@if( $sort=='doc_no' ) {{ $order }} @endif">{{ $col_doc_no }}</a></th>
+					<th>{{ $col_so_no }}</th>
 					<th>STORE</th>
 					<th>{{ $col_receiving_stock_piler }}</th>
 					<th>ENTRY DATE</th>
@@ -150,6 +151,7 @@
 								{{ $value['move_doc_number'] }}
 								@endif
 							</td>
+							<td>{{$value['so_no']}} </td>
 							<td>{{ Store::getStoreName($value['store_code']) }}</td>
 							<td>{{ $value['fullname'] }}</td>
 							<td>{{ date("M d, Y", strtotime($value['created_at'])) }}</td>

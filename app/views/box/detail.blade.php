@@ -55,7 +55,13 @@
 <div class="widget widget-table action-table">
     <div class="widget-header"> <i class="icon-th-list"></i>
       <h3>{{ $heading_title_detail_contents }}</h3>
-      <span class="pagination-totalItems">{{ $text_total }} {{ $boxes_count }}</span>
+
+		<?php 
+			$total_moved_qty=0; 
+			foreach( $boxes as $box )
+				$total_moved_qty+=$box->moved_qty;
+		?>
+      <span class="pagination-totalItems">{{ $text_total }} {{ $boxes_count }} / Total Moved Qty: {{$total_moved_qty }} </span>
     </div>
     <!-- /widget-header -->
     <div class="widget-content">
@@ -82,7 +88,6 @@
 						<td>{{ $box->short_description }}</td>
 						<td>{{ $box->box_code }}</td>
 						<td>{{ $box->moved_qty }}</td>
-
 					</tr>
 					@endforeach
 				@endif
