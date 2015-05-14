@@ -139,6 +139,14 @@ class BoxDetails extends Eloquent {
     	return $boxDetailCount;
     }
 
+    public static function getTotalMovedQty($boxCode)
+    {
+    	$boxMovedQty = BoxDetails::select(DB::raw('SUM(moved_qty) moved_qty'))
+    		->where('box_code', '=', $boxCode)
+    		->first()
+    		->toArray();
+    	return $boxMovedQty;
+    }
     /*
     SELECT box.box_code, box.in_use FROM `wms_box_details` box_details
 LEFT JOIN wms_picklist_details picklist_details ON picklist_details.id = box_details.picklist_detail_id

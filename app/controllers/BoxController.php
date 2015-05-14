@@ -202,6 +202,7 @@ class BoxController extends BaseController {
 		$results 		= BoxDetails::getBoxDetails($box_code, $arrParams);
 		DebugHelper::log(__METHOD__, $results);
 		$results_total 	= BoxDetails::getBoxDetails($box_code, $arrParams, true);
+		$this->data['total_moved_qty'] 	= BoxDetails::getTotalMovedQty($box_code);
 		// Pagination
 		$this->data['arrFilters'] = array(
 									'filter_box_code' => $filter_box_code,
