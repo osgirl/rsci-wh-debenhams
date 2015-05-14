@@ -361,8 +361,7 @@ user: STRATPGMR pass: PASSWORD
 				}
 
 				if (!parent::$jda->screenWait("Sku not on order")) {
-					// parent::$jda->write5250(array(array($detail['sku'],14,44)),ENTER,true);//sleep(2);
-					parent::$jda->write5250(array(array(sprintf("%-9d", $detail['sku']),14,44)),ENTER,true);//sleep(2);
+					parent::$jda->write5250(array(array($detail['sku'],14,44)),ENTER,true);//sleep(2);
 					parent::$jda->write5250(array(array(sprintf("%11d", $detail['quantity_delivered']),15,44)),ENTER,true);//sleep(2);
 					parent::display(parent::$jda->screen,132);
 					parent::$jda->write5250(array(array($detail['slot_code'],16,44)),ENTER,true);//sleep(2);
