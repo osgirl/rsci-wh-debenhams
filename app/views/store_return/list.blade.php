@@ -93,7 +93,7 @@
     <!-- /widget-header -->
     <div class="widget-content">
     	<div class="table-responsive">
-			<table class="table table-striped table-bordered">
+			<table class="table table-bordered">
 				<thead>
 					<tr>
 						@if ( CommonHelper::valueInArray('CanAssignStoreReturn', $permissions) )
@@ -116,7 +116,11 @@
 				</tr>
 				@else
 					@foreach( $store_return as $so )
-					<tr class="font-size-13 tblrow" data-id="{{ $so['so_no'] }}">
+					<tr class="font-size-13 tblrow" data-id="{{ $so['so_no'] }}"
+						@if ( array_key_exists('discrepancy',$so) )
+							style="background-color:#F29F9F"
+						@endif
+					>
 						@if ( CommonHelper::valueInArray('CanAssignStoreReturn', $permissions) )
 						<td class="align-center">
 							@if($so['data_display'] == 'Open' || $so['data_display'] == 'Assigned')

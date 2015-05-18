@@ -447,6 +447,7 @@ class PurchaseOrderController extends BaseController {
 							'filter_back_order_only' => TRUE,
 							'filter_po_no' 			=> NULL,
 							'filter_receiver_no' 	=> NULL,
+							'filter_shipment_reference_no'	=> NULL,
 							'filter_entry_date' 	=> NULL,
 							'filter_stock_piler' 	=> NULL,
 							'filter_status' 		=> NULL,
@@ -550,6 +551,7 @@ class PurchaseOrderController extends BaseController {
 		// Main
 		$filter_po_no       = Input::get('filter_po_no', NULL);
 		$filter_receiver_no = Input::get('filter_receiver_no', NULL);
+		$filter_shipment_reference_no = Input::get('filter_shipment_reference_no', NULL);
 		// $filter_supplier = Input::get('filter_supplier', NULL);
 		$filter_entry_date  = Input::get('filter_entry_date', NULL);
 		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
@@ -589,6 +591,7 @@ class PurchaseOrderController extends BaseController {
 									'receiver_no'			=> $receiver_no,
 									'filter_po_no'			=> $filter_po_no,
 									'filter_receiver_no'	=> $filter_receiver_no,
+									'filter_shipment_reference_no'	=> $filter_shipment_reference_no,
 									// 'filter_supplier'		=> $filter_supplier,
 									'filter_entry_date'		=> $filter_entry_date,
 									'filter_stock_piler'	=> $filter_stock_piler,
@@ -604,6 +607,7 @@ class PurchaseOrderController extends BaseController {
 		// Main
 		$this->data['filter_po_no']          = $filter_po_no;
 		$this->data['filter_receiver_no']    = $filter_receiver_no;
+		$this->data['filter_shipment_reference_no']    = $filter_shipment_reference_no;
 		// $this->data['filter_supplier']    = $filter_supplier;
 		$this->data['filter_entry_date']     = $filter_entry_date;
 		$this->data['filter_stock_piler']    = $filter_stock_piler;
@@ -619,7 +623,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['page_detail']           = $page_detail;
 
 
-		$url = '?filter_po_no=' . $filter_po_no . '&filter_receiver_no=' . $filter_receiver_no;
+		$url = '?filter_po_no=' . $filter_po_no . '&filter_receiver_no=' . $filter_receiver_no. '&filter_shipment_reference_no=' . $filter_shipment_reference_no;
 		// $url .= '&filter_supplier=' . $filter_supplier . '&filter_entry_date=' . $filter_entry_date;
 		$url .= '&filter_stock_piler=' . $filter_stock_piler . '&filter_status=' . $filter_status;
 		$url .= '&page_back=' . $page_back . '&order_back=' . $order_back . '&sort_back=' . $sort_back. '&receiver_no=' . $receiver_no;
@@ -688,6 +692,7 @@ class PurchaseOrderController extends BaseController {
 		// Search Filters
 		$filter_po_no       = Input::get('filter_po_no', NULL);
 		$filter_receiver_no = Input::get('filter_receiver_no', NULL);
+		$filter_shipment_reference_no = Input::get('filter_shipment_reference_no', NULL);
 		$filter_entry_date  = Input::get('filter_entry_date', NULL);
 		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
 		$filter_status      = Input::get('filter_status', NULL);
@@ -704,6 +709,7 @@ class PurchaseOrderController extends BaseController {
 		$arrParams = array(
 						'filter_po_no'       => $filter_po_no,
 						'filter_receiver_no' => $filter_receiver_no,
+						'filter_shipment_reference_no'	=> $filter_shipment_reference_no,
 						'filter_entry_date'  => $filter_entry_date,
 						'filter_stock_piler' => $filter_stock_piler,
 						'filter_back_order'  => $filter_back_order,
@@ -728,6 +734,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['arrFilters'] = array(
 									'filter_po_no'       => $filter_po_no,
 									'filter_receiver_no' => $filter_receiver_no,
+									'filter_shipment_reference_no'	=> $filter_shipment_reference_no,
 									'filter_entry_date'  => $filter_entry_date,
 									'filter_stock_piler' => $filter_stock_piler,
 									'filter_back_order'  => $filter_back_order,
@@ -744,6 +751,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['counter']               = $this->data['purchase_orders']->getFrom();
 		$this->data['filter_po_no']          = $filter_po_no;
 		$this->data['filter_receiver_no']    = $filter_receiver_no;
+		$this->data['filter_shipment_reference_no']    = $filter_shipment_reference_no;
 		$this->data['filter_entry_date']     = $filter_entry_date;
 		$this->data['filter_stock_piler']    = $filter_stock_piler;
 		$this->data['filter_status']         = $filter_status;
@@ -755,7 +763,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['order']                 = $order;
 		$this->data['page']                  = $page;
 
-		$url                                 = '?filter_po_no=' . $filter_po_no . '&filter_receiver_no=' . $filter_receiver_no;
+		$url                                 = '?filter_po_no=' . $filter_po_no . '&filter_receiver_no=' . $filter_receiver_no. '&filter_shipment_reference_no=' . $filter_shipment_reference_no;
 		$url                                 .= '&filter_entry_date=' . $filter_entry_date . '&filter_back_order=' . $filter_back_order;
 		$url                                 .= '&filter_stock_piler=' . $filter_stock_piler . '&filter_status=' . $filter_status;
 		$url                                 .= '&filter_brand=' . $filter_brand . '&filter_division=' . $filter_division;
@@ -780,6 +788,7 @@ class PurchaseOrderController extends BaseController {
 		// Search Filters
 		$url = '?filter_po_no=' . Input::get('filter_po_no', NULL);
 		$url .= '&filter_receiver_no=' . Input::get('filter_receiver_no', NULL);
+		$filter_shipment_reference_no = Input::get('filter_shipment_reference_no', NULL);
 		// $url .= '&filter_supplier=' . Input::get('filter_supplier', NULL);
 		$url .= '&filter_entry_date=' . Input::get('filter_entry_date', NULL);
 		$url .= '&filter_stock_piler=' . Input::get('filter_stock_piler', NULL);
