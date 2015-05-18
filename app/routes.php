@@ -231,6 +231,9 @@ Route::group(array('prefix'=>'api/v1', 'before'=>'oauth|auth.piler'), function()
 	Route::post('store_return/not_in_transfer/{soNo}', 'ApiStoreReturn@notInTransfer');
 
 	Route::post('inter_transfer/add', 'ApiInterTransfer@insertRecord');
+
+	//manual move
+	Route::post('manual_move/save', 'ApiManualMove@insertRecord');
 });
 
 Route::group(array('prefix'=>'api/v1', 'before'=>'oauth'), function()

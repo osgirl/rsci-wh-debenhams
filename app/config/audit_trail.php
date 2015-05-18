@@ -42,4 +42,5 @@ return array(
 	"modify_store_return_status"	=> "Update Store Return Status",
 	"done_store_return"	=> "Done Store Return",
 	"post_inter_transfer"	=> "Saved inter transfer",
+	"save_manual_move"	=> "Added record for manual move",
 );
