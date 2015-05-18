@@ -323,7 +323,17 @@ class StoreReturnController extends BaseController {
 						'limit'					=> 30
 					);
 
-		$results 		= StoreReturn::getSOList($arrParams)->toArray();
+		$results 		= StoreReturn::getSOList($arrParams);
+		foreach ($results as $result) {
+			$details= StoreReturnDetail::getSODetails($result['so_no'], $arrParams)->toArray();
+			foreach($details as $detail){
+				if($detail['received_qty'] != $detail['delivered_qty'] ){
+					$result->discrepancy=1;
+					break;
+				}
+			}
+		}
+		$results = $results->toArray();
 		$results_total 	= StoreReturn::getCount($arrParams);
 
 		// Pagination
