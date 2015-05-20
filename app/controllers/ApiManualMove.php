@@ -80,6 +80,7 @@ class ApiManualMove extends BaseController {
 			$upc = Request::get('upc');
 
 			$info = ManualMove::getDB2Info($fromSlot, $upc);
+			$info = (!empty($info)) ? $info[0] : [];
 			return CommonHelper::return_success_message($info);
 		} catch (Exception $e) {
 			return CommonHelper::return_fail($e->getMessage());
