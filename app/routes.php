@@ -233,6 +233,7 @@ Route::group(array('prefix'=>'api/v1', 'before'=>'oauth|auth.piler'), function()
 	Route::post('inter_transfer/add', 'ApiInterTransfer@insertRecord');
 
 	//manual move
+	Route::get('manual_move/get_info', 'ApiManualMove@getInfo');
 	Route::post('manual_move/save', 'ApiManualMove@insertRecord');
 });
 

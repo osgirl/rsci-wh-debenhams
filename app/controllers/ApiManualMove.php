@@ -65,4 +65,26 @@ class ApiManualMove extends BaseController {
 		AuditTrail::addAuditTrail($arrParams);
 	}
 
+	/**
+	* Get Brands
+	*
+	* @example  www.example.com/api/{version}/department/brands
+	* @return array of brands
+	*/
+	public static function getInfo()
+	{
+		try {
+			CommonHelper::setRequiredFields(array('from_slot', 'upc',));
+
+			$fromSlot = Request::get('from_slot');
+			$upc = Request::get('upc');
+
+			$info = ManualMove::getDB2Info($fromSlot, $upc);
+			return CommonHelper::return_success_message($info);
+		} catch (Exception $e) {
+			return CommonHelper::return_fail($e->getMessage());
+		}
+
+	}
+
 }
