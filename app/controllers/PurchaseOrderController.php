@@ -788,7 +788,6 @@ class PurchaseOrderController extends BaseController {
 		// Search Filters
 		$url = '?filter_po_no=' . Input::get('filter_po_no', NULL);
 		$url .= '&filter_receiver_no=' . Input::get('filter_receiver_no', NULL);
-		$filter_shipment_reference_no = Input::get('filter_shipment_reference_no', NULL);
 		// $url .= '&filter_supplier=' . Input::get('filter_supplier', NULL);
 		$url .= '&filter_entry_date=' . Input::get('filter_entry_date', NULL);
 		$url .= '&filter_stock_piler=' . Input::get('filter_stock_piler', NULL);
