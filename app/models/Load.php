@@ -85,7 +85,7 @@ class Load extends Eloquent {
                         ->get();
         foreach($rs as $val){
             $box =  DB::table('box_details')
-                    ->select(DB::raw('SUM(wms_picklist_details.moved_qty) as moved_qty  '),
+                    ->select(DB::raw('SUM(wms_picklist_details.moved_qty) as moved_qty'),
                             'picklist_details.sku as upc','picklist_details.created_at as order_date','picklist_details.store_code','picklist_details.so_no','picklist_details.store_code',
                             'product_lists.description')
                     ->join('picklist_details','picklist_details.id','=','box_details.picklist_detail_id','LEFT')
