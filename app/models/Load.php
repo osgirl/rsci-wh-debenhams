@@ -23,7 +23,7 @@ class Load extends Eloquent {
 
     public static function getLoadList($data = array(), $getCount = false)
     {
-        $query = Load::select(DB::raw("wms_load.id, wms_load.load_code, wms_load.is_shipped, group_concat(DISTINCT wms_pallet.store_code SEPARATOR ',') stores,wms_picklist.pl_status"))
+        $query = Load::select(DB::raw("wms_load.id, wms_load.load_code, wms_load.is_shipped, group_concat(DISTINCT wms_pallet.store_code SEPARATOR ',') stores,group_concat(DISTINCT wms_picklist.pl_status SEPARATOR ',') pl_status"))
             ->join('load_details', 'load_details.load_code', '=', 'load.load_code')
             ->join('pallet', 'pallet.pallet_code', '=', 'load_details.pallet_code')
             ->join('pallet_details','load_details.pallet_code','=','pallet_details.pallet_code','RIGHT')
