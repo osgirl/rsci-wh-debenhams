@@ -29,7 +29,12 @@ class ApiManualMove extends BaseController {
 				$manualMove->quantity = $value['quantity'];
 				$manualMove->to_slot = $toSlot;
 				$manualMove->sync_by = Authorizer::getResourceOwnerId();
-				$manualMove->save();
+				$saved = $manualMove->save();
+
+				if($saved){
+					$manual_move  = "classes/manual_move.php {$manualMove->id}";
+					CommonHelper::execInBackground($manual_move,'manual_move');
+				}
 				//audit trail
 				self::auditTrail($fromSlot, $value, $toSlot);
 			}
