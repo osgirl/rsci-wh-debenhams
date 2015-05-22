@@ -11,16 +11,16 @@ class ManualMove extends Eloquent {
 		$password = Config::get('app.db2_password');
 		$tempFieldNames = [];
 
-
 		$sql = "SELECT WHSLOT from_slot, INVUPC.INUMBR, INVUPC.IUPC upc, WHHAND, WHCOMM, WHHAND - WHCOMM as total
 				FROM WHSLSK
 				INNER JOIN INVUPC ON WHSLSK.INUMBR = INVUPC.INUMBR
 				WHERE WHSLOT = '{$fromSlot}' AND INVUPC.IUPC = {$upc}
 				FETCH FIRST 1 ROWS ONLY";
 		// WHHAND - WHCOMM
-		$connection = odbc_connect($dsn,$username,$password,SQL_CUR_USE_DRIVER) or die("Error! Couldn't Connect To Database. Error Code:  ".odbc_error());
-
-		$res = odbc_exec($connection,$sql) or die("Error! Couldn't Run Query. Error Code:  ".odbc_error());
+		$connection = @odbc_connect($dsn,$username,$password,SQL_CUR_USE_DRIVER);
+		if (!($connection)) throw new Exception("Error! Couldn't Connect To DB2 Database. Error Code:  ".odbc_error());
+		$res = @odbc_exec($connection,$sql);
+		if (!($res)) throw new Exception("Error! Couldn't Run Query. Error Code:  ".odbc_error());
         unset($tempFieldNames);
 
 		$toReturn = "";
@@ -41,6 +41,6 @@ class ManualMove extends Eloquent {
         }
 
         //result : Array ( [0] => Array ( [WHSLOT] => ZR000001 [INUMBR] => 11270549 [WHHAND] => 1011.00 [WHCOMM] => 0 ) )
-		return $toReturn[0];
+		return $toReturn;
 	}
 }
