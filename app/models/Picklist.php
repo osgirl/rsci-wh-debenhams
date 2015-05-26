@@ -130,7 +130,7 @@ class Picklist extends Eloquent {
 			->join('stores', 'stores.store_code', '=', 'picklist_details.store_code')
 			->join('dataset', 'picklist.pl_status', '=', 'dataset.id')
 			->groupBy('picklist.move_doc_number')
-			->get(array('picklist.move_doc_number','stores.store_name', 'picklist_details.store_code', 'data_value as status'))
+			->get(array('picklist_details.so_no as transfer_no','picklist.move_doc_number','stores.store_name', 'picklist_details.store_code', 'data_value as status'))
 			->toArray();
 	}
 

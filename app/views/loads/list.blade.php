@@ -82,7 +82,7 @@
 							@endif
 						</td>
 						<td>
-							@if( $load['pl_status'] == 17 )
+							@if( preg_match('/17/', $load['pl_status']) )
 								<a disabled class="btn btn-info">{{ $button_ship }}</a>
 							@elseif( $load['is_shipped'] == 0 )
 								@if ( CommonHelper::valueInArray('CanAccessShipping', $permissions))
@@ -96,14 +96,14 @@
 								<a disabled class="btn btn-danger">{{ $button_shipped }}</a>
 							@endif
 
-							@if( $load['is_shipped'] == 0 )
+							@if( $load['is_shipped'] == 0 || preg_match('/17/', $load['pl_status']))
 								&nbsp;&nbsp;<a disabled target="_blank" class="btn btn-danger">Print MTS</a>
 							@else
 								&nbsp;&nbsp;<a href="{{url('load/print/' . $load['load_code'])}}" target="_blank" class="btn btn-danger">Print MTS</a>
 							@endif
 								&nbsp;&nbsp;<a href="{{url('load/printloadingsheet/' . $load['load_code'])}}" target="_blank" class="btn btn-info">Print Loading Sheet</a>
 							
-							@if( $load['is_shipped'] == 0 )
+							@if( $load['is_shipped'] == 0 || preg_match('/17/', $load['pl_status']))
 								&nbsp;&nbsp;<a disabled target="_blank" class="btn btn-default">Print Packing List</a>
 							@else
 								&nbsp;&nbsp;<a href="{{url('load/printpacklist/' . $load['load_code'])}}" target="_blank" class="btn btn-default">Print Packing List</a>

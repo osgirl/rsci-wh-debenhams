@@ -23,7 +23,7 @@ class Load extends Eloquent {
 
     public static function getLoadList($data = array(), $getCount = false)
     {
-        $query = Load::select(DB::raw("wms_load.id, wms_load.load_code, wms_load.is_shipped, group_concat(DISTINCT wms_pallet.store_code SEPARATOR ',') stores,wms_picklist.pl_status"))
+        $query = Load::select(DB::raw("wms_load.id, wms_load.load_code, wms_load.is_shipped, group_concat(DISTINCT wms_pallet.store_code SEPARATOR ',') stores,group_concat(DISTINCT wms_picklist.pl_status SEPARATOR ',') pl_status"))
             ->join('load_details', 'load_details.load_code', '=', 'load.load_code')
             ->join('pallet', 'pallet.pallet_code', '=', 'load_details.pallet_code')
             ->join('pallet_details','load_details.pallet_code','=','pallet_details.pallet_code','RIGHT')
@@ -85,11 +85,12 @@ class Load extends Eloquent {
                         ->get();
         foreach($rs as $val){
             $box =  DB::table('box_details')
-                    ->select('box_details.moved_qty',
+                    ->select(DB::raw('SUM(wms_picklist_details.moved_qty) as moved_qty'),
                             'picklist_details.sku as upc','picklist_details.created_at as order_date','picklist_details.store_code','picklist_details.so_no','picklist_details.store_code',
                             'product_lists.description')
                     ->join('picklist_details','picklist_details.id','=','box_details.picklist_detail_id','LEFT')
                     ->join('product_lists','product_lists.upc','=','picklist_details.sku','LEFT')
+                    ->groupBy('picklist_details.sku')
                     ->where('box_details.box_code','=', $val->box_code)
                     ->get();
 
