@@ -87,7 +87,7 @@ class jdaCustomClass
 		#happens when a job is currently performed with the same account
 		self::display(self::$jda->screen,132);
 		self::$jda->screenWait("Press Enter to continue");
-		if(self::$jda->screenCheck("Press Enter to continue")) {
+		if(self::$jda->screenCheck("Press Enter to continue") || self::$jda->screenCheck("(if required), press Enter")) {
 			echo 'saw enter to cont';
 			self::$jda->write5250(null,ENTER,true);
 		}
