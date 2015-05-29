@@ -25,7 +25,7 @@ class DB2Helper {
 
     public function __construct()
     {
-        echo "Connecting to DB2... \n";
+        // echo "Connecting to DB2... \n";
         $this->dsn = Config::get('app.db2_dsn');
         $this->username = Config::get('app.db2_username');
         $this->password = Config::get('app.db2_password');
@@ -79,7 +79,7 @@ class DB2Helper {
 
     public function close()
     {
-        echo "Closing odbc connection... \n";
+        // echo "Closing odbc connection... \n";
         odbc_close($this->db2);
     }
 

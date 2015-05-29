@@ -45,7 +45,11 @@ class PurchaseOrderDetail extends Eloquent {
 				'updated_at' => date('Y-m-d H:i:s')
 			);
 
+			//update our db quantities
 			$result = $query->update($array_params);
+			//update db2 quantities
+			$skuNo = ProductList::getSkuNo($data['sku']);
+			PurchaseOrderDetail::updateQuantities($receiver_no, $skuNo, $data['quantity_delivered']);
 			DebugHelper::log(__METHOD__, $result);
 			return $result;
 		}
@@ -204,5 +208,34 @@ class PurchaseOrderDetail extends Eloquent {
 		}
 
 		return $result;
+	}
+
+	public static function testGet() {
+		$sql = "SELECT POMRCH.PONUMB, POMRCH.POMRCV
+		        FROM POMRCH
+		        LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB AND POMRCH.POBON = POMHDR.POBON
+		        WHERE POMRCH.PONUMB IN (128985) and POMRCH.POSTAT = 3";
+				//WHERE POMRCH.POSTAT = 3 AND POMRCH.POLOC = 7000
+
+        $sql2 = "SELECT INUMBR, POMRCV, POMCUR
+		        FROM POMRCD
+		        WHERE POMRCV=3910";
+
+		$db2 = new DB2Helper;
+		$result = $db2->get($sql);
+		$result2 = $db2->get($sql2);
+
+		echo '<pre>'; print_r($result);
+		echo '<pre>'; print_r($result2);
+
+		$db2->close();
+	}
+
+	/*DB2 Functions*/
+	public static function updateQuantities($receiver_no, $sku, $quantity) {
+		$sql = "UPDATE POMRCD SET POMCUR={$quantity} WHERE POMRCV={$receiver_no} AND INUMBR={$sku}";
+		$db2 = new DB2Helper;
+		$result = $db2->updateRecord($sql);
+		$db2->close();
 	}
 }

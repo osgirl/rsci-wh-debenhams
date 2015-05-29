@@ -58,4 +58,11 @@ class ProductList extends Eloquent {
 		if( $query->first() ) return true;
 		else throw new Exception( 'Upc does not exist.');
 	}
+
+	public static function getSkuNo($upc) {
+		$query = ProductList::select('sku')->where('upc', '=', $upc);
+
+		if( $query->first() ) return $query->first()->sku;
+		else throw new Exception( 'Upc does not exist.');
+	}
 }
