@@ -14,8 +14,8 @@ return array(
 	*/
 
 	'debug' => true,
-	'db2_dsn' => 'DRIVER=IBM i Access ODBC Driver 64-bit;SYSTEM=172.16.1.1;DBQ=MMGSTLIB',
-	'db2_username' => 'STRATPGMR',
+	'db2_dsn' => 'DRIVER=IBM i Access ODBC Driver 64-bit;SYSTEM=172.16.1.1;DBQ=MMGAPLIB',
+	'db2_username' => 'STRATSYS',
 	'db2_password' => 'PASSWORD'
 
 );
