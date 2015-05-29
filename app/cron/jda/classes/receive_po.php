@@ -172,7 +172,10 @@ class poReceiving extends jdaCustomClass
 		parent::$jda->screenWait("Receiver Number");
 		parent::display(parent::$jda->screen,132);
 
-		self::updateSyncStatus($receiver);
+		if(parent::$jda->screenCheck("Receiver Number"))
+			self::updateSyncStatus($receiver);
+		else
+			echo "Unsuccessful jda sync. PO still in Release Status";
 
 	}
 
