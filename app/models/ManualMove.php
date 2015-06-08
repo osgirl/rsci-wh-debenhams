@@ -11,9 +11,10 @@ class ManualMove extends Eloquent {
 		$password = Config::get('app.db2_password');
 		$tempFieldNames = [];
 
-		$sql = "SELECT WHSLOT from_slot, INVUPC.INUMBR, INVUPC.IUPC upc, WHHAND, WHCOMM, WHHAND - WHCOMM as total
+		$sql = "SELECT WHSLOT from_slot, INVUPC.INUMBR, INVUPC.IUPC upc,INVMST.IDESCR description, WHHAND, WHCOMM, WHHAND - WHCOMM as total
 				FROM WHSLSK
 				INNER JOIN INVUPC ON WHSLSK.INUMBR = INVUPC.INUMBR
+				INNER JOIN INVMST ON INVUPC.INUMBR = INVMST.INUMBR
 				WHERE WHSLOT = '{$fromSlot}' AND INVUPC.IUPC = {$upc}
 				FETCH FIRST 1 ROWS ONLY";
 		// WHHAND - WHCOMM
@@ -33,7 +34,7 @@ class ManualMove extends Eloquent {
             for ($j = 1; $j <= odbc_num_fields($res); $j++) {
                 $field_name = odbc_field_name($res, $j);
                 $tempFieldNames[$j] = $field_name;
-                $ar[$field_name] = odbc_result($res, $field_name);
+                $ar[$field_name] = trim(odbc_result($res, $field_name));
     	   	}
 
             $toReturn[$i] = $ar;
