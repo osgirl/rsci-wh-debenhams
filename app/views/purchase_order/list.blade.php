@@ -196,6 +196,7 @@
 									{{ Form::hidden('filter_entry_date', $filter_entry_date) }}
 									{{ Form::hidden('filter_stock_piler', $filter_stock_piler) }}
 									{{ Form::hidden('filter_status', $filter_status) }}
+									{{ Form::hidden('filter_shipment_reference_no', $filter_shipment_reference_no) }}
 							  		{{ Form::hidden('sort', $sort) }}
 									{{ Form::hidden('order', $order) }}
 									{{ Form::hidden('page', $page) }}
