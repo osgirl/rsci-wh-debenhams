@@ -15,7 +15,8 @@ class storeReturn extends jdaCustomClass
 	>what happens to transferred batch (daemon at syncclosing)
 	>how to detect sku that don't exist in jda
 	>pagination
-	>invalid slot error
+	>invalid slot errorif f5 found not in 1st page
+	>
 
 	*master menu
 	09
@@ -265,7 +266,7 @@ class storeReturn extends jdaCustomClass
 
 				}
 				parent::display(parent::$jda->screen,132);
-				self::showWarning($formValues);
+				self::showWarning($formValues,$offset);
 				self::captureWarning();
 				self::reenterValues($formValues, $offset);
 				self::enterTransferReceiptMaintenanceSkuAgain($transferer);
@@ -327,7 +328,7 @@ class storeReturn extends jdaCustomClass
 		}
 	}
 
-	private static function showWarning($formValues) {
+	private static function showWarning($formValues,$offset=null) {
 		$tries=0;
 		while($tries++ < 5 && !parent::$jda->screenWait("All Recieved Quantities are ZERO."))
 		{
@@ -335,6 +336,7 @@ class storeReturn extends jdaCustomClass
 			if (! parent::$jda->screenCheck("Transfer Number")) {
 				parent::$jda->write5250($formValues,F7,true); // doesn't affect if we press multiple F7 key
 				parent::display(parent::$jda->screen,132);
+				self::reenterValues($formValues, $offset);
 			} else {
 				break;
 			}

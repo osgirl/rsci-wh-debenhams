@@ -242,7 +242,7 @@ class pdoConnection
 		if ($getNotInTransfer) $sql .= " AND delivered_qty = 0";
 		// else $sql .= " AND delivered_qty <> 0";
 
-		$sql .= " ORDER BY sku ASC";
+		$sql .= " ORDER BY convert(wms_product_lists.sku, decimal) ASC";
 		$query 	= self::query($sql);
 
 		$result = array();
