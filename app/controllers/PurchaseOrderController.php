@@ -798,12 +798,12 @@ class PurchaseOrderController extends BaseController {
 		$url .= '&filter_shipment_reference_no=' . Input::get('filter_shipment_reference_no', NULL);
 		if($forDetail) {
 			$url .= '&sort_back=' . Input::get('sort', 'po_no');
-			$url .= '&order_back=' . Input::get('order', 'ASC');
+			$url .= '&order_back=' . Input::get('order', 'DESC');
 			$url .= '&page_back=' . Input::get('page', 1);
 		} else {
 			if($forBackToList == true) {
 				$url .= '&sort=' . Input::get('sort_back', 'po_no');
-				$url .= '&order=' . Input::get('order_back', 'ASC');
+				$url .= '&order=' . Input::get('order_back', 'DESC');
 				$url .= '&page=' . Input::get('page_back', 1);
 			} else {
 				$url .= '&sort=' . Input::get('sort', 'po_no');
