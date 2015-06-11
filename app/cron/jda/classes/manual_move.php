@@ -85,7 +85,7 @@ class manualMove extends jdaCustomClass
 			return false;
 		}
 		if(parent::$jda->screenCheck("Invalid 'sku' entered")) {
-            $message="Invalid 'sku' entered";
+            $message="Invalid sku entered";
             self::$formMsg = "{$input}: {$message}";
             parent::logError(self::$formMsg, __METHOD__);
 			self::updateSyncStatus($input,"{$source}: {$message}", TRUE);
@@ -99,7 +99,7 @@ class manualMove extends jdaCustomClass
 			return false;
 		}
 		if(parent::$jda->screenCheck("'From slot' or 'new primary slot' must be entered")) {
-            $message="'From slot' or 'new primary slot' must be entered";
+            $message="From slot or new primary slot must be entered";
             self::$formMsg = "{$input}: {$message}";
             parent::logError(self::$formMsg, __METHOD__);
 			self::updateSyncStatus($input,"{$source}: {$message}", TRUE);

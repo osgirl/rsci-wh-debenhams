@@ -250,6 +250,7 @@ class storeReturn extends jdaCustomClass
 
 					for($i=0; $i < $offset; $i++)
 					{
+						$top_sku=$transfer_nos[$new]['sku'];
 						echo "\nCounter of i is: {$offset} \n";
 						echo "\nEntered ROLLUP: Page: {$offset} with offset of: {$new} and row {$row} \n";
 						parent::$jda->write5250(null,ROLLUP,true);
@@ -266,9 +267,9 @@ class storeReturn extends jdaCustomClass
 
 				}
 				parent::display(parent::$jda->screen,132);
-				self::showWarning($formValues,$offset);
+				self::showWarning($formValues,$offset,$top_sku);
 				self::captureWarning();
-				self::reenterValues($formValues, $offset);
+				self::reenterValues($formValues, $offset,$top_sku);
 				self::enterTransferReceiptMaintenanceSkuAgain($transferer);
 
 				$offset++;
@@ -306,20 +307,26 @@ class storeReturn extends jdaCustomClass
 		self::checkTransferLanding($transferer,__METHOD__);
 	}
 
-	private static function rescroll($count) {
+	private static function rescroll($count, $top_sku=null) {
 		echo "\nEntered rescroll parameter count values is : {$count} \n";
 
 		for($i=0; $i < $count; $i++)
 		{
-			echo "\nCounter of i is: {$i} \n";
-			echo "\nEntered ROLLUP: Page: {$i} with offset of: {$count} \n";
-			parent::$jda->write5250(null,ROLLUP,true);
-			parent::display(parent::$jda->screen,132);
+			if(! parent::$jda->screenCheck("{$top_sku}")){
+				echo "\nCounter of i is: {$i} \n";
+				echo "\nEntered ROLLUP: Page: {$i} with offset of: {$count} \n";
+				parent::$jda->write5250(null,ROLLUP,true);
+				parent::display(parent::$jda->screen,132);
+			}
+			else{
+				echo "\nFound top sku: {$top_sku} \n";
+				break;
+			}
 		}
 
 	}
 
-	private static function reenterValues($formValues, $offset) {
+	private static function reenterValues($formValues, $offset, $top_sku=null) {
 		if (! parent::$jda->screenWait("Transfer Number") && parent::$jda->screenCheck("F5=Msg")) {
 			echo "\n Found F5=Msg!!! reenter values: {$tries} \n";
 			self::rescroll($offset);
@@ -328,7 +335,7 @@ class storeReturn extends jdaCustomClass
 		}
 	}
 
-	private static function showWarning($formValues,$offset=null) {
+	private static function showWarning($formValues,$offset=null, $top_sku=null) {
 		$tries=0;
 		while($tries++ < 5 && !parent::$jda->screenWait("All Recieved Quantities are ZERO."))
 		{
@@ -336,7 +343,7 @@ class storeReturn extends jdaCustomClass
 			if (! parent::$jda->screenCheck("Transfer Number")) {
 				parent::$jda->write5250($formValues,F7,true); // doesn't affect if we press multiple F7 key
 				parent::display(parent::$jda->screen,132);
-				self::reenterValues($formValues, $offset);
+				self::reenterValues($formValues, $offset, $top_sku);
 			} else {
 				break;
 			}
