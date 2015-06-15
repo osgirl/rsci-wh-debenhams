@@ -563,7 +563,7 @@ class PurchaseOrderController extends BaseController {
 		// $receiver_no     = Input::get('receiver_no', 1);
 
 		// Details
-		$sort_detail        = Input::get('sort', 'purchase_order_details.sku');
+		$sort_detail        = Input::get('sort', 'product_lists.sku');
 		$order_detail       = Input::get('order', 'ASC');
 		$page_detail        = Input::get('page', 1);
 

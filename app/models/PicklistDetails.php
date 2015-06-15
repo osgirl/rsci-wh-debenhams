@@ -394,7 +394,7 @@ class PicklistDetails extends Eloquent {
 		// if( CommonHelper::hasValue($data['filter_status_detail']) ) $query->where('move_to_shipping_area', '=', $data['filter_status_detail']);
 
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
-			if ($data['sort']=='sku') $data['sort'] = 'picklist_details.sku';
+			if ($data['sort']=='sku') $data['sort'] = 'product_lists.sku';
 			if ($data['sort']=='upc') $data['sort'] = 'product_lists.upc';
 			if ($data['sort']=='so_no') $data['sort'] = 'so_no';
 			if ($data['sort']=='from_slot_code') $data['sort'] = 'from_slot_code';

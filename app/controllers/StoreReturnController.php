@@ -243,7 +243,7 @@ class StoreReturnController extends BaseController {
 		$url = '?filter_so_no=' . $filter_so_no . '&filter_store=' . $filter_store;
 		// $url .= '&filter_delivered_date=' . $filter_delivered_date;
 		$url .= '&filter_status=' . $filter_status;
-		$url .= '&sort=' . $sort_back . '&order=' . $order_back . '&page=' . $page_back;
+		$url .= '&sort_back=' . $sort_back . '&order_back=' . $order_back . '&page_back=' . $page_back;
 		$url .= '&page_detail=' . $page_detail . '&id=' . $so_id . '&so_no=' . $so_no;
 
 
@@ -253,11 +253,11 @@ class StoreReturnController extends BaseController {
 		$order_allocated_quantity = ($sort_detail=='allocated_quantity' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		$order_dispatched_quantity = ($sort_detail=='dispatched_quantity' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 
-		$this->data['sort_sku'] = URL::to('store_return/detail' . $url . '&sort_detail=sku&order_detail=' . $order_sku, NULL, FALSE);
-		$this->data['sort_short_name'] = URL::to('store_return/detail' . $url . '&sort_detail=short_name&order_detail=' . $order_short_name, NULL, FALSE);
-		$this->data['sort_delivered_quantity'] = URL::to('store_return/detail' . $url . '&sort_detail=delivered_quantity&order_detail=' . $order_delivered_quantity, NULL, FALSE);
-		$this->data['sort_allocated_quantity'] = URL::to('store_return/detail' . $url . '&sort_detail=allocated_quantity&order_detail=' . $order_allocated_quantity, NULL, FALSE);
-		$this->data['sort_dispatched_quantity'] = URL::to('store_return/detail' . $url . '&sort_detail=dispatched_quantity&order_detail=' . $order_dispatched_quantity, NULL, FALSE);
+		$this->data['sort_sku'] = URL::to('store_return/detail' . $url . '&sort=sku&order=' . $order_sku, NULL, FALSE);
+		$this->data['sort_short_name'] = URL::to('store_return/detail' . $url . '&sort=short_name&order=' . $order_short_name, NULL, FALSE);
+		$this->data['sort_delivered_quantity'] = URL::to('store_return/detail' . $url . '&sort=delivered_quantity&order=' . $order_delivered_quantity, NULL, FALSE);
+		$this->data['sort_allocated_quantity'] = URL::to('store_return/detail' . $url . '&sort=allocated_quantity&order=' . $order_allocated_quantity, NULL, FALSE);
+		$this->data['sort_dispatched_quantity'] = URL::to('store_return/detail' . $url . '&sort=dispatched_quantity&order=' . $order_dispatched_quantity, NULL, FALSE);
 
 		// Permissions
 		$this->data['permissions'] = unserialize(Session::get('permissions'));
@@ -277,7 +277,7 @@ class StoreReturnController extends BaseController {
 		// URL
 		$this->data['url_assign']         = URL::to('store_return/assign');
 		$this->data['url_export'] = URL::to('store_return/export');
-		$this->data['url_detail'] = URL::to('store_return/detail' . $this->setURL());
+		$this->data['url_detail'] = URL::to('store_return/detail' . $this->setURL(true));
 
 		// Message
 		$this->data['error'] = '';
