@@ -12,7 +12,7 @@ class StoreOrderDetail extends Eloquent {
 	* @param   storeCode    store code
 	*
 	* @return upcs
-	*/ 
+	*/
 	public static function getProductList($data)
 	{
 		/*$upcs =  DB::select(DB::raw("select stores.store_name, sku, SUM(ordered_qty) ordered_qty, SUM(delivered_qty) delivered_qty
@@ -21,7 +21,7 @@ class StoreOrderDetail extends Eloquent {
 			inner join wms_stores stores on stores.store_code = so.store_code
 			where so.store_code = {$data['storeCode']} and so_status = ".Config::get('so_statuses.done')." and load_code = '{$data['loadCode']}'
 			group by sku, load_code, so.store_code" ));*/
-		
+
 		$upcs =  DB::select(DB::raw("select stores.store_name, so_detail.sku, SUM(ordered_qty) ordered_qty, SUM(delivered_qty) delivered_qty, description
 			from wms_store_order so
 			right join wms_store_order_detail so_detail on so.so_no = so_detail.so_no
@@ -34,14 +34,14 @@ class StoreOrderDetail extends Eloquent {
 
 	public static function getStoreOrderDetail($storeCode, $loadCode, $sku)
 	{
-		$storeOrderDetails = StoreOrderDetail::select('store_order_detail.id', 'store_order_detail.so_no','store_order_detail.sku', 'ordered_qty', 'packed_qty', 'delivered_qty', 'store_order_detail.created_at', 'store_order.store_code', 'store_order.load_code', 'store_order.so_status', 'store_order.assigned_user_id' )
+		$storeOrderDetails = StoreOrderDetail::select('store_order_detail.id', 'store_order_detail.so_no',DB::raw('convert(store_order_detail.sku, decimal(20,0)) as sku'), 'ordered_qty', 'packed_qty', 'delivered_qty', 'store_order_detail.created_at', 'store_order.store_code', 'store_order.load_code', 'store_order.so_status', 'store_order.assigned_user_id' )
 			->join('store_order', 'store_order.so_no', '=', 'store_order_detail.so_no')
 			->where('sku', '=', $sku)
 			->where('store_order.load_code', '=', $loadCode)
 			->where('store_order.store_code', '=', $storeCode)
 			->where('store_order.so_status', '=',Config::get('so_statuses.done') )
 			->get();
-		
+
 		return $storeOrderDetails;
 	}
 
@@ -50,7 +50,7 @@ class StoreOrderDetail extends Eloquent {
 		$storeOrderDetail = StoreOrderDetail::where('id', '=', $sodId)
 			->get()->first();
 
-		$newQtyToReceive = intval($storeOrderDetail->delivered_qty) + $qtyToReceive; 
+		$newQtyToReceive = intval($storeOrderDetail->delivered_qty) + $qtyToReceive;
 		if((int)$storeOrderDetail->ordered_qty < $newQtyToReceive) {
 			throw new Exception("Received quantity is greater than ordered quantity.");
 		}
@@ -75,7 +75,7 @@ class StoreOrderDetail extends Eloquent {
 			if ($data['sort']=='short_name') $data['sort'] = 'product_lists.short_description';
 			if ($data['sort']=='ordered_quantity') $data['sort'] = 'store_order_detail.ordered_qty';
 			if ($data['sort']=='delivered_quantity') $data['sort'] = 'store_order_detail.delivered_qty';
-			
+
 			$query->orderBy($data['sort'], $data['order']);
 		}
 
@@ -85,7 +85,7 @@ class StoreOrderDetail extends Eloquent {
 		}
 
 		$result = $query->get();
-		
+
 		return $result;
 	}
 
@@ -94,8 +94,8 @@ class StoreOrderDetail extends Eloquent {
 			->where('so_no', '=', $so_no)
 			->join('product_lists', 'store_order_detail.sku', '=', 'product_lists.upc')
 			->get();
-		
-		return $storeOrderDetail->count();			
+
+		return $storeOrderDetail->count();
 	}
 
 	public static function getMtsDetails($so_no,$data = array(), $getCount = FALSE){
@@ -124,7 +124,7 @@ class StoreOrderDetail extends Eloquent {
 			if ($data['sort']=='short_name') $data['sort'] = 'product_lists.short_description';
 			if ($data['sort']=='ordered_quantity') $data['sort'] = 'store_order_detail.ordered_qty';
 			if ($data['sort']=='delivered_quantity') $data['sort'] = 'store_order_detail.delivered_qty';
-			
+
 			$query->orderBy('box_details.box_code', 'ASC')
 				  ->orderBy($data['sort'], $data['order']);
 		}
@@ -136,12 +136,12 @@ class StoreOrderDetail extends Eloquent {
 
 		if($getCount) $result = $query->count();
 		else $result = $query->get(
-			array('store_order.so_no', 'store_order.store_code', 
-					'product_lists.sku', 'product_lists.upc', 'product_lists.description', 
+			array('store_order.so_no', 'store_order.store_code',
+					'product_lists.sku', 'product_lists.upc', 'product_lists.description',
 					'box_details.picklist_detail_id', 'box_details.box_code',
 					'store_order_detail.ordered_qty', 'box_details.moved_qty', 'store_order_detail.delivered_qty',
 					'picklist_details.sequence_no', 'store_order.load_code'));
-		
+
 		DebugHelper::log(__METHOD__, $result);
 		return $result;
 	}

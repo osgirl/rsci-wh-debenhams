@@ -12,6 +12,7 @@ class StoreReturnDetail extends Eloquent {
 		// print_r($data); die();
 		$query =  StoreReturnDetail::join('product_lists', 'store_return_detail.sku', '=', 'product_lists.upc')
 					->join('store_return', 'store_return.so_no', '=', 'store_return_detail.so_no', 'LEFT')
+					->select(DB::raw('convert(wms_product_lists.sku, decimal(15,0)) as sku, convert(wms_product_lists.upc, decimal(20,0)) as upc'),'product_lists.description','store_return_detail.received_qty','store_return_detail.delivered_qty','store_return.created_at')
 					// ->join('dataset', 'store_return.so_status', '=', 'dataset.id');
 					->where('store_return_detail.so_no', '=', $so_no);
 
@@ -29,7 +30,7 @@ class StoreReturnDetail extends Eloquent {
 			if ($data['sort']=='sku') $data['sort'] = 'product_lists.upc';
 			if ($data['sort']=='store') $data['sort'] = 'product_lists.upc';
 			if ($data['sort']=='short_name') $data['sort'] = 'product_lists.short_description';
-			if ($data['sort']=='ordered_quantity') $data['sort'] = 'store_return_detail.ordered_qty';
+			if ($data['sort']=='ordered_quantity') $data['sort'] = 'store_return_detail.received_qty';
 			if ($data['sort']=='delivered_quantity') $data['sort'] = 'store_return_detail.delivered_qty';
 			if ($data['sort']=='so_no') $data['sort'] = 'store_return.so_no';
 			if ($data['sort']=='created_at') $data['sort'] = 'store_return.created_at';

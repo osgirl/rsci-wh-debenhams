@@ -34,7 +34,7 @@ class Unlisted extends Eloquent {
             ->join('pallet', 'pallet.pallet_code', '=', 'load_details.pallet_code')
             ->groupBy('load.load_code');*/
 
-        $query = Unlisted::select('unlisted.*','users.firstname','users.lastname','purchase_order_lists.shipment_reference_no','purchase_order_lists.destination','purchase_order_lists.delivery_date')
+        $query = Unlisted::select('unlisted.*','users.firstname','users.lastname','purchase_order_lists.shipment_reference_no','purchase_order_lists.destination','purchase_order_lists.delivery_date',DB::raw('convert(wms_unlisted.sku, decimal(20,0)) as sku'))
                 ->join('purchase_order_lists', 'unlisted.reference_no', '=', 'purchase_order_lists.purchase_order_no')
                 ->join('users', 'unlisted.scanned_by', '=', 'users.id', 'RIGHT')
                 ->where('unlisted.deleted_at', '=', '0000-00-00 00:00:00');

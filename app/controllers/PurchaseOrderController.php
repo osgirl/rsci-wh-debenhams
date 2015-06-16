@@ -563,7 +563,7 @@ class PurchaseOrderController extends BaseController {
 		// $receiver_no     = Input::get('receiver_no', 1);
 
 		// Details
-		$sort_detail        = Input::get('sort', 'product_lists.sku');
+		$sort_detail        = Input::get('sort', 'sku');
 		$order_detail       = Input::get('order', 'ASC');
 		$page_detail        = Input::get('page', 1);
 
@@ -639,7 +639,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['sort_upc']               = URL::to('purchase_order/detail' . $url . '&sort=upc&order=' . $order_upc, NULL, FALSE);
 		$this->data['sort_short_name']        = URL::to('purchase_order/detail' . $url . '&sort=short_name&order=' . $order_short_name, NULL, FALSE);
 		$this->data['sort_expected_quantity'] = URL::to('purchase_order/detail' . $url . '&sort=expected_quantity&order=' . $order_expected_quantity, NULL, FALSE);
-		$this->data['sort_received_quantity'] = URL::to('purchase_order/detail' . $url . '&sort=received_quantity&order=' . $order_expected_quantity, NULL, FALSE);
+		$this->data['sort_received_quantity'] = URL::to('purchase_order/detail' . $url . '&sort=received_quantity&order=' . $order_received_quantity, NULL, FALSE);
 
 		// Permissions
 		$this->data['permissions']            = unserialize(Session::get('permissions'));

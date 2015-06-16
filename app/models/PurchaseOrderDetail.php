@@ -80,6 +80,7 @@ class PurchaseOrderDetail extends Eloquent {
 
 	public static function getPODetails($receiver_no = NULL, $data = array()) {
 		$query = DB::table('purchase_order_lists')
+					->select(DB::raw('convert(wms_product_lists.sku, decimal(15,0)) as sku,convert(wms_product_lists.upc, decimal(20,0)) as upc'),'product_lists.short_description','purchase_order_details.quantity_ordered','purchase_order_details.quantity_delivered','purchase_order_details.expiry_date')
 					->join('purchase_order_details', 'purchase_order_lists.receiver_no', '=', 'purchase_order_details.receiver_no', 'RIGHT')
 					->join('product_lists', 'purchase_order_details.sku', '=', 'product_lists.upc')
 					->where('purchase_order_details.receiver_no', '=', $receiver_no);
