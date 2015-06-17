@@ -199,7 +199,7 @@ user: STRATPGMR pass: PASSWORD
 				INNER JOIN wms_purchase_order_details po_details ON po_lists.receiver_no = po_details.receiver_no
 				INNER JOIN wms_product_lists prod ON po_details.sku = prod.upc
 				WHERE module = 'Purchase Order' AND jda_action='Closing' AND trans.sync_status = 0 AND po_details.quantity_ordered = 0 AND po_lists.receiver_no = {$receiver_no} AND quantity_delivered <> 0
-				ORDER BY prod.sku ASC";
+				ORDER BY convert(prod.sku, decimal) ASC";
  // AND po_details.quantity_ordered <> 0
 		$query 	= $db->query($sql);
 

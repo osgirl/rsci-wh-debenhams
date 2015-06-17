@@ -11,6 +11,7 @@ class manualMove extends jdaCustomClass
 	public static $warehouseNo = "7000 ";
 
 	/*
+	NOTE!!!! cron needed. possibility of connection timeout
 		13
 		04
 		03

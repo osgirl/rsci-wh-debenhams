@@ -262,12 +262,12 @@ class pdoConnection
 		echo "\n Getting manual move details from db \n";
 		$sql 	= "SELECT pl.sku, wms_manual_move.* FROM wms_manual_move
 					INNER JOIN wms_product_lists pl ON pl.upc = wms_manual_move.upc";
-		if(isset($mmId))
+		if($mmId!=null)
 			$sql .= " WHERE wms_manual_move.id = {$mmId} and sync_status=0";
 		else
 			$sql .=" WHERE sync_status=0";
 
-		$sql .= " ORDER BY pl.sku ASC";
+		$sql .= " ORDER BY convert(pl.sku, decimal) ASC";
 		$query 	= self::query($sql);
 
 		$result = array();
