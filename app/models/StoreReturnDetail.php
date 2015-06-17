@@ -12,7 +12,7 @@ class StoreReturnDetail extends Eloquent {
 		// print_r($data); die();
 		$query =  StoreReturnDetail::join('product_lists', 'store_return_detail.sku', '=', 'product_lists.upc')
 					->join('store_return', 'store_return.so_no', '=', 'store_return_detail.so_no', 'LEFT')
-					->select(DB::raw('convert(wms_product_lists.sku, decimal(15,0)) as sku, convert(wms_product_lists.upc, decimal(20,0)) as upc'),'product_lists.description','store_return_detail.received_qty','store_return_detail.delivered_qty','store_return.created_at')
+					->select(DB::raw('convert(wms_product_lists.sku, decimal) as sku, convert(wms_product_lists.upc, decimal(20,0)) as upc'),'product_lists.description','store_return_detail.received_qty','store_return_detail.delivered_qty','store_return.created_at')
 					// ->join('dataset', 'store_return.so_status', '=', 'dataset.id');
 					->where('store_return_detail.so_no', '=', $so_no);
 

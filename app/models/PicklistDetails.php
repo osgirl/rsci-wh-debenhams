@@ -384,7 +384,7 @@ class PicklistDetails extends Eloquent {
 	public static function getFilteredPicklistDetail($data, $getCount= false)
 	{
 		$query = PicklistDetails::where('move_doc_number', $data['picklist_doc'])
-			->select(DB::raw('convert(wms_product_lists.sku, decimal(15,0)) as sku,convert(wms_product_lists.upc, decimal(20,0)) as upc'),'product_lists.short_description','stores.store_name','stores.store_code','picklist_details.quantity_to_pick','picklist_details.moved_qty','picklist_details.so_no','picklist_details.from_slot_code')
+			->select(DB::raw('convert(wms_product_lists.sku, decimal) as sku,convert(wms_product_lists.upc, decimal(20,0)) as upc'),'product_lists.short_description','stores.store_name','stores.store_code','picklist_details.quantity_to_pick','picklist_details.moved_qty','picklist_details.so_no','picklist_details.from_slot_code')
 			->leftJoin('stores', 'stores.store_code', '=', 'picklist_details.store_code')
 			->leftJoin('product_lists', 'picklist_details.sku', '=', 'product_lists.upc');
 

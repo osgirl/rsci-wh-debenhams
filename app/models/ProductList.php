@@ -8,7 +8,7 @@ class ProductList extends Eloquent {
 		$sql_1 = '(SELECT d1.description FROM wms_department d1 WHERE wms_product_lists.dept_code=d1.dept_code AND d1.sub_dept=0 AND d1.class=0 and d1.sub_class=0) AS dept_name';
 		$sql_2 = '(SELECT d2.description FROM wms_department d2 WHERE wms_product_lists.dept_code=d2.dept_code AND wms_product_lists.sub_dept=d2.sub_dept AND d2.class=0 and d2.sub_class=0) AS sub_dept_name';
 
-		$query = DB::table('product_lists')->select(DB::raw('convert(wms_product_lists.sku, decimal(15,0)) as sku,convert(wms_product_lists.upc, decimal(20,0)) as upc,wms_product_lists.description,wms_product_lists.short_description,wms_product_lists.dept_code,wms_product_lists.sub_dept, ' . $sql_1 . ', ' . $sql_2));
+		$query = DB::table('product_lists')->select(DB::raw('convert(wms_product_lists.sku, decimal) as sku,convert(wms_product_lists.upc, decimal(20,0)) as upc,wms_product_lists.description,wms_product_lists.short_description,wms_product_lists.dept_code,wms_product_lists.sub_dept, ' . $sql_1 . ', ' . $sql_2));
 
 		if( CommonHelper::hasValue($data['filter_prod_sku']) ) $query->where('sku', 'LIKE', '%'.$data['filter_prod_sku'].'%');
 		if( CommonHelper::hasValue($data['filter_prod_upc']) ) $query->where('upc', 'LIKE', '%'.$data['filter_prod_upc'].'%');
