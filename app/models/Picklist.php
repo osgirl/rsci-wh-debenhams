@@ -86,6 +86,8 @@ class Picklist extends Eloquent {
 			$result[$key]->fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $getUsers));
 		}
 
+		if($getCount) return count($result);
+
 		return $result;
 	}
 

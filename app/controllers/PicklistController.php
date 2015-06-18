@@ -191,7 +191,7 @@ class PicklistController extends BaseController {
 					);
 
 		$results 		= Picklist::getPickingListv2($arrParams)->toArray();
-		$results_total 	= Picklist::getPickingListCount($arrParams);
+		$results_total 	= Picklist::getPickingListv2($arrParams, TRUE);
 
 		// Pagination
 		$this->data['arrFilters'] = array(
