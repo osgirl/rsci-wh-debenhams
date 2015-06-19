@@ -118,7 +118,7 @@ class StoreOrderDetail extends Eloquent {
 					})
 					->join('box_details', 'box_details.picklist_detail_id', '=', 'picklist_details.id', 'RIGHT')
 					->where('store_order_detail.so_no', '=', $so_no);
-
+		if($getCount) return $result = $query->count();
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if ($data['sort']=='sku') $data['sort'] = 'product_lists.upc';
 			if ($data['sort']=='short_name') $data['sort'] = 'product_lists.short_description';
@@ -134,8 +134,7 @@ class StoreOrderDetail extends Eloquent {
 		          ->take($data['limit']);
 		}
 
-		if($getCount) $result = $query->count();
-		else $result = $query->get(
+		$result = $query->get(
 			array('store_order.so_no', 'store_order.store_code',
 					'product_lists.sku', 'product_lists.upc', 'product_lists.description',
 					'box_details.picklist_detail_id', 'box_details.box_code',

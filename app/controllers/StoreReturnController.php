@@ -325,6 +325,16 @@ class StoreReturnController extends BaseController {
 
 		$results 		= StoreReturn::getSOList($arrParams);
 		foreach ($results as $result) {
+			$arrParams = array(
+							'filter_so_no' 			=> $filter_so_no,
+							'filter_store' 			=> $filter_store,
+							'filter_created_at' 	=> $filter_created_at,
+							'filter_status' 		=> $filter_status,
+							'sort'					=> $sort,
+							'order'					=> $order,
+							'page'					=> $page,
+							'limit'					=> 0
+						);
 			$details= StoreReturnDetail::getSODetails($result['so_no'], $arrParams)->toArray();
 			foreach($details as $detail){
 				if($detail['received_qty'] != $detail['delivered_qty'] ){

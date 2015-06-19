@@ -691,7 +691,7 @@ class UsersController extends BaseController {
 							'limit'				=> 30
 						);
 		$results = User::getUsers($arrParams);
-		$results_total = User::getCountUsers($arrParams);
+		$results_total = User::getUsers($arrParams,true);
 
 		// Pagination
 		$this->data['arrFilters'] = array(

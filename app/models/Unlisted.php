@@ -39,6 +39,9 @@ class Unlisted extends Eloquent {
                 ->join('users', 'unlisted.scanned_by', '=', 'users.id', 'RIGHT')
                 ->where('unlisted.deleted_at', '=', '0000-00-00 00:00:00');
 
+        if($getCount) {
+            return $result = $query->count();
+        }
         if( CommonHelper::hasValue($data['filter_reference_no']) ) $query->where('reference_no', 'LIKE', '%'. $data['filter_reference_no'] . '%');
         if( CommonHelper::hasValue($data['filter_sku']) ) $query->where('sku', 'LIKE', '%'. $data['filter_sku'] . '%');
         if( CommonHelper::hasValue($data['filter_shipment_reference_no']) ) $query->where('shipment_reference_no', 'LIKE', '%'. $data['filter_shipment_reference_no'] . '%');
@@ -58,9 +61,6 @@ class Unlisted extends Eloquent {
 
         $result['result'] = $query->get()->toArray();
         $result['ship_ref_count'] = $query->groupBy('shipment_reference_no')->get()->count();
-        if($getCount) {
-            $result = count($result);
-        }
         DebugHelper::log(__METHOD__, $result);
         return $result;
 

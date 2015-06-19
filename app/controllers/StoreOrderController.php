@@ -331,7 +331,6 @@ class StoreOrderController extends BaseController {
 		}
 
 		// Search Options
-		// Search Options
 		$this->data['so_status_type'] = Dataset::getTypeWithValue("SO_STATUS_TYPE");
 		$store_list 	  			  = StoreOrder::getStoreList();
 		if(CommonHelper::arrayHasValue($store_list)) {
@@ -349,14 +348,15 @@ class StoreOrderController extends BaseController {
 		$filter_order_date = Input::get('filter_order_date', NULL);
 		$filter_status = Input::get('filter_status', NULL);
 
-		$sort = Input::get('sort', 'so_no');
-		$order = Input::get('order', 'ASC');
-		$page = Input::get('page', 1);
+		//for back
+		$sort_back  = Input::get('sort_back', 'so_no');
+		$order_back = Input::get('order_back', 'ASC');
+		$page_back  = Input::get('page_back', 1);
 
 		// Details
-		$sort_detail = Input::get('sort_detail', 'sku');
-		$order_detail = Input::get('order_detail', 'ASC');
-		$page_detail = Input::get('page_detail', 1);
+		$sort_detail = Input::get('sort', 'sku');
+		$order_detail = Input::get('order', 'ASC');
+		$page_detail = Input::get('page', 1);
 
 		//Data
 		$so_id = Input::get('id', NULL);
@@ -378,8 +378,17 @@ class StoreOrderController extends BaseController {
 
 		// Pagination
 		$this->data['arrFilters'] = array(
-									'sort'		=> $sort_detail,
-									'order'		=> $order_detail
+									'id'             => $so_id,
+									'sort_back'         => $sort_back,
+									'order_back'        => $order_back,
+									'page_back'         => $page_back,
+									'sort'              => $sort_detail,
+									'order'             => $order_detail,
+									'so_no'             => $so_no,
+									'filter_so_no'      => $filter_so_no,
+									'filter_store'      => $filter_store,
+									'filter_order_date' => $filter_order_date,
+									'filter_status'     => $filter_status
 								);
 
 		$this->data['store_orders'] = Paginator::make($results, $results_total, 30);
@@ -393,19 +402,23 @@ class StoreOrderController extends BaseController {
 		$this->data['filter_order_date'] = $filter_order_date;
 		$this->data['filter_status'] = $filter_status;
 
-		$this->data['sort'] = $sort;
-		$this->data['order'] = $order;
-		$this->data['page'] = $page;
+		$this->data['sort'] = $sort_detail;
+		$this->data['order'] = $order_detail;
+		$this->data['page'] = $page_detail;
 
 		// Details
 		$this->data['sort_detail'] = $sort_detail;
 		$this->data['order_detail'] = $order_detail;
 		$this->data['page_detail'] = $page_detail;
 
+		$this->data['sort_back']             = $sort_back;
+		$this->data['order_back']            = $order_back;
+		$this->data['page_back']             = $page_back;
+
 		$url = '?filter_so_no=' . $filter_so_no . '&filter_store=' . $filter_store;
 		$url .= '&filter_order_date=' . $filter_order_date;
 		$url .= '&filter_status=' . $filter_status;
-		$url .= '&sort=' . $sort . '&order=' . $order . '&page=' . $page;
+		$url .= '&sort_back=' . $sort_back . '&order_back=' . $order_back . '&page_back=' . $page_back;
 		$url .= '&page_detail=' . $page_detail . '&id=' . $so_id . '&so_no=' . $so_no;
 
 
@@ -459,7 +472,7 @@ class StoreOrderController extends BaseController {
 		// URL
 		$this->data['url_export'] = URL::to('store_order/export');
 		$this->data['url_detail'] = URL::to('store_order/detail' . $this->setURL(true));
-		$this->data['url_mts_detail'] = URL::to('store_order/mts_detail' . $this->setURL());
+		$this->data['url_mts_detail'] = URL::to('store_order/mts_detail' . $this->setURL(true));
 
 		// Message
 		$this->data['error'] = '';

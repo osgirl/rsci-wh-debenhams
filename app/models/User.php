@@ -105,7 +105,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		}
 	}
 
-	public static function getUsers($data = array()) {
+	public static function getUsers($data = array(), $getCount=false) {
 		$query = DB::table('users')->select(DB::raw('wms_users.*, CONCAT(wms_users.firstname, \' \', wms_users.lastname) AS name, wms_user_roles.role_name, brand_name'))
 								   ->join('user_roles', 'users.role_id', '=', 'user_roles.id', 'LEFT')
 								   // ->join('settings', 'users.brand', '=', 'settings.id', 'LEFT')
@@ -116,6 +116,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 							                $query_sub->where('users.deleted_at', '=', '0000-00-00 00:00:00')
 								   				  	  ->orWhere('users.deleted_at', '=', NULL);
 							            });
+
+		if($getCount) return $query->count();
 
 		if( CommonHelper::hasValue($data['filter_username']) ) $query->where('username', 'LIKE', '%'.$data['filter_username'].'%');
 		if( CommonHelper::hasValue($data['filter_barcode']) ) $query->where('barcode', 'LIKE', '%'.$data['filter_barcode'].'%');

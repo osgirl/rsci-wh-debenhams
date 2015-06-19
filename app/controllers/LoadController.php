@@ -91,7 +91,7 @@ class LoadController extends BaseController {
 						);
 		$results = Load::getLoadList($arrParams)->toArray();
 		// echo '<pre>'; dd($results);
-		$results_total = count($results);
+		$results_total = Load::getLoadList($arrParams,true);
 
 		// Pagination
 		$this->data['arrFilters'] = array(
@@ -174,7 +174,7 @@ class LoadController extends BaseController {
 			$this->data['permissions'] = unserialize(Session::get('permissions'));
             $load=Load::select('printMTS')->where('load_code','=',$loadCode)->get();
             $this->data['print_status']=$load[0]['printMTS'];
-            
+
             $this->layout = View::make('layouts.print');
             $this->layout->content = View::make('loads.printmts', $this->data);
 
@@ -242,7 +242,7 @@ class LoadController extends BaseController {
             }
             else
             	$this->data['pl_num'] = $pl_num;
-        
+
             $this->layout = View::make('layouts.print');
             $this->layout->content = View::make('loads.print_packing_list', $this->data);
 	}

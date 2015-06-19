@@ -188,7 +188,7 @@ public static function getPackingDetails($loadCode)
                     $data['StoreCode'][$rs[$i]->store_code]['InterTransfer'][$rs[$i]->mts_number]['items'][$val->box_code] = $rs;
                 }
             }
-        
+
 
 
         // echo '<pre>'; dd($data);
@@ -270,7 +270,7 @@ public static function getPackingDetails($loadCode)
                     $data['InterTransfer'][$rs[$i]->mts_number]['items'][$val->box_code] = $rs;
                 }
             }
-        
+
         }
 
         return $data;
