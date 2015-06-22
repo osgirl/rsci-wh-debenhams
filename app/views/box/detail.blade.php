@@ -26,6 +26,8 @@
 			      	</div>
             </div>
             {{ Form::hidden('box_code', $box_code) }}
+            {{ Form::hidden('filter_store', $filter_store) }}
+            {{ Form::hidden('filter_box_code', $filter_box_code) }}
             {{ Form::hidden('page_back', $page_back) }}
 			{{ Form::hidden('sort_back', $sort_back) }}
 			{{ Form::hidden('order_back', $order_back) }}

@@ -445,15 +445,14 @@ class PurchaseOrderController extends BaseController {
 
 		$arrParams = array(
 							'filter_back_order_only' => TRUE,
-							'filter_po_no' 			=> NULL,
-							'filter_receiver_no' 	=> NULL,
-							'filter_shipment_reference_no'	=> NULL,
-							'filter_entry_date' 	=> NULL,
-							'filter_stock_piler' 	=> NULL,
-							'filter_status' 		=> NULL,
-							'filter_back_order' 	=> NULL,
-							'filter_brand'       => NULL,
-							'filter_division'	 => NULL,
+							'filter_po_no' 			 => NULL,
+							'filter_receiver_no' 	 => NULL,
+							'filter_entry_date' 	 => NULL,
+							'filter_stock_piler' 	 => NULL,
+							'filter_status' 		 => NULL,
+							'filter_back_order' 	 => NULL,
+							'filter_brand'      	 => NULL,
+							'filter_division'	 	 => NULL,
 							'filter_shipment_reference_no' => Input::get('filter_shipment_reference_no', NULL),
 							'sort'                   => Input::get('sort', 'po_no'),
 							'order'                  => Input::get('order', 'ASC'),
@@ -556,6 +555,9 @@ class PurchaseOrderController extends BaseController {
 		$filter_entry_date  = Input::get('filter_entry_date', NULL);
 		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
 		$filter_status      = Input::get('filter_status', NULL);
+		$filter_back_order  = Input::get('filter_back_order', NULL);
+		$filter_brand		= Input::get('filter_brand', NULL);
+		$filter_division    = Input::get('filter_division', NULL);
 
 		$sort_back          = Input::get('sort_back', 'po_no');
 		$order_back         = Input::get('order_back', 'ASC');
@@ -583,20 +585,22 @@ class PurchaseOrderController extends BaseController {
 
 		// Pagination
 		$this->data['arrFilters'] = array(
-									'sort'					=> $sort_detail,
-									'order'					=> $order_detail,
-									'page_back'				=> $page_back,
-									'sort_back'				=> $sort_back,
-									'order_back'			=> $order_back,
-									'receiver_no'			=> $receiver_no,
 									'filter_po_no'			=> $filter_po_no,
 									'filter_receiver_no'	=> $filter_receiver_no,
-									'filter_shipment_reference_no'	=> $filter_shipment_reference_no,
-									// 'filter_supplier'		=> $filter_supplier,
 									'filter_entry_date'		=> $filter_entry_date,
 									'filter_stock_piler'	=> $filter_stock_piler,
 									'filter_status'			=> $filter_status,
+									// 'filter_supplier'		=> $filter_supplier,
+									'filter_back_order'		=> $filter_back_order,
+									'filter_brand'			=> $filter_brand,
+									'filter_division'		=> $filter_division,
+									'filter_shipment_reference_no'	=> $filter_shipment_reference_no,
+									'sort_back'				=> $sort_back,
+									'order_back'			=> $order_back,
+									'page_back'				=> $page_back,
 									'receiver_no'			=> $receiver_no,
+									'sort'					=> $sort_detail,
+									'order'					=> $order_detail,
 								);
 
 		$this->data['purchase_orders']       = Paginator::make($results, $results_total, 30);
@@ -622,12 +626,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['order_detail']          = $order_detail;
 		$this->data['page_detail']           = $page_detail;
 
-
-		$url = '?filter_po_no=' . $filter_po_no . '&filter_receiver_no=' . $filter_receiver_no. '&filter_shipment_reference_no=' . $filter_shipment_reference_no;
-		// $url .= '&filter_supplier=' . $filter_supplier . '&filter_entry_date=' . $filter_entry_date;
-		$url .= '&filter_stock_piler=' . $filter_stock_piler . '&filter_status=' . $filter_status;
-		$url .= '&page_back=' . $page_back . '&order_back=' . $order_back . '&sort_back=' . $sort_back. '&receiver_no=' . $receiver_no;
-		$url .= '&receiver_no=' . $receiver_no . '&page=' . $page_detail;
+		$url = '&page=' . $page_detail;
 
 		$order_sku                            = ($sort_detail=='sku' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		$order_upc                            = ($sort_detail=='upc' && $order_detail=='ASC') ? 'DESC' : 'ASC';
@@ -635,11 +634,11 @@ class PurchaseOrderController extends BaseController {
 		$order_expected_quantity              = ($sort_detail=='expected_quantity' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		$order_received_quantity              = ($sort_detail=='received_quantity' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 
-		$this->data['sort_sku']               = URL::to('purchase_order/detail' . $url . '&sort=sku&order=' . $order_sku, NULL, FALSE);
-		$this->data['sort_upc']               = URL::to('purchase_order/detail' . $url . '&sort=upc&order=' . $order_upc, NULL, FALSE);
-		$this->data['sort_short_name']        = URL::to('purchase_order/detail' . $url . '&sort=short_name&order=' . $order_short_name, NULL, FALSE);
-		$this->data['sort_expected_quantity'] = URL::to('purchase_order/detail' . $url . '&sort=expected_quantity&order=' . $order_expected_quantity, NULL, FALSE);
-		$this->data['sort_received_quantity'] = URL::to('purchase_order/detail' . $url . '&sort=received_quantity&order=' . $order_received_quantity, NULL, FALSE);
+		$this->data['sort_sku']               = $_SERVER['REQUEST_URI'] . $url . '&sort=sku&order=' . $order_sku;
+		$this->data['sort_upc']               = $_SERVER['REQUEST_URI'] . $url . '&sort=upc&order=' . $order_upc;
+		$this->data['sort_short_name']        = $_SERVER['REQUEST_URI'] . $url . '&sort=short_name&order=' . $order_short_name;
+		$this->data['sort_expected_quantity'] = $_SERVER['REQUEST_URI'] . $url . '&sort=expected_quantity&order=' . $order_expected_quantity;
+		$this->data['sort_received_quantity'] = $_SERVER['REQUEST_URI'] . $url . '&sort=received_quantity&order=' . $order_received_quantity;
 
 		// Permissions
 		$this->data['permissions']            = unserialize(Session::get('permissions'));
@@ -692,7 +691,6 @@ class PurchaseOrderController extends BaseController {
 		// Search Filters
 		$filter_po_no       = Input::get('filter_po_no', NULL);
 		$filter_receiver_no = Input::get('filter_receiver_no', NULL);
-		$filter_shipment_reference_no = Input::get('filter_shipment_reference_no', NULL);
 		$filter_entry_date  = Input::get('filter_entry_date', NULL);
 		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
 		$filter_status      = Input::get('filter_status', NULL);
@@ -709,7 +707,6 @@ class PurchaseOrderController extends BaseController {
 		$arrParams = array(
 						'filter_po_no'       => $filter_po_no,
 						'filter_receiver_no' => $filter_receiver_no,
-						'filter_shipment_reference_no'	=> $filter_shipment_reference_no,
 						'filter_entry_date'  => $filter_entry_date,
 						'filter_stock_piler' => $filter_stock_piler,
 						'filter_back_order'  => $filter_back_order,
@@ -741,7 +738,6 @@ class PurchaseOrderController extends BaseController {
 									'filter_status'      => $filter_status,
 									'filter_brand'       => $filter_brand,
 									'filter_division'	 => $filter_division,
-									'filter_shipment_reference_no' => $filter_shipment_reference_no,
 									'sort'               => $sort,
 									'order'              => $order
 								);
@@ -758,7 +754,6 @@ class PurchaseOrderController extends BaseController {
 		$this->data['filter_back_order']     = $filter_back_order;
 		$this->data['filter_brand']          = $filter_brand;
 		$this->data['filter_division']       = $filter_division;
-		$this->data['filter_shipment_reference_no'] = $filter_shipment_reference_no;
 		$this->data['sort']                  = $sort;
 		$this->data['order']                 = $order;
 		$this->data['page']                  = $page;
@@ -767,7 +762,6 @@ class PurchaseOrderController extends BaseController {
 		$url                                 .= '&filter_entry_date=' . $filter_entry_date . '&filter_back_order=' . $filter_back_order;
 		$url                                 .= '&filter_stock_piler=' . $filter_stock_piler . '&filter_status=' . $filter_status;
 		$url                                 .= '&filter_brand=' . $filter_brand . '&filter_division=' . $filter_division;
-		$url 								 .= '&filter_shipment_reference_no=' . $filter_shipment_reference_no;
 		$url                                 .= '&page=' . $page;
 
 		$order_po_no                         = ($sort=='po_no' && $order=='ASC') ? 'DESC' : 'ASC';

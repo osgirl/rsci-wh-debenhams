@@ -51,6 +51,8 @@
             {{ Form::hidden('filter_type', $filter_type) }}
             {{ Form::hidden('filter_doc_no', $filter_doc_no) }}
             {{ Form::hidden('filter_status', $filter_status) }}
+            {{ Form::hidden('filter_store', $filter_store) }}
+            {{ Form::hidden('filter_stock_piler', $filter_stock_piler) }}
             {{ Form::hidden('page_back', $page_back) }}
 			{{ Form::hidden('sort_back', $sort_back) }}
 			{{ Form::hidden('order_back', $order_back) }}

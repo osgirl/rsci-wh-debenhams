@@ -246,7 +246,7 @@ class PicklistController extends BaseController {
 		$this->data['button_search']      = Lang::get('general.button_search');
 		$this->data['button_clear']       = Lang::get('general.button_clear');
 		$this->data['url_back']           = URL::to('picking/list' . $this->setURL(false, true));
-		$this->data['url_detail']         = URL::to('picking/detail');
+		$this->data['url_detail']         = URL::to('picking/detail' . $this->setURL(true));
 		$this->data['pick_status_type']   = Dataset::getTypeWithValue("PICKLIST_STATUS_TYPE");
 		//added this because there is not closed in the detail
 		unset($this->data['pick_status_type'][2]);
@@ -270,6 +270,8 @@ class PicklistController extends BaseController {
 		$filter_upc           = Input::get('filter_upc', NULL);
 		$filter_so            = Input::get('filter_so', NULL);
 		$filter_from_slot     = Input::get('filter_from_slot', NULL);
+		$filter_store     = Input::get('filter_store', NULL);
+		$filter_stock_piler     = Input::get('filter_stock_piler', NULL);
 		// $filter_to_slot    = Input::get('filter_to_slot', NULL);
 		// $filter_status_detail = Input::get('filter_status_detail', NULL);
 
@@ -302,21 +304,23 @@ class PicklistController extends BaseController {
 
 		// Pagination
 		$this->data['arrFilters'] = array(
-									'filter_sku'			=> $filter_sku,
-									'filter_upc'			=> $filter_upc,
-									'filter_so'				=> $filter_so,
-									'filter_from_slot'		=> $filter_from_slot,
 									// 'filter_to_slot'		=> $filter_to_slot,
 									// 'filter_status_detail'	=> $filter_status_detail,
 									'filter_type'			=> $filter_type,
 									'filter_doc_no'			=> $filter_doc_no,
-									'filter_status'		=> $filter_status,
+									'filter_status'			=> $filter_status,
+									'filter_store'			=> $filter_store,
+									'filter_stock_piler'	=> $filter_stock_piler,
 									'sort_back'				=> $sort_back,
 									'order_back'			=> $order_back,
 									'page_back'				=> $page_back,
+									'picklist_doc'			=> $picklistDoc,
+									'filter_sku'			=> $filter_sku,
+									'filter_upc'			=> $filter_upc,
+									'filter_so'				=> $filter_so,
+									'filter_from_slot'		=> $filter_from_slot,
 									'sort'					=> $sort_detail,
-									'order'					=> $order_detail,
-									'picklist_doc'			=> $picklistDoc
+									'order'					=> $order_detail
 								);
 
 		$this->data['picklist_detail']       = Paginator::make($results->toArray(), $results_total, 30);
@@ -330,6 +334,8 @@ class PicklistController extends BaseController {
 		$this->data['filter_upc']            = $filter_upc;
 		$this->data['filter_so']             = $filter_so;
 		$this->data['filter_from_slot']      = $filter_from_slot;
+		$this->data['filter_store']      = $filter_store;
+		$this->data['filter_stock_piler']      = $filter_stock_piler;
 		// $this->data['filter_status_detail']  = $filter_status_detail;
 		$this->data['sort_back']             = $sort_back;
 		$this->data['order_back']            = $order_back;
@@ -340,10 +346,9 @@ class PicklistController extends BaseController {
 		$this->data['order'] = $order_detail;
 		$this->data['page']  = $page_detail;
 
-		$url = '?filter_sku=' . $filter_sku . '&filter_upc=' . $filter_upc . '&filter_so=' . $filter_so;
+		$url = '&filter_sku=' . $filter_sku . '&filter_upc=' . $filter_upc . '&filter_so=' . $filter_so;
 		$url .= '&filter_from_slot=' . $filter_from_slot;
-		$url .= '&page_back=' . $page_back . '&order_back=' . $order_back . '&sort_back=' . $sort_back;
-		$url .= '&picklist_doc=' . $picklistDoc . '&page=' . $page_detail;
+		$url .= '&page=' . $page_detail;
 
 		$this->data['url_export_detail'] =  URL::to('picking/export_detail' . $url);
 
@@ -354,10 +359,10 @@ class PicklistController extends BaseController {
 		// $order_to_slot_code = ($sort_detail=='to_slot_code' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 
 
-		$this->data['sort_sku'] = URL::to('picking/detail' . $url . '&sort=sku&order=' . $order_sku, NULL, FALSE);
-		$this->data['sort_upc'] = URL::to('picking/detail' . $url . '&sort=upc&order=' . $order_upc, NULL, FALSE);
-		$this->data['sort_so_no'] = URL::to('picking/detail' . $url . '&sort=so_no&order=' . $order_so_no, NULL, FALSE);
-		$this->data['sort_from_slot_code'] = URL::to('picking/detail' . $url . '&sort=from_slot_code&order=' . $order_from_slot_code, NULL, FALSE);
+		$this->data['sort_sku'] = $_SERVER['REQUEST_URI'] . $url . '&sort=sku&order=' . $order_sku;
+		$this->data['sort_upc'] = $_SERVER['REQUEST_URI'] . $url . '&sort=upc&order=' . $order_upc;
+		$this->data['sort_so_no'] = $_SERVER['REQUEST_URI'] . $url . '&sort=so_no&order=' . $order_so_no;
+		$this->data['sort_from_slot_code'] = $_SERVER['REQUEST_URI'] . $url . '&sort=from_slot_code&order=' . $order_from_slot_code;
 		// $this->data['sort_to_slot_code'] = URL::to('picking/detail' . $url . '&sort=to_slot_code&order=' . $order_to_slot_code, NULL, FALSE);
 
 		$this->data['permissions'] = unserialize(Session::get('permissions'));

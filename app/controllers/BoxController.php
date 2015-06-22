@@ -157,7 +157,7 @@ class BoxController extends BaseController {
 		$this->data['button_clear'] = Lang::get('general.button_clear');
 		// URL
 		$this->data['url_export'] = URL::to('box/export_detail');
-		$this->data['url_back'] = URL::to('box/list' . $this->setURL());
+		$this->data['url_back'] = URL::to('box/list' . $this->setURL(false,true));
 
 		// Message
 		$this->data['error'] = '';
@@ -205,12 +205,12 @@ class BoxController extends BaseController {
 		$this->data['total_moved_qty'] 	= BoxDetails::getTotalMovedQty($box_code);
 		// Pagination
 		$this->data['arrFilters'] = array(
+									'filter_store' 	=> $filter_store,
 									'filter_box_code' => $filter_box_code,
-									'page_back'		=> $page_back,
 									'sort_back'		=> $sort_back,
 									'order_back'	=> $order_back,
+									'page_back'		=> $page_back,
 									'filter_sku'	=> $filter_sku,
-									'filter_store' 	=> $filter_store,
 									// 'filter_slot'	=> $filter_slot,
 									'sort'			=> $sort_detail,
 									'order'			=> $order_detail,
@@ -637,24 +637,25 @@ class BoxController extends BaseController {
 	}
 
 
-	protected function setURL($detail = FALSE) {
+	protected function setURL($forDetail = false, $forBackToList = false) {
+		$url = '?filter_store=' . Input::get('filter_store', NULL);
+		$url .= '&filter_box_code=' . Input::get('filter_box_code', NULL);
 		// Search Filters
-		if(!$detail) {
-			$url = '?filter_store=' . Input::get('filter_store', NULL);
-			$url .= '&filter_box_code=' . Input::get('filter_box_code', NULL);
-			$url .= '&sort=' . Input::get('sort', 'store');
-			$url .= '&order=' . Input::get('order', 'ASC');
-			$url .= '&page=' . Input::get('page', 1);
+		if($forDetail) {
+			$url .= '&sort_back=' . Input::get('sort', 'so_no');
+			$url .= '&order_back=' . Input::get('order', 'ASC');
+			$url .= '&page_back=' . Input::get('page', 1);
+		} else {
+			if($forBackToList == true) {
+				$url .= '&sort=' . Input::get('sort_back', 'so_no');
+				$url .= '&order=' . Input::get('order_back', 'ASC');
+				$url .= '&page=' . Input::get('page_back', 1);
+			} else {
+				$url .= '&sort=' . Input::get('sort', 'so_no');
+				$url .= '&order=' . Input::get('order', 'ASC');
+				$url .= '&page=' . Input::get('page', 1);
+			}
 		}
-		else {
-			$url = '?filter_box_code=' . Input::get('filter_box_code', NULL);
-			// $url .= '&filter_sku=' . Input::get('filter_sku', NULL);
-			$url .= '&box_code=' . Input::get('box_code', 'NULL');
-			$url .= '&sort=' . Input::get('sort', 'box_code');
-			$url .= '&order=' . Input::get('order', 'ASC');
-			$url .= '&page=' . Input::get('page', 1);
-		}
-
 		return $url;
 	}
 

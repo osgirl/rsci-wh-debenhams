@@ -117,7 +117,7 @@ class BoxDetails extends Eloquent {
 		$result = $query->get();
 		DebugHelper::log(__METHOD__, $result);
 		if($getCount) {
-			$result = $query->count();
+			$result = count($result);
 		}
 
 
