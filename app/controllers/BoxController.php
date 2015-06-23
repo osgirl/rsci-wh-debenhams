@@ -243,13 +243,13 @@ class BoxController extends BaseController {
 
 
 		$order_sku = ($sort_detail=='sku' && $order_detail=='ASC') ? 'DESC' : 'ASC';
-		$order_store = ($sort_detail=='store' && $order_detail=='ASC') ? 'DESC' : 'ASC';
-		$order_box_code = ($sort_detail=='box_code' && $order_detail=='ASC') ? 'DESC' : 'ASC';
+		$order_short_description = ($sort_detail=='short_description' && $order_detail=='ASC') ? 'DESC' : 'ASC';
+		$order_moved_qty = ($sort_detail=='moved_qty' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 
 
 		$this->data['sort_sku'] = URL::to('box/detail' . $url . '&sort=sku&order=' . $order_sku, NULL, FALSE);
-		$this->data['sort_box_code'] = URL::to('box/detail' . $url . '&sort=box_code&order=' . $order_box_code, NULL, FALSE);
-		$this->data['sort_store'] = URL::to('box/detail' . $url . '&sort=store&order=' . $order_store, NULL, FALSE);
+		$this->data['sort_short_description'] = URL::to('box/detail' . $url . '&sort=short_description&order=' . $order_short_description, NULL, FALSE);
+		$this->data['sort_moved_qty'] = URL::to('box/detail' . $url . '&sort=moved_qty&order=' . $order_moved_qty, NULL, FALSE);
 
 		// Permissions
 		$this->data['permissions'] = unserialize(Session::get('permissions'));

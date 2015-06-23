@@ -72,11 +72,10 @@
 					<tr>
 						<th>{{ $col_id }}</th>
 						<th>{{ $col_box_no }}</th>
-						<th><a href="{{ $sort_sku }}" class="@if( $sort_detail=='sku' ) {{ $order_detail }} @endif">{{ $col_upc }}</a></th>
-						<th><a href="{{ $sort_short_name }}" class="@if( $sort_detail=='short_name' ) {{ $order_detail }} @endif">{{ $col_short_name }}</a></th>
-						<th>{{ $col_issued }}</a></th>
-						<th>{{ $col_received }}</th>
-						<th>{{ $col_damaged }}</th>
+						<th><a href="{{ $sort_upc }}" class="@if( $sort=='upc' ) {{ $order }} @endif">{{ $col_upc }}</a></th>
+						<th><a href="{{ $sort_short_name }}" class="@if( $sort=='short_name' ) {{ $order }} @endif">{{ $col_short_name }}</a></th>
+						<th><a href="{{ $sort_moved_qty }}" class="@if( $sort=='moved_qty' ) {{ $order }} @endif">{{ $col_issued }}</a></th>
+						<th><a href="{{ $sort_delivered_qty }}" class="@if( $sort=='delivered_qty' ) {{ $order }} @endif">{{ $col_received }}</a></th>
 
 					</tr>
 				</thead>
@@ -92,8 +91,7 @@
 						<td>{{ $so->upc }}</td>
 						<td>{{ $so->description }}</td>
 						<td>{{ $so->moved_qty }}</td>
-						<td></td>
-						<td></td>
+						<td>{{ $so->delivered_qty }}</td>
 					</tr>
 					@endforeach
 				@endif

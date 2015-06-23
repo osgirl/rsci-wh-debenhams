@@ -134,8 +134,10 @@ class ExpiryItemsController extends BaseController {
 		$url .= '&page=' . $page;
 
 		$order_purchase_order_no = ($sort=='purchase_order_no' && $order=='ASC') ? 'DESC' : 'ASC';
+		$order_expiry_date = ($sort=='expiry_date' && $order=='ASC') ? 'DESC' : 'ASC';
 
-		$this->data['sort_po_no'] = URL::to('expiry_items' . $url . '&sort=filter_po_no&order=' . $order_purchase_order_no, NULL, FALSE);
+		$this->data['sort_po_no'] = URL::to('expiry_items' . $url . '&sort=purchase_order_no&order=' . $order_purchase_order_no, NULL, FALSE);
+		$this->data['sort_expiry_date'] = URL::to('expiry_items' . $url . '&sort=expiry_date&order=' . $order_expiry_date, NULL, FALSE);
 
 		// Permissions
 		$this->data['permissions'] = unserialize(Session::get('permissions'));

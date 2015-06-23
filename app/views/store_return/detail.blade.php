@@ -70,10 +70,10 @@
 				<thead>
 					<tr>
 						<th>{{ $col_id }}</th>
-						<th>{{ $col_sku }}</th>
-						<th><a href="{{ $sort_sku }}" class="@if( $sort_detail=='sku' ) {{ $order_detail }} @endif">{{ $col_upc }}</a></th>
-						<th><a href="{{ $sort_short_name }}" class="@if( $sort_detail=='short_name' ) {{ $order_detail }} @endif">{{ $col_short_name }}</a></th>
-						<th><a href="{{ $sort_delivered_quantity }}" class="@if( $sort_detail=='delivered_quantity' ) {{ $order_detail }} @endif">{{ $col_delivered_quantity }}</a></th>
+						<th><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif">{{ $col_sku }}</a></th>
+						<th><a href="{{ $sort_upc }}" class="@if( $sort=='upc' ) {{ $order }} @endif">{{ $col_upc }}</a></th>
+						<th><a href="{{ $sort_short_name }}" class="@if( $sort=='short_name' ) {{ $order }} @endif">{{ $col_short_name }}</a></th>
+						<th><a href="{{ $sort_delivered_quantity }}" class="@if( $sort=='delivered_quantity' ) {{ $order }} @endif">{{ $col_delivered_quantity }}</a></th>
 						<th> RECEIVED QTY </th>
 						<th> VARIANCE QTY </th>
 					</tr>

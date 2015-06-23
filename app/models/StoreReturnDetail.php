@@ -27,7 +27,8 @@ class StoreReturnDetail extends Eloquent {
 		}
 
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
-			if ($data['sort']=='sku') $data['sort'] = 'product_lists.upc';
+			if ($data['sort']=='sku') $data['sort'] = 'product_lists.sku';
+			if ($data['sort']=='upc') $data['sort'] = 'product_lists.upc';
 			if ($data['sort']=='store') $data['sort'] = 'product_lists.upc';
 			if ($data['sort']=='short_name') $data['sort'] = 'product_lists.short_description';
 			if ($data['sort']=='ordered_quantity') $data['sort'] = 'store_return_detail.received_qty';

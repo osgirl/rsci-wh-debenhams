@@ -72,7 +72,7 @@ class StoreOrderDetail extends Eloquent {
 
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if ($data['sort']=='sku') $data['sort'] = 'product_lists.upc';
-			if ($data['sort']=='short_name') $data['sort'] = 'product_lists.short_description';
+			if ($data['sort']=='short_name') $data['sort'] = 'product_lists.description';
 			if ($data['sort']=='ordered_quantity') $data['sort'] = 'store_order_detail.ordered_qty';
 			if ($data['sort']=='delivered_quantity') $data['sort'] = 'store_order_detail.delivered_qty';
 
@@ -118,10 +118,9 @@ class StoreOrderDetail extends Eloquent {
 					})
 					->join('box_details', 'box_details.picklist_detail_id', '=', 'picklist_details.id', 'RIGHT')
 					->where('store_order_detail.so_no', '=', $so_no);
-		if($getCount) return $result = $query->count();
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if ($data['sort']=='sku') $data['sort'] = 'product_lists.upc';
-			if ($data['sort']=='short_name') $data['sort'] = 'product_lists.short_description';
+			if ($data['sort']=='short_name') $data['sort'] = 'product_lists.description';
 			if ($data['sort']=='ordered_quantity') $data['sort'] = 'store_order_detail.ordered_qty';
 			if ($data['sort']=='delivered_quantity') $data['sort'] = 'store_order_detail.delivered_qty';
 
@@ -134,12 +133,16 @@ class StoreOrderDetail extends Eloquent {
 		          ->take($data['limit']);
 		}
 
+		$query->groupBy('picklist_details.sku');
+
 		$result = $query->get(
 			array('store_order.so_no', 'store_order.store_code',
 					'product_lists.sku', 'product_lists.upc', 'product_lists.description',
 					'box_details.picklist_detail_id', 'box_details.box_code',
-					'store_order_detail.ordered_qty', 'box_details.moved_qty', 'store_order_detail.delivered_qty',
+					'store_order_detail.ordered_qty', DB::raw('SUM(wms_picklist_details.moved_qty) as moved_qty'), 'store_order_detail.delivered_qty',
 					'picklist_details.sequence_no', 'store_order.load_code'));
+
+		if($getCount) return count($result);
 
 		DebugHelper::log(__METHOD__, $result);
 		return $result;

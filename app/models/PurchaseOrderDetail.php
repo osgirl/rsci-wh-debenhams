@@ -188,7 +188,6 @@ class PurchaseOrderDetail extends Eloquent {
 		if( CommonHelper::hasValue($data['filter_to_date']) && CommonHelper::hasValue($data['filter_from_date'])) $query->where('expiry_date', '<=', $data['filter_to_date'])->where('expiry_date', '>=', $data['filter_from_date']);
 
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
-			if ($data['sort']=='sku') $data['sort'] = 'product_lists.sku';
 			if ($data['sort']=='upc') $data['sort'] = 'product_lists.upc';
 			if ($data['sort']=='short_name') $data['sort'] = 'product_lists.short_description';
 			if ($data['sort']=='expected_quantity') $data['sort'] = 'purchase_order_details.quantity_ordered';

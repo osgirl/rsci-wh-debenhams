@@ -66,10 +66,10 @@
 				<thead>
 					<tr>
 						<th>{{ $col_id }}</th>
-						<th>{{ $col_upc }}</th>
-						<th>SHORT DESCRIPTION</th>
+						<th><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif">{{ $col_upc }}</a></th>
+						<th><a href="{{ $sort_short_description }}" class="@if( $sort=='short_description' ) {{ $order }} @endif">SHORT DESCRIPTION</a></th>
 						<th>{{ $col_box_code }}</th>
-						<th>{{ $col_moved_qty }}</th>
+						<th><a href="{{ $sort_moved_qty }}" class="@if( $sort=='moved_qty' ) {{ $order }} @endif">{{ $col_moved_qty }}</th></th>
 					</tr>
 				</thead>
 				@if( !CommonHelper::arrayHasValue($boxes) )

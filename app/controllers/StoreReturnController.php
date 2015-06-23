@@ -187,7 +187,7 @@ class StoreReturnController extends BaseController {
 		$this->data['so_info'] = StoreReturn::getSOInfo($so_id);
 
 		$arrParams = array(
-						'id'             => $so_id,
+						'id'             	=> $so_id,
 						'sort'              => $sort_detail,
 						'order'             => $order_detail,
 						'page'              => $page_detail,
@@ -204,17 +204,17 @@ class StoreReturnController extends BaseController {
 		$results_total 	= StoreReturnDetail::getCountSODetails($so_no, $arrParams);
 		// Pagination
 		$this->data['arrFilters'] = array(
-									'id'             => $so_id,
-									'sort_back'         => $sort_back,
-									'order_back'        => $order_back,
-									'page_back'         => $page_back,
-									'sort'              => $sort_detail,
-									'order'             => $order_detail,
-									'so_no'             => $so_no,
 									'filter_so_no'      => $filter_so_no,
 									'filter_store'      => $filter_store,
 									'filter_created_at' => $filter_created_at,
-									'filter_status'     => $filter_status
+									'filter_status'     => $filter_status,
+									'sort_back'         => $sort_back,
+									'order_back'        => $order_back,
+									'page_back'         => $page_back,
+									'id'             	=> $so_id,
+									'so_no'             => $so_no,
+									'sort'              => $sort_detail,
+									'order'             => $order_detail
 								);
 
 		$this->data['store_return'] = Paginator::make($results, $results_total, 30);
@@ -233,27 +233,29 @@ class StoreReturnController extends BaseController {
 		$this->data['page'] = $page_detail;
 
 		// Details
-		$this->data['sort_detail'] = $sort_detail;
+		$this->data['sort_detail']  = $sort_detail;
 		$this->data['order_detail'] = $order_detail;
 		// $this->data['page_detail'] = $page_detail;
-		$this->data['sort_back']             = $sort_back;
-		$this->data['order_back']            = $order_back;
-		$this->data['page_back']             = $page_back;
+		$this->data['sort_back']    = $sort_back;
+		$this->data['order_back']   = $order_back;
+		$this->data['page_back']    = $page_back;
 
 		$url = '?filter_so_no=' . $filter_so_no . '&filter_store=' . $filter_store;
-		// $url .= '&filter_delivered_date=' . $filter_delivered_date;
+		$url .= '&filter_created_at=' . $filter_created_at;
 		$url .= '&filter_status=' . $filter_status;
 		$url .= '&sort_back=' . $sort_back . '&order_back=' . $order_back . '&page_back=' . $page_back;
 		$url .= '&page_detail=' . $page_detail . '&id=' . $so_id . '&so_no=' . $so_no;
 
 
 		$order_sku = ($sort_detail=='sku' && $order_detail=='ASC') ? 'DESC' : 'ASC';
+		$order_upc = ($sort_detail=='upc' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		$order_short_name = ($sort_detail=='short_name' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		$order_delivered_quantity = ($sort_detail=='delivered_quantity' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		$order_allocated_quantity = ($sort_detail=='allocated_quantity' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		$order_dispatched_quantity = ($sort_detail=='dispatched_quantity' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 
 		$this->data['sort_sku'] = URL::to('store_return/detail' . $url . '&sort=sku&order=' . $order_sku, NULL, FALSE);
+		$this->data['sort_upc'] = URL::to('store_return/detail' . $url . '&sort=upc&order=' . $order_upc, NULL, FALSE);
 		$this->data['sort_short_name'] = URL::to('store_return/detail' . $url . '&sort=short_name&order=' . $order_short_name, NULL, FALSE);
 		$this->data['sort_delivered_quantity'] = URL::to('store_return/detail' . $url . '&sort=delivered_quantity&order=' . $order_delivered_quantity, NULL, FALSE);
 		$this->data['sort_allocated_quantity'] = URL::to('store_return/detail' . $url . '&sort=allocated_quantity&order=' . $order_allocated_quantity, NULL, FALSE);

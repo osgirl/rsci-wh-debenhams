@@ -232,17 +232,17 @@ class StoreOrderController extends BaseController {
 
 		// Pagination
 		$this->data['arrFilters'] = array(
-									'id'             => $so_id,
-									'sort_back'         => $sort_back,
-									'order_back'        => $order_back,
-									'page_back'         => $page_back,
-									'sort'              => $sort_detail,
-									'order'             => $order_detail,
-									'so_no'             => $so_no,
 									'filter_so_no'      => $filter_so_no,
 									'filter_store'      => $filter_store,
 									'filter_order_date' => $filter_order_date,
-									'filter_status'     => $filter_status
+									'filter_status'     => $filter_status,
+									'sort_back'         => $sort_back,
+									'order_back'        => $order_back,
+									'page_back'         => $page_back,
+									'id'             => $so_id,
+									'so_no'             => $so_no,
+									'sort'              => $sort_detail,
+									'order'             => $order_detail
 								);
 
 		$this->data['store_orders'] = Paginator::make($results, $results_total, 30);
@@ -283,11 +283,11 @@ class StoreOrderController extends BaseController {
 		$order_allocated_quantity = ($sort_detail=='allocated_quantity' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		$order_dispatched_quantity = ($sort_detail=='dispatched_quantity' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 
-		$this->data['sort_sku'] = URL::to('store_order/detail' . $url . '&sort_detail=sku&order_detail=' . $order_sku, NULL, FALSE);
-		$this->data['sort_short_name'] = URL::to('store_order/detail' . $url . '&sort_detail=short_name&order_detail=' . $order_short_name, NULL, FALSE);
-		$this->data['sort_ordered_quantity'] = URL::to('store_order/detail' . $url . '&sort_detail=ordered_quantity&order_detail=' . $order_ordered_quantity, NULL, FALSE);
-		$this->data['sort_allocated_quantity'] = URL::to('store_order/detail' . $url . '&sort_detail=allocated_quantity&order_detail=' . $order_allocated_quantity, NULL, FALSE);
-		$this->data['sort_dispatched_quantity'] = URL::to('store_order/detail' . $url . '&sort_detail=dispatched_quantity&order_detail=' . $order_dispatched_quantity, NULL, FALSE);
+		$this->data['sort_sku'] = URL::to('store_order/detail' . $url . '&sort=sku&order=' . $order_sku, NULL, FALSE);
+		$this->data['sort_short_name'] = URL::to('store_order/detail' . $url . '&sort=short_name&order=' . $order_short_name, NULL, FALSE);
+		$this->data['sort_ordered_quantity'] = URL::to('store_order/detail' . $url . '&sort=ordered_quantity&order=' . $order_ordered_quantity, NULL, FALSE);
+		$this->data['sort_allocated_quantity'] = URL::to('store_order/detail' . $url . '&sort=allocated_quantity&order=' . $order_allocated_quantity, NULL, FALSE);
+		$this->data['sort_dispatched_quantity'] = URL::to('store_order/detail' . $url . '&sort=dispatched_quantity&order=' . $order_dispatched_quantity, NULL, FALSE);
 
 		// Permissions
 		$this->data['permissions'] = unserialize(Session::get('permissions'));
@@ -378,17 +378,17 @@ class StoreOrderController extends BaseController {
 
 		// Pagination
 		$this->data['arrFilters'] = array(
-									'id'             => $so_id,
-									'sort_back'         => $sort_back,
-									'order_back'        => $order_back,
-									'page_back'         => $page_back,
-									'sort'              => $sort_detail,
-									'order'             => $order_detail,
-									'so_no'             => $so_no,
 									'filter_so_no'      => $filter_so_no,
 									'filter_store'      => $filter_store,
 									'filter_order_date' => $filter_order_date,
-									'filter_status'     => $filter_status
+									'filter_status'     => $filter_status,
+									'sort_back'         => $sort_back,
+									'order_back'        => $order_back,
+									'page_back'         => $page_back,
+									'id'             => $so_id,
+									'so_no'             => $so_no,
+									'sort'              => $sort_detail,
+									'order'             => $order_detail,
 								);
 
 		$this->data['store_orders'] = Paginator::make($results, $results_total, 30);
@@ -422,17 +422,17 @@ class StoreOrderController extends BaseController {
 		$url .= '&page_detail=' . $page_detail . '&id=' . $so_id . '&so_no=' . $so_no;
 
 
-		$order_sku = ($sort_detail=='sku' && $order_detail=='ASC') ? 'DESC' : 'ASC';
+		$order_upc = ($sort_detail=='upc' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		$order_short_name = ($sort_detail=='short_name' && $order_detail=='ASC') ? 'DESC' : 'ASC';
-		$order_ordered_quantity = ($sort_detail=='ordered_quantity' && $order_detail=='ASC') ? 'DESC' : 'ASC';
-		$order_allocated_quantity = ($sort_detail=='allocated_quantity' && $order_detail=='ASC') ? 'DESC' : 'ASC';
+		$order_moved_qty = ($sort_detail=='moved_qty' && $order_detail=='ASC') ? 'DESC' : 'ASC';
+		$order_delivered_qty = ($sort_detail=='delivered_qty' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		$order_dispatched_quantity = ($sort_detail=='dispatched_quantity' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 
-		$this->data['sort_sku'] = URL::to('store_order/mts_detail' . $url . '&sort_detail=sku&order_detail=' . $order_sku, NULL, FALSE);
-		$this->data['sort_short_name'] = URL::to('store_order/mts_detail' . $url . '&sort_detail=short_name&order_detail=' . $order_short_name, NULL, FALSE);
-		$this->data['sort_ordered_quantity'] = URL::to('store_order/mts_detail' . $url . '&sort_detail=ordered_quantity&order_detail=' . $order_ordered_quantity, NULL, FALSE);
-		$this->data['sort_allocated_quantity'] = URL::to('store_order/mts_detail' . $url . '&sort_detail=allocated_quantity&order_detail=' . $order_allocated_quantity, NULL, FALSE);
-		$this->data['sort_dispatched_quantity'] = URL::to('store_order/mts_detail' . $url . '&sort_detail=dispatched_quantity&order_detail=' . $order_dispatched_quantity, NULL, FALSE);
+		$this->data['sort_upc'] = URL::to('store_order/mts_detail' . $url . '&sort=upc&order=' . $order_upc, NULL, FALSE);
+		$this->data['sort_short_name'] = URL::to('store_order/mts_detail' . $url . '&sort=short_name&order=' . $order_short_name, NULL, FALSE);
+		$this->data['sort_moved_qty'] = URL::to('store_order/mts_detail' . $url . '&sort=moved_qty&order=' . $order_moved_qty, NULL, FALSE);
+		$this->data['sort_delivered_qty'] = URL::to('store_order/mts_detail' . $url . '&sort=delivered_qty&order=' . $order_delivered_qty, NULL, FALSE);
+		$this->data['sort_dispatched_quantity'] = URL::to('store_order/mts_detail' . $url . '&sort=dispatched_quantity&order=' . $order_dispatched_quantity, NULL, FALSE);
 
 		// Permissions
 		$this->data['permissions'] = unserialize(Session::get('permissions'));

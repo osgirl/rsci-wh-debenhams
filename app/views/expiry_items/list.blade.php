@@ -85,12 +85,12 @@
 					<tr>
 						<th>{{ $col_id }}</th>
 						<th>{{ $col_shipment_ref_no }}</th>
-						<th>{{ $col_purchase_order_no }}</th>
+						<th><a href="{{ $sort_po_no }}" class="@if( $sort=='purchase_order_no' ) {{ $order }} @endif">{{ $col_purchase_order_no }}</a></th>
 						<th>{{ $col_sku }}</th>
 						<th>{{ $col_upc }}</th>
 						<th>{{ $col_slot }}</th>
 						<th>{{ $col_short_name }}</th>
-						<th>{{ $col_expiry_date }}</th>
+						<th><a href="{{ $sort_expiry_date }}" class="@if( $sort=='expiry_date' ) {{ $order }} @endif">{{ $col_expiry_date }}</a></th>
 						<!-- <th>{{ $col_expected_quantity }}</th> -->
 						<th>{{ $col_received_quantity }}</th>
 						<th>{{ $col_received_by }}</th>
