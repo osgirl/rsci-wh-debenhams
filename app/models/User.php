@@ -117,8 +117,6 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 								   				  	  ->orWhere('users.deleted_at', '=', NULL);
 							            });
 
-		if($getCount) return $query->count();
-
 		if( CommonHelper::hasValue($data['filter_username']) ) $query->where('username', 'LIKE', '%'.$data['filter_username'].'%');
 		if( CommonHelper::hasValue($data['filter_barcode']) ) $query->where('barcode', 'LIKE', '%'.$data['filter_barcode'].'%');
 		if( CommonHelper::hasValue($data['filter_user_role']) ) $query->where('user_roles.id', '=', $data['filter_user_role']);
@@ -138,6 +136,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		}
 
 		$result = $query->get();
+
+		if($getCount) return $query->count();
 
 		return $result;
 	}
