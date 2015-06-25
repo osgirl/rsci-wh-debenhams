@@ -49,8 +49,8 @@ td.plainUnderline {border: 1px #F0F0F0; margin: 0;border-bottom: solid 1px #000;
 </style>
 
 <div id="actionButtons">
-	<a href="{{url('load/printpacklist/update/'.$loadCode)}}" onclick="window.print();">PRINT THIS</a>
-	<a href="{{url('load/list')}}">BACK TO LOAD LIST</a>
+	<a href="{{url('load/printpacklist/update/'.$loadCode.$url_back)}}" onclick="window.print();">PRINT THIS</a>
+	<a href="{{url('load/list').$url_back}}">BACK TO LOAD LIST</a>
 
 </div>
 @foreach($records['StoreCode'] as $storeCode => $value)
@@ -108,13 +108,13 @@ td.plainUnderline {border: 1px #F0F0F0; margin: 0;border-bottom: solid 1px #000;
 				<th style="text-align: center">Issued</th>
 				<th style="text-align: center">Received</th>
 			</tr>
-			<?php 
+			<?php
 				$boxarray=[];
 				$grandTotal = 0;
 				$rowcount=0;
 			?>
 			@foreach($value['StoreOrder'] as $soNo => $val)
-				<?php 
+				<?php
 					$boxes[$soNo]=[];
 					$counter=0;
 				?>
@@ -126,7 +126,7 @@ td.plainUnderline {border: 1px #F0F0F0; margin: 0;border-bottom: solid 1px #000;
 					@endif
 					<td align="center"><strong>{{$soNo}}</strong></td>
 			    @foreach($val['items'] as $boxNo => $items)
-					<?php 
+					<?php
 						if(!in_array($boxNo, $boxarray)){
 							array_push($boxarray, $boxNo);
 						}
@@ -141,7 +141,7 @@ td.plainUnderline {border: 1px #F0F0F0; margin: 0;border-bottom: solid 1px #000;
 							<td></td>
 							<td></td>
 					@endif
-			    
+
 			    	<td align="center">{{$boxNo}}</td>
 					@foreach($items as $item)
 						<?php
@@ -161,7 +161,7 @@ td.plainUnderline {border: 1px #F0F0F0; margin: 0;border-bottom: solid 1px #000;
 				</tr>
 			@endforeach
 			<tr>
-				<?php 
+				<?php
 					$numOfBoxTotal=count($boxarray);
 				?>
 			    <th style="text-align: center" colspan="2">Box Total:</td>
@@ -195,14 +195,14 @@ td.plainUnderline {border: 1px #F0F0F0; margin: 0;border-bottom: solid 1px #000;
 				$grandTotal = 0;
 			?>
 			@foreach($value['InterTransfer'] as $soNo => $val)
-				<?php 
+				<?php
 					$boxes[$soNo]=[];
 					$counter=0;
 				?>
 				<tr>
 					<td align="center" colspan="2"><strong>{{$soNo}}</strong></td>
 			    @foreach($val['items'] as $boxNo => $items)
-					<?php 
+					<?php
 						if(!in_array($boxNo, $boxarray)){
 							array_push($boxarray, $boxNo);
 						}
@@ -216,7 +216,7 @@ td.plainUnderline {border: 1px #F0F0F0; margin: 0;border-bottom: solid 1px #000;
 						<tr>
 							<td colspan="2"></td>
 					@endif
-			    
+
 			    	<td align="center" colspan="2">{{$boxNo}}</td>
 					@foreach($items as $item)
 						<?php

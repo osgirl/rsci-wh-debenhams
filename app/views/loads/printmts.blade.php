@@ -41,8 +41,8 @@ td.underline {border-bottom: solid 1px #000;}
 
 </style>
 <div id="actionButtons">
-	<a href="{{url('load/print/update/'.$loadCode)}}" onclick="window.print();">PRINT THIS</a>
-	<a href="{{url('load/list')}}">BACK TO LOAD LIST</a>
+	<a href="{{url('load/print/update/'.$loadCode.$url_back)}}" onclick="window.print();">PRINT THIS</a>
+	<a href="{{url('load/list').$url_back}}">BACK TO LOAD LIST</a>
 </div>
 @foreach($records['StoreOrder'] as $soNo => $val)
 	<?php $grandTotal = 0;?>
@@ -153,7 +153,7 @@ td.underline {border-bottom: solid 1px #000;}
 
 		</div>
 
-		
+
 		<div class="signatories">
 			<div>
 				Checked By / Issued By / Date: <hr/>

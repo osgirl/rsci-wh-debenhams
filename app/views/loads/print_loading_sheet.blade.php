@@ -41,7 +41,7 @@ header {margin-bottom: 20px;}
 
 <div id="actionButtons">
 	<a href="#" onclick="window.print();">PRINT THIS</a>
-	<a href="{{url('load/list')}}">BACK TO LOAD LIST</a>
+	<a href="{{$url_back}}">BACK TO LOAD LIST</a>
 
 </div>
 	<section class="soContainer">
@@ -106,18 +106,18 @@ header {margin-bottom: 20px;}
 				<th style="text-align: center">QTY</th>
 			</tr>
             <tr>
-	<?php 
+	<?php
 		$boxarray=[];
 		$grandTotal = 0;
 	?>
 			@foreach($records['StoreOrder'] as $soNo => $val)
-				<?php 
+				<?php
 					$counter=0;
 				?>
 				<tr>
 					<td align="center"><strong>{{$soNo}}</strong></td>
 			    @foreach($val['items'] as $boxNo => $items)
-					<?php 
+					<?php
 						if(!in_array($boxNo, $boxarray))
 							array_push($boxarray, $boxNo);
 	    				$boxTotal = 0;
@@ -145,7 +145,7 @@ header {margin-bottom: 20px;}
 			@endforeach
 			</tr>
 			<tr>
-				<?php 
+				<?php
 					$numOfBoxTotal=count($boxarray);
 				?>
 				<th style="text-align: center">Total: </th>
@@ -164,19 +164,19 @@ header {margin-bottom: 20px;}
 				<th style="text-align: center">Remarks</th>
 			</tr>
             <tr>
-			<?php 
+			<?php
 				$boxarray=[];
 				$grandTotal = 0;
 			?>
 			@foreach($records['InterTransfer'] as $soNo => $val)
-				<?php 
+				<?php
 					$boxes[$soNo]=[];
 					$counter=0;
 				?>
 				<tr>
 					<td align="center"><strong>{{$soNo}}</strong></td>
 			    @foreach($val['items'] as $boxNo => $items)
-					<?php 
+					<?php
 						if(!in_array($boxNo, $boxarray)){
 							array_push($boxarray, $boxNo);
 						}
@@ -190,7 +190,7 @@ header {margin-bottom: 20px;}
 						<tr>
 							<td></td>
 					@endif
-			    
+
 			    	<td align="center">{{$boxNo}}</td>
 					@foreach($items as $item)
 						<?php

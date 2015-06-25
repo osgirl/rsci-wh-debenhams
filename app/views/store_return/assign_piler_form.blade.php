@@ -63,6 +63,13 @@
 		</div>
         {{ Form::hidden('so_no', $so_no) }}
 		{{ Form::hidden('module', 'store_return') }}
+		{{ Form::hidden('filter_so_no', $filter_so_no) }}
+		{{ Form::hidden('filter_store', $filter_store) }}
+		{{ Form::hidden('filter_created_at', $filter_created_at) }}
+		{{ Form::hidden('filter_status', $filter_status) }}
+		{{ Form::hidden('page', $page) }}
+		{{ Form::hidden('sort', $sort) }}
+		{{ Form::hidden('order', $order) }}
 
 		{{ Form::close() }}
 	</div>

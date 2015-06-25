@@ -277,7 +277,7 @@ class StoreReturnController extends BaseController {
 		$this->data['button_clear'] = Lang::get('general.button_clear');
 		$this->data['button_export'] = Lang::get('general.button_export');
 		// URL
-		$this->data['url_assign']         = URL::to('store_return/assign');
+		$this->data['url_assign']         = URL::to('store_return/assign'. $this->setURL());
 		$this->data['url_export'] = URL::to('store_return/export');
 		$this->data['url_detail'] = URL::to('store_return/detail' . $this->setURL(true));
 
@@ -438,13 +438,32 @@ class StoreReturnController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
+		// Search Filters
+		$filter_so_no = Input::get('filter_so_no', NULL);
+		$filter_store = Input::get('filter_store', NULL);
+		$filter_created_at = Input::get('filter_created_at', NULL);
+		$filter_status = Input::get('filter_status', NULL);
+
+		$sort = Input::get('sort', 'so_no');
+		$order = Input::get('order', 'ASC');
+		$page = Input::get('page', 1);
+
 		$this->data                     = Lang::get('store_return');
 		$this->data['so_no']           = Input::get('so_no');
+
+		$this->data['filter_so_no'] = $filter_so_no;
+		$this->data['filter_store'] = $filter_store;
+		$this->data['filter_created_at'] = $filter_created_at;
+		$this->data['filter_status'] = $filter_status;
+
+		$this->data['sort'] = $sort;
+		$this->data['order'] = $order;
+		$this->data['page'] = $page;
 
 		$this->data['stock_piler_list'] = $this->getStockPilers();
 		$this->data['button_assign']    = Lang::get('general.button_assign');
 		$this->data['button_cancel']    = Lang::get('general.button_cancel');
-		$this->data['url_back']         = URL::to('store_return');
+		$this->data['url_back']         = URL::to('store_return'). $this->setURL();
 		$this->data['params']           = explode(',', Input::get('so_no'));
 		$this->data['info']             = StoreReturn::getInfoBySoNo($this->data['params']);
 

@@ -63,6 +63,14 @@
 		</div>
         {{ Form::hidden('doc_no', $doc_no) }}
 		{{ Form::hidden('module', 'picklist') }}
+		{{ Form::hidden('filter_type', $filter_type) }}
+		{{ Form::hidden('filter_doc_no', $filter_doc_no) }}
+		{{ Form::hidden('filter_status', $filter_status) }}
+		{{ Form::hidden('filter_store', $filter_store) }}
+		{{ Form::hidden('filter_stock_piler', $filter_stock_piler) }}
+		{{ Form::hidden('sort', $sort) }}
+		{{ Form::hidden('order', $order) }}
+		{{ Form::hidden('page', $page) }}
 
 		{{ Form::close() }}
 	</div>

@@ -42,17 +42,17 @@ td.underline {padding-bottom: 0; }
 </style>
 <div id="actionButtons">
 	<a href="#" onclick="window.print();">PRINT THIS</a>
-	<a href="{{url('load/list')}}">BACK TO LOAD LIST</a>
+	<a href="{{$url_back}}">BACK TO LOAD LIST</a>
 
 </div>
-	<?php 
+	<?php
 		$boxarray=[];
 		$tempboxarray=[];
 		$counter=0;
 	?>
 @foreach($records as $boxNo => $val)
 	@foreach($val['items'] as $item)
-		<?php 
+		<?php
 			if(!in_array($boxNo, $tempboxarray)){
 				$sonoarray[$boxNo] =[];
 				if( $item->box_code== $boxNo && !in_array($item->so_no, $sonoarray[$boxNo]))
@@ -67,7 +67,7 @@ td.underline {padding-bottom: 0; }
 	@endforeach
 @endforeach
 @foreach($records as $boxNo => $val)
-		<?php 
+		<?php
 			$boxTotal=0;
 		?>
 	@if($counter%3==0)
@@ -91,7 +91,7 @@ td.underline {padding-bottom: 0; }
 							@if($so_no == $lastElement)
 								{{$so_no}}
 							@else
-								{{$so_no}}, 
+								{{$so_no}},
 							@endif
 						@else
 							{{$so_no}}
@@ -115,7 +115,7 @@ td.underline {padding-bottom: 0; }
 							<td align="center"><h1> {{$boxTotal}} </h1></td>
 						</tr>
 				</table>
-				<?php 
+				<?php
 					array_push($boxarray, $boxNo);
 				?>
 				Shipped by date: {{$val['ship_date']}}

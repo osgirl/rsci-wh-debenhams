@@ -63,6 +63,18 @@
 		</div>
         {{ Form::hidden('po_no', $po_no) }}
 		{{ Form::hidden('module', 'purchase_order') }}
+		{{ Form::hidden('filter_po_no', $filter_po_no) }}
+		{{ Form::hidden('filter_receiver_no', $filter_receiver_no) }}
+		{{ Form::hidden('filter_shipment_reference_no', $filter_shipment_reference_no) }}
+		{{ Form::hidden('filter_entry_date', $filter_entry_date) }}
+		{{ Form::hidden('filter_back_order', $filter_back_order) }}
+		{{ Form::hidden('filter_stock_piler', $filter_stock_piler) }}
+		{{ Form::hidden('filter_status', $filter_status) }}
+		{{ Form::hidden('filter_brand', $filter_brand) }}
+		{{ Form::hidden('filter_division', $filter_division) }}
+		{{ Form::hidden('page', $page) }}
+		{{ Form::hidden('sort', $sort) }}
+		{{ Form::hidden('order', $order) }}
 
 		{{ Form::close() }}
 	</div>

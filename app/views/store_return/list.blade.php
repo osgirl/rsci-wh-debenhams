@@ -150,6 +150,13 @@
 
 							{{ Form::open(array('url'=>'store_return/close', 'id' => 'closeSO_' . $so['so_no'], 'style' => 'margin: 0px;')) }}
 								{{ Form::hidden('so_no', $so['so_no']) }}
+					            {{ Form::hidden('filter_so_no', $filter_so_no) }}
+								{{ Form::hidden('filter_store', $filter_store) }}
+								{{ Form::hidden('filter_created_at', $filter_created_at) }}
+								{{ Form::hidden('filter_status', $filter_status) }}
+							    {{ Form::hidden('page', $page) }}
+					            {{ Form::hidden('sort', $sort) }}
+							    {{ Form::hidden('order', $order) }}
 								{{ Form::hidden('module', 'store_return') }}
 					  		{{ Form::close() }}
 					  	@endif
@@ -282,7 +289,7 @@ $(document).ready(function() {
     			$('#so_no').val(so_no.join(','));
 
     			// http://local.ccri.com/purchase_order/assign
-    			location = "{{ $url_assign }}" + '?so_no=' + encodeURIComponent(so_no.join(','));
+    			location = "{{ $url_assign }}" + '&so_no=' + encodeURIComponent(so_no.join(','));
 			} else {
 				return false;
 			}

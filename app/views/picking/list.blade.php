@@ -159,13 +159,13 @@
 							<td class="align-center">
 								@if($value['data_display'] === 'Posted')
 									<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_posted }}</a> <br><br>
-									<a href="{{url('picking/printboxlabel/' .$value['move_doc_number'] )}}" target="_blank" class="btn btn-success">Print Box Label</a>
+									<a href="{{url('picking/printboxlabel/' .$value['move_doc_number'] ). $url_back}}" target="_blank" class="btn btn-success">Print Box Label</a>
 									 <!-- && ($value['quantity_to_pick'] != $value['moved_qty']) -->
 								@elseif ( $value['data_display'] === 'Done' )
 									@if(is_array(PicklistDetails::getPicklistLoad($value['move_doc_number'])) && CommonHelper::arrayHasValue(PicklistDetails::getPicklistLoad($value['move_doc_number'])))
 										<a style="width: 70px;" class="btn btn-success closePicklist" data-id="{{ $value['move_doc_number'] }}">{{ $button_close_picklist }}</a> <br><br>
 									@endif
-									<a href="{{url('picking/printboxlabel/' .$value['move_doc_number'] )}}" target="_blank" class="btn btn-success">Print Box Label</a>
+									<a href="{{url('picking/printboxlabel/' .$value['move_doc_number'] ). $url_back}}" target="_blank" class="btn btn-success">Print Box Label</a>
 								@else
 									<a style="width: 70px;" disabled="disabled" class="btn">{{ $button_close_picklist }}</a>
 								@endif
@@ -375,7 +375,7 @@ $(document).ready(function() {
     			$('#doc_no').val(doc_no.join(','));
 
     			// http://local.ccri.com/purchase_order/assign
-    			location = "{{ $url_assign }}" + '?doc_no=' + encodeURIComponent(doc_no.join(','));
+    			location = "{{ $url_assign }}" + '&doc_no=' + encodeURIComponent(doc_no.join(','));
 			} else {
 				return false;
 			}

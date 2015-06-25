@@ -146,7 +146,8 @@ class PicklistController extends BaseController {
 		$this->data['url_export']             = URL::to('picking/export'. $this->setURL(true));
 		$this->data['url_change_to_store']    = URL::to('picking/change_to_store');
 		$this->data['url_generate_load_code'] = URL::to('picking/new/load');
-		$this->data['url_assign']             = URL::to('picking/assign');
+		$this->data['url_assign']             = URL::to('picking/assign'). $this->setURL();
+		$this->data['url_back']             = $this->setURL();
 		$this->data['stores']                 = Store::lists( 'store_name', 'store_code');
 		// $this->data['url_load']	= URL::to('picking/load');
 
@@ -854,13 +855,34 @@ class PicklistController extends BaseController {
     	} else {
 			return Redirect::to('users/logout');
 		}
+
+		// Search Filters
+		$filter_type = Input::get('filter_type', NULL);
+		$filter_doc_no = Input::get('filter_doc_no', NULL);
+		$filter_status = Input::get('filter_status', NULL);
+		$filter_store = Input::get('filter_store', NULL);
+		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
+
+		$sort = Input::get('sort', 'doc_no');
+		$order = Input::get('order', 'ASC');
+		$page = Input::get('page', 1);
+
 		$this->data                     = Lang::get('picking');
 		$this->data['doc_no']           = Input::get('doc_no');
+
+		$this->data['filter_type'] = $filter_type;
+		$this->data['filter_doc_no'] = $filter_doc_no;
+		$this->data['filter_status'] = $filter_status;
+		$this->data['filter_store'] = $filter_store;
+		$this->data['filter_stock_piler'] = $filter_stock_piler;
+		$this->data['sort'] = $sort;
+		$this->data['order'] = $order;
+		$this->data['page'] = $page;
 
 		$this->data['stock_piler_list'] = $this->getStockPilers();
 		$this->data['button_assign']    = Lang::get('general.button_assign');
 		$this->data['button_cancel']    = Lang::get('general.button_cancel');
-		$this->data['url_back']         = URL::to('picking/list');
+		$this->data['url_back']         = URL::to('picking/list'). $this->setURL();
 		$this->data['params']           = explode(',', Input::get('doc_no'));
 		$this->data['info']             = Picklist::getInfoByDocNos($this->data['params']);
 
@@ -972,6 +994,28 @@ class PicklistController extends BaseController {
 
 	public function printBoxLabel($doc_num)
 	{
+		// Search Filters
+		$filter_type = Input::get('filter_type', NULL);
+		$filter_doc_no = Input::get('filter_doc_no', NULL);
+		$filter_status = Input::get('filter_status', NULL);
+		$filter_store = Input::get('filter_store', NULL);
+		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
+
+		$sort = Input::get('sort', 'doc_no');
+		$order = Input::get('order', 'ASC');
+		$page = Input::get('page', 1);
+
+		$this->data['filter_type'] = $filter_type;
+		$this->data['filter_doc_no'] = $filter_doc_no;
+		$this->data['filter_status'] = $filter_status;
+		$this->data['filter_store'] = $filter_store;
+		$this->data['filter_stock_piler'] = $filter_stock_piler;
+		$this->data['sort'] = $sort;
+		$this->data['order'] = $order;
+		$this->data['page'] = $page;
+
+		$this->data['url_back'] = URL::to('picking/list' . $this->setURL());
+
 			$this->data['doc_num'] = $doc_num;
 			$this->data['records'] = Picklist::getPicklistBoxes($doc_num);
 			$this->data['permissions'] = unserialize(Session::get('permissions'));

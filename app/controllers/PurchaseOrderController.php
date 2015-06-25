@@ -115,7 +115,7 @@ class PurchaseOrderController extends BaseController {
 
 			return Redirect::to('purchase_order/detail' . $url)->with('message', Lang::get('purchase_order.text_success_assign'));
 		} else {
-			return Redirect::to('purchase_order')->with('message', Lang::get('purchase_order.text_success_assign'));
+			return Redirect::to('purchase_order'. $this->setURL())->with('message', Lang::get('purchase_order.text_success_assign'));
 		}
 	}
 
@@ -668,7 +668,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['url_export']                   = URL::to('purchase_order/export' . $this->setURL());
 		$this->data['url_export_backorder']         = URL::to('purchase_order/export_backorder' . $this->setURL());
 		$this->data['url_reopen']                   = URL::to('purchase_order/reopen');
-		$this->data['url_assign']                   = URL::to('purchase_order/assign' . $this->setURL(false, true));
+		$this->data['url_assign']                   = URL::to('purchase_order/assign' . $this->setURL());
 		$this->data['url_detail']                   = URL::to('purchase_order/detail' . $this->setURL(true));
 
 		// Message
@@ -920,6 +920,34 @@ class PurchaseOrderController extends BaseController {
 			return Redirect::to('users/logout');
 		}
 		// Search Filters
+		$filter_po_no       = Input::get('filter_po_no', NULL);
+		$filter_receiver_no = Input::get('filter_receiver_no', NULL);
+		$filter_entry_date  = Input::get('filter_entry_date', NULL);
+		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
+		$filter_status      = Input::get('filter_status', NULL);
+		$filter_back_order  = Input::get('filter_back_order', NULL);
+		$filter_brand       = Input::get('filter_brand', NULL);
+		$filter_division       = Input::get('filter_division', NULL);
+		$filter_shipment_reference_no = Input::get('filter_shipment_reference_no', NULL);
+
+		$sort               = Input::get('sort', 'purchase_order_lists.purchase_order_no');
+		$order              = Input::get('order', 'DESC');
+		$page               = Input::get('page', 1);
+
+		$this->data['filter_po_no']          = $filter_po_no;
+		$this->data['filter_receiver_no']    = $filter_receiver_no;
+		$this->data['filter_shipment_reference_no']    = $filter_shipment_reference_no;
+		$this->data['filter_entry_date']     = $filter_entry_date;
+		$this->data['filter_stock_piler']    = $filter_stock_piler;
+		$this->data['filter_status']         = $filter_status;
+		$this->data['filter_back_order']     = $filter_back_order;
+		$this->data['filter_brand']          = $filter_brand;
+		$this->data['filter_division']       = $filter_division;
+		$this->data['sort']                  = $sort;
+		$this->data['order']                 = $order;
+		$this->data['page']                  = $page;
+
+		// Search Filters
 		$this->data['po_no']                   = Input::get('po_no');
 		$this->data['heading_title_assign_po'] = Lang::get('purchase_order.heading_title_assign_po');
 		$this->data['entry_purchase_no']       = Lang::get('purchase_order.entry_purchase_no');
@@ -927,7 +955,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['stock_piler_list']        = $this->getStockPilers();
 		$this->data['button_assign']           = Lang::get('general.button_assign');
 		$this->data['button_cancel']           = Lang::get('general.button_cancel');
-		$this->data['url_back']                = URL::to('purchase_order');
+		$this->data['url_back']                = URL::to('purchase_order'). $this->setURL();
 		$this->data['error_assign_po']         = Lang::get('purchase_order.error_assign_po');
 		$this->data['params']                  = explode(',', Input::get('po_no'));
 		$this->data['po_info']                 = PurchaseOrder::getPOInfoByPoNos($this->data['params']);

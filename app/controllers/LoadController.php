@@ -124,6 +124,7 @@ class LoadController extends BaseController {
 		$this->data['sort_status'] = URL::to('load/list' . $url . '&sort=status&order=' . $order_status, NULL, FALSE);
 
 		// Permissions
+		$this->data['url_back'] =$this->setURL();
 		$this->data['permissions'] = unserialize(Session::get('permissions'));
 
 		$this->layout->content = View::make('loads.list', $this->data);
@@ -169,6 +170,20 @@ class LoadController extends BaseController {
 	public function printLoad($loadCode)
 	{
 		try {
+			// Search Filters
+			$filter_load_code = Input::get('filter_load_code', NULL);
+
+			$sort = Input::get('sort', 'doc_no');
+			$order = Input::get('order', 'ASC');
+			$page = Input::get('page', 1);
+
+			$this->data['filter_load_code'] = $filter_load_code;
+			$this->data['sort'] = $sort;
+			$this->data['order'] = $order;
+			$this->data['page'] = $page;
+
+			$this->data['url_back'] = $this->setURL();
+
 			$this->data['loadCode'] = $loadCode;
 			$this->data['records'] = Load::getLoadDetails($loadCode);
 			$this->data['permissions'] = unserialize(Session::get('permissions'));
@@ -185,6 +200,20 @@ class LoadController extends BaseController {
 
     public function printPackingList($loadCode)
     {
+		// Search Filters
+		$filter_load_code = Input::get('filter_load_code', NULL);
+
+		$sort = Input::get('sort', 'doc_no');
+		$order = Input::get('order', 'ASC');
+		$page = Input::get('page', 1);
+
+		$this->data['filter_load_code'] = $filter_load_code;
+		$this->data['sort'] = $sort;
+		$this->data['order'] = $order;
+		$this->data['page'] = $page;
+
+		$this->data['url_back'] = $this->setURL();
+
             $this->data['loadCode'] = $loadCode;
             $this->data['records'] = Load::getPackingDetails($loadCode);
             $this->data['permissions'] = unserialize(Session::get('permissions'));
@@ -211,6 +240,20 @@ class LoadController extends BaseController {
                 ->update(array(
                     "printMTS" => 1
                 ));
+			// Search Filters
+			$filter_load_code = Input::get('filter_load_code', NULL);
+
+			$sort = Input::get('sort', 'doc_no');
+			$order = Input::get('order', 'ASC');
+			$page = Input::get('page', 1);
+
+			$this->data['filter_load_code'] = $filter_load_code;
+			$this->data['sort'] = $sort;
+			$this->data['order'] = $order;
+			$this->data['page'] = $page;
+
+			$this->data['url_back'] = $this->setURL();
+
 			$this->data['loadCode'] = $loadCode;
 			$this->data['records'] = Load::getLoadDetails($loadCode);
 			$this->data['permissions'] = unserialize(Session::get('permissions'));
@@ -227,6 +270,20 @@ class LoadController extends BaseController {
                 ->update(array(
                     "printPacking" => 1
                 ));
+			// Search Filters
+			$filter_load_code = Input::get('filter_load_code', NULL);
+
+			$sort = Input::get('sort', 'doc_no');
+			$order = Input::get('order', 'ASC');
+			$page = Input::get('page', 1);
+
+			$this->data['filter_load_code'] = $filter_load_code;
+			$this->data['sort'] = $sort;
+			$this->data['order'] = $order;
+			$this->data['page'] = $page;
+
+			$this->data['url_back'] = $this->setURL();
+
 			$this->data['loadCode'] = $loadCode;
             $this->data['records'] = Load::getPackingDetails($loadCode);
 			$this->data['permissions'] = unserialize(Session::get('permissions'));
@@ -250,6 +307,20 @@ class LoadController extends BaseController {
     public function printLoadingSheet($loadCode)
     {
         // try {
+		// Search Filters
+		$filter_load_code = Input::get('filter_load_code', NULL);
+
+		$sort = Input::get('sort', 'doc_no');
+		$order = Input::get('order', 'ASC');
+		$page = Input::get('page', 1);
+
+		$this->data['filter_load_code'] = $filter_load_code;
+		$this->data['sort'] = $sort;
+		$this->data['order'] = $order;
+		$this->data['page'] = $page;
+
+		$this->data['url_back'] = URL::to('load/list' . $this->setURL());
+
             $this->data['loadCode'] = $loadCode;
             $this->data['records'] = Load::getLoadingDetails($loadCode);
             $this->data['permissions'] = unserialize(Session::get('permissions'));

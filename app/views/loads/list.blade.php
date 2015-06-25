@@ -99,14 +99,14 @@
 							@if( $load['is_shipped'] == 0 || preg_match('/17/', $load['pl_status']))
 								&nbsp;&nbsp;<a disabled target="_blank" class="btn btn-danger">Print MTS</a>
 							@else
-								&nbsp;&nbsp;<a href="{{url('load/print/' . $load['load_code'])}}" target="_blank" class="btn btn-danger">Print MTS</a>
+								&nbsp;&nbsp;<a href="{{url('load/print/' . $load['load_code']).$url_back}}" target="_blank" class="btn btn-danger">Print MTS</a>
 							@endif
-								&nbsp;&nbsp;<a href="{{url('load/printloadingsheet/' . $load['load_code'])}}" target="_blank" class="btn btn-info">Print Loading Sheet</a>
-							
+								&nbsp;&nbsp;<a href="{{url('load/printloadingsheet/' . $load['load_code']).$url_back}}" target="_blank" class="btn btn-info">Print Loading Sheet</a>
+
 							@if( $load['is_shipped'] == 0 || preg_match('/17/', $load['pl_status']))
 								&nbsp;&nbsp;<a disabled target="_blank" class="btn btn-default">Print Packing List</a>
 							@else
-								&nbsp;&nbsp;<a href="{{url('load/printpacklist/' . $load['load_code'])}}" target="_blank" class="btn btn-default">Print Packing List</a>
+								&nbsp;&nbsp;<a href="{{url('load/printpacklist/' . $load['load_code']).$url_back}}" target="_blank" class="btn btn-default">Print Packing List</a>
 							@endif
 						</td>
 					</tr>
