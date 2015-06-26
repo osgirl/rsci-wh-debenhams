@@ -139,13 +139,15 @@ class BoxDetails extends Eloquent {
     	return $boxDetailCount;
     }
 
-    public static function getTotalMovedQty($boxCode)
+    public static function getTotalMovedQty($boxCode,$data = array())
     {
-    	$boxMovedQty = BoxDetails::select(DB::raw('SUM(moved_qty) moved_qty'))
-    		->where('box_code', '=', $boxCode)
-    		->first()
-    		->toArray();
-    	return $boxMovedQty;
+    	$boxMovedQty = DB::table('box_details')
+    		->select(DB::raw('SUM(wms_box_details.moved_qty) moved_qty'))
+			->join('picklist_details', 'picklist_details.id', '=', 'box_details.picklist_detail_id', 'LEFT')
+			->where('box_code', '=', $boxCode);
+    		if( CommonHelper::hasValue($data['filter_sku']) ) $boxMovedQty->where('picklist_details.sku', 'LIKE', '%'.$data['filter_sku'].'%');
+		$result = $boxMovedQty->get();
+    	return $result[0]->moved_qty;
     }
     /*
     SELECT box.box_code, box.in_use FROM `wms_box_details` box_details

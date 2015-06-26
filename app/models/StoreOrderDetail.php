@@ -128,6 +128,8 @@ class StoreOrderDetail extends Eloquent {
 				  ->orderBy($data['sort'], $data['order']);
 		}
 
+		if($getCount) return $query->count();
+
 		if( CommonHelper::hasValue($data['limit']) && CommonHelper::hasValue($data['page']))  {
 			$query->skip($data['limit'] * ($data['page'] - 1))
 		          ->take($data['limit']);
@@ -142,7 +144,6 @@ class StoreOrderDetail extends Eloquent {
 					'store_order_detail.ordered_qty', DB::raw('SUM(wms_picklist_details.moved_qty) as moved_qty'), 'store_order_detail.delivered_qty',
 					'picklist_details.sequence_no', 'store_order.load_code'));
 
-		if($getCount) return count($result);
 
 		DebugHelper::log(__METHOD__, $result);
 		return $result;

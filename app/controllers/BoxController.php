@@ -202,7 +202,7 @@ class BoxController extends BaseController {
 		$results 		= BoxDetails::getBoxDetails($box_code, $arrParams);
 		DebugHelper::log(__METHOD__, $results);
 		$results_total 	= BoxDetails::getBoxDetails($box_code, $arrParams, true);
-		$this->data['total_moved_qty'] 	= BoxDetails::getTotalMovedQty($box_code);
+		$this->data['total_moved_qty'] 	= BoxDetails::getTotalMovedQty($box_code, $arrParams);
 		// Pagination
 		$this->data['arrFilters'] = array(
 									'filter_store' 	=> $filter_store,
@@ -642,16 +642,16 @@ class BoxController extends BaseController {
 		$url .= '&filter_box_code=' . Input::get('filter_box_code', NULL);
 		// Search Filters
 		if($forDetail) {
-			$url .= '&sort_back=' . Input::get('sort', 'so_no');
+			$url .= '&sort_back=' . Input::get('sort', 'box_code');
 			$url .= '&order_back=' . Input::get('order', 'ASC');
 			$url .= '&page_back=' . Input::get('page', 1);
 		} else {
 			if($forBackToList == true) {
-				$url .= '&sort=' . Input::get('sort_back', 'so_no');
+				$url .= '&sort=' . Input::get('sort_back', 'box_code');
 				$url .= '&order=' . Input::get('order_back', 'ASC');
 				$url .= '&page=' . Input::get('page_back', 1);
 			} else {
-				$url .= '&sort=' . Input::get('sort', 'so_no');
+				$url .= '&sort=' . Input::get('sort', 'box_code');
 				$url .= '&order=' . Input::get('order', 'ASC');
 				$url .= '&page=' . Input::get('page', 1);
 			}

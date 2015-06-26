@@ -196,16 +196,16 @@ class PurchaseOrderDetail extends Eloquent {
 			$query->orderBy($data['sort'], $data['order']);
 		}
 
+		if($getCount) {
+			return $result = $query->count();
+		}
+
 		if( CommonHelper::hasValue($data['limit']) && CommonHelper::hasValue($data['page']) && !$getCount)  {
 			$query->skip($data['limit'] * ($data['page'] - 1))
 		          ->take($data['limit']);
 		}
 
 		$result = $query->get();
-
-		if($getCount) {
-			$result = $query->count();
-		}
 
 		return $result;
 	}

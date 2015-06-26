@@ -129,6 +129,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 			$query->orderBy($data['sort'], $data['order']);
 		}
+		if($getCount) return $query->count();
 
 		if( CommonHelper::hasValue($data['limit']) && CommonHelper::hasValue($data['page']))  {
 			$query->skip($data['limit'] * ($data['page'] - 1))
@@ -137,7 +138,6 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 		$result = $query->get();
 
-		if($getCount) return $query->count();
 
 		return $result;
 	}
