@@ -37,7 +37,7 @@
 				<td>{{ $so->upc }}</td>
 				<td>{{ $so->description }}</td>
 				<td>{{ $so->moved_qty }}</td>
-				<td></td>
+				<td>{{ $so->delivered_qty }}</td>
 				<td></td>
 			</tr>
 			@endforeach

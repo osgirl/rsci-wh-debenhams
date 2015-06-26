@@ -123,6 +123,7 @@ class StoreOrderDetail extends Eloquent {
 			if ($data['sort']=='short_name') $data['sort'] = 'product_lists.description';
 			if ($data['sort']=='ordered_quantity') $data['sort'] = 'store_order_detail.ordered_qty';
 			if ($data['sort']=='delivered_quantity') $data['sort'] = 'store_order_detail.delivered_qty';
+			if ($data['sort']=='moved_qty') $data['sort'] = 'picklist_details.moved_qty';
 
 			$query->orderBy('box_details.box_code', 'ASC')
 				  ->orderBy($data['sort'], $data['order']);

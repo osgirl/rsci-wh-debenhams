@@ -118,6 +118,7 @@ $(document).ready(function() {
     	url += '?box_code=' + encodeURIComponent('{{ $box_code }}');
 		url += '&sort=' + encodeURIComponent('{{ $sort }}');
 		url += '&order=' + encodeURIComponent('{{ $order }}');
+		url += '&filter_sku=' + encodeURIComponent('{{ $filter_sku }}');
 
       	location = "{{ $url_export }}" + url;
     });

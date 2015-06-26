@@ -109,7 +109,7 @@ class PurchaseOrderController extends BaseController {
 		}
 
 		if (Input::get('module') == 'purchase_order_detail') {
-			$url = $this->setURL();
+			$url = $this->setURL(true);
 			$url .= '&receiver_no=' . Input::get('receiver_no');
 			$url .= '&sort_back=' . Input::get('sort_back').'&order_back=' . Input::get('order_back') . '&page_back=' . Input::get('page_back');
 
@@ -530,7 +530,7 @@ class PurchaseOrderController extends BaseController {
 		// URL
 		$this->data['url_export']                   = URL::to('purchase_order/export_detail');
 		$this->data['url_back']                     = URL::to('purchase_order' . $this->setURL(false, true));
-		$this->data['url_assign']                   = URL::to('purchase_order/assign' );
+		$this->data['url_assign']                   = URL::to('purchase_order/assign' . $this->setURL(false, true));
 
 		// Message
 		$this->data['error'] = '';
@@ -616,6 +616,7 @@ class PurchaseOrderController extends BaseController {
 		$this->data['filter_entry_date']     = $filter_entry_date;
 		$this->data['filter_stock_piler']    = $filter_stock_piler;
 		$this->data['filter_status']         = $filter_status;
+		$this->data['receiver_no']         = $receiver_no;
 
 		$this->data['sort_back']             = $sort_back;
 		$this->data['order_back']            = $order_back;
@@ -930,6 +931,7 @@ class PurchaseOrderController extends BaseController {
 		$filter_division       = Input::get('filter_division', NULL);
 		$filter_shipment_reference_no = Input::get('filter_shipment_reference_no', NULL);
 
+		$module             = Input::get('module', 'purchase_order');
 		$sort               = Input::get('sort', 'purchase_order_lists.purchase_order_no');
 		$order              = Input::get('order', 'DESC');
 		$page               = Input::get('page', 1);
@@ -943,6 +945,8 @@ class PurchaseOrderController extends BaseController {
 		$this->data['filter_back_order']     = $filter_back_order;
 		$this->data['filter_brand']          = $filter_brand;
 		$this->data['filter_division']       = $filter_division;
+		$this->data['receiver_no']           = Input::get('receiver_no', NULL);
+		$this->data['module']                = $module;
 		$this->data['sort']                  = $sort;
 		$this->data['order']                 = $order;
 		$this->data['page']                  = $page;
@@ -955,7 +959,10 @@ class PurchaseOrderController extends BaseController {
 		$this->data['stock_piler_list']        = $this->getStockPilers();
 		$this->data['button_assign']           = Lang::get('general.button_assign');
 		$this->data['button_cancel']           = Lang::get('general.button_cancel');
-		$this->data['url_back']                = URL::to('purchase_order'). $this->setURL();
+		if($module=='purchase_order_detail')
+			$this->data['url_back']                = URL::to('purchase_order/detail'). $this->setURL(TRUE).'&receiver_no='. Input::get('receiver_no', NULL);
+		else
+			$this->data['url_back']                = URL::to('purchase_order'). $this->setURL();
 		$this->data['error_assign_po']         = Lang::get('purchase_order.error_assign_po');
 		$this->data['params']                  = explode(',', Input::get('po_no'));
 		$this->data['po_info']                 = PurchaseOrder::getPOInfoByPoNos($this->data['params']);

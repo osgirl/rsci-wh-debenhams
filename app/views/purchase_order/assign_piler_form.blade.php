@@ -62,7 +62,8 @@
 			</div> <!-- /control-group -->
 		</div>
         {{ Form::hidden('po_no', $po_no) }}
-		{{ Form::hidden('module', 'purchase_order') }}
+        {{ Form::hidden('receiver_no', $receiver_no) }}
+		{{ Form::hidden('module', $module) }}
 		{{ Form::hidden('filter_po_no', $filter_po_no) }}
 		{{ Form::hidden('filter_receiver_no', $filter_receiver_no) }}
 		{{ Form::hidden('filter_shipment_reference_no', $filter_shipment_reference_no) }}

@@ -28,14 +28,14 @@
 			        	<div>
 				        	<span class="search-po-left-pane">{{ $label_date_from }}</span>
 				        	<div class="search-po-right-pane input-append date">
-								{{ Form::text('filter_from_date', null, array('class'=>'span2', 'id'=>"filter_from_date", 'readonly'=>'readonly')) }}
+								{{ Form::text('filter_from_date', $filter_from_date, array('class'=>'span2', 'id'=>"filter_from_date", 'readonly'=>'readonly')) }}
 								<span class="add-on"><i class="icon-th"></i></span>
 				        	</div>
 				        </div>
 			        	<div>
 				        	<span class="search-po-left-pane">{{ $label_date_to }}</span>
 				        	<div class="search-po-right-pane input-append date">
-								{{ Form::text('filter_to_date', null, array('class'=>'span2', 'id'=>"filter_to_date", 'readonly'=>'readonly')) }}
+								{{ Form::text('filter_to_date', $filter_from_date, array('class'=>'span2', 'id'=>"filter_to_date", 'readonly'=>'readonly')) }}
 								<span class="add-on"><i class="icon-th"></i></span>
 				        	</div>
 				        </div>

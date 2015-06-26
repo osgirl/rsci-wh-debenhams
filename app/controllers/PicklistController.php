@@ -347,8 +347,8 @@ class PicklistController extends BaseController {
 		$this->data['order'] = $order_detail;
 		$this->data['page']  = $page_detail;
 
-		$url = '&filter_sku=' . $filter_sku . '&filter_upc=' . $filter_upc . '&filter_so=' . $filter_so;
-		$url .= '&filter_from_slot=' . $filter_from_slot;
+		$url = '?filter_sku=' . $filter_sku . '&filter_upc=' . $filter_upc . '&filter_so=' . $filter_so;
+		$url .= '&filter_from_slot=' . $filter_from_slot . '&picklist_doc=' . $picklistDoc;
 		$url .= '&page=' . $page_detail;
 
 		$this->data['url_export_detail'] =  URL::to('picking/export_detail' . $url);

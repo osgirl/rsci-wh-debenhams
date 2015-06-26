@@ -267,7 +267,7 @@ $(document).ready(function() {
 
 		var po_no = $(this).data('id');
 		// http://local.ccri.com/purchase_order/assign
-		location = "{{ $url_assign }}" + '?po_no=' + po_no;
+		location = "{{ $url_assign }}" + '&module=purchase_order_detail&receiver_no={{ $receiver_no }}&po_no=' + po_no;
     });
 
     // Close PO

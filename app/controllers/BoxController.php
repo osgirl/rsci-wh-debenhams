@@ -488,7 +488,7 @@ class BoxController extends BaseController {
 		$arrParams = array(
 						'sort'			=> Input::get('sort', 'sku'),
 						'order'			=> Input::get('order', 'ASC'),
-						'filter_sku' 	=> NULL,
+						'filter_sku' 	=> Input::get('filter_sku', 'filter_sku'),
 						'filter_store' 	=> NULL,
 						'filter_box_code' => NULL,
 						'filter_status' => NULL,
