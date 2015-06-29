@@ -190,7 +190,7 @@ class manualMove extends jdaCustomClass
 
 $db = new pdoConnection(); //open db connection
 
-$params = array();
+$mmId = null;
 
 $execParams 			= array();
 $execParams['mmId'] 	= ((isset($argv[1]))? $argv[1] : NULL);

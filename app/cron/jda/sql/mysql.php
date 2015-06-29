@@ -258,7 +258,7 @@ class pdoConnection
 		return $result;
 	}
 
-	public function getMoveDetails($mmId=null) {
+	public function getMoveDetails($mmId) {
 		echo "\n Getting manual move details from db \n";
 		$sql 	= "SELECT pl.sku, wms_manual_move.* FROM wms_manual_move
 					INNER JOIN wms_product_lists pl ON pl.upc = wms_manual_move.upc";
