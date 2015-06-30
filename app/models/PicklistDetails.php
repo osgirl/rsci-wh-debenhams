@@ -486,7 +486,7 @@ class PicklistDetails extends Eloquent {
 	*/
 	public static function getPicklistDetailByDocNo($docNo)
 	{
-		$picklistDetails = PicklistDetails::select('picklist_details.sku',"product_lists.description", 'store_code', 'move_doc_number', 'from_slot_code', 'quantity_to_pick', 'moved_qty', 'so_no')
+		$picklistDetails = PicklistDetails::select('picklist_details.sku',"product_lists.description", 'store_code', 'move_doc_number', 'from_slot_code','sequence_no', 'quantity_to_pick', 'moved_qty', 'so_no')
 			->leftJoin('product_lists' , 'product_lists.upc', '=', 'picklist_details.sku')
 			->where('move_doc_number', '=', $docNo)
 			->orderBy('from_slot_code', 'asc')
@@ -514,11 +514,13 @@ class PicklistDetails extends Eloquent {
 				$boxCode      = $v['box_code'];
 				$sku          = $v['sku'];
 				$fromSlotCode = $v['from_slot_code'];
+				$sequenceNo  = $v['sequence_no'];
 				$soNo 		  = $v['so_no'];
 
 				$picklistDetail = PicklistDetails::where('from_slot_code', '=', $fromSlotCode)
 					->where('move_doc_number', '=', $docNo)
 					->where('sku', '=', $sku)
+					->where('sequence_no', '=', $sequenceNo)
 					->where('so_no', '=', $soNo)
 					->first();
 
