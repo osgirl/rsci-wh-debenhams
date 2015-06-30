@@ -553,6 +553,7 @@ $(document).ready(function() {
 		if (dataVal.brand == '') {
 			select.append('<option value="" selected="selected">Please Select</option>');
 		} else {
+			select.append('<option value="" selected="selected">Please Select</option>');
 			$.ajax({
 	            url: 'purchase_order/get_division',
 	            type: 'GET',
