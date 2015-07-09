@@ -3,8 +3,8 @@
 include_once(__DIR__.'/../core/jda5250_helper.php');
 include_once(__DIR__.'/../sql/mysql.php');
 
-class palletizingStep1 extends jdaCustomClass 
-{	
+class palletizingStep1 extends jdaCustomClass
+{
 	private static $formMsg = "";
 	private static $cartonType = 'S'; //default
 	public static $user = 'SYS';
@@ -34,7 +34,7 @@ Palletizing Maintaining of Cartoon header
 		parent::$jda->screenWait("Carton Header Maintenance");
 		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("03",22,44)),ENTER,true);
-		echo "Entered: Carton Header Maintenance \n";	
+		echo "Entered: Carton Header Maintenance \n";
 	}
 
 	private static function enterCartonType($box_code)
@@ -45,7 +45,7 @@ Palletizing Maintaining of Cartoon header
 		$formValues = array();//values to enter to form
 		$formValues[] = array(self::$cartonType, 8, 40);// enter carton type
 		parent::$jda->write5250($formValues,ENTER,true);
-		echo "Entered: Carton Type \n";	
+		echo "Entered: Carton Type \n";
 
 		return self::checkResponse($box_code,__METHOD__);
 	}
@@ -59,7 +59,7 @@ Palletizing Maintaining of Cartoon header
 		// $formValues[] = array(sprintf("%9s", $box_code),10,40); //enter carton id
 		$formValues[] = array($box_code,10,40); //enter carton id
 		parent::$jda->write5250($formValues,ENTER,true);
-		echo "Entered: Carton ID \n";	
+		echo "Entered: Carton ID \n";
 
 		return self::checkResponse($box_code,__METHOD__);
 	}
@@ -69,7 +69,7 @@ Palletizing Maintaining of Cartoon header
 		parent::$jda->screenWait("Cube Total");
 		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(NULL,F7,true);
-		echo "Entered: Carton Details \n";	
+		echo "Entered: Carton Details \n";
 
 		return self::checkResponse($box_code,__METHOD__);
 	}
@@ -117,13 +117,13 @@ Palletizing Maintaining of Cartoon header
 			parent::enterWarning();
 			return false;
 		}
-		
-		#success		
-		if(parent::$jda->screenCheck('This record is now updated in the file')) {
+
+		#success
+		if(parent::$jda->screenCheck('This record is now updated in the file') || parent::$jda->screenWait('This record is now updated in the file')) {
 			self::$formMsg = "{$box_code}: This record is now updated in the file";
 			self::updateSyncStatus($box_code);
 		}
-		
+
 
 		echo self::$formMsg;
 
@@ -133,12 +133,12 @@ Palletizing Maintaining of Cartoon header
 	/*
 	* Get all open boxes
 	*/
-	/*public function getBoxes() 
+	/*public function getBoxes()
 	{
 		$db = new pdoConnection();
 
 		echo "\n Getting box codes from db \n";
-		$sql = "SELECT b.box_code 
+		$sql = "SELECT b.box_code
 				FROM wms_box_details bd
 				INNER JOIN wms_box b ON b.box_code = bd.box_code
 				WHERE bd.sync_status = 1 AND b.sync_status = 0
@@ -158,7 +158,7 @@ Palletizing Maintaining of Cartoon header
 	/*
 	* Update ewms trasaction_to_jda sync_status
 	*/
-	/*private static function updateSyncStatus($box_code, $isError = FALSE) 
+	/*private static function updateSyncStatus($box_code, $isError = FALSE)
 	{
 		$db = new pdoConnection();
 		$date_today = date('Y-m-d H:i:s');
@@ -184,7 +184,7 @@ Palletizing Maintaining of Cartoon header
 		$status = ($isError) ? parent::$errorFlag : parent::$successFlag;
 
 		echo "\n Getting receiver no from db \n";
-		$sql 	= "UPDATE wms_transactions_to_jda 
+		$sql 	= "UPDATE wms_transactions_to_jda
 					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}', error_message = '{$error_message}'
 					WHERE sync_status = 0 AND module = 'Box Header' AND jda_action='Creation' AND reference = '{$reference}'";
 		$query 	= $db->exec($sql);
@@ -196,7 +196,7 @@ Palletizing Maintaining of Cartoon header
 	* On done only via android
 	*/
 	public function enterUpToCartonHeaderMaintenance()
-	{	
+	{
 		//TODO::checkvalues
 		//TODO::how to know if error
 		try {
@@ -208,12 +208,12 @@ Palletizing Maintaining of Cartoon header
 			parent::enterWarehouseMaintenance();
 			parent::enterCartonPalletLoadMaintenance();
 			self::enterCartonHeaderMaintenance();
-			
+
 		} catch (Exception $e) {
 			//send fail status
 			echo 'Error: '. $e->getMessage();
 		}
-		
+
 	}
 
 	private static function syncPalletHeader($params)
@@ -227,11 +227,11 @@ Palletizing Maintaining of Cartoon header
 	}
 
 	public function logout($params = array())
-	{	
+	{
 		parent::logout();
 		self::syncPalletHeader($params);
 	}
-	
+
 }
 
 $db = new pdoConnection(); //open db connection
@@ -249,7 +249,7 @@ if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
 $getBoxes = $db->getJdaTransactionBoxHeader($jdaParams);
 print_r($getBoxes);
 
-if(! empty($getBoxes) ) 
+if(! empty($getBoxes) )
 {
 	$palletizing = new palletizingStep1();
 	$palletizing->enterUpToCartonHeaderMaintenance();

@@ -3,8 +3,8 @@
 include_once(__DIR__.'/../core/jda5250_helper.php');
 include_once(__DIR__.'/../sql/mysql.php');
 
-class palletizingStep6 extends jdaCustomClass 
-{	
+class palletizingStep6 extends jdaCustomClass
+{
 	private static $formMsg = "";
 	private static $weight = 1;
 /*
@@ -34,15 +34,15 @@ Palletizing: Shipping
 		parent::$jda->screenWait("Radio Frequency Applications");
 		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("15",22,44)),ENTER,true);
-		echo "Entered: Radio Frequency Applications \n";	
+		echo "Entered: Radio Frequency Applications \n";
 	}
 
-	private static function enterRFApplications() 
+	private static function enterRFApplications()
 	{
 		parent::$jda->screenWait("RF Applications");
 		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("14",22,44)),ENTER,true);
-		echo "Entered: RF Applications \n";	
+		echo "Entered: RF Applications \n";
 	}
 
 	private static function enterShipping()
@@ -50,7 +50,7 @@ Palletizing: Shipping
 		parent::$jda->screenWait("Shipping");
 		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("05",15,1)),ENTER,true);
-		echo "Entered: Shipping \n";	
+		echo "Entered: Shipping \n";
 	}
 
 	private static function enterShippingAgain()
@@ -58,7 +58,7 @@ Palletizing: Shipping
 		parent::$jda->screenWait("Transfer Shipping");
 		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("3",10,2)),ENTER,true);
-		echo "Entered: Shipping Again \n";	
+		echo "Entered: Shipping Again \n";
 	}
 
 	public function enterLoadId($load_code)
@@ -100,7 +100,7 @@ Palletizing: Shipping
 		parent::$jda->screenWait("F7");
 		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(NULL,F7,true);
-		echo "Entered: Pressed F7 Key \n";	
+		echo "Entered: Pressed F7 Key \n";
 
 		return self::checkResponse($load_code);
 	}*/
@@ -139,16 +139,16 @@ Palletizing: Shipping
 			parent::pressEnter();
 			return false;
 		}
-		
+
 
 		#success
-		if(parent::$jda->screenCheck('WRF0052')) {
+		if(parent::$jda->screenCheck('WRF0052') || parent::$jda->screenWait('WRF0052')) {
 			self::$formMsg = "{$load_code}: WRF0052: The load approval job has been submitted to batch";
 			self::updateSyncStatus($load_code);
 			parent::pressEnter();
 		}
 
-		
+
 		echo self::$formMsg;
 		return true;
 	}
@@ -156,12 +156,12 @@ Palletizing: Shipping
 	/*
 	* Get all open is_load pallets
 	*/
-	/*public function getLoads() 
+	/*public function getLoads()
 	{
 		$db = new pdoConnection();
 
 		echo "\n Getting load_code from db \n";
-		$sql = "SELECT l.load_code 
+		$sql = "SELECT l.load_code
 				FROM wms_load l
 				INNER JOIN wms_load_details ld ON l.load_code = ld.load_code AND is_load = 1
 				WHERE l.sync_status = 0 AND is_shipped = 1
@@ -181,7 +181,7 @@ Palletizing: Shipping
 	/*
 	* Update batch wms_load_details sync_status
 	*/
-	/*private static function updateSyncStatus($load_code, $isError = FALSE) 
+	/*private static function updateSyncStatus($load_code, $isError = FALSE)
 	{
 		$db = new pdoConnection();
 		$date_today = date('Y-m-d H:i:s');
@@ -208,7 +208,7 @@ Palletizing: Shipping
 		$status = ($isError) ? parent::$errorFlag : parent::$successFlag;
 
 		echo "\n Getting receiver no from db \n";
-		$sql 	= "UPDATE wms_transactions_to_jda 
+		$sql 	= "UPDATE wms_transactions_to_jda
 					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}', error_message = '{$error_message}'
 					WHERE sync_status = 0 AND module = 'Shipping' AND jda_action='Shipping' AND reference = '{$reference}'";
 		$query 	= $db->exec($sql);
@@ -220,7 +220,7 @@ Palletizing: Shipping
 	* On done only via android
 	*/
 	public function enterUpToShippingAgain()
-	{	
+	{
 		//TODO::checkvalues
 		//TODO::how to know if error
 		try {
@@ -233,46 +233,62 @@ Palletizing: Shipping
 			self::enterRFApplications();
 			self::enterShipping();
 			self::enterShippingAgain();
-			
+
 		} catch (Exception $e) {
 			//send fail status
 			echo 'Error: '. $e->getMessage();
 		}
-		
+
 	}
 
 	public function logout()
-	{	
+	{
 		parent::logout();
 
 		echo "Entered: Done shipping.... \n";
 	}
-	
+
 }
 
 $db = new pdoConnection(); //open db connection
 
 $jdaParams = array();
-$jdaParams = array('module' => 'Shipping', 'jda_action' => 'Shipping');
-if($argv[1]) $jdaParams['reference'] = $argv[1];// for manual sync. Get the exec parameter
+$jdaParams = array('module' => 'Loading', 'jda_action' => 'Assigning', 'checkSuccess' => 'true');
 
-$getLoads = $db->getJdaTransaction($jdaParams);
-$db->close(); //close db connection
-print_r($getLoads);
+$execParams 			= array();
+$execParams['loadNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
+print_r($execParams);
+if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
 
-if(! empty($getLoads) ) 
+$getUnsuccessfulLoads = $db->getJdaTransaction($jdaParams);
+
+if(empty($getUnsuccessfulLoads))
 {
-	$shipping = new palletizingStep6();
-	$shipping->enterUpToShippingAgain();
+	$jdaParams = array();
+	$jdaParams = array('module' => 'Shipping', 'jda_action' => 'Shipping');
+	if($argv[1]) $jdaParams['reference'] = $argv[1];// for manual sync. Get the exec parameter
 
-	// $getLoads = $shipping->getLoads();
-	foreach($getLoads as $load) 
+	$getLoads = $db->getJdaTransaction($jdaParams);
+	print_r($getLoads);
+
+	if(! empty($getLoads) )
 	{
-		$validate = $shipping->enterLoadId($load);
-		if($validate) $shipping->save($load);
+		$shipping = new palletizingStep6();
+		$shipping->enterUpToShippingAgain();
+
+		// $getLoads = $shipping->getLoads();
+		foreach($getLoads as $load)
+		{
+			$validate = $shipping->enterLoadId($load);
+			if($validate) $shipping->save($load);
+		}
+		$shipping->logout();
 	}
-	$shipping->logout();
+	else {
+		echo " \n No rows found!. \n";
+	}
 }
-else {
-	echo " \n No rows found!. \n";
+else{
+	echo " \n Found unsuccessful assigning of load! Stop process!\n";
 }
+$db->close(); //close db connection

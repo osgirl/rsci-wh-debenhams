@@ -136,7 +136,7 @@ Palletizing Load header
 	{
 		parent::display(parent::$jda->screen,132);
 
-		if(parent::$jda->screenCheck('F9=Approve'))
+		if(parent::$jda->screenCheck('F9=Approve') || parent::$jda->screenWait('F9=Approve'))
 		{
 			parent::$jda->write5250(NULL,F9,true);
 			self::updateSyncStatus($load);
@@ -348,49 +348,65 @@ Palletizing Load header
 $db = new pdoConnection(); //open db connection
 
 $jdaParams = array();
-$jdaParams = array('module' => 'Load Header', 'jda_action' => 'Creation');
+$jdaParams = array('module' => 'Pallet Header', 'jda_action' => 'Creation', 'checkSuccess' => 'true');
 
 $execParams 			= array();
 $execParams['loadNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
+
 print_r($execParams);
 if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
 
-$getLoads = $db->getJdaTransaction($jdaParams);
+$getUnsuccessfulPallets = $db->getJdaTransactionPallet($jdaParams);
 
-print_r($getLoads);
+if(empty($getUnsuccessfulPallets)){
+	$jdaParams = array();
+	$jdaParams = array('module' => 'Load Header', 'jda_action' => 'Creation');
 
-if(! empty($getLoads) )
-{
-	$palletizing = new palletizingStep3();
-	$palletizing->enterUpToLoadHeaderMaintenance();
-	// $getLoads = $palletizing->getLoads();
-	foreach($getLoads as $load)
+	$execParams 			= array();
+	$execParams['loadNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
+	print_r($execParams);
+	if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
+
+	$getLoads = $db->getJdaTransaction($jdaParams);
+
+	print_r($getLoads);
+
+	if(! empty($getLoads) )
 	{
-		$validate = $palletizing->enterLoadControlNumber($load);
-		if($validate)
+		$palletizing = new palletizingStep3();
+		$palletizing->enterUpToLoadHeaderMaintenance();
+		// $getLoads = $palletizing->getLoads();
+		foreach($getLoads as $load)
 		{
-			$validateDetail = $palletizing->enterDetailForm($load);
-			if($validateDetail)
+			$validate = $palletizing->enterLoadControlNumber($load);
+			if($validate)
 			{
-				//get all location
-				$getLocations = $palletizing->getLocations($load);
-				$getIds = array();
-				foreach($getLocations as $location)
+				$validateDetail = $palletizing->enterDetailForm($load);
+				if($validateDetail)
 				{
-					$isLocationValid = $palletizing->enterLocation($location);
-					// if($isLocationValid) $palletizing->enterAnotherLocation();
-					$getIds[] = $location['id'];
+					//get all location
+					$getLocations = $palletizing->getLocations($load);
+					$getIds = array();
+					foreach($getLocations as $location)
+					{
+						$isLocationValid = $palletizing->enterLocation($location);
+						// if($isLocationValid) $palletizing->enterAnotherLocation();
+						$getIds[] = $location['id'];
+					}
+					// $palletizing->save($getIds);
+					$palletizing->save($load);
 				}
-				// $palletizing->save($getIds);
-				$palletizing->save($load);
 			}
 		}
+		$palletizing->logout($execParams);
 	}
-	$palletizing->logout($execParams);
+	else {
+		echo " \n No rows found!. Proceed to assigning boxes to pallet.  \n";
+		$formattedString = "{$execParams['loadNo']}";
+		$db->daemon('palletizing_step4', $formattedString);
+	}
 }
-else {
-	echo " \n No rows found!. Proceed to assigning boxes to pallet.  \n";
-	$formattedString = "{$execParams['loadNo']}";
-	$db->daemon('palletizing_step4', $formattedString);
+else{
+	echo " \n Found unsuccessful creation of pallet headers! Stop process!\n";
 }
 $db->close(); //close db connection

@@ -103,6 +103,14 @@ Palletizing Maintaining of Cartoon Pallet
 	private static function checkResponse($pallet_code,$source)
 	{
 		# error
+		if(parent::$jda->screenCheck('Load id does not have the "to" location established')) {
+            $receiver_message="Load id does not have the to location established";
+			self::$formMsg = "{self::$palletType}: {$receiver_message}";
+			parent::logError(self::$formMsg, __METHOD__);
+			self::updateSyncStatus($pallet_code,"{$source}: {$receiver_message}", TRUE);
+			return false;
+		}
+
 		if(parent::$jda->screenCheck('Pallet type selection code is not valid or blank')) {
             $receiver_message="Pallet type selection code is not valid or blank";
 			self::$formMsg = "{self::$palletType}: {$receiver_message}";
@@ -129,13 +137,13 @@ Palletizing Maintaining of Cartoon Pallet
 		}
 
 		#success
-		if(parent::$jda->screenCheck('Record added to system')) {
+		if(parent::$jda->screenCheck('Record added to system') || parent::$jda->screenWait('Record added to system')) {
 			self::$formMsg = "{$pallet_code}: Record added to system";
 			self::updateSyncStatus($pallet_code);
 		}
 
 		#success
-		if(parent::$jda->screenCheck('The selected record has been updated')) {
+		if(parent::$jda->screenCheck('The selected record has been updated') || parent::$jda->screenWait('The selected record has been updated')) {
 			self::$formMsg = "{$pallet_code}: The selected record has been updated";
 			self::updateSyncStatus($pallet_code);
 		}
@@ -255,31 +263,48 @@ Palletizing Maintaining of Cartoon Pallet
 $db = new pdoConnection(); //open db connection
 
 $jdaParams = array();
-$jdaParams = array('module' => 'Pallet Header', 'jda_action' => 'Creation');
+$jdaParams = array('module' => 'Box Header', 'jda_action' => 'Creation', 'checkSuccess' => 'true');
 
+// format: php picklist.php {docNo} {$boxNo} {$palletNo} {$loadNo}
 $execParams 			= array();
 $execParams['loadNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
 
 print_r($execParams);
 if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
 
-$getPallets = $db->getJdaTransactionPallet($jdaParams);
-print_r($getPallets);
-if(! empty($getPallets) )
-{
-	$palletsInfo = $db->getPalletsInfo($getPallets);
-	$palletizing = new palletizingStep2();
-	$palletizing->enterUpToPalletHeaderMaintenance();
+$getUnsuccessfulBoxes = $db->getJdaTransactionBoxHeader($jdaParams);
 
-	foreach($palletsInfo as $pallet) {
-		$palletizing->save($pallet);
+if(empty($getUnsuccessfulBoxes)){
+	$jdaParams = array();
+	$jdaParams = array('module' => 'Pallet Header', 'jda_action' => 'Creation');
+
+	$execParams 			= array();
+	$execParams['loadNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
+
+	print_r($execParams);
+	if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
+
+	$getPallets = $db->getJdaTransactionPallet($jdaParams);
+	print_r($getPallets);
+	if(! empty($getPallets) )
+	{
+		$palletsInfo = $db->getPalletsInfo($getPallets);
+		$palletizing = new palletizingStep2();
+		$palletizing->enterUpToPalletHeaderMaintenance();
+
+		foreach($palletsInfo as $pallet) {
+			$palletizing->save($pallet);
+		}
+		$palletizing->logout($execParams);
 	}
-	$palletizing->logout($execParams);
+	else {
+		echo " \n No rows found!. Proceed to load header creation\n";
+		$formattedString = "{$execParams['loadNo']}";
+		$db->daemon('palletizing_step3', $formattedString);
+	}
 }
-else {
-	echo " \n No rows found!. Proceed to load header creation\n";
-	$formattedString = "{$execParams['loadNo']}";
-	$db->daemon('palletizing_step3', $formattedString);
+else{
+	echo " \n Found unsuccessful creation of box headers! Stop process!\n";
 }
 
 $db->close(); //close db connection

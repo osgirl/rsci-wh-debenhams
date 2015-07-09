@@ -3,8 +3,8 @@
 include_once(__DIR__.'/../core/jda5250_helper.php');
 include_once(__DIR__.'/../sql/mysql.php');
 
-class palletizingStep5 extends jdaCustomClass 
-{	
+class palletizingStep5 extends jdaCustomClass
+{
 	private static $formMsg = "";
 	private static $sealNo = 1;
 	private static $weight = 1;
@@ -44,15 +44,15 @@ Palletizing: Loading
 		parent::$jda->screenWait("Radio Frequency Applications");
 		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("15",22,44)),ENTER,true);
-		echo "Entered: Radio Frequency Applications \n";	
+		echo "Entered: Radio Frequency Applications \n";
 	}
 
-	private static function enterRFApplications() 
+	private static function enterRFApplications()
 	{
 		parent::$jda->screenWait("RF Applications");
 		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("14",22,44)),ENTER,true);
-		echo "Entered: RF Applications \n";	
+		echo "Entered: RF Applications \n";
 	}
 
 	private static function enterShipping()
@@ -60,7 +60,7 @@ Palletizing: Loading
 		parent::$jda->screenWait("Shipping");
 		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("05",15,1)),ENTER,true);
-		echo "Entered: Shipping \n";	
+		echo "Entered: Shipping \n";
 	}
 
 	private static function enterLoading()
@@ -68,7 +68,7 @@ Palletizing: Loading
 		parent::$jda->screenWait("Loading");
 		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("2",10,2)),ENTER,true);
-		echo "Entered: Loading \n";	
+		echo "Entered: Loading \n";
 	}
 
 	private static function enterSingle()
@@ -76,7 +76,7 @@ Palletizing: Loading
 		parent::$jda->screenWait("Single");
 		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(array(array("1",7,3)),ENTER,true);
-		echo "Entered: Single \n";	
+		echo "Entered: Single \n";
 	}
 
 	public function enterBuildSingle($load_code)
@@ -126,7 +126,7 @@ Palletizing: Loading
 		parent::$jda->screenWait("F1");
 		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(NULL,F1,true);
-		echo "Entered: Pressed F1 \n";	
+		echo "Entered: Pressed F1 \n";
 	}
 
 	public static function pressF8($load)
@@ -134,10 +134,10 @@ Palletizing: Loading
 		parent::$jda->screenWait("F8");
 		parent::display(parent::$jda->screen,132);
 		parent::$jda->write5250(NULL,F8,true);
-		echo "Entered: Pressed F8 \n";	
+		echo "Entered: Pressed F8 \n";
 
 		// self::checkResponse(NULL, $load);
-		
+
 	}
 
 	private static function enterSealNo($load)
@@ -148,7 +148,7 @@ Palletizing: Loading
 		$formValues = array();//values to enter to form
 		$formValues[] = array(sprintf("%9d", self::$sealNo),7,4); //enter seal no
 		parent::$jda->write5250($formValues,F7,true);
-		echo "Entered: Seal No \n";	
+		echo "Entered: Seal No \n";
 
 		return self::checkSuccess($load);
 	}
@@ -161,7 +161,7 @@ Palletizing: Loading
 		self::enterSealNo($load);
 	}
 
-	private static function checkResponse($data = NULL, $load = NULL) 
+	private static function checkResponse($data = NULL, $load = NULL)
 	{
 		# error
 		if(parent::$jda->screenCheck('WRF0034')) {
@@ -232,21 +232,21 @@ Palletizing: Loading
 			return false;
 			// return false;
 		}
-		
+
 		echo self::$formMsg;
 		return true;
 	}
 
-	private static function checkSuccess($loadCode) 
+	private static function checkSuccess($loadCode)
 	{
 		#success
-		if(parent::$jda->screenCheck('WRF0028')) {
+		if(parent::$jda->screenCheck('WRF0028') || parent::$jda->screenWait('WRF0028')) {
 			self::$formMsg = "WRF0028: Close load job has been submitted to batch";
 			parent::pressEnter();
 			// self::updateLoadStatusByIds($data);
 			self::updateSyncStatus($loadCode);
 		}
-		
+
 		echo self::$formMsg;
 		return true;
 	}
@@ -254,7 +254,7 @@ Palletizing: Loading
 	/*
 	* Get all open is_load pallets
 	*/
-	/*public function getLoads() 
+	/*public function getLoads()
 	{
 		$db = new pdoConnection();
 
@@ -274,7 +274,7 @@ Palletizing: Loading
 		return $result;
 	}*/
 
-	public function getPallets($load_code) 
+	public function getPallets($load_code)
 	{
 		$db = new pdoConnection();
 
@@ -297,7 +297,7 @@ Palletizing: Loading
 	/*
 	* Update batch wms_load_details sync_status
 	*/
-	/*private static function updateLoadStatusByIds($ids, $isError = FALSE) 
+	/*private static function updateLoadStatusByIds($ids, $isError = FALSE)
 	{
 		$db = new pdoConnection();
 		$date_today = date('Y-m-d H:i:s');
@@ -315,7 +315,7 @@ Palletizing: Loading
 		}
 		else {
 			print_r($ids);
-			echo "Empty ids \n";	
+			echo "Empty ids \n";
 		}
 
 		$db->close();
@@ -324,7 +324,7 @@ Palletizing: Loading
 	/*
 	* Update batch wms_load_details sync_status
 	*/
-	/*private static function updateLoadStatusByPallet($pallet_code, $isError = FALSE) 
+	/*private static function updateLoadStatusByPallet($pallet_code, $isError = FALSE)
 	{
 		$db = new pdoConnection();
 		$date_today = date('Y-m-d H:i:s');
@@ -343,7 +343,7 @@ Palletizing: Loading
 	/*
 	* Update ewms trasaction_to_jda sync_status
 	*/
-	private static function updateSyncStatus($reference, $isError = FALSE) 
+	private static function updateSyncStatus($reference, $isError = FALSE)
 	{
 		$db = new pdoConnection();
 		$date_today = date('Y-m-d H:i:s');
@@ -351,7 +351,7 @@ Palletizing: Loading
 		$status = ($isError) ? parent::$errorFlag : parent::$successFlag;
 
 		echo "\n Getting receiver no from db \n";
-		$sql 	= "UPDATE wms_transactions_to_jda 
+		$sql 	= "UPDATE wms_transactions_to_jda
 					SET sync_status = {$status}, updated_at = '{$date_today}', jda_sync_date = '{$date_today}'
 					WHERE sync_status = 0 AND module = 'Loading' AND jda_action='Assigning' AND reference = '{$reference}'";
 		$query 	= $db->exec($sql);
@@ -363,7 +363,7 @@ Palletizing: Loading
 	* On done only via android
 	*/
 	public function enterUpToSingle()
-	{	
+	{
 		//TODO::checkvalues
 		//TODO::how to know if error
 		try {
@@ -377,12 +377,12 @@ Palletizing: Loading
 			self::enterShipping();
 			self::enterLoading();
 			self::enterSingle();
-			
+
 		} catch (Exception $e) {
 			//send fail status
 			echo 'Error: '. $e->getMessage();
 		}
-		
+
 	}
 
 	private static function syncShipping($params)
@@ -396,54 +396,70 @@ Palletizing: Loading
 	}
 
 	public function logout($params = array())
-	{	
+	{
 		parent::logout();
 		self::syncShipping($params);
 	}
-	
+
 }
 
 $db = new pdoConnection(); //open db connection
 
 $jdaParams = array();
-$jdaParams = array('module' => 'Loading', 'jda_action' => 'Assigning');
+$jdaParams = array('module' => 'Palletize Box', 'jda_action' => 'Assigning', 'checkSuccess' => 'true');
 
 $execParams 			= array();
 $execParams['loadNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
 print_r($execParams);
 if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
 
-$getLoads = $db->getJdaTransaction($jdaParams);
+$getUnsuccessfulPalletBox = $db->getJdaTransactionPallet($jdaParams);
 
-print_r($getLoads);
-
-if(! empty($getLoads) ) 
+if(empty($getUnsuccessfulPalletBox))
 {
-	$loading = new palletizingStep5();
-	$loading->enterUpToSingle();
+	$jdaParams = array();
+	$jdaParams = array('module' => 'Loading', 'jda_action' => 'Assigning');
 
-	// $getLoads = $loading->getLoads();
-	foreach($getLoads as $load) 
+	$execParams 			= array();
+	$execParams['loadNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
+	print_r($execParams);
+	if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
+
+	$getLoads = $db->getJdaTransaction($jdaParams);
+
+	print_r($getLoads);
+
+	if(! empty($getLoads) )
 	{
-		$validate = $loading->enterBuildSingle($load);
-		if($validate)
+		$loading = new palletizingStep5();
+		$loading->enterUpToSingle();
+
+		// $getLoads = $loading->getLoads();
+		foreach($getLoads as $load)
 		{
-			$getPallets = $loading->getPallets($load);
-			$ids = array();
-			foreach($getPallets as $pallet)
+			$validate = $loading->enterBuildSingle($load);
+			if($validate)
 			{
-				$isValidPallet = $loading->enterPalletId($pallet);
-				if($isValidPallet) $loading->enterWeight($pallet);
-				$ids[] = $pallet['id'];
+				$getPallets = $loading->getPallets($load);
+				$ids = array();
+				foreach($getPallets as $pallet)
+				{
+					$isValidPallet = $loading->enterPalletId($pallet);
+					if($isValidPallet) $loading->enterWeight($pallet);
+					$ids[] = $pallet['id'];
+				}
+				$loading->save($ids, $load);
 			}
-			$loading->save($ids, $load);
 		}
+		$loading->logout($execParams);
 	}
-	$loading->logout($execParams);
+	else {
+		echo " \n No rows found!. Proceed to shipping.\n";
+		$formattedString = "{$execParams['loadNo']}";
+		$db->daemon('palletizing_step6', $formattedString);
+	}
 }
-else {
-	echo " \n No rows found!. Proceed to shipping.\n";
-	$formattedString = "{$execParams['loadNo']}";
-	$db->daemon('palletizing_step6', $formattedString);
+else{
+	echo " \n Found unsuccessful assigning of palletize box! Stop process!\n";
 }
 $db->close(); //close db connection
