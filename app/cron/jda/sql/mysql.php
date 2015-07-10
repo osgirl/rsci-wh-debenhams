@@ -60,9 +60,14 @@ class pdoConnection
 		echo "\n Getting reference # from db \n";
 
 		$sql 	= "SELECT reference FROM wms_transactions_to_jda
-					WHERE module = '{$module}' AND jda_action='{$jdaAction}' AND sync_status = 0";
+					WHERE module = '{$module}' AND jda_action='{$jdaAction}'";
 
 		if(!empty($data['reference'])) $sql .= " AND reference = '{$data['reference']}'";
+
+		if(!empty($data['checkSuccess']))
+			$sql .=" AND sync_status <> 1";
+		else
+			$sql .=" AND sync_status = 0";
 		/*if(!empty($data['reference']))
 		{
 			// print_r($data['reference']);
@@ -144,14 +149,19 @@ class pdoConnection
 			$sql = "SELECT DISTINCT reference FROM wms_transactions_to_jda trans
 					INNER JOIN wms_pallet_details pd ON trans.reference = pd.box_code
 					INNER JOIN wms_load_details ld ON ld.pallet_code = pd.pallet_code AND ld.load_code = '{$data['reference']}'
-					WHERE module = '{$module}' AND jda_action = '{$jdaAction}' AND trans.sync_status = 0";
+					WHERE module = '{$module}' AND jda_action = '{$jdaAction}'";
 		}
 		else {
 			$sql 	= "SELECT DISTINCT reference FROM wms_transactions_to_jda trans
 					INNER JOIN wms_pallet_details pd ON trans.reference = pd.box_code
 					INNER JOIN wms_load_details ld ON ld.pallet_code = pd.pallet_code
-					WHERE module = '{$module}' AND jda_action = '{$jdaAction}' AND trans.sync_status = 0";
+					WHERE module = '{$module}' AND jda_action = '{$jdaAction}'";
 		}
+
+		if(!empty($data['checkSuccess']))
+			$sql .=" AND trans.sync_status <> 1";
+		else
+			$sql .=" AND trans.sync_status = 0";
 
 		$query = self::query($sql);
 		$result = array();
@@ -193,14 +203,19 @@ class pdoConnection
 			$sql = "SELECT DISTINCT reference FROM wms_transactions_to_jda trans
 					INNER JOIN wms_pallet_details pd ON trans.reference = pd.pallet_code
 					INNER JOIN wms_load_details ld ON ld.pallet_code = pd.pallet_code AND ld.load_code = '{$data['reference']}'
-					WHERE module = '{$module}' AND jda_action = '{$jdaAction}' AND trans.sync_status = 0";
+					WHERE module = '{$module}' AND jda_action = '{$jdaAction}'";
 		}
 		else {
 			$sql = "SELECT DISTINCT reference FROM wms_transactions_to_jda trans
 					INNER JOIN wms_pallet_details pd ON trans.reference = pd.pallet_code
 					INNER JOIN wms_load_details ld ON ld.pallet_code = pd.pallet_code
-					WHERE module = '{$module}' AND jda_action = '{$jdaAction}' AND trans.sync_status = 0";
+					WHERE module = '{$module}' AND jda_action = '{$jdaAction}'";
 		}
+
+		if(!empty($data['checkSuccess']))
+			$sql .=" AND trans.sync_status <> 1";
+		else
+			$sql .=" AND trans.sync_status = 0";
 
 		$query = self::query($sql);
 		$result = array();
