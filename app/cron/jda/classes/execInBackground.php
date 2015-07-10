@@ -1,7 +1,7 @@
 <?php
 
-    	if($argv[1]) $filename = ((isset($argv[1]))? $argv[1] : NULL);
-    	if($argv[2]) $data = ((isset($argv[2]))? $argv[2] : NULL);
+    	$filename = ((isset($argv[1]))? $argv[1] : NULL);
+    	$data = ((isset($argv[2]))? $argv[2] : NULL);
         $cmd = 'nohup php -q ' . __DIR__.'/'.$filename.'.php '.$data;
     	$pidfile = __DIR__.'/../../jda/logs/pidfile.log';
 

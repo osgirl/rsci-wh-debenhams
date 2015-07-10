@@ -355,9 +355,6 @@ if(empty($getUnsuccessfulLoads))
 	$jdaParams = array();
 	$jdaParams = array('module' => 'Palletize Box', 'jda_action' => 'Assigning');
 
-	$execParams 			= array();
-	$execParams['loadNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
-	print_r($execParams);
 	if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
 
 	$getPalletBox = $db->getJdaTransactionPallet($jdaParams);

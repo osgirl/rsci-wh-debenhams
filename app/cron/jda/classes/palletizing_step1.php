@@ -236,32 +236,57 @@ Palletizing Maintaining of Cartoon header
 
 $db = new pdoConnection(); //open db connection
 
-$jdaParams = array();
-$jdaParams = array('module' => 'Box Header', 'jda_action' => 'Creation');
+if(!isset($argv[1])){
+	$jdaParams = array();
+	$jdaParams = array('module' => 'Shipping', 'jda_action' => 'Shipping');
+	$getLoads = $db->getJdaTransaction($jdaParams);
 
-// format: php picklist.php {docNo} {$boxNo} {$palletNo} {$loadNo}
-$execParams 			= array();
-$execParams['loadNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
+	print_r($getLoads);
+	if(empty($getLoads) )
+	{
+		$jdaParams = array();
+		$jdaParams = array('module' => 'Loading', 'jda_action' => 'Assigning');
+		$getLoads = $db->getJdaTransaction($jdaParams);
 
-print_r($execParams);
-if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
-
-$getBoxes = $db->getJdaTransactionBoxHeader($jdaParams);
-print_r($getBoxes);
-
-if(! empty($getBoxes) )
-{
-	$palletizing = new palletizingStep1();
-	$palletizing->enterUpToCartonHeaderMaintenance();
-	// $getBoxes = $palletizing->getBoxes();
-	foreach($getBoxes as $box) {
-		$palletizing->save($box);
+		print_r($getLoads);
 	}
-	$palletizing->logout($execParams);
+
+	if(! empty($getLoads) )
+	{
+		foreach($getLoads as $load) {
+			$formattedString = "{$load}";
+			$db->daemon('palletizing_step1', $formattedString);
+		}
+	}
 }
 else {
-	echo " \n No rows found!. Proceed to Pallet Header Creation\n";
-	$formattedString = "{$execParams['loadNo']}";
-	$db->daemon('palletizing_step2', $formattedString);
+	$jdaParams = array();
+	$jdaParams = array('module' => 'Box Header', 'jda_action' => 'Creation');
+
+	// format: php picklist.php {docNo} {$boxNo} {$palletNo} {$loadNo}
+	$execParams 			= array();
+	$execParams['loadNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
+
+	print_r($execParams);
+	if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
+
+	$getBoxes = $db->getJdaTransactionBoxHeader($jdaParams);
+	print_r($getBoxes);
+
+	if(! empty($getBoxes) )
+	{
+		$palletizing = new palletizingStep1();
+		$palletizing->enterUpToCartonHeaderMaintenance();
+		// $getBoxes = $palletizing->getBoxes();
+		foreach($getBoxes as $box) {
+			$palletizing->save($box);
+		}
+		$palletizing->logout($execParams);
+	}
+	else {
+		echo " \n No rows found!. Proceed to Pallet Header Creation\n";
+		$formattedString = "{$execParams['loadNo']}";
+		$db->daemon('palletizing_step2', $formattedString);
+	}
 }
 $db->close(); //close db connection

@@ -362,9 +362,6 @@ if(empty($getUnsuccessfulPallets)){
 	$jdaParams = array();
 	$jdaParams = array('module' => 'Load Header', 'jda_action' => 'Creation');
 
-	$execParams 			= array();
-	$execParams['loadNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
-	print_r($execParams);
 	if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
 
 	$getLoads = $db->getJdaTransaction($jdaParams);

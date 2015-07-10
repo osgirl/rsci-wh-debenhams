@@ -255,10 +255,7 @@ $db = new pdoConnection(); //open db connection
 $jdaParams = array();
 $jdaParams = array('module' => 'Loading', 'jda_action' => 'Assigning', 'checkSuccess' => 'true');
 
-$execParams 			= array();
-$execParams['loadNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
-print_r($execParams);
-if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
+if($argv[1]) $jdaParams['reference'] = $argv[1];
 
 $getUnsuccessfulLoads = $db->getJdaTransaction($jdaParams);
 
