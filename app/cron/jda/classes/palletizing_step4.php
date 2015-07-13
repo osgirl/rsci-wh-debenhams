@@ -116,10 +116,9 @@ NOTE: if multiple carton in a pallet just enter again the carton id
 	{
 		parent::pressF1();
 		self::pressF8();
-		$tries3=0;
-		//refactor
+
 		if(!parent::$jda->screenWait('WRF0084',5)){
-			echo "\n Unable to find WRF0084 & tries: {$tries3} \n";
+			echo "\n Unable to find WRF0084 & waits \n";
 			parent::pressF7();
 		}
 		#success

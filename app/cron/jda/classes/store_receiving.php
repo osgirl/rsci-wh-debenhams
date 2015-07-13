@@ -167,7 +167,7 @@ store receiving
 		}
 
 		#success
-		if(parent::$jda->screenCheck('Carton added to the submit processing selections')) {
+		if(parent::$jda->screenCheck('Carton added to the submit processing selections') || parent::$jda->screenWait('Carton added to the submit processing selections')) {
 			self::$formMsg = "{$box_code}: Carton added to the submit processing selections";
 		}
 

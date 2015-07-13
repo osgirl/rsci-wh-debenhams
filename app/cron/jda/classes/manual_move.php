@@ -190,11 +190,7 @@ class manualMove extends jdaCustomClass
 
 $db = new pdoConnection(); //open db connection
 
-$mmId = null;
-
-$execParams 			= array();
-$execParams['mmId'] 	= ((isset($argv[1]))? $argv[1] : NULL);
-if($argv[1]) $mmId = $execParams['mmId'];
+$mmId 	= ((isset($argv[1]))? $argv[1] : NULL);
 
 $move_details = $db->getMoveDetails($mmId);
 
@@ -206,7 +202,7 @@ if(! empty($move_details) )
 	foreach ($move_details as $move_detail) {
 		$manualMove->enterMMForm($move_detail);
 	}
-	$manualMove->logout($execParams);
+	$manualMove->logout();
 
 }
 else {

@@ -700,7 +700,7 @@ class PurchaseOrderController extends BaseController {
 		$filter_division       = Input::get('filter_division', NULL);
 		$filter_shipment_reference_no = Input::get('filter_shipment_reference_no', NULL);
 
-		$sort               = Input::get('sort', 'purchase_order_lists.purchase_order_no');
+		$sort               = Input::get('sort', 'po_no');
 		$order              = Input::get('order', 'DESC');
 		$page               = Input::get('page', 1);
 

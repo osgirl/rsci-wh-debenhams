@@ -276,11 +276,10 @@ class pdoConnection
 	public function getMoveDetails($mmId) {
 		echo "\n Getting manual move details from db \n";
 		$sql 	= "SELECT pl.sku, wms_manual_move.* FROM wms_manual_move
-					INNER JOIN wms_product_lists pl ON pl.upc = wms_manual_move.upc";
+					INNER JOIN wms_product_lists pl ON pl.upc = wms_manual_move.upc
+					WHERE sync_status=0";
 		if($mmId!=null)
-			$sql .= " WHERE wms_manual_move.id = {$mmId} and sync_status=0";
-		else
-			$sql .=" WHERE sync_status=0";
+			$sql .= " and wms_manual_move.id = {$mmId}";
 
 		$sql .= " ORDER BY convert(pl.sku, decimal) ASC";
 		$query 	= self::query($sql);

@@ -41,6 +41,7 @@ F1
 
 	*/
 
+// Note: BUG ON ERROR UPDATE SYNC STATUS, exceeds
 	public function __construct() {
 		// parent::__construct();
 		parent::login();
@@ -186,7 +187,7 @@ F1
 
 
 		#success
-		if(parent::$jda->screenCheck("Document {$data['document_number']} accepted for store {$data['store_number']}")) {
+		if(parent::$jda->screenCheck("Document {$data['document_number']} accepted for store {$data['store_number']}") || parent::$jda->screenWait("Document {$data['document_number']} accepted for store {$data['store_number']}")) {
 			self::$formMsg = "Document {$data['document_number']} accepted for store {$data['store_number']}";
 			self::updateSyncStatus($data['document_number']);
 			// parent::pressF1();
