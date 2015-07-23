@@ -148,9 +148,9 @@ class eWMSMigration {
 	 */
 	public function getLatestCsv($filename_pattern) {
 		$files = glob('db2_dump/'.$filename_pattern.'_*.csv');
-		$files = array_combine($files, array_map('filectime', $files));
-		arsort($files);
-		$key   = key($files); // the filename
+		// $files = array_combine($files, array_map('filectime', $files));
+		rsort($files);
+		$key   = $files[0]; // the filename
 		echo "\n CSV FILE: $key \n";
 		return $key;
 	}
