@@ -8,5 +8,6 @@
     	$source=$filename . "_" . date('m_d_y');
     	$outputfile = __DIR__.'/../../jda/logs/'.$source.'.log';
         exec(sprintf("%s >> %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));
+        chmod($outputfile,0777);
         // exec($cmd . " </dev/null 2> /dev/null & echo $!");
         // exec($cmd . " > /dev/null &");
