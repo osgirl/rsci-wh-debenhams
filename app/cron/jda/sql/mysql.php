@@ -131,6 +131,30 @@ class pdoConnection
 		return $result;
 	}
 
+
+	/**
+	* Get picklist of load
+	*
+	* @param $data 	array()		array values are module, jda_action & reference
+	* @return array of reference
+	*/
+	public function getPicklistsOfLoad($loadCode)
+	{
+		$sql = "SELECT group_concat(DISTINCT move_doc_number SEPARATOR ',') move_doc_number FROM wms_load_details load_d
+				RIGHT JOIN wms_pallet_details pallet_d ON pallet_d.pallet_code = load_d.pallet_code
+				LEFT JOIN wms_box_details box_d ON box_d.box_code=pallet_d.box_code
+				LEFT JOIN wms_picklist_details picklist_d ON picklist_d.id=box_d.picklist_detail_id
+				WHERE load_code='{$loadCode}'";
+
+		$query = self::query($sql);
+		$result = array();
+		foreach ($query as $value ) {
+			$result[] = $value['move_doc_number'];
+		}
+
+		return $result[0];
+	}
+
 	/**
 	* Get boxes
 	*

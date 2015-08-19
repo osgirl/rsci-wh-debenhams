@@ -15,6 +15,17 @@ class cronDB2 {
 		$this->instance = new odbcConnection();
 	}
 
+    public function getOpenPicklist($move_doc_number) {
+        $sql = "SELECT count(WHMOVE) num_open
+                FROM WHSMVH
+                WHERE WHMVST = '1' AND WHMOVE IN ({$move_doc_number})";
+                //WHERE POMRCH.POSTAT = 3 AND POMRCH.POLOC = 7000
+
+		$query_result 	= $this->instance->runSQL($sql,true);
+
+		return $query_result[0]['NUM_OPEN'];
+    }
+
 	public function posDescription()
 	{
 		$sql = "SELECT INUMBR, POS18 FROM INVDSC";

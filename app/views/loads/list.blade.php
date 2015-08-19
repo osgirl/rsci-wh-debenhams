@@ -82,7 +82,7 @@
 							@endif
 						</td>
 						<td>
-							@if( preg_match('/17/', $load['pl_status']) )
+							@if( preg_match('/17/', $load['pl_status']) || $load['open_pl_status']!=0)
 								<a disabled class="btn btn-info">{{ $button_ship }}</a>
 							@elseif( $load['is_shipped'] == 0 )
 								@if ( CommonHelper::valueInArray('CanAccessShipping', $permissions))

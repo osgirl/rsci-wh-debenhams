@@ -2,6 +2,7 @@
 
 include_once(__DIR__.'/../core/jda5250_helper.php');
 include_once(__DIR__.'/../sql/mysql.php');
+include_once(__DIR__.'/../../db2_cron_class.php');
 
 class palletizingStep1 extends jdaCustomClass
 {
@@ -235,6 +236,7 @@ Palletizing Maintaining of Cartoon header
 }
 
 $db = new pdoConnection(); //open db connection
+$db2 = new cronDB2();
 
 if(!isset($argv[1])){
 	$jdaParams = array();
@@ -270,23 +272,33 @@ else {
 	print_r($execParams);
 	if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
 
-	$getBoxes = $db->getJdaTransactionBoxHeader($jdaParams);
-	print_r($getBoxes);
+	$getPicklists= $db->getPicklistsOfLoad($jdaParams['reference']);
 
-	if(! empty($getBoxes) )
-	{
-		$palletizing = new palletizingStep1();
-		$palletizing->enterUpToCartonHeaderMaintenance();
-		// $getBoxes = $palletizing->getBoxes();
-		foreach($getBoxes as $box) {
-			$palletizing->save($box);
+	$numOfPicklistOpen = $db2->getOpenPicklist($getPicklists);
+	print_r($numOfPicklistOpen);
+	echo " \n";
+
+	if($numOfPicklistOpen==0){
+		$getBoxes = $db->getJdaTransactionBoxHeader($jdaParams);
+		print_r($getBoxes);
+
+		if(! empty($getBoxes) )
+		{
+			$palletizing = new palletizingStep1();
+			$palletizing->enterUpToCartonHeaderMaintenance();
+			// $getBoxes = $palletizing->getBoxes();
+			foreach($getBoxes as $box) {
+				$palletizing->save($box);
+			}
+			$palletizing->logout($execParams);
 		}
-		$palletizing->logout($execParams);
+		else {
+			echo " \n No rows found!. Proceed to Pallet Header Creation\n";
+			$formattedString = "{$execParams['loadNo']}";
+			$db->daemon('palletizing_step2', $formattedString);
+		}
 	}
-	else {
-		echo " \n No rows found!. Proceed to Pallet Header Creation\n";
-		$formattedString = "{$execParams['loadNo']}";
-		$db->daemon('palletizing_step2', $formattedString);
-	}
+	else
+		echo " \nSOME PICKLISTS ARE NOT YET CLOSED\n";
 }
 $db->close(); //close db connection

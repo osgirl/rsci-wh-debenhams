@@ -23,7 +23,7 @@ class Load extends Eloquent {
 
     public static function getLoadList($data = array(), $getCount = false)
     {
-        $query = Load::select(DB::raw("wms_load.id, wms_load.load_code, wms_load.is_shipped, group_concat(DISTINCT wms_pallet.store_code SEPARATOR ',') stores,group_concat(DISTINCT wms_picklist.pl_status SEPARATOR ',') pl_status"))
+        $query = Load::select(DB::raw("wms_load.id, wms_load.load_code, wms_load.is_shipped, group_concat(DISTINCT wms_pallet.store_code SEPARATOR ',') stores,group_concat(DISTINCT wms_picklist.pl_status SEPARATOR ',') pl_status,group_concat(DISTINCT wms_picklist.move_doc_number SEPARATOR ',') move_doc_number"))
             ->join('load_details', 'load_details.load_code', '=', 'load.load_code')
             ->join('pallet', 'pallet.pallet_code', '=', 'load_details.pallet_code')
             ->join('pallet_details','load_details.pallet_code','=','pallet_details.pallet_code','RIGHT')
@@ -48,12 +48,31 @@ class Load extends Eloquent {
         }
 
         $result = $query->get();
+
+        foreach ($result as $load) {
+            $load->open_pl_status = Load::getOpenPicklist($load->move_doc_number);
+        }
+
         if($getCount) {
             $result = count($result);
         }
         DebugHelper::log(__METHOD__, $result);
         return $result;
 
+    }
+
+    public static function getOpenPicklist($move_doc_number) {
+        $sql = "SELECT count(WHMOVE) num_open
+                FROM WHSMVH
+                WHERE WHMVST = '1' AND WHMOVE IN ({$move_doc_number})";
+                //WHERE POMRCH.POSTAT = 3 AND POMRCH.POLOC = 7000
+
+        $db2 = new DB2Helper;
+        $result = $db2->get($sql);
+
+        $db2->close();
+
+        return $result[0]['NUM_OPEN'];
     }
 
     public static function shipLoad($data = array())
