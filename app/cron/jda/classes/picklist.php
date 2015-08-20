@@ -184,15 +184,6 @@ F1
 			return false;
 		}
 
-
-
-		#success
-		if(parent::$jda->screenCheck("Document {$data['document_number']} accepted for store {$data['store_number']}") || parent::$jda->screenWait("Document {$data['document_number']} accepted for store {$data['store_number']}")) {
-			self::$formMsg = "Document {$data['document_number']} accepted for store {$data['store_number']}";
-			self::updateSyncStatus($data['document_number']);
-			// parent::pressF1();
-		}
-
 		echo self::$formMsg;
 
 		return true;
@@ -257,7 +248,7 @@ F1
 			if ($new !== 0) {
 				$new = $new * $limit;
 
-				if (parent::$jda->screenWait("Warehouse..")) {
+				if (parent::$jda->screenWait("Warehouse..",5)) {
 					parent::$jda->write5250(null,F6,true);
 				}
 
@@ -279,7 +270,12 @@ F1
 
 			}
 			parent::display(parent::$jda->screen,132);
-			parent::$jda->write5250($formValues,F7,true);
+			if(parent::$jda->screenWait("F7=Accept Qtys")){
+				parent::$jda->write5250($formValues,F7,true);
+			}
+			else{
+				echo "Unable to find F7=Accept Qtys";
+			}
 			$offset++;
 		}
 		echo "Entered: Approve Picks Into Cartons Details xxxxxxxxxxxxxxxxxxxxxxx\n";
@@ -308,13 +304,28 @@ F1
 
 	public function save($data)
 	{
-		parent::$jda->screenWait("CENTRAL WAREHOUSE");
-		parent::display(parent::$jda->screen,132);
-		// parent::$jda->write5250(NULL,F7,true); // backup
-		parent::$jda->write5250(NULL,F10,true); // TO CHECK
-		echo "Entered: Update Detail Again \n";
+		if(parent::$jda->screenWait("F10=Accept Qty Assign Carton Markout Remaining"))
+		{
+			// parent::$jda->write5250(NULL,F7,true); // backup
+			parent::$jda->write5250(NULL,F10,true); // TO CHECK
+			parent::display(parent::$jda->screen,132);
+			echo "Entered: Pressed F10 \n";
 
-		self::checkResponse($data,__METHOD__);
+
+			#success
+			if(parent::$jda->screenCheck("Document {$data['document_number']} accepted for store {$data['store_number']}") || parent::$jda->screenWait("Document {$data['document_number']} accepted for store {$data['store_number']}")) {
+				self::$formMsg = "Document {$data['document_number']} accepted for store {$data['store_number']}";
+				self::updateSyncStatus($data['document_number']);
+				// parent::pressF1();
+			}
+			else{
+				echo "Unable to find success message \n";
+				parent::display(parent::$jda->screen,132);
+			}
+		}
+		else{
+			echo "Unable to find F10=Accept Qty Assign Carton Markout Remaining \n";
+		}
 	}
 
 	/*
