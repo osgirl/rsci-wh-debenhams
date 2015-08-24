@@ -49,8 +49,9 @@ class Box extends Eloquent {
     {
         /*$query = Box::select('box_details.picklist_detail_id', 'box.box_code', 'box.id', 'box.store_code', 'box.in_use', 'box.created_at', 'stores.store_name')
             ->join('stores', 'stores.store_code', '=', 'box.store_code')
-            ->leftJoin('box_details', 'box_details.box_code', '=', 'box.box_code');*/
+            ->leftJoin('box_details', 'box_details.box_code', '=', 'box.box_code');
 
+        //8-24-15
         $query = Box::select('box_details.picklist_detail_id', 'box.box_code', 'box.id', 'box.store_code', 'box.in_use', 'box.created_at', 'stores.store_name', 'picklist.pl_status')
             ->join('stores', 'stores.store_code', '=', 'box.store_code')
             ->leftJoin('picklist_details', 'picklist_details.store_code', '=', 'box.store_code')
@@ -59,7 +60,13 @@ class Box extends Eloquent {
                 $join->on('picklist.move_doc_number', '=', 'picklist_details.move_doc_number');
 
             })
-            ->leftJoin('box_details', 'box_details.box_code', '=', 'box.box_code');
+            */
+
+        $query = Box::select('box_details.picklist_detail_id', 'box.box_code', 'box.id', 'box.store_code', 'box.in_use', 'box.created_at', 'stores.store_name', 'picklist.pl_status')
+            ->join('stores', 'stores.store_code', '=', 'box.store_code')
+            ->join('box_details', 'box_details.box_code', '=', 'box.box_code')
+            ->join('picklist_details', 'picklist_details.id', '=', 'box_details.picklist_detail_id')
+            ->join('picklist', 'picklist.move_doc_number', '=', 'picklist_details.move_doc_number');
 
         if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
             if ($data['sort']=='store') $data['sort'] = 'box.store_code';
