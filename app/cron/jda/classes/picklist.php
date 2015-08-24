@@ -248,7 +248,7 @@ F1
 			if ($new !== 0) {
 				$new = $new * $limit;
 
-				if (parent::$jda->screenWait("Warehouse..",5)) {
+				if (parent::$jda->screenWait("F6=Update Detail",5)) {
 					parent::$jda->write5250(null,F6,true);
 				}
 

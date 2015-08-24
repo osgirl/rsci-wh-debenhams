@@ -49,9 +49,9 @@ class Load extends Eloquent {
 
         $result = $query->get();
 
-        foreach ($result as $load) {
-            $load->open_pl_status = Load::getOpenPicklist($load->move_doc_number);
-        }
+        // foreach ($result as $load) {
+        //     $load->open_pl_status = Load::getOpenPicklist($load->move_doc_number);
+        // }
 
         if($getCount) {
             $result = count($result);

@@ -262,10 +262,6 @@ if(!isset($argv[1])){
 	}
 }
 else {
-	$jdaParams = array();
-	$jdaParams = array('module' => 'Box Header', 'jda_action' => 'Creation');
-
-	// format: php picklist.php {docNo} {$boxNo} {$palletNo} {$loadNo}
 	$execParams 			= array();
 	$execParams['loadNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
 
@@ -274,11 +270,14 @@ else {
 
 	$getPicklists= $db->getPicklistsOfLoad($jdaParams['reference']);
 
-	$numOfPicklistOpen = $db2->getOpenPicklist($getPicklists);
-	print_r($numOfPicklistOpen);
-	echo " \n";
+	$getOpenPicklist = $db->getJdaTransactionUnsuccessfulPicklist($getPicklists);
 
-	if($numOfPicklistOpen==0){
+	if(empty($getOpenPicklist))
+	{
+		$jdaParams = array();
+		$jdaParams = array('module' => 'Box Header', 'jda_action' => 'Creation');
+		if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
+
 		$getBoxes = $db->getJdaTransactionBoxHeader($jdaParams);
 		print_r($getBoxes);
 
@@ -298,7 +297,9 @@ else {
 			$db->daemon('palletizing_step2', $formattedString);
 		}
 	}
-	else
-		echo " \nSOME PICKLISTS ARE NOT YET CLOSED\n";
+	else{
+		echo " \nSOME PICKLISTS OF {$execParams['loadNo']} ARE NOT YET CLOSED\n";
+		print_r($getOpenPicklist);
+	}
 }
 $db->close(); //close db connection

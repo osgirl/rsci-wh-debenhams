@@ -154,6 +154,27 @@ class pdoConnection
 
 		return $result[0];
 	}
+	/**
+	* Get boxes
+	*
+	* @param $data 	array()		array values are module, jda_action & reference
+	* @return array of reference
+	*/
+	public function getJdaTransactionUnsuccessfulPicklist($getPicklists)
+	{
+		echo "\n Getting reference # from db \n";
+
+		$sql = "SELECT DISTINCT reference FROM wms_transactions_to_jda trans
+				WHERE module = 'Picklist' AND jda_action = 'Closing' AND reference in ({$getPicklists})
+				AND trans.sync_status <> 1";
+
+		$query = self::query($sql);
+		$result = array();
+		foreach ($query as $value ) {
+			$result[] = $value['reference'];
+		}
+		return $result;
+	}
 
 	/**
 	* Get boxes
