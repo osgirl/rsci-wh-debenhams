@@ -102,7 +102,8 @@ class StoreReturnDetail extends Eloquent {
 					->where('sku', '=', $sku)
 					->first();
 
-				$detail->received_qty          = ($detail->received_qty + $receivedQty);
+				// $detail->received_qty          = ($detail->received_qty + $receivedQty);
+				$detail->received_qty          = $receivedQty;
 				$detail->updated_at            = date('Y-m-d H:i:s');
 
 				$detail->save();
