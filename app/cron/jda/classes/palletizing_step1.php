@@ -40,7 +40,7 @@ Palletizing Maintaining of Cartoon header
 
 	private static function enterCartonType($box_code)
 	{
-		parent::$jda->screenWait("Enter Carton Type");
+		parent::$jda->screenWait("Enter Carton Type",5);
 		parent::display(parent::$jda->screen,132);
 
 		$formValues = array();//values to enter to form

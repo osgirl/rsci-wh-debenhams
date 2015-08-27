@@ -89,7 +89,7 @@ F1
 		#special case when the completed date is less than todays date
 		if(parent::$jda->screenCheck('The completion time cannot be before the assign time')) {
 			parent::logError("The completion time cannot be before the assign time", __METHOD__);
-			$date_now = date('n/d/y');
+			$date_now = date('m/d/y');
 			$formValues[] = array(sprintf("%8s", $date_now), 16, 25);// enter date completed
 			parent::$jda->write5250($formValues,F6,true);
 		}
@@ -313,7 +313,7 @@ F1
 
 
 			#success
-			if(parent::$jda->screenCheck("Document {$data['document_number']} accepted for store {$data['store_number']}") || parent::$jda->screenWait("Document {$data['document_number']} accepted for store {$data['store_number']}")) {
+			if(parent::$jda->screenCheck("Document {$data['document_number']} accepted for store {$data['store_number']}") || parent::$jda->screenWait("Document {$data['document_number']} accepted for store {$data['store_number']}",5)) {
 				self::$formMsg = "Document {$data['document_number']} accepted for store {$data['store_number']}";
 				self::updateSyncStatus($data['document_number']);
 				// parent::pressF1();

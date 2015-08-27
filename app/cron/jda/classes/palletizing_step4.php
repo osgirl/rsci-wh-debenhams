@@ -137,11 +137,13 @@ NOTE: if multiple carton in a pallet just enter again the carton id
 
 	private static function checkResponse($data)
 	{
+		$formMsg = "";
 		# error
 		if(parent::$jda->screenCheck('work or closed')) {
 			self::$formMsg = "{$data}: Status not in work or closed status";
 			parent::logError(self::$formMsg, __METHOD__);
 			parent::pressEnter();
+			echo self::$formMsg;
 			return false;
 		}
 
@@ -149,13 +151,15 @@ NOTE: if multiple carton in a pallet just enter again the carton id
 			self::$formMsg = "{$data}: WRF0107: Selection is not valid";
 			parent::logError(self::$formMsg, __METHOD__);
 			parent::pressEnter();
+			echo self::$formMsg;
 			return false;
 		}
 
-		if(parent::$jda->screenCheck('WHS0173')) {
+		if(parent::$jda->screenCheck('WHS0173') || parent::$jda->screenWait('WHS0173',5)) {
 			self::$formMsg = "{$data}: WHS0173: Carton ID not on file";
 			parent::logError(self::$formMsg, __METHOD__);
 			parent::pressEnter();
+			echo self::$formMsg;
 			return false;
 		}
 
@@ -163,6 +167,7 @@ NOTE: if multiple carton in a pallet just enter again the carton id
 			self::$formMsg = "{$data}: WHS0528: Pallet ID not on file";
 			parent::logError(self::$formMsg, __METHOD__);
 			parent::pressEnter();
+			echo self::$formMsg;
 			return false;
 		}
 
@@ -170,6 +175,7 @@ NOTE: if multiple carton in a pallet just enter again the carton id
 			self::$formMsg = "{$data}: WHS0165: ID is already assigned to this pallet";
 			parent::logError(self::$formMsg, __METHOD__);
 			parent::pressEnter();
+			echo self::$formMsg;
 			return false;
 		}
 
@@ -177,6 +183,7 @@ NOTE: if multiple carton in a pallet just enter again the carton id
 			self::$formMsg = "{$data}: Pallet store no not equal to carton store no";
 			parent::logError(self::$formMsg, __METHOD__);
 			parent::pressEnter();
+			echo self::$formMsg;
 			return false;
 		}
 
@@ -184,11 +191,12 @@ NOTE: if multiple carton in a pallet just enter again the carton id
 			self::$formMsg = "{$data}: Pallet must be in work status to load more cartons";
 			parent::logError(self::$formMsg, __METHOD__);
 			parent::pressEnter();
+			echo self::$formMsg;
 			return false;
 		}
 		#end error
 
-		echo self::$formMsg;
+		// echo self::$formMsg;
 		return true;
 	}
 
@@ -232,9 +240,13 @@ NOTE: if multiple carton in a pallet just enter again the carton id
 		$db = new pdoConnection();
 		//TODOS: check if it still need to join in wms_box
 		echo "\n Getting box_code from db \n";
-		$sql	= "SELECT id, box_code, pallet_code
-					FROM wms_pallet_details
-					WHERE sync_status = 0 AND pallet_code = '{$pallet_code}'";
+		// $sql	= "SELECT id, box_code, pallet_code
+		// 			FROM wms_pallet_details
+		// 			WHERE sync_status = 0 AND pallet_code = '{$pallet_code}'";
+		$sql	= "SELECT DISTINCT reference as box_code FROM wms_transactions_to_jda trans
+					INNER JOIN wms_pallet_details pd ON trans.reference = pd.box_code AND pd.pallet_code = '{$pallet_code}'
+					WHERE module = 'Box Header' AND jda_action = 'Creation'";
+
 		$query 	= $db->query($sql);
 
 		$result = array();
@@ -372,11 +384,12 @@ if(empty($getUnsuccessfulLoads))
 			{
 				// $cartons = array('TXT000001', 'TXT000006');
 				$cartons = $palletizing->getCartons($pallet);
+				print_r($cartons);
 				$getIds = array();
 				foreach($cartons as $carton)
 				{
 					$palletizing->enterCartonId($carton);
-					$getIds[] = $carton['id'];
+					// $getIds[] = $carton['id'];
 				}
 
 				$palletizing->save($getIds, $pallet);
