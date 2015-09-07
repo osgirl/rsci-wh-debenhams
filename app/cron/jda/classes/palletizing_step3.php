@@ -145,6 +145,7 @@ Palletizing Load header
 		else {
 			parent::pressF1();
 			echo "Entered: Missing F9 Key \n";
+			self::updateSyncStatus($load);
 		}
 	}
 

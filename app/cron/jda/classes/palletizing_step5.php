@@ -90,6 +90,13 @@ Palletizing: Loading
 		parent::$jda->write5250($formValues,ENTER,true);
 		echo "Entered: Build Single \n";
 
+		if(parent::$jda->screenCheck('WRF0170')) {
+			self::$formMsg = "{$data}: WRF0170: The selected id is not in load status";
+			parent::logError(self::$formMsg, __METHOD__);
+			parent::pressEnter();
+			self::updateSyncStatus($load_code);
+			return false;
+		}
 		return self::checkResponse($load_code);
 	}
 

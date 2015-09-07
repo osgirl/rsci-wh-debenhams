@@ -86,6 +86,14 @@ NOTE: if multiple carton in a pallet just enter again the carton id
 		parent::$jda->write5250($formValues,ENTER,true);
 		echo "Entered: Pallet ID \n";
 
+		if(parent::$jda->screenCheck('in work status')) {
+			self::$formMsg = "{$data}: Pallet must be in work status to load more cartons";
+			parent::logError(self::$formMsg, __METHOD__);
+			parent::pressEnter();
+			self::updateSyncStatus($pallet_id);
+			return false;
+		}
+
 		return self::checkResponse($pallet_id);
 	}
 
