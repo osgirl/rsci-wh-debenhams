@@ -89,7 +89,7 @@ F1
 		#special case when the completed date is less than todays date
 		if(parent::$jda->screenCheck('The completion time cannot be before the assign time')) {
 			parent::logError("The completion time cannot be before the assign time", __METHOD__);
-			$date_now = date('m/d/y');
+			$date_now = date('n/d/y');
 			$formValues[] = array(sprintf("%8s", $date_now), 16, 25);// enter date completed
 			parent::$jda->write5250($formValues,F6,true);
 		}
