@@ -519,50 +519,63 @@ user: STRATPGMR pass: PASSWORD
 
 $db = new pdoConnection(); //open db connection
 
-$params = array();
-$params = array('module' => 'Purchase Order', 'jda_action' => 'Closing');
-
 $execParams 			= array();
 $execParams['poNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
-if($argv[1]) $params['reference'] = $execParams['poNo'];
 
-$poNos = $db->getJdaTransaction($params);
+$jdaParams = array();
+$jdaParams = array('module' => 'Purchase Order', 'jda_action' => 'Receiving', 'checkSuccess' => 'true');
+if(isset($argv[1])) $jdaParams['reference'] = $execParams['poNo'];
 
-if(! empty($poNos) )
+$getUnsuccessfulReceiving = $db->getJdaTransaction($jdaParams);
+
+if(empty($getUnsuccessfulReceiving))
 {
-	$receiver_nos = $db->getReceiverNo($poNos);
-	print_r($receiver_nos);
-	if(! empty($receiver_nos) )
+	$params = array();
+	$params = array('module' => 'Purchase Order', 'jda_action' => 'Closing');
+
+	if($argv[1]) $params['reference'] = $execParams['poNo'];
+
+	$poNos = $db->getJdaTransaction($params);
+
+	if(! empty($poNos) )
 	{
-		$closePO = new poClosing();
-		$closePO->enterUpToDockReceipt();
-
-		foreach($receiver_nos as $receiver_no)
+		$receiver_nos = $db->getReceiverNo($poNos);
+		print_r($receiver_nos);
+		if(! empty($receiver_nos) )
 		{
-			$receiver   = $receiver_no['receiver_no'];
-			$back_order = $receiver_no['back_order'];
+			$closePO = new poClosing();
+			$closePO->enterUpToDockReceipt();
 
-			$validate   = $closePO->enterReceiverNumber($receiver, $back_order);
-
-			if($validate)
+			foreach($receiver_nos as $receiver_no)
 			{
-				$closePO->enterPOForm($receiver);
-				$closePO->enterPoReceiptDetail();
-				$closePO->enterPoReceiptDetailBySKU();
-				//TODOS: need validation if qty is more than
-				$closePO->enterQtyPerItem($receiver);
-				$closePO->enterClosingPo();
-				$closePO->enterJobName($receiver);
+				$receiver   = $receiver_no['receiver_no'];
+				$back_order = $receiver_no['back_order'];
+
+				$validate   = $closePO->enterReceiverNumber($receiver, $back_order);
+
+				if($validate)
+				{
+					$closePO->enterPOForm($receiver);
+					$closePO->enterPoReceiptDetail();
+					$closePO->enterPoReceiptDetailBySKU();
+					//TODOS: need validation if qty is more than
+					$closePO->enterQtyPerItem($receiver);
+					$closePO->enterClosingPo();
+					$closePO->enterJobName($receiver);
+				}
 			}
+			$closePO->logout();
 		}
-		$closePO->logout();
+		else {
+			echo " \n No receiver_nos found!. \n";
+		}
 	}
 	else {
-		echo " \n No receiver_nos found!. \n";
+		echo " \n No rows found!. \n";
 	}
 }
-else {
-	echo " \n No rows found!. \n";
+else{
+	echo " \n Found unsuccessful receiving of PO! Stop process!\n";
 }
 $db->close(); //close db connection
 
