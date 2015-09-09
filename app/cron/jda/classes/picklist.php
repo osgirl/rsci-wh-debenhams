@@ -7,6 +7,8 @@ class picklist extends jdaCustomClass
 {
 	private static $formMsg = "";
 
+	private static $lagging = false;
+
 	public static $user = 'SYS';
 	public static $warehouseNo = "7000 ";
 	/*
@@ -89,8 +91,8 @@ F1
 		#special case when the completed date is less than todays date
 		if(parent::$jda->screenCheck('The completion time cannot be before the assign time')) {
 			parent::logError("The completion time cannot be before the assign time", __METHOD__);
-			$date_now = date('n/d/y');
-			$formValues[] = array(sprintf("%8s", $date_now), 16, 25);// enter date completed
+			$date_now = date('m/d/y');
+			$formValues[] = array(sprintf("%8s", $date_now), 19, 25);// enter date completed
 			parent::$jda->write5250($formValues,F6,true);
 		}
 
@@ -251,15 +253,30 @@ F1
 				if (parent::$jda->screenWait("F6=Update Detail",5)) {
 					parent::$jda->write5250(null,F6,true);
 				}
-
-				for($i=0; $i < $offset; $i++)
-				{
-					echo "\nCounter of i is: {$offset} \n";
-					echo "\nEntered ROLLUP: Page: {$offset} with offset of: {$new} and row {$row} \n";
-					parent::$jda->write5250(null,ROLLUP,true);
+				else{
 					parent::display(parent::$jda->screen,132);
+					echo "Unable to find F6=Update Detail\n";
+					$lagging = true;
+					break;
+				}
+
+				if (parent::$jda->screenWait("F7=Accept Qtys",5)) {
+					for($i=0; $i < $offset; $i++)
+					{
+						echo "\nCounter of i is: {$offset} \n";
+						echo "\nEntered ROLLUP: Page: {$offset} with offset of: {$new} and row {$row} \n";
+						parent::$jda->write5250(null,ROLLUP,true);
+						parent::display(parent::$jda->screen,132);
+					}
+				}
+				else{
+					parent::display(parent::$jda->screen,132);
+					echo "Unable to find F7=Accept Qtys\n";
+					$lagging = true;
+					break;
 				}
 			}
+
 			$page = array_slice( $qtyMoved, $new, $limit );
 			$formValues = array();
 			foreach ($page as $key => $value) {
@@ -274,11 +291,17 @@ F1
 				parent::$jda->write5250($formValues,F7,true);
 			}
 			else{
-				echo "Unable to find F7=Accept Qtys";
+				parent::display(parent::$jda->screen,132);
+				echo "Unable to find F7=Accept Qtys\n";
+				$lagging = true;
+				break;
 			}
 			$offset++;
 		}
 		echo "Entered: Approve Picks Into Cartons Details xxxxxxxxxxxxxxxxxxxxxxx\n";
+
+		if($lagging)
+			return false;
 
 		return self::checkResponse($data,__METHOD__);
 	}
