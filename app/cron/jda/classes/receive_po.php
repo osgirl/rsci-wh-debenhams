@@ -94,7 +94,7 @@ class poReceiving extends jdaCustomClass
             $receiver_message='Receiver is already being received by another user.';
             self::$formMsg = "{$receiver_no}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
+			// self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 		//won't happen in the live environment
@@ -259,43 +259,59 @@ class poReceiving extends jdaCustomClass
 
 $db = new pdoConnection(); //open db connection
 
-$params = array();
-$params = array('module' => 'Purchase Order', 'jda_action' => 'Receiving');
+if(!isset($argv[1])){
+	$jdaParams = array();
+	$jdaParams = array('module' => 'Purchase Order', 'jda_action' => 'Closing');
+	$getPoNos = $db->getJdaTransaction($jdaParams);
 
-$execParams 			= array();
-$execParams['poNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
-if($argv[1]) $params['reference'] = $execParams['poNo'];
-
-$poNos = $db->getJdaTransaction($params);
-
-if(! empty($poNos) )
-{
-	$receiver_nos = $db->getReceiverNo($poNos);
-	print_r($receiver_nos);
-	if(! empty($receiver_nos) )
+	print_r($getPoNos);
+	if(! empty($getPoNos) )
 	{
-		$receivePO = new poReceiving();
-		$receivePO->enterUpToDockReceipt();
-		foreach($receiver_nos as $receiver_no)
-		{
-			$receiver = $receiver_no['receiver_no'];
-			$back_order = $receiver_no['back_order'];
-			$slot_code = $receiver_no['slot_code'];
-			$shipment_reference_no = $receiver_no['shipment_reference_no'];
-
-			$validate = $receivePO->enterReceiverNumber($receiver, $back_order);
-			if($validate) $receivePO->enterPOForm($receiver, $slot_code, $shipment_reference_no);
+		foreach($getPoNos as $poNo) {
+			$formattedString = "{$poNo}";
+			$db->daemon('receive_po', $formattedString);
 		}
-		$receivePO->logout($execParams);
-	}
-	else {
-		echo " \n No receiver_nos found!. \n";
 	}
 }
-else {
-	echo " \n No rows found!. Proceed to Closing of PO...\n";
-	$formattedString = "{$execParams['poNo']}";
-	$db->daemon('close_po', $formattedString);
+else{
+	$params = array();
+	$params = array('module' => 'Purchase Order', 'jda_action' => 'Receiving');
+
+	$execParams 			= array();
+	$execParams['poNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
+	if($argv[1]) $params['reference'] = $execParams['poNo'];
+
+	$poNos = $db->getJdaTransaction($params);
+
+	if(! empty($poNos) )
+	{
+		$receiver_nos = $db->getReceiverNo($poNos);
+		print_r($receiver_nos);
+		if(! empty($receiver_nos) )
+		{
+			$receivePO = new poReceiving();
+			$receivePO->enterUpToDockReceipt();
+			foreach($receiver_nos as $receiver_no)
+			{
+				$receiver = $receiver_no['receiver_no'];
+				$back_order = $receiver_no['back_order'];
+				$slot_code = $receiver_no['slot_code'];
+				$shipment_reference_no = $receiver_no['shipment_reference_no'];
+
+				$validate = $receivePO->enterReceiverNumber($receiver, $back_order);
+				if($validate) $receivePO->enterPOForm($receiver, $slot_code, $shipment_reference_no);
+			}
+			$receivePO->logout($execParams);
+		}
+		else {
+			echo " \n No receiver_nos found!. \n";
+		}
+	}
+	else {
+		echo " \n No rows found!. Proceed to Closing of PO...\n";
+		$formattedString = "{$execParams['poNo']}";
+		$db->daemon('close_po', $formattedString);
+	}
 }
 $db->close(); //close db connection
 /*
