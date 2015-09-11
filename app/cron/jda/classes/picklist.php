@@ -95,6 +95,12 @@ F1
 			$formValues[] = array(sprintf("%8s", $date_now), 19, 25);// enter date completed
 			parent::$jda->write5250($formValues,F6,true);
 		}
+		#special case when picklist was close but sync_status was not updated
+		if(parent::$jda->screenCheck('Status code of move transaction is not "open"')) {
+			parent::logError('Status code of move transaction is not "open"', __METHOD__);
+			self::updateSyncStatus($data['document_number']);
+			return false;
+		}
 
 		parent::display(parent::$jda->screen,132);
 		return self::checkResponse($data,__METHOD__);
