@@ -30,6 +30,7 @@ class Load extends Eloquent {
             ->join('box_details','box_details.box_code','=','pallet_details.box_code','LEFT')
             ->join('picklist_details','picklist_details.id','=','box_details.picklist_detail_id','LEFT')
             ->join('picklist','picklist.move_doc_number','=','picklist_details.move_doc_number','LEFT')
+            ->where('load.load_code', '!=', '')
             ->groupBy('load.load_code');
 
         if( CommonHelper::hasValue($data['filter_load_code']) ) $query->where('load.load_code', 'LIKE', '%'. $data['filter_load_code'] . '%');
@@ -105,7 +106,7 @@ class Load extends Eloquent {
         foreach($rs as $val){
             $box =  DB::table('box_details')
                     // ->select(DB::raw('SUM(wms_picklist_details.moved_qty) as moved_qty'),
-					->select(DB::raw('SUM(wms_box_details.moved_qty) as moved_qty'),
+                    ->select(DB::raw('SUM(wms_box_details.moved_qty) as moved_qty'),
                             'picklist_details.sku as upc','picklist_details.created_at as order_date','picklist_details.store_code','picklist_details.so_no','picklist_details.store_code',
                             'product_lists.description')
                     ->join('picklist_details','picklist_details.id','=','box_details.picklist_detail_id','LEFT')
