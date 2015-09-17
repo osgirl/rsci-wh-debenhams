@@ -73,7 +73,7 @@ class manualMove extends jdaCustomClass
 		parent::display(parent::$jda->screen,132);
 		$validate =  self::checkingInput($move_detail['id'],__METHOD__);
 		if($validate)
-			self::checkMoveLanding($move_detail['id']);
+			self::checkMoveLanding($move_detail);
 	}
 
 	public function checkingInput($input,$source)
@@ -133,10 +133,10 @@ class manualMove extends jdaCustomClass
 	}
 
 	//check if move is successful
-	private static function checkMoveLanding($id) {
-		if(parent::$jda->screenWait('moved from')) {
-			echo "\n SKU has been successfully moved \n";
-			self::updateSyncStatus($id);
+	private static function checkMoveLanding($data = array()) {
+		if(parent::$jda->screenWait("{$data['sku']} moved from {$data['from_slot']} to {$data['to_slot']}")) {
+			echo "\n SKU {$data['sku']} has been succesfully moved from {$data['from_slot']} to {$data['to_slot']} \n";
+			self::updateSyncStatus($data['id']);
 		}
 	}
 
