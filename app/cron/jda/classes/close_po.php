@@ -98,7 +98,7 @@ user: STRATPGMR pass: PASSWORD
             $receiver_message='Receiver is already being received by another user';
             self::$formMsg = "{$receiver_no}: {$receiver_message}";
 			parent::logError(self::$formMsg, __METHOD__);
-			self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
+			// self::updateSyncStatus($receiver_no,"{$source}: {$receiver_message}", TRUE);
 			return false;
 		}
 		//won't happen in the live environment
