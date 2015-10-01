@@ -7,6 +7,8 @@ class storeReturn extends jdaCustomClass
 	private static $formMsg = "";
 	public static $user = 'SYS';
 
+	private static $lagging = false;
+
 	/*
 	STORE RETURN
 
@@ -270,13 +272,24 @@ class storeReturn extends jdaCustomClass
 				self::showWarning($formValues,$offset,$top_sku);
 				self::captureWarning();
 				self::reenterValues($formValues, $offset,$top_sku);
-				self::enterTransferReceiptMaintenanceSkuAgain($transferer);
+				$lagging= self::enterTransferReceiptMaintenanceSkuAgain($transferer);
+
+				if($lagging){
+					self::$jda->write5250(null,F1,true);
+					self::$jda->write5250(null,F1,true);
+					break;
+				}
 
 				$offset++;
 			}
 			parent::display(parent::$jda->screen,132);
 
-			self::closeTransaction($transferer);
+			if($lagging){
+				echo "\n Connection time out. Do not proceed. \n";
+				self::$jda->write5250(null,F1,true);
+			}
+			else
+				self::closeTransaction($transferer);
 			// }
 		}
 	}
@@ -371,6 +384,12 @@ class storeReturn extends jdaCustomClass
 			parent::$jda->screenWait("Transfer Receipt Maintenance-SKU");
 			echo "\n Entered Transfer Receipt Maintenance-SKU again \n";
 			parent::display(parent::$jda->screen,132);
+
+			return false;
+		}
+		else{
+			echo "\n Unable to find Transfer Number. Unsuccessful F7 saving qty. \n";
+			return true;
 		}
 	}
 
