@@ -155,6 +155,26 @@ class Load extends Eloquent {
         return $data;
     }
 
+
+public static function getCommentsByLoadCode($loadCode)
+{
+   // get comments from wms_store_order by load_code
+//    $rs = DB::table('store_order')
+//                ->select('comments')
+//                ->where('load_code', '=', $loadCode)
+//                ->first();
+//    $data['comments'] = $rs->comments;
+
+
+    $rs = DB::table('store_order')->select('comments')->where('load_code',$loadCode)->first();
+
+    //$data = 'shit!';
+    $data['comments'] = $rs->comments;
+
+
+    return $data;
+}
+
 public static function getPackingDetails($loadCode)
     {
         // get load date

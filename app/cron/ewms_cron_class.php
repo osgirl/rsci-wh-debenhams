@@ -180,7 +180,7 @@ class cronEWMS {
 		echo "\n Running method " . __METHOD__ . "\n";
 		$csvfile_pattern = "store_order_header";
 		$eWMSTable = self::$storeOrder;
-		$columns = '(@so_no, @store_code, @so_status, @order_date) set so_no=@so_no, store_code=@store_code, order_date=@order_date';
+		$columns = '(@so_no, @store_code, @so_status, @order_date, @comments) set so_no=@so_no, store_code=@store_code, order_date=@order_date, comments=@comments';
 		// so_no | store_name | so_status | order_date | created_at
 
 		$csvLocation = $this->instance->getLatestCsv($csvfile_pattern);

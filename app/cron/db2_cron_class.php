@@ -8,8 +8,6 @@ class cronDB2 {
 
 	var $instance;
 
-
-
 	public function __construct()
 	{
 		$this->instance = new odbcConnection();
@@ -294,12 +292,12 @@ class cronDB2 {
 
 		if(! empty($ids) )
 		{
-			$sql = "SELECT TRFBCH, TRFTLC, TRFSTS, TRFBDT FROM TRFHDR WHERE TRFBCH IN ($ids)";
+			$sql = "SELECT TRFBCH, TRFTLC, TRFSTS, TRFBDT, TRFINS FROM TRFHDR WHERE TRFBCH IN ($ids)";
 			$query_result 	= $this->instance->runSQL($sql,true);
 
 			$filename 		= 'store_order_header';
 		    // so_no | store_name | so_status | order_date | created_at
-			$header_column = array('so_no','store_code', 'so_status', 'order_date');
+			$header_column = array('so_no','store_code', 'so_status', 'order_date', 'comments');
 			$this->_export($query_result, $filename, $header_column, __METHOD__);
 		}
 		else {

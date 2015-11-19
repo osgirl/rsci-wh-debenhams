@@ -2,10 +2,12 @@
 // chdir(dirname(__FILE__));
 include_once(__DIR__.'/../core/jda5250_helper.php');
 include_once(__DIR__.'/../sql/mysql.php');
+include_once('../../db2_connection.php');
 
 class palletizingStep4 extends jdaCustomClass
 {
 	private static $formMsg = "";
+    var $instance;
 /*
 Palletizing Assigning of carton to pallet/ Shipping
 
@@ -34,6 +36,7 @@ NOTE: if multiple carton in a pallet just enter again the carton id
 	public function __construct() {
 		// parent::__construct();
 		parent::login();
+        $this->instance = new odbcConnection();
 	}
 
 	private static function enterRadioFrequencyApplications()
@@ -107,7 +110,7 @@ NOTE: if multiple carton in a pallet just enter again the carton id
 		// $formValues[] = array(sprintf("%9s", $carton_id),7,3); //enter carton id
 		$formValues[] = array($carton_id,7,3); //enter carton id
 		parent::$jda->write5250($formValues,ENTER,true);
-		echo "Entered: Carton Id \n";
+		echo "Entered: Carton Id : $carton_id \n";
 
 		return self::checkResponse($carton_id);
 	}
@@ -355,6 +358,19 @@ NOTE: if multiple carton in a pallet just enter again the carton id
 		self::syncLoading($params);
 	}
 
+
+    public function checkBoxToPallet($boxcode, $palletcode)
+    {
+        $sql = "SELECT CHTOLO,CHCTID,CHPAID,CHSTAT
+                FROM WHSCTH
+                WHERE CHCTID = $boxcode
+                AND CHPAID = $palletcode";
+        echo "Check: Carton Id : $sql \n";
+        $result = $this->instance->count($sql);
+        echo "Check: Carton Id : $result \n";
+        return $result;
+    }
+
 }
 
 $db = new pdoConnection(); //open db connection
@@ -366,6 +382,9 @@ $execParams 			= array();
 $execParams['loadNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
 print_r($execParams);
 if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
+
+$checkbox = new palletizingStep4();
+$checkboxresult = $checkbox->checkBoxToPallet('710020005','XT0000003');
 
 $getUnsuccessfulLoads = $db->getJdaTransaction($jdaParams);
 

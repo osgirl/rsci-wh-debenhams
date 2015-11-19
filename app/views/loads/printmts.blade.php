@@ -46,6 +46,7 @@ td.underline {border-bottom: solid 1px #000;}
 </div>
 @foreach($records['StoreOrder'] as $soNo => $val)
 	<?php $grandTotal = 0;?>
+
 	<section class="soContainer">
 		<header>
 			<div class="doctitle">
@@ -148,9 +149,11 @@ td.underline {border-bottom: solid 1px #000;}
 
 		<div class="comments">
 			Comments:
-			<hr/><hr/><hr/>
-
-
+			<table>
+				<tr>
+					<td><?php echo $comments['comments']; ?></td>
+				</tr>
+			</table>
 		</div>
 
 
