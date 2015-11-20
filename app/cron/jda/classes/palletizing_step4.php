@@ -361,14 +361,16 @@ NOTE: if multiple carton in a pallet just enter again the carton id
 
     public function checkBoxToPallet($boxcode, $palletcode)
     {
-        $sql = "SELECT CHTOLO,CHCTID,CHPAID,CHSTAT
+        $boxcodenum = $boxcode['box_code'];
+        $sql = "SELECT COUNT(*)
                 FROM WHSCTH
-                WHERE CHCTID = $boxcode
-                AND CHPAID = $palletcode";
-        echo "Check: Carton Id : $sql \n";
-        $result = $this->instance->count($sql);
-        echo "Check: Carton Id : $result \n";
-        return $result;
+                WHERE CHCTID = $boxcodenum
+                AND CHPAID = '$palletcode'";
+        // echo "Check: Carton Id : $sql \n";
+        $query_result = $this->instance->runSQL($sql,true);
+        $result = $query_result[0];
+        $result2 = $result['00001'];
+        return $result2;
     }
 
 }
@@ -383,8 +385,9 @@ $execParams['loadNo'] 	= ((isset($argv[1]))? $argv[1] : NULL);
 print_r($execParams);
 if(isset($argv[1])) $jdaParams['reference'] = $execParams['loadNo'];
 
-$checkbox = new palletizingStep4();
-$checkboxresult = $checkbox->checkBoxToPallet('710020005','XT0000003');
+//$checkbox = new palletizingStep4();
+//$checkboxresult = $checkbox->checkBoxToPallet('710020005','XT0000003');
+//echo "Check: Carton Id : " . $checkboxresult . "\n";
 
 $getUnsuccessfulLoads = $db->getJdaTransaction($jdaParams);
 
@@ -417,6 +420,16 @@ if(empty($getUnsuccessfulLoads))
 				{
 					$palletizing->enterCartonId($carton);
 					// $getIds[] = $carton['id'];
+                  $checkboxresult = $palletizing->checkBoxToPallet($carton,$pallet);
+
+                    while($checkboxresult == "0") {
+                        $palletizing->enterCartonId($carton);
+                        $checkboxresult = $palletizing->checkBoxToPallet($carton,$pallet);
+                    }
+//
+//                    if ($checkboxresult == "1") {
+//                        $palletizing->enterCartonId($carton);
+//                    }
 				}
 
 				$palletizing->save($getIds, $pallet);
