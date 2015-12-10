@@ -205,6 +205,15 @@ NOTE: if multiple carton in a pallet just enter again the carton id
 			echo self::$formMsg;
 			return false;
 		}
+
+        if(parent::$jda->screenCheck('WRF003')) {
+            self::$formMsg = "{$data}: WRF003: No error message displayed";
+            parent::logError(self::$formMsg, __METHOD__);
+            parent::pressEnter();
+            echo self::$formMsg;
+            return false;
+        }
+
 		#end error
 
 		// echo self::$formMsg;
