@@ -191,7 +191,7 @@ class LoadController extends BaseController {
             $this->data['print_status']=$load[0]['printMTS'];
 
             // get the comments to MTS reports
-            $this->data['comments']=Load::getCommentsByLoadCode($loadCode);
+            // $this->data['comments']= Load::getCommentsByLoadCode($loadCode);
 
             $this->layout = View::make('layouts.print');
             $this->layout->content = View::make('loads.printmts', $this->data);

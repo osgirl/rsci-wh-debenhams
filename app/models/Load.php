@@ -135,7 +135,8 @@ class Load extends Eloquent {
                     ->where('store_code','=', $value['store_code'])
                     ->first();
                 $data['StoreOrder'][$soNo]['store_name'] = $store->store_name;
-
+                $mts_comments = DB::table('store_order')->select('comments')->where('so_no',$soNo)->first();
+                $data['StoreOrder'][$soNo]['comments'] = $mts_comments->comments;
                 // get so date created
                 // echo '<pre>'; dd($soNo);
             }
@@ -153,6 +154,7 @@ class Load extends Eloquent {
         }*/
 
         return $data;
+
     }
 
 

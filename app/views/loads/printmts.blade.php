@@ -44,8 +44,10 @@ td.underline {border-bottom: solid 1px #000;}
 	<a href="{{url('load/print/update/'.$loadCode.$url_back)}}" onclick="window.print();">PRINT THIS</a>
 	<a href="{{url('load/list').$url_back}}">BACK TO LOAD LIST</a>
 </div>
+
 @foreach($records['StoreOrder'] as $soNo => $val)
 	<?php $grandTotal = 0;?>
+
 
 	<section class="soContainer">
 		<header>
@@ -151,7 +153,7 @@ td.underline {border-bottom: solid 1px #000;}
 			Comments:
 			<table>
 				<tr>
-					<td><?php echo $comments['comments']; ?></td>
+					<td><?php echo $val['comments']; ?></td>
 				</tr>
 			</table>
 		</div>
