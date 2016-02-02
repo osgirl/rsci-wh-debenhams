@@ -69,6 +69,8 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::get('box/delete', 'BoxController@deleteBoxes');
 	Route::post('box/load', 'BoxController@loadBoxes');
 	Route::post('box/new/load', 'BoxController@generateLoadCode');
+    Route::get('box/assign', 'BoxController@assignPilerForm');
+    Route::post('box/assign_to_piler', 'BoxController@assignToStockPiler');
 
 	Route::get('letdown', 'LetDownController@showIndex');
 	Route::get('letdown/detail', 'LetDownController@getLetDownDetails');
@@ -256,4 +258,7 @@ Route::group(array('prefix'=>'api/v2', 'before'=>'oauth|auth.piler'), function()
 	Route::get('picking/details/{move_doc_number}', 'ApiPicklist@getPickingDetailv2');
 	Route::post('picking/save', 'ApiPicklist@postPickingDetailv2');
 	Route::post('picking/change_status/{docNo}', 'ApiPicklist@updateStatus');
+
+    Route::get('boxes/{store_code}/{userid}', 'ApiBox@getBoxesByStoreUserId'); // with username
+    Route::post('boxes/createbyuserid', 'ApiBox@postCreateBoxByUserId'); // with username
 });

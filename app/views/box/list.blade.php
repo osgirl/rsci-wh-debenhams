@@ -26,7 +26,7 @@
 				        	</span>
 				        </div>
 			      	</div>
-			      	<div class="span5">
+			      	<div class="span4">
 			      		<div>
 				        	<span class="search-po-left-pane">{{ $label_box_code }}</span>
 				        	<span class="search-po-right-pane">
@@ -34,6 +34,15 @@
 				        	</span>
 				        </div>
 				    </div>
+                    <div class="span4">
+                        <div>
+                            <span class="search-po-left-pane">{{ $label_assign_to }}</span>
+                            <span class="search-po-right-pane">
+
+                                {{ Form::select('filter_stock_piler', array('' => $text_select) + $stock_piler_list, $filter_stock_piler, array('class'=>'select-width', 'id'=>"filter_stock_piler")) }}
+                            </span>
+                        </div>
+                    </div>
 			      	<div class="span11 control-group collapse-border-top">
 			      		<a class="btn btn-success btn-darkblue" id="submitForm">{{ $button_search }}</a>
 		      			<a class="btn" id="clearForm">{{ $button_clear }}</a>
@@ -71,6 +80,10 @@
 		<a class="btn btn-info btn-darkblue" href="{{$url_add_box}}">{{ $button_create_box }}</a>
 		{{-- @endif --}}
 
+        @if ( CommonHelper::valueInArray('CanExportPacking', $permissions) )
+            <a role="button" class="btn btn-info btn-darkblue assignPicklist" title="{{ $button_assign_to_user }}" data-toggle="modal">{{ $button_assign_to_user }}</a>
+        @endif
+
 		@if ( CommonHelper::valueInArray('CanExportBoxingLoading', $permissions) )
 		<a class="btn btn-info btn-darkblue" href="{{$url_export_box}}" >{{ $button_export_box }}</a>
 		@endif
@@ -103,6 +116,7 @@
 						<th>{{ $col_id }}</th>
 						<th><a href="{{ $sort_store }}" class="@if( $sort=='store' ) {{ $order }} @endif">{{ $col_store }}</a></th>
 						<th><a href="{{ $sort_box_code }}" class="@if( $sort=='box_code' ) {{ $order }} @endif">{{ $col_box_code }}</a></th>
+						<th>{{ $col_box_assign }}</th>
 						<th><a href="{{ $sort_date_created }}" class="@if( $sort=='date_created' ) {{ $order }} @endif">{{ $col_date_created }}</a></th>
 						<th>{{ $col_action }}</th>
 					</tr>
@@ -122,6 +136,7 @@
 						<td>{{ $counter++ }}</td>
 						<td>{{ $box['store_name'] }}</td>
 						<td><a href="{{ $url_detail . '&id=' . $box['id'] . '&box_code=' . $box['box_code'] }}">{{ $box['box_code'] }}</a></td>
+						<td>{{ $box['username'] }}</td>
 						<td>{{ date("M d, Y", strtotime($box['created_at']))}}</td>
 						<td class="align-center">
 							{{-- @if ( CommonHelper::valueInArray('CanLoadPicking', $permissions)  || CommonHelper::valueInArray('CanEditPicklist', $permissions)) --}}
@@ -218,6 +233,31 @@ $(document).ready(function() {
     });
 
 
+    // Assign PO
+    $('.assignPicklist').click(function() {
+        var count = $("[name='selected[]']:checked").length;
+
+        if (count>0) {
+            var answer = confirm('{{ $text_confirm_assign }}');
+            if (answer) {
+				var boxes = new Array();
+				$.each($("input[name='selected[]']:checked"), function() {
+					boxes.push($(this).val());
+				});
+				$('#box-codes').val(boxes.join(','));
+
+                location = "{{ $url_assign }}" + '&box_code=' + encodeURIComponent(boxes.join(','));
+
+			} else {
+				return false;
+			}
+        } else {
+            alert('{{ $error_load }}');
+            return false;
+        }
+    });
+
+
     /**************Search events***************/
 
     //Search form on enter sumbmit filters
@@ -229,7 +269,7 @@ $(document).ready(function() {
 
     // Clear Search Form
     $('#clearForm').click(function() {
-    	$('#filter_store, #filter_box_code').val('');
+    	$('#filter_store, #filter_box_code ,#filter_stock_piler').val('');
 
 		$('#form-box').submit();
     });

@@ -55,7 +55,9 @@ class Picklist extends Eloquent {
 	public static function getPickingListv2($data= array(), $getCount=false)
 	{
 		// $query = Picklist::select(DB::raw('wms_picklist.*, sum(wms_picklist_details.move_to_shipping_area) as sum_moved, sum(wms_picklist_details.assigned_user_id) as sum_assigned, store_code' ))
-		$query = Picklist::join('picklist_details', 'picklist_details.move_doc_number', '=', 'picklist.move_doc_number')
+
+		$query = Picklist::select('picklist.*','picklist_details.*','dataset.*','picklist_details.updated_at as action_date')
+            ->join('picklist_details', 'picklist_details.move_doc_number', '=', 'picklist.move_doc_number')
 			->join('dataset', 'picklist.pl_status', '=', 'dataset.id');
 
 		if( CommonHelper::hasValue($data['filter_doc_no']) ) $query->where('picklist.move_doc_number', 'LIKE', '%'. $data['filter_doc_no'] . '%');
@@ -63,7 +65,8 @@ class Picklist extends Eloquent {
 		if( CommonHelper::hasValue($data['filter_status']) ) $query->where('data_value', '=', $data['filter_status'])->where('data_code', '=', 'PICKLIST_STATUS_TYPE');
 		if( CommonHelper::hasValue($data['filter_store']) ) $query->where('store_code', '=',  $data['filter_store']);
 		if( CommonHelper::hasValue($data['filter_stock_piler']) ) $query->whereRaw('find_in_set('. $data['filter_stock_piler'] . ',assigned_to_user_id) > 0');
-
+        if( CommonHelper::hasValue($data['filter_transfer_no']) ) $query->where('picklist_details.so_no', 'LIKE', '%'. $data['filter_transfer_no'] . '%');
+        if( CommonHelper::hasValue($data['filter_action_date']) ) $query->whereBetween('picklist_details.updated_at', array($data['filter_action_date'] . ' 00:00:00', $data['filter_action_date'] . ' 23:59:59'));
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if($data['sort'] == 'doc_no') $data['sort'] = 'picklist.move_doc_number';
 			$query->orderBy($data['sort'], $data['order']);
@@ -76,8 +79,8 @@ class Picklist extends Eloquent {
 		}
 
 		$query->groupBy('picklist.move_doc_number');
-
 		$result = $query->get();
+        DebugHelper::log(__METHOD__, $result);
 
 		// get the multiple stock piler fullname
 		foreach ($result as $key => $picklist) {
@@ -87,7 +90,6 @@ class Picklist extends Eloquent {
 		}
 
 		if($getCount) return count($result);
-
 		return $result;
 	}
 

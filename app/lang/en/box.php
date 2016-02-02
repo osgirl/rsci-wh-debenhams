@@ -5,6 +5,7 @@ return array(
 	'heading_title_detail_contents' 			=> 'Box Content',
 	'heading_title_add'			=> 'Create Box',
 	'heading_title_update'		=> 'Update Box',
+    'heading_title_assign_box' 	=> 'Assign Box/s to Stock Piler',
 
 	'entry_load'		=> 'Load Boxes',
 	'entry_load_create'	=> 'New Load Code',
@@ -13,12 +14,14 @@ return array(
 	'label_box_code'			=> 'Box Codes:',
 	'label_upc'					=> 'UPC:',
 	'label_load_code'			=> 'Load Code:',
-	'label_doc_no'		=> 'Document Number:',
+	'label_doc_no'		        => 'Document Number:',
+    'label_assign_to'			=> 'Assign To:',
 
 	'col_id' 					=> 'No.',
 	'col_id_export'				=> 'Id',
 	'col_store'					=> 'Store',
 	'col_box_code'				=> 'Box Code',
+    'col_box_assign'			=> 'Assign To',
 	'col_date_created'			=> 'Date Created',
 	'col_action'				=> 'Action',
 	'col_inuse'					=> 'In Use',
@@ -34,6 +37,7 @@ return array(
 	'button_export_box'			=> 'Export to PDF',
 	'button_load'				=> 'Load',
 	'button_add_store'			=> 'Add load',
+    'button_assign_to_user'	=> 'Assign to Stock Piler',
 
 	'text_confirm_delete'		=> 'Are you sure you want to delete the selected boxes?',
 	'text_confirm_delete_single'=> 'Are you sure you want to delete this box?',
@@ -41,6 +45,7 @@ return array(
 	'text_confirm_update'		=> 'Are your sure you want to update the box',
 	'text_confirm_cancel'		=> 'Are you sure you want to cancel?',
 	'text_confirm_load'	=> 'Are you sure you want to load the boxes?',
+    'text_confirm_assign'		=> 'Assign selected items?',
 
 	'text_success_create'		=> 'You have successfully created a box',
 	'text_fail_create'			=> 'This box already exists.',
@@ -51,13 +56,16 @@ return array(
 	'text_warning'				=> 'Close Boxed',
 	'text_success_load'		=> 'You have successfully loaded the boxes',
 	'text_fail_load'			=> 'Unable to load box.',
+    'text_success_assign'		=> 'Successfully assigned the Boxes!',
 
 	'error_delete'				=> 'Please select boxes to be deleted',
 	'error_required_fields'		=> 'Please complete required fields.',
 	'error_load'		=> 'Please choose box/s',
 	'error_load_no_load_code'	=> 'Please select load code',
+    'error_assign'				=> 'Please select the items to be assigned',
 
 	'entry_store'				=> 'Store: ',
 	'entry_box_code'			=> 'Box Code: ',
+    'entry_stock_piler'			=> 'Stock Piler:',
 
 );

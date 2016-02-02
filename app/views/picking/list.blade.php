@@ -35,6 +35,13 @@
 				        	</span>
 				        </div>
 
+                        <div>
+                            <span class="search-po-left-pane">{{ $label_tl }}</span>
+                            <span class="search-po-right-pane">
+                                {{ Form::text('filter_transfer_no', $filter_transfer_no, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_transfer_no")) }}
+                            </span>
+                        </div>
+
 				    </div>
 
 				    <div class="span5">
@@ -50,6 +57,13 @@
 				        		{{ Form::select('filter_stock_piler', array('' => $text_select) + $stock_piler_list, $filter_stock_piler, array('class'=>'select-width', 'id'=>"filter_stock_piler")) }}
 				        	</span>
 				        </div>
+				        <div>
+                            <span class="search-po-left-pane">{{ $label_action_date }}</span>
+                            <div class="search-po-right-pane input-append date">
+                                {{ Form::text('filter_action_date', $filter_action_date, array('class'=>'span2', 'id'=>"filter_action_date", 'readonly'=>'readonly')) }}
+                                <span class="add-on"><i class="icon-th"></i></span>
+                            </div>
+                        </div>
 
 				    </div>
 			      	<div class="span11 control-group collapse-border-top">
@@ -122,6 +136,7 @@
 					<th>{{ $col_receiving_stock_piler }}</th>
 					<th>ENTRY DATE</th>
 					<th>{{ $col_status }}</th>
+					<th>{{ $col_action_date }}</th>
 					<th>{{ $col_action }}</th>
 				</thead>
 				@if( !CommonHelper::arrayHasValue($picklist) )
@@ -156,6 +171,8 @@
 							<td>{{ $value['fullname'] }}</td>
 							<td>{{ date("M d, Y", strtotime($value['created_at'])) }}</td>
 							<td>{{ $value['data_display'] }}</td>
+							{{--<td>{{$value['action_date']}} </td>--}}
+							<td>{{ date("M d, Y", strtotime($value['action_date'])) }}</td>
 							<td class="align-center">
 								@if($value['data_display'] === 'Posted')
 									<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_posted }}</a> <br><br>
@@ -182,7 +199,6 @@
 									{{ Form::hidden('module', 'picklist') }}
 						  		{{ Form::close() }}
 							</td>
-
 						</tr>
 					@endforeach
 				@endif
@@ -226,7 +242,9 @@ $(document).ready(function() {
     	$('.picklist-ids-load').val(picklist_doc_no);
     	$('#load-picklist-modal').modal('show');
     });*/
-
+    $('.date').datepicker({
+      format: 'yyyy-mm-dd'
+    });
 
     $('.edit-picklist-single').click(function() {
     	var answer = confirm('{{ $text_confirm_change }}')
@@ -314,8 +332,7 @@ $(document).ready(function() {
 	});
 	// Clear Form
     $('#clearForm').click(function() {
-    	$('#filter_doc_no, #filter_status, #filter_type').val('');
-
+    	$('#filter_doc_no, #filter_status, #filter_type, #filter_transfer_no, #filter_action_date').val('');
 		$('select').val('');
 		$('#form-pick-list').submit();
     });

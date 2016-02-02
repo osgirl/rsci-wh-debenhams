@@ -16,13 +16,32 @@ class ApiBox extends BaseController {
 	public static function getBoxesByStore($storeCode)
 	{
 		try {
-			$boxes = Box::getBoxes($storeCode);
+			//$boxes = Box::getBoxes($storeCode);
+            $user_id = Authorizer::getResourceOwnerId();
+            $boxes = Box::getBoxesUserId($storeCode,$user_id);
 			return CommonHelper::return_success_message($boxes);
 		} catch (Exception $e) {
 			return CommonHelper::return_fail($e->getMessage());
 		}
 
 	}
+
+    /**
+     * Get boxes by store
+     *
+     * @example  www.example.com/api/{version}/boxes/{store_code}/{user_name}
+     * @return boxes
+     */
+    public static function getBoxesByStoreUserId($storeCode,$userid)
+    {
+        try {
+            $boxes = Box::getBoxesUserId($storeCode,$userid);
+            return CommonHelper::return_success_message($boxes);
+        } catch (Exception $e) {
+            return CommonHelper::return_fail($e->getMessage());
+        }
+
+    }
 
 	/**
 	* Post picking detail
@@ -227,6 +246,7 @@ class ApiBox extends BaseController {
 			DB::beginTransaction();
 
 			$storeCode = Request::get('store');
+            $user_id = Authorizer::getResourceOwnerId();
 			$numberOfBoxes = 1;
 
 			if(strlen($storeCode) == 1) $newStoreCodeFormat = "000{$storeCode}";
@@ -248,6 +268,7 @@ class ApiBox extends BaseController {
 				$formattedBoxCode[$number]['box_code'] = $newStoreCodeFormat . sprintf("%05s", (int)$boxCode);
 				$formattedBoxCode[$number]['store_code'] = $storeCode;
 				$formattedBoxCode[$number]['created_at'] = date('Y-m-d H:i:s');
+                $formattedBoxCode[$number]['userid'] = $user_id;
 				$containerBox[] = $newStoreCodeFormat . sprintf("%05s", (int)$boxCode);
 			}
 
@@ -264,6 +285,66 @@ class ApiBox extends BaseController {
 			return CommonHelper::return_fail($e->getMessage());
 		}
 	}
+
+    /**
+     * Create box in series by username
+     *
+     * @example  self::postCreateBoxByUserId();
+     *
+     * @param  store     store code
+     * @param  username  user name
+     * @return status is success/error
+     */
+    public static function postCreateBoxByUserId()
+    {
+        try {
+
+            CommonHelper::setRequiredFields(array('store'));
+            CommonHelper::setRequiredFields(array('userid'));
+
+            DB::beginTransaction();
+
+            $storeCode = Request::get('store');
+            // $userid = Request::get('userid');
+            $userid = Auth::user()->id;
+            $numberOfBoxes = 1;
+
+            if(strlen($storeCode) == 1) $newStoreCodeFormat = "000{$storeCode}";
+            else if(strlen($storeCode) == 2) $newStoreCodeFormat = "00{$storeCode}";
+            else if(strlen($storeCode) == 3) $newStoreCodeFormat = "0{$storeCode}";
+            else if(strlen($storeCode) == 4) $newStoreCodeFormat = "{$storeCode}";
+            else throw new Exception("Invalid store");
+
+            #check if a record exist in that store
+            $box = Box::where('box_code', 'LIKE', "{$newStoreCodeFormat}%")->max('box_code');
+            #if result is empty follow the format
+            if($box == null) $box = $newStoreCodeFormat."00000";
+            #if exists get the latest then increment box
+            $formattedBoxCode = array();
+            $containerBox = array(); //use for audit trail
+            foreach(range(1, $numberOfBoxes) as $number) {
+                $boxCode = substr($box, -5);
+                $boxCode = (int) $boxCode + $number;
+                $formattedBoxCode[$number]['box_code'] = $newStoreCodeFormat . sprintf("%05s", (int)$boxCode);
+                $formattedBoxCode[$number]['store_code'] = $storeCode;
+                $formattedBoxCode[$number]['created_at'] = date('Y-m-d H:i:s');
+                $formattedBoxCode[$number]['userid'] = $userid;
+                $containerBox[] = $newStoreCodeFormat . sprintf("%05s", (int)$boxCode);
+            }
+
+            Box::insert($formattedBoxCode);
+
+            $storeName = Store::getStoreName($storeCode);
+            $boxCodeInString = implode(',', $containerBox);
+
+            self::postCreateBoxAuditTrail($boxCodeInString, $storeName);
+            DB::commit();
+            return CommonHelper::return_success_message($containerBox[0]);
+        } catch (Exception $e) {
+            DB::rollback();
+            return CommonHelper::return_fail($e->getMessage());
+        }
+    }
 
 	private static function postCreateBoxAuditTrail($boxCode, $storeName)
 	{

@@ -33,7 +33,20 @@ class Box extends Eloquent {
     	$boxes = Box::where('store_code', '=', $storeCode)
     		->where('in_use', '=', Config::get('box_statuses.not_in_use'))
     		->lists('box_code');
-    	return $boxes;
+        DebugHelper::log(__METHOD__, $boxes);
+
+        return $boxes;
+    }
+
+    public static function getBoxesUserId($storeCode,$userid)
+    {
+        $boxes = Box::where('store_code', '=', $storeCode)
+            ->where('userid', '=', $userid)
+            ->where('in_use', '=', Config::get('box_statuses.not_in_use'))
+            ->lists('box_code');
+        DebugHelper::log(__METHOD__, $boxes);
+
+        return $boxes;
     }
 
 
@@ -63,11 +76,12 @@ class Box extends Eloquent {
             ->leftJoin('box_details', 'box_details.box_code', '=', 'box.box_code');
             */
 
-        $query = Box::select('box_details.picklist_detail_id', 'box.box_code', 'box.id', 'box.store_code', 'box.in_use', 'box.created_at', 'stores.store_name', 'picklist.pl_status')
+        $query = Box::select('box_details.picklist_detail_id', 'box.box_code', 'box.id', 'box.store_code', 'box.in_use', 'box.created_at', 'stores.store_name', 'picklist.pl_status', 'box.userid', 'users.username')
             ->join('stores', 'stores.store_code', '=', 'box.store_code')
             ->leftJoin('box_details', 'box_details.box_code', '=', 'box.box_code')
             ->leftJoin('picklist_details', 'picklist_details.id', '=', 'box_details.picklist_detail_id')
-            ->leftJoin('picklist', 'picklist.move_doc_number', '=', 'picklist_details.move_doc_number');
+            ->leftJoin('picklist', 'picklist.move_doc_number', '=', 'picklist_details.move_doc_number')
+            ->leftJoin('users', 'users.id', '=', 'box.userid');
 
         if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
             if ($data['sort']=='store') $data['sort'] = 'box.store_code';
@@ -84,6 +98,9 @@ class Box extends Eloquent {
         if( CommonHelper::hasValue($data['filter_box_code']) ) {
             $query->where('box.box_code', 'LIKE', '%'.$data['filter_box_code']. '%');
         }
+        if( CommonHelper::hasValue($data['filter_stock_piler']) ) {
+            $query->where('users.id', 'LIKE', $data['filter_stock_piler'] );
+        }
 
         if( CommonHelper::hasValue($data['limit']) && CommonHelper::hasValue($data['page']) )  {
             $query->skip($data['limit'] * ($data['page'] - 1))
@@ -93,6 +110,7 @@ class Box extends Eloquent {
 
         $result = $query->get();
 
+        DebugHelper::log(__METHOD__, $result);
 
         return $result;
     }
@@ -158,6 +176,18 @@ class Box extends Eloquent {
         // DebugHelper::log(__METHOD__, $boxlist);
         return $boxlist;
     }
+
+    public static function getInfoByBoxNos($data)
+    {
+        return Box::whereIn('box_code', $data)->get()->toArray();
+    }
+
+    public static function assignToStockPiler($Box_code = '', $data = array())
+    {
+        $query = Box::where('box_code', '=', $Box_code)->update($data);
+        DebugHelper::log(__METHOD__, $query);
+    }
+
 
 
     //TODO :: remove if not in use

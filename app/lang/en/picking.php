@@ -19,6 +19,8 @@ return array(
 	'label_doc_no'		=> 'Document Number:',
 	'label_status'		=> 'Status:',
 	'label_load_code'	=> 'Load Code:',
+    'label_tl'	=> 'Transfer no:',
+    'label_action_date'	=> 'Action Date:',
 
 	'label_sku'			=> 'UPC/SKU:',
 	'label_stock_piler'	=> 'Stock piler:',
@@ -41,6 +43,7 @@ return array(
 	'col_to_slot_code'	=> 'To slot code',
 	'col_qty_to_pick'	=> 'Quantity to pick',
 	'col_to_move'		=> 'Quantity picked',
+    'col_action_date'	=> 'Action Date',
 
 	'col_time_locked'			=> 'Time Locked',
 	'col_stock_piler'			=> 'Stock Piler',

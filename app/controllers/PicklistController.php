@@ -174,6 +174,9 @@ class PicklistController extends BaseController {
 		$filter_store = Input::get('filter_store', NULL);
 		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
 
+        $filter_transfer_no = Input::get('filter_transfer_no', NULL);
+        $filter_action_date = Input::get('filter_action_date', NULL);
+
 		$sort = Input::get('sort', 'doc_no');
 		$order = Input::get('order', 'ASC');
 		$page = Input::get('page', 1);
@@ -185,6 +188,8 @@ class PicklistController extends BaseController {
 						'filter_status' 		=> $filter_status,
 						'filter_store' 			=> $filter_store,
 						'filter_stock_piler' 	=> $filter_stock_piler,
+                        'filter_transfer_no' 	=> $filter_transfer_no,
+                        'filter_action_date' 	=> $filter_action_date,
 						'sort'					=> $sort,
 						'order'					=> $order,
 						'page'					=> $page,
@@ -201,6 +206,8 @@ class PicklistController extends BaseController {
 									'filter_status' 		=> $filter_status,
 									'filter_store' 			=> $filter_store,
 									'filter_stock_piler' 	=> $filter_stock_piler,
+                                    'filter_transfer_no' 	=> $filter_transfer_no,
+                                    'filter_action_date' 	=> $filter_action_date,
 									'sort'					=> $sort,
 									'order'					=> $order
 								);
@@ -213,6 +220,8 @@ class PicklistController extends BaseController {
 		$this->data['filter_status'] = $filter_status;
 		$this->data['filter_store'] = $filter_store;
 		$this->data['filter_stock_piler'] = $filter_stock_piler;
+        $this->data['filter_transfer_no'] = $filter_transfer_no;
+        $this->data['filter_action_date'] = $filter_action_date;
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
 		$this->data['page'] = $page;
@@ -220,6 +229,8 @@ class PicklistController extends BaseController {
 		$url = '?filter_type=' . $filter_type . '&filter_doc_no=' . $filter_doc_no;
 		$url .= '&filter_status=' . $filter_status . '&filter_store=' . $filter_store;
 		$url .= '&filter_stock_piler=' . $filter_stock_piler;
+        $url .= '&filter_transfer_no=' . $filter_transfer_no;
+        $url .= '&filter_action_date=' . $filter_action_date;
 		$url .= '&page=' . $page;
 
 		$order_doc_no = ($sort=='doc_no' && $order=='ASC') ? 'DESC' : 'ASC';

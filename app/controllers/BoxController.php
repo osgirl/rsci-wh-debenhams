@@ -40,21 +40,25 @@ class BoxController extends BaseController {
 		$this->data['text_confirm_delete'] 	= Lang::get('box.text_confirm_delete');
 		$this->data['text_confirm_delete_single'] 	= Lang::get('box.text_confirm_delete_single');
 		$this->data['text_confirm_load'] 	= Lang::get('box.text_confirm_load');
+        $this->data['text_confirm_assign'] 	= Lang::get('box.text_confirm_assign');
 
 		$this->data['button_create_box'] 	= Lang::get('box.button_create_box');
 		$this->data['button_export_box'] 	= Lang::get('box.button_export_box');
 		$this->data['button_delete_box'] 	= Lang::get('box.button_delete_box');
 		$this->data['button_load'] 			= Lang::get('box.button_load');
 		$this->data['button_add_store'] = Lang::get('box.button_add_store');
+        $this->data['button_assign_to_user'] = Lang::get('box.button_assign_to_user');
 
 		$this->data['label_store'] 		= Lang::get('box.label_store');
 		$this->data['label_box_code'] 	= Lang::get('box.label_box_code');
 		$this->data['label_load_code'] = Lang::get('box.label_load_code');
+        $this->data['label_assign_to'] = Lang::get('box.label_assign_to');
 		// $this->data['label_doc_no'] = Lang::get('box.label_doc_no');
 
 		$this->data['col_id'] 			= Lang::get('box.col_id');
 		$this->data['col_store'] 		= Lang::get('box.col_store');
 		$this->data['col_box_code'] 	= Lang::get('box.col_box_code');
+        $this->data['col_box_assign'] 	= Lang::get('box.col_box_assign');
 		$this->data['col_date_created'] = Lang::get('box.col_date_created');
 		$this->data['col_action'] 		= Lang::get('box.col_action');
 
@@ -65,6 +69,7 @@ class BoxController extends BaseController {
 		$this->data['error_load'] 		= Lang::get('box.error_load');
 		$this->data['error_load_no_load_code'] = Lang::get('box.error_load_no_load_code');
 		$this->data['load_codes']		= $this->getLoadCodes();
+        $this->data['url_assign']       = URL::to('box/assign'). $this->setURL();
 
 
 		// Message
@@ -74,10 +79,13 @@ class BoxController extends BaseController {
 		$this->data['success'] = '';
 		if (Session::has('success')) $this->data['success'] = Session::get('success');
 
+        $this->data['stock_piler_list'] = $this->getStockPilers();
+
 		$filter_store 		= Input::get('filter_store', NULL);
 		$filter_box_code	= Input::get('filter_box_code', NULL);
+        $filter_stock_piler = Input::get('filter_stock_piler', NULL);
 
-		$sort = Input::get('sort', 'box_code');
+        $sort = Input::get('sort', 'box_code');
 		$order = Input::get('order', 'ASC');
 		$page = Input::get('page', 1);
 
@@ -85,6 +93,7 @@ class BoxController extends BaseController {
 		$arrParams = array(
 						'filter_store' 			=> $filter_store,
 						'filter_box_code' 		=> $filter_box_code,
+                        'filter_stock_piler' 	=> $filter_stock_piler,
 						'sort'					=> $sort,
 						'order'					=> $order,
 						'page'					=> $page,
@@ -102,6 +111,7 @@ class BoxController extends BaseController {
 		$this->data['arrFilters'] = array(
 									'filter_store' 			=> $filter_store,
 									'filter_box_code' 		=> $filter_box_code,
+                                    'filter_stock_piler' 	=> $filter_stock_piler,
 									'sort'					=> $sort,
 									'order'					=> $order
 								);
@@ -114,6 +124,7 @@ class BoxController extends BaseController {
 
 		$this->data['filter_store'] = $filter_store;
 		$this->data['filter_box_code'] = $filter_box_code;
+        $this->data['filter_stock_piler'] = $filter_stock_piler;
 
 		$this->data['url_add_box'] = URL::to('box/create' . $this->setURL());
 		$this->data['url_update_box'] =  URL::to('box/update' . $this->setURL());
@@ -127,7 +138,7 @@ class BoxController extends BaseController {
 		$this->data['order'] = $order;
 		$this->data['page'] = $page;
 
-		$url = '?filter_store=' . $filter_store . '&filter_box_code=' . $filter_box_code;
+		$url = '?filter_store=' . $filter_store . '&filter_box_code=' . $filter_box_code .  '&filter_stock_piler=' . $filter_stock_piler;
 		$url .= '&page=' . $page;
 
 		$order_store = ($sort=='store' && $order=='ASC') ? 'DESC' : 'ASC';
@@ -765,4 +776,109 @@ class BoxController extends BaseController {
 		);
 		AuditTrail::addAuditTrail($arrParams);
 	}
+
+    private function getStockPilers()
+    {
+        $stock_pilers = array();
+        foreach (User::getStockPilerOptions() as $item) {
+            $stock_pilers[$item->id] = $item->firstname . ' ' . $item->lastname;
+        }
+        return array('' => Lang::get('general.text_select')) + $stock_pilers;
+    }
+
+    public function assignPilerForm() {
+
+        if (Session::has('permissions')) {
+            if (!in_array('CanAssignPacking', unserialize(Session::get('permissions'))))  {
+                return Redirect::to('purchase_order');
+            }
+        } else {
+            return Redirect::to('users/logout');
+        }
+
+        // Search Filters
+        $filter_type = Input::get('filter_type', NULL);
+        $filter_doc_no = Input::get('filter_doc_no', NULL);
+        $filter_status = Input::get('filter_status', NULL);
+        $filter_store = Input::get('filter_store', NULL);
+        $filter_stock_piler = Input::get('filter_stock_piler', NULL);
+
+        $sort = Input::get('sort', 'box_code');
+        $order = Input::get('order', 'ASC');
+        $page = Input::get('page', 1);
+
+        $this->data                     = Lang::get('box');
+        $this->data['doc_no']           = Input::get('box_code');
+
+        $this->data['filter_type'] = $filter_type;
+        $this->data['filter_doc_no'] = $filter_doc_no;
+        $this->data['filter_status'] = $filter_status;
+        $this->data['filter_store'] = $filter_store;
+        $this->data['filter_stock_piler'] = $filter_stock_piler;
+        $this->data['sort'] = $sort;
+        $this->data['order'] = $order;
+        $this->data['page'] = $page;
+
+        $this->data['stock_piler_list'] = $this->getStockPilers();
+        $this->data['button_assign']    = Lang::get('general.button_assign');
+        $this->data['button_cancel']    = Lang::get('general.button_cancel');
+        $this->data['url_back']         = URL::to('picking/list'). $this->setURL();
+        $this->data['params']           = explode(',', Input::get('box_code'));
+        $this->data['info']             = Box::getInfoByBoxNos($this->data['params']);
+
+        $this->layout->content          = View::make('box.assign_piler_form', $this->data);
+    }
+
+    /**
+     * Assign stock piler to purchase order
+     *
+     * @example  www.example.com/purchase_order/assign_to_piler
+     *
+     * @param  po_no         int    Purchase order number
+     * @param  stock_piler   int    Stock piler id
+     * @return Status
+     */
+    public function assignToStockPiler() {
+        // Check Permissions
+        $pilers = implode(',' , Input::get('stock_piler'));
+
+        //get moved_to_reserve id
+        //$arrParams = array('data_code' => 'BOX_STATUS_TYPE', 'data_value'=> 'assigned');
+        //$boxStatus = Dataset::getType($arrParams)->toArray();
+
+        $arrBoxCode = explode(',', Input::get("doc_no"));
+
+        foreach ($arrBoxCode as $box_codes) {
+            $arrParams = array(
+                'userid' 	    => $pilers,
+                'updated_at' 	=> date('Y-m-d H:i:s')
+            );
+            Box::assignToStockPiler($box_codes, $arrParams);
+
+            // AuditTrail
+            $users = User::getUsersFullname(Input::get('stock_piler'));
+
+            $fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $users));
+
+            $data_before = '';
+            $data_after = 'Box Code: ' . $box_codes . ' assigned to ' . $fullname;
+
+            $arrParams = array(
+                'module'		=> Config::get('audit_trail_modules.boxing'),
+                'action'		=> Config::get('audit_trail.update_box'),
+                'reference'		=> $box_codes,
+                'data_before'	=> $data_before,
+                'data_after'	=> $data_after,
+                'user_id'		=> Auth::user()->id,
+                'created_at'	=> date('Y-m-d H:i:s'),
+                'updated_at'	=> date('Y-m-d H:i:s')
+            );
+            AuditTrail::addAuditTrail($arrParams);
+            // AuditTrail
+        }
+
+
+        return Redirect::to('box/list' . $this->setURL())->with('message', Lang::get('box.text_success_assign'));
+
+    }
 }
