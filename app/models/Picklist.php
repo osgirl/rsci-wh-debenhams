@@ -13,46 +13,12 @@ class Picklist extends Eloquent {
 			->first()->toArray();
 		return $picklist;
 	}
-
-	public static function getPickingList($data= array(), $getCount=false)
-	{
-		$query = Picklist::select(DB::raw('wms_picklist.*, sum(wms_picklist_details.move_to_shipping_area) as sum_moved, sum(wms_picklist_details.assigned_user_id) as sum_assigned, store_code' ))
-			->join('picklist_details', 'picklist_details.move_doc_number', '=', 'picklist.move_doc_number');
-
-		if( CommonHelper::hasValue($data['filter_doc_no']) ) $query->where('picklist.move_doc_number', 'LIKE', '%'. $data['filter_doc_no'] . '%');
-		if( CommonHelper::hasValue($data['filter_type']) ) $query->where('type', '=',  $data['filter_type']);
-		if( CommonHelper::hasValue($data['filter_status']) ) $query->where('pl_status', '=', $data['filter_status']);
-
-		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
-			if($data['sort'] == 'doc_no') $data['sort'] = 'picklist.move_doc_number';
-			$query->orderBy($data['sort'], $data['order']);
-		}
-
-
-		if( CommonHelper::hasValue($data['limit']) && CommonHelper::hasValue($data['page']) && !$getCount)  {
-			$query->skip($data['limit'] * ($data['page'] - 1))
-		          ->take($data['limit']);
-		}
-		$query->groupBy('picklist.move_doc_number');
-		$result = $query->get();
-
-		return $result;
-	}
-
-	public static function getPickingListCount($data)
-	{
-		$query = Picklist::select('*');
-		if( CommonHelper::hasValue($data['filter_doc_no']) ) $query->where('move_doc_number', 'LIKE', '%'. $data['filter_doc_no'] . '%');
-		if( CommonHelper::hasValue($data['filter_type']) ) $query->where('type', '=',  $data['filter_type']);
-		if( CommonHelper::hasValue($data['filter_status']) ) $query->where('pl_status', '=', $data['filter_status']);
-
-		$result = $query->count();
-
-		return $result;
-
-	}
-
-	public static function getPickingListv2($data= array(), $getCount=false)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+public static function getPickingListv2($data= array(), $getCount=false)
 	{
 		// $query = Picklist::select(DB::raw('wms_picklist.*, sum(wms_picklist_details.move_to_shipping_area) as sum_moved, sum(wms_picklist_details.assigned_user_id) as sum_assigned, store_code' ))
 
@@ -92,6 +58,46 @@ class Picklist extends Eloquent {
 		if($getCount) return count($result);
 		return $result;
 	}
+
+	public static function getPickingList($data= array(), $getCount=false)
+	{
+		$query = Picklist::select(DB::raw('wms_picklist.*, sum(wms_picklist_details.move_to_shipping_area) as sum_moved, sum(wms_picklist_details.assigned_user_id) as sum_assigned, store_code' ))
+			->join('picklist_details', 'picklist_details.move_doc_number', '=', 'picklist.move_doc_number');
+
+		if( CommonHelper::hasValue($data['filter_doc_no']) ) $query->where('picklist.move_doc_number', 'LIKE', '%'. $data['filter_doc_no'] . '%');
+		if( CommonHelper::hasValue($data['filter_type']) ) $query->where('type', '=',  $data['filter_type']);
+		if( CommonHelper::hasValue($data['filter_status']) ) $query->where('pl_status', '=', $data['filter_status']);
+
+		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
+			if($data['sort'] == 'doc_no') $data['sort'] = 'picklist.move_doc_number';
+			$query->orderBy($data['sort'], $data['order']);
+		}
+
+
+		if( CommonHelper::hasValue($data['limit']) && CommonHelper::hasValue($data['page']) && !$getCount)  {
+			$query->skip($data['limit'] * ($data['page'] - 1))
+		          ->take($data['limit']);
+		}
+		$query->groupBy('picklist.move_doc_number');
+		$result = $query->get();
+
+		return $result;
+	}
+
+	public static function getPickingListCount($data)
+	{
+		$query = Picklist::select('*');
+		if( CommonHelper::hasValue($data['filter_doc_no']) ) $query->where('move_doc_number', 'LIKE', '%'. $data['filter_doc_no'] . '%');
+		if( CommonHelper::hasValue($data['filter_type']) ) $query->where('type', '=',  $data['filter_type']);
+		if( CommonHelper::hasValue($data['filter_status']) ) $query->where('pl_status', '=', $data['filter_status']);
+
+		$result = $query->count();
+
+		return $result;
+
+	}
+
+	
 
 	public static function changeToStore($docNo)
 	{

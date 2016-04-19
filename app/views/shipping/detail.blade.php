@@ -41,6 +41,7 @@
 							<tr>
 								<th>{{ $col_dt_sku }}</th>
 								<th>{{ $col_dt_packed_qty }}</th>
+								
 							</tr>
 						</thead>
 						@if( !CommonHelper::arrayHasValue($details) ) 

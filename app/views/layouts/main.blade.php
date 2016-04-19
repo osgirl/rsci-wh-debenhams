@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>{{ $title_brand }}</title>
+<title>CCRi</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="shortcut icon" href="{{asset('resources/img/favicon.ico')}}" />
@@ -96,10 +96,10 @@
             <li><a href="{{ URL::to('picking/list') }}">{{ $menu_picking }}</a></li>
 			    @endif
           @if ( CommonHelper::valueInArray('CanAccessBoxingLoading', $permissions) )
-            <li><a href="{{ URL::to('box/list') }}">{{ $menu_carton }}</a></li>
+            <li><a href="{{ URL::to('box/list') }}">Loading</a></li>
           @endif
           @if ( CommonHelper::valueInArray('CanAccessShipping', $permissions) )
-            <li><a href="{{ URL::to('load/list') }}">{{ $menu_load }}</a></li>
+            <li><a href="{{ URL::to('load/list') }}">Stocks Transfer</a></li>
           @endif
       </ul>
 		</li>
@@ -107,23 +107,43 @@
 
     @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) ||
     CommonHelper::valueInArray('CanAccessStoreReturn', $permissions))
-		<li class="dropdown">
-			<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-				<i class="icon-inbox"></i>
-				<span>{{ $menu_str_receiving }}</span>
-				<b class="caret"></b>
-			</a>
+    <li class="dropdown">
+      <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+        <i class="icon-inbox"></i>
+        <span>{{ $menu_str_receiving }}</span>
+        <b class="caret"></b>
+      </a>
 
-			<ul class="dropdown-menu">
-			    @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) )
+      <ul class="dropdown-menu">
+          @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) )
             <li><a href="{{ URL::to('store_order') }}">{{ $menu_store_order }}</a></li>
           @endif
+          <!--
           @if ( CommonHelper::valueInArray('CanAccessStoreReturn', $permissions) )
             <li><a href="{{ URL::to('store_return') }}">{{ $menu_store_return }}</a></li>
           @endif
-			</ul>
-		</li>
-		@endif <!--end if drop down for store receiving-->
+          -->
+      </ul>
+    </li>
+    @endif <!--end if drop down for store receiving-->
+
+    @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) ||
+    CommonHelper::valueInArray('CanAccessStoreReturn', $permissions))
+    <li class="dropdown">
+      <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+        <i class="icon-refresh"></i>
+        <span>Reverse Logistics</span>
+        <b class="caret"></b>
+      </a>
+
+      <ul class="dropdown-menu">
+          @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) )
+            <li><a href="{{ URL::to('reverse_logistic') }}">Reverse Logistics</a></li>
+          @endif
+          
+      </ul>
+    </li>
+    @endif <!--end if drop down for store receiving-->
 
 		@if ( CommonHelper::valueInArray('CanAccessProductMasterList', $permissions) ||
     CommonHelper::valueInArray('CanAccessSlotMasterList', $permissions) ||
@@ -135,7 +155,7 @@
         <li class="@if(Route::currentRouteUses('ProductListController@showIndex') || Route::currentRouteUses('SlotListController@showIndex') || Route::currentRouteUses('AuditTrailController@showIndex')) active @endif dropdown">
 			<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
 				<i class="icon-list-alt"></i>
-				<span>{{ $menu_reports }}</span>
+				<span>Masterlist</span>
 				<b class="caret"></b>
 			</a>
 
@@ -159,9 +179,11 @@
         @if ( CommonHelper::valueInArray('CanAccessUnlisted', $permissions) )
         <li><a href="{{ URL::to('unlisted') }}">{{ $menu_unlisted_list }}</a></li>
         @endif
+        <!--
         @if ( CommonHelper::valueInArray('CanAccessExpiryItems', $permissions) )
         <li><a href="{{ URL::to('expiry_items') }}">{{ $menu_expiry_items }}</a></li>
         @endif
+        -->
 				@if ( CommonHelper::valueInArray('CanAccessAuditTrail', $permissions) )
 				<li><a href="{{ URL::to('audit_trail') }}">{{ $menu_audit_trail }}</a></li>
 				@endif

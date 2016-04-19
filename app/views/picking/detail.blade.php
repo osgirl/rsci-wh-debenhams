@@ -1,15 +1,16 @@
 <div class="control-group">
 	<a href="{{ $url_back }}" class="btn btn-info btn-darkblue"> <i class="icon-chevron-left"></i> {{ $button_back }}</a>
+	<!--
 	@if ( CommonHelper::valueInArray('CanExportPacking', $permissions) )
 	<a href="{{$url_export_detail}}" class="btn btn-info btn-darkblue"> {{ $button_export_detail }}</a>
 	@endif
-
+	-->
 </div>
 
 <div class="control-group">
 	<div class="controls">
 		<div class="accordion" id="accordion2">
-          <div class="accordion-group" style="background-color: #FFFFFF;">
+          <div class="accordion-group" style="background-color: #;">
             {{ Form::open(array('url'=>$url_detail, 'class'=>'form-signin', 'id'=>'form-picking-detail', 'role'=>'form', 'method' => 'get')) }}
             <div id="collapseOne" class="accordion-body collapse in" style="padding-top: 20px;">
 	                <div class="span4">
@@ -91,6 +92,7 @@
 				<thead>
 					<tr>
 						<th>{{ $col_no }}</th>
+						<th>{{ $col_store_name }}</th>
 						<th><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif">{{ $col_sku }}</a></th>
 						<th><a href="{{ $sort_upc }}" class="@if( $sort=='upc' ) {{ $order }} @endif">{{ $col_upc }}</a></th>
 						<th>SHORT DESCRIPTION</th>
@@ -98,8 +100,7 @@
 						<th><a href="{{ $sort_from_slot_code }}" class="@if( $sort=='from_slot_code' ) {{ $order }} @endif">{{ $col_from_slot_code }}</th>
 						<th>{{ $col_qty_to_pick }}</th>
 						<th>{{ $col_to_move }}</th>
-						<th>{{ $col_store_name }}</th>
-						<th>{{ $col_store_code }}</th>
+						<th>Variance</th>
 						<!-- <th>{{ $col_status }}</th> -->
 					</tr>
 				</thead>
@@ -115,6 +116,7 @@
 					@endif
 					>
 						<td>{{$counter++}}</td>
+						<td>{{$pd['store_name']}}</td>
 						<td>{{$pd['sku']}}</td>
 						<td>{{$pd['upc']}}</td>
 						<td>{{$pd['short_description']}}</td>
@@ -122,8 +124,7 @@
 						<td>{{$pd['from_slot_code']}}</td>
 						<td>{{$pd['quantity_to_pick']}}</td>
 						<td>{{$pd['moved_qty']}}</td>
-						<td>{{$pd['store_name']}}</td>
-						<td>{{$pd['store_code']}}</td>
+						<td>{{$pd['quantity_to_pick'] - $pd['moved_qty']}}</td>
 
 					</tr>
 					@endforeach

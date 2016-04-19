@@ -171,8 +171,8 @@ class UnlistedController extends BaseController {
 		$order_reference = ($sort=='reference_no' && $order=='ASC') ? 'DESC' : 'ASC';
 		$order_sku = ($sort=='sku' && $order=='ASC') ? 'DESC' : 'ASC';
 
-		$this->data['sort_reference'] = URL::to('unlisted' . $url . '&sort=reference_no&order=' . $order_reference, NULL, FALSE);
-		$this->data['sort_sku'] = URL::to('unlisted' . $url . '&sort=sku&order=' . $order_sku, NULL, FALSE);
+		$this->data['sort_reference'] = URL::to('purchase_order/unlisted' . $url . '&sort=reference_no&order=' . $order_reference, NULL, FALSE);
+		$this->data['sort_sku'] = URL::to('purchase_order/unlisted' . $url . '&sort=sku&order=' . $order_sku, NULL, FALSE);
 
 		// Permissions
 		$this->data['permissions'] = unserialize(Session::get('permissions'));

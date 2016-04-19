@@ -40,7 +40,7 @@
 	<div class="div-paginate">
 		@if(CommonHelper::arrayHasValue($stores) )
 		    <h6 class="paginate">
-				<span>{{ $stores->appends($arrFilters)->links() }}&nbsp;</span>
+				<span>{{ $stores->links() }}&nbsp;</span>
 			</h6>
 		@else
 			&nbsp;

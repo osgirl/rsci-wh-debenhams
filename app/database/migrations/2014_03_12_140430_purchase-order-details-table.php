@@ -25,6 +25,9 @@ class PurchaseOrderDetailsTable extends Migration {
 			$table->float('unit_price')->default(0);
 			$table->integer('quantity_delivered');
 			$table->timestamp('expiry_date')->default('0000-00-00 00:00:00');
+			$table->integer('assigned_by');
+			$table->string('assigned_to_user_id', 30)->default(0);
+			$table->tinyInteger('po_status')->default(1);
 			// $table->softDeletes();
 			$table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
 			$table->timestamp('updated_at')->default('0000-00-00 00:00:00');

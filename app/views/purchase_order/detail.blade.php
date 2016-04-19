@@ -1,10 +1,9 @@
 <div class="control-group">
+
 	<a href="{{ $url_back }}" class="btn btn-info btn-darkblue"> <i class="icon-chevron-left"></i> {{ $button_back }}</a>
 
-	@if ( CommonHelper::valueInArray('CanSyncPurchaseOrders', $permissions) && $po_info->data_display != 'Closed')
-	<!-- <a class="btn btn-info">{{ $button_jda }}</a> -->
-	@endif
-
+	
+	<!--
 	@if ( CommonHelper::valueInArray('CanExportPurchaseOrders', $permissions) )
 	<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
 	@endif
@@ -14,6 +13,7 @@
 			<a style="width: 145px;" class="btn" title="{{ $text_assigned }}" disabled="disabled">{{ $text_assigned }}</a>
 		@else
 			<!-- <a style="width: 145px;" href="#myModal" role="button" class="btn btn-success assignPO" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal" data-id="{{ $po_info->purchase_order_no }}">{{ $button_assign_to_stock_piler }}</a> -->
+	<!--
 			<a style="width: 145px;" role="button" class="btn btn-info btn-darkblue assignPO" title="{{ $button_assign_to_stock_piler }}" data-id="{{ $po_info->purchase_order_no }}">{{ $button_assign_to_stock_piler }}</a>
 		@endif
 	@endif
@@ -27,9 +27,11 @@
 			<a style="width: 70px;" disabled="disabled" class="btn">{{ $button_close_po }}</a>
 
 		@endif
+	-->
 
-		{{ Form::open(array('url'=>'purchase_order/close_po', 'id' => 'closePO_' . $po_info->purchase_order_no, 'style' => 'margin: 0px;')) }}
-			{{ Form::hidden('po_no', $po_info->purchase_order_no) }}
+<!--
+		{{ Form::open(array('url'=>'purchase_order/close_po', 'id' => 'closePO_', 'style' => 'margin: 0px;')) }}
+			{{ Form::hidden('po_no', '') }}
 			{{ Form::hidden('invoice_no') }}
 			{{ Form::hidden('invoice_amount') }}
 			{{ Form::hidden('filter_po_no', $filter_po_no) }}
@@ -49,6 +51,7 @@
   		{{ Form::close() }}
 
 	@endif
+	-->
 </div>
 
 <!-- PO Detail -->
@@ -65,35 +68,28 @@
 		        	<span class="right-pane">{{ Form::text('purchase_order_no', $po_info->purchase_order_no, array('readonly' => 'readonly')) }}</span>
 		        </div>
 		        <div>
-		        	<span class="left-pane">{{ $label_receiver_no }}</span>
-		        	<span class="right-pane">{{ Form::text('receiver_no', $po_info->receiver_no, array('readonly' => 'readonly')) }}</span>
+		        	<span class="left-pane">{{ $label_stock_piler }}</span>
+		        	<span class="right-pane">{{ Form::text('name', $po_info->firstname .' '.$po_info->lastname, array('readonly' => 'readonly')) }}</span>
 		        </div>
-		        <!-- <div>
-		        	<span class="left-pane">{{ $label_supplier }}</span>
-		        	<span class="right-pane">{{ Form::text('vendor_name', $po_info->vendor_name, array('readonly' => 'readonly')) }}</span>
-		        </div> -->
 	      	</div>
 
 	      	<div class="span4">
 	      		<div>
-		        	<span class="left-pane">{{ $label_entry_date }}</span>
+		        	<span class="left-pane">{{ $label_entry_date.' :' }}</span>
 		        	<span class="right-pane">{{ Form::text('entry_date', date('M d, Y', strtotime($po_info->created_at)), array('readonly' => 'readonly')) }}</span>
 		        </div>
 		        <div>
 		        	<span class="left-pane">{{ $label_status }}</span>
 		        	<span class="right-pane">{{ Form::text('data_display', $po_info->data_display, array('readonly' => 'readonly')) }}</span>
 		        </div>
-		        <div>
-		        	<span class="left-pane">{{ $label_stock_piler }}</span>
-		        	<span class="right-pane">{{ Form::text('name', $po_info->fullname, array('readonly' => 'readonly')) }}</span>
-		        </div>
+		        
 	      </div>
 
 	      <div class="span4">
-
-		        <div>
-		        	<span class="left-pane">{{ $label_app_sync }}</span>
-		        	<span class="right-pane">{{ Form::text('latest_mobile_sync_date', ($po_info->latest_mobile_sync_date!='0000-00-00 00:00:00') ? date('M d, Y H:i:s', strtotime($po_info->latest_mobile_sync_date)) : '', array('readonly' => 'readonly')) }}</span>
+				
+		       <div>
+		        	<span class="left-pane">Division :</span>
+		        	<span class="right-pane">{{ Form::text('division', $po_info->division, array('readonly' => 'readonly')) }}</span>
 		        </div>
 	      </div>
 	   </div>
@@ -119,7 +115,7 @@
     </div>
     <!-- /widget-header -->
     <div class="widget-content">
-    	<div class="table-responsive">
+    	<div class="table-responsive" onkeypress="return isNumber(event)">
 			<table class="table table-bordered">
 				<thead>
 					<tr>
@@ -127,10 +123,11 @@
 						<th><a href="{{ $sort_sku }}" class="@if( $sort_detail=='sku' ) {{ $order_detail }} @endif">{{ $col_sku }}</a></th>
 						<th><a href="{{ $sort_upc }}" class="@if( $sort_detail=='upc' ) {{ $order_detail }} @endif">{{ $col_upc }}</a></th>
 						<th><a href="{{ $sort_short_name }}" class="@if( $sort_detail=='short_name' ) {{ $order_detail }} @endif">{{ $col_short_name }}</a></th>
-						<th>{{ $col_expiry_date }}</th>
+						<!--<th>{{ $col_expiry_date }}</th> -->
 						<th><a href="{{ $sort_expected_quantity }}" class="@if( $sort_detail=='expected_quantity' ) {{ $order_detail }} @endif">{{ $col_expected_quantity }}</a></th>
 						<th><a href="{{ $sort_received_quantity }}" class="@if( $sort_detail=='received_quantity' ) {{ $order_detail }} @endif">{{ $col_received_quantity }}</a></th>
 						<th> VARIANCE </th>
+						<th> NOT IN PO </th>
 					</tr>
 				</thead>
 				@if( !CommonHelper::arrayHasValue($purchase_orders) )
@@ -148,16 +145,23 @@
 						<td>{{ $po->sku }}</td>
 						<td>{{ $po->upc }}</td>
 						<td>{{ $po->short_description }}</td>
-						<td>
-							@if ($po->expiry_date == '0000-00-00 00:00:00' )
-								N/A
-							@else
-								{{ date('M d, Y', strtotime($po->expiry_date)) }}
-							@endif
-						</td>
 						<td>{{ $po->quantity_ordered }}</td>
-						<td>{{ $po->quantity_delivered }}</td>
+						@if ( $po_info->data_display <> 'Posted')
+							<td class="align-center" style="padding-top: 20px;" style="padding-top: 20px;">
+								{{ Form::open(array('url'=>'purchase_order/updateqty', 'class'=>'form-signin', 'id'=>'form-purchase-order', 'role'=>'form', 'method' => 'get')) }}
+									{{ Form::hidden('sku', $po->upc) }}
+									{{ Form::hidden('receiver_no',  Input::get('receiver_no', NULL)) }}
+									{{ Form::hidden('division',  Input::get('division', NULL)) }}
+									{{ Form::text('quantity', $po->quantity_delivered, array('class'=>'form-signin', 'placeholder'=>'', 'id'=>"$po_info->sku")) }}
+								{{ Form::close() }}
+							</td>
+						@else
+							<td>{{ $po->quantity_delivered }}</td>
+						@endif
+
+						
 						<td>{{ $po->quantity_delivered - $po->quantity_ordered  }}</td>
+						<td>No</td>
 					</tr>
 					@endforeach
 				@endif
@@ -262,6 +266,20 @@ $(document).ready(function() {
 
     	$('#po_no').val(purchase_no);
     });*/
+
+
+
+
+
+function isNumber(evt) {
+	evt = (evt) ? evt : window.event;
+	var charCode = (evt.which) ? evt.which : evt.keyCode;
+	if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+		return false;
+	}
+return true;
+}
+										  
 
 	$('.assignPO').click(function() {
 

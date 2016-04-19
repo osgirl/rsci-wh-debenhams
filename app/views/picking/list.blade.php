@@ -22,7 +22,7 @@
 
 			      	<div class="span5">
 			      		<div>
-				        	<span class="search-po-left-pane">{{ $label_doc_no }}</span>
+				        	<span class="search-po-left-pane">TL Number :</span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::text('filter_doc_no', $filter_doc_no, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_doc_no")) }}
 				        	</span>
@@ -34,17 +34,18 @@
 				        		{{ Form::select('filter_status', array('' => $text_select) + $pl_status_type, $filter_status, array('class'=>'select-width', 'id'=>"filter_status")) }}
 				        	</span>
 				        </div>
-
+				    <!--
                         <div>
                             <span class="search-po-left-pane">{{ $label_tl }}</span>
                             <span class="search-po-right-pane">
                                 {{ Form::text('filter_transfer_no', $filter_transfer_no, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_transfer_no")) }}
                             </span>
                         </div>
-
+					-->
 				    </div>
 
 				    <div class="span5">
+				       
 				        <div>
 				        	<span class="search-po-left-pane">{{ $label_store }}</span>
 				        	<span class="search-po-right-pane">
@@ -52,11 +53,12 @@
 				        	</span>
 				        </div>
 				        <div>
-				        	<span class="search-po-left-pane">{{ $label_receiver }}</span>
+				        	<span class="search-po-left-pane">Picker :</span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::select('filter_stock_piler', array('' => $text_select) + $stock_piler_list, $filter_stock_piler, array('class'=>'select-width', 'id'=>"filter_stock_piler")) }}
 				        	</span>
 				        </div>
+				     <!--
 				        <div>
                             <span class="search-po-left-pane">{{ $label_action_date }}</span>
                             <div class="search-po-right-pane input-append date">
@@ -64,8 +66,11 @@
                                 <span class="add-on"><i class="icon-th"></i></span>
                             </div>
                         </div>
-
+					-->
 				    </div>
+
+
+				    
 			      	<div class="span11 control-group collapse-border-top">
 			      		<a class="btn btn-success btn-darkblue" id="submitForm">{{ $button_search }}</a>
 		      			<a class="btn" id="clearForm">{{ $button_clear }}</a>
@@ -100,16 +105,23 @@
 		<!-- @endif -->
 		<!-- <a role="button" class="btn btn-info multi-change-to-store" title="{{ $button_change_to_store }}" data-toggle="modal">{{ $button_change_to_store }}</a> -->
 		@if ( CommonHelper::valueInArray('CanAssignPacking', $permissions))
-			<a role="button" class="btn btn-info btn-darkblue assignPicklist" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a>
+			<a role="button" class="btn btn-info btn-darkblue assignPicklist" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">Assign Picker</a>
 		@endif
 		@if ( CommonHelper::valueInArray('CanExportPacking', $permissions) )
-			<a href="{{$url_export}}" class="btn btn-info btn-darkblue">{{ $button_export }}</a>
+			<a href="{{$url_export}}" class="btn btn-info btn-darkblue">Report</a>
 		@endif
+
+		@if ( CommonHelper::valueInArray('CanSyncPurchaseOrders', $permissions) )
+			<a class="btn btn-info btn-darkblue" href={{URL::to('purchase_order/pulljda')}}>Pull Data(JDA)</a>
+		@endif
+					
 
 		@if ( CommonHelper::valueInArray('CanViewPickingLockTags', $permissions) )
 		<!-- <a href="{{$url_lock_tags}}" class="btn btn-info btn-darkblue">{{ $button_to_lock_tags }}</a> -->
 		@endif
-	</div>
+
+ 
+	
 </div>
 
 
@@ -130,13 +142,12 @@
 					<th style="width: 20px;" class="align-center"><input type="checkbox" id="main-selected" /></th>
 					@endif
 					<th>{{ $col_no }}</th>
-					<th style="width: 20px;"><a href="{{ $sort_doc_no }}" class="@if( $sort=='doc_no' ) {{ $order }} @endif">{{ $col_doc_no }}</a></th>
-					<th>{{ $col_so_no }}</th>
+					<th style="width: 20px;"><a href="{{ $sort_doc_no }}" class="@if( $sort=='doc_no' ) {{ $order }} @endif">TL Number</a></th>
+					<th>Ship By Date</th>
+					<th>Division</th>
 					<th>STORE</th>
-					<th>{{ $col_receiving_stock_piler }}</th>
-					<th>ENTRY DATE</th>
+					<th>PICKER</th>
 					<th>{{ $col_status }}</th>
-					<th>{{ $col_action_date }}</th>
 					<th>{{ $col_action }}</th>
 				</thead>
 				@if( !CommonHelper::arrayHasValue($picklist) )
@@ -166,26 +177,34 @@
 								{{ $value['move_doc_number'] }}
 								@endif
 							</td>
-							<td>{{$value['so_no']}} </td>
-							<td>{{ Store::getStoreName($value['store_code']) }}</td>
-							<td>{{ $value['fullname'] }}</td>
+
 							<td>{{ date("M d, Y", strtotime($value['created_at'])) }}</td>
+							<td>{{ $value['division'] }}</td>
+							<td>{{ Store::getStoreName($value['store_code']) }}</td>
+							<!--<td>{{ Store::getStoreName($value['store_code']) }}</td>-->
+							<td>{{ $value['fullname'] }}</td>
+					<!--		<td>{{ date("M d, Y", strtotime($value['created_at'])) }}</td>   -->
 							<td>{{ $value['data_display'] }}</td>
 							{{--<td>{{$value['action_date']}} </td>--}}
-							<td>{{ date("M d, Y", strtotime($value['action_date'])) }}</td>
+					<!--		<td>{{ date("M d, Y", strtotime($value['action_date'])) }}</td>    -->
 							<td class="align-center">
 								@if($value['data_display'] === 'Posted')
 									<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_posted }}</a> <br><br>
-									<a href="{{url('picking/printboxlabel/' .$value['move_doc_number'] ). $url_back}}" target="_blank" class="btn btn-success">Print Box Label</a>
+									<a href="{{url('picking/printboxlabel/' .$value['move_doc_number'] ). $url_back}}" target="_blank" class="btn btn-info">Print MTS</a>
 									 <!-- && ($value['quantity_to_pick'] != $value['moved_qty']) -->
 								@elseif ( $value['data_display'] === 'Done' )
+
+
 									@if(is_array(PicklistDetails::getPicklistLoad($value['move_doc_number'])) && CommonHelper::arrayHasValue(PicklistDetails::getPicklistLoad($value['move_doc_number'])))
 										<a style="width: 70px;" class="btn btn-success closePicklist" data-id="{{ $value['move_doc_number'] }}">{{ $button_close_picklist }}</a> <br><br>
 									@endif
-									<a href="{{url('picking/printboxlabel/' .$value['move_doc_number'] ). $url_back}}" target="_blank" class="btn btn-success">Print Box Label</a>
+									<a href="{{url('picking/printboxlabel/' .$value['move_doc_number'] ). $url_back}}" target="_blank" class="btn btn-success">Print Box Label</a> 
 								@else
-									<a style="width: 70px;" disabled="disabled" class="btn">{{ $button_close_picklist }}</a>
+									&nbsp;&nbsp;<a style="width: 70px;" disabled="disabled" class="btn">{{ $button_close_picklist }}</a>
+									&nbsp;&nbsp;<a href="" target="_blank" class="btn btn-info">Print MTS</a>
 								@endif
+
+								
 
 								{{ Form::open(array('url'=>'picking/close', 'id' => 'closePicklist_' . $value['move_doc_number'], 'style' => 'margin: 0px;')) }}
 									{{ Form::hidden('doc_no', $value['move_doc_number']) }}

@@ -25,12 +25,14 @@
 				        		{{ Form::text('filter_po_no', $filter_po_no, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_po_no")) }}
 				        	</span>
 				        </div>
+				<!--
 				        <div>
 				        	<span class="search-po-left-pane">{{ $label_receiver_no }}</span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::text('filter_receiver_no', $filter_receiver_no, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_receiver_no")) }}
 				        	</span>
 				        </div>
+				-->
 				        <div>
 				        	<span class="search-po-left-pane">{{ $label_shipment_reference_no }}</span>
 				        	<span class="search-po-right-pane">
@@ -46,32 +48,41 @@
 								<span class="add-on"><i class="icon-th"></i></span>
 				        	</div>
 				        </div>
+				<!--
 				        <div>
 				        	<span class="search-po-left-pane">{{ $label_back_order }}</span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::text('filter_back_order', $filter_back_order, array('class'=>'back-order', 'placeholder'=>'', 'id'=>"filter_back_order")) }}
 				        	</span>
 				        </div>
+				-->
 			      	</div>
+			    
 			      	<div class="span3">
+			      	<!--
 			      		<div>
 				        	<span class="search-po-left-pane">{{ $label_receiver }}</span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::select('filter_stock_piler', array('' => $text_select) + $stock_piler_list, $filter_stock_piler, array('class'=>'select-width', 'id'=>"filter_stock_piler")) }}
 				        	</span>
 				        </div>
+				        -->
+				
 			      		<div>
 				        	<span class="search-po-left-pane">{{ $label_status }}</span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::select('filter_status', array('default' => $text_select) + $po_status_type, $filter_status, array('class'=>'select-width', 'id'=>"filter_status")) }}
 				        	</span>
 				        </div>
+				       
+				        <!--
 				        <div>
 				        	<span class="search-po-left-pane">{{ $label_brand }}</span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::select('filter_brand', array('' => $text_select) + $brands_list, $filter_brand, array('class'=>'select-width', 'id'=>"filter_brand")) }}
 				        	</span>
 				        </div>
+				
 				        <div>
 				        	<span class="search-po-left-pane">{{ $label_division }}</span>
 				        	<span class="search-po-right-pane">
@@ -81,6 +92,7 @@
 				        		</select>
 				        	</span>
 				        </div>
+				        -->
 			      	</div>
 			      	<div class="span11 control-group collapse-border-top">
 			      		<a class="btn btn-success btn-darkblue" id="submitForm">{{ $button_search }}</a>
@@ -108,17 +120,40 @@
 		@endif
 	</div>
 	<div class="div-buttons">
-		@if ( CommonHelper::valueInArray('CanAssignPurchaseOrders', $permissions) )
-			<!-- <a href="#myModal" role="button" class="btn btn-info btn-darkblue assignPO" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a> -->
-			<a role="button" class="btn btn-info btn-darkblue assignPO" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a>
-		@endif
-		@if ( CommonHelper::valueInArray('CanExportPurchaseOrders', $permissions) )
-		<a href= {{ $url_export_backorder }} class="btn btn-info btn-darkblue">{{ $button_generate_backorder }}</a>
-		<a href= {{ $url_export }} class="btn btn-info btn-darkblue">{{ $button_export }}</a> <!--  id="exportList" -->
-		@endif
-		@if ( CommonHelper::valueInArray('CanSyncPurchaseOrders', $permissions) )
-		<a class="btn btn-info btn-darkblue" href={{URL::to('purchase_order/pulljda')}}>{{ $button_jda }}</a>
-		@endif
+		<table>
+			<tr>
+				<th>
+					<div class="div-buttons">
+						<!--@if ( CommonHelper::valueInArray('CanAssignPurchaseOrders', $permissions) )
+						
+							<a role="button" class="btn btn-info btn-darkblue assignPO" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a>
+						@endif
+						-->
+						@if ( CommonHelper::valueInArray('CanExportPurchaseOrders', $permissions) )
+					<!--<a href= {{ $url_export_backorder }} class="btn btn-info btn-darkblue">{{ $button_generate_backorder }}</a> -->
+						<a class="btn btn-info btn-darkblue" href={{URL::to('purchase_order/sync_to_mobile')}}>Sync To Mobile</a>
+						@endif 
+					</div>
+				</th>
+				<th>
+					<div class="div-buttons btn-group ">
+				        <button type="button" class="btn btn-info btn-darkblue " data-toggle="dropdown">Report <span class="caret"></span>
+				        </button>
+				        <ul class="dropdown-menu">
+				          <li><a href={{URL::to('purchase_order/discrepansy')}}>Overage/Shortage Report</a></li>
+					          <li><a href={{URL::to('purchase_order/unlisted')}}>Unlisted Report</a></li>
+				        </ul>
+			      	</div>
+			     </th>
+			     <th>
+					<div class="div-buttons">
+						@if ( CommonHelper::valueInArray('CanSyncPurchaseOrders', $permissions) )
+						<a class="btn btn-info btn-darkblue" href={{URL::to('purchase_order/pulljda')}}>{{ $button_jda }}</a>
+						@endif
+					</div>
+				</th>
+			</tr>
+		</table>
 	</div>
 </div>
 
@@ -133,20 +168,23 @@
 			<table class="table table-striped table-bordered">
 				<thead>
 					<tr>
+					<!--
 						@if ( CommonHelper::valueInArray('CanAssignPurchaseOrders', $permissions) )
 						<th style="width: 20px;" class="align-center"><input type="checkbox" id="main-selected" /></th>
 						@endif
+					-->
 						<th>{{ $col_id }}</th>
 						<th><a href="{{ $sort_po_no }}" class="@if( $sort=='po_no' ) {{ $order }} @endif">{{ $col_po_no }}</a></th>
 						<th>{{ $col_shipment_ref }}</th>
-						<th>{{ $col_back_order }}</th>
 						<th>{{ $col_total_qty }}</th>
-						<th>{{ $col_carton_id }}</th>
-						<th><a href="{{ $sort_receiver_no }}" class="@if( $sort=='receiver_no' ) {{ $order }} @endif">{{ $col_receiver_no }}</a></th>
-						<th>{{ $col_receiving_stock_piler }}</th>
+				<!--	<th>{{ $col_carton_id }}</th>     -->
+				<!--	<th><a href="{{ $sort_receiver_no }}" class="@if( $sort=='receiver_no' ) {{ $order }} @endif">{{ $col_receiver_no }}</a></th>    
+						<th>{{ $col_receiving_stock_piler }}</th> -->
 						<th>{{ $col_slot }}</th>
 						<th><a href="{{ $sort_entry_date }}" class="@if( $sort=='entry_date' ) {{ $order }} @endif">{{ $col_entry_date }}</a></th>
+						<!--
 						<th>{{ $col_status }}</th>
+						-->
 						<th class="align-center">{{ $col_action }}</th>
 					</tr>
 				</thead>
@@ -158,23 +196,26 @@
 					@foreach( $purchase_orders as $po )
 					<tr class="font-size-13 tblrow" data-id="{{ $po->purchase_order_no }}">
 						@if ( CommonHelper::valueInArray('CanAssignPurchaseOrders', $permissions) )
+						<!--
 						<td class="align-center">
 							@if($po->data_display == 'Open' || $po->data_display == 'Assigned')
 							<input type="checkbox" class="checkbox item-selected" name="selected[]" id="selected-{{ $po->purchase_order_no }}" value="{{ $po->purchase_order_no }}" />
 							@endif
 						</td>
+						-->
 						@endif
 						<td>{{ $counter++ }}</td>
 						<td><a href="{{ $url_detail . '&receiver_no=' . $po->receiver_no }}">{{ $po->purchase_order_no }}</a></td>
 						<td>{{ $po->shipment_reference_no }}</td>
-						<td>{{ $po->back_order }}</td>
 						<td>{{ $po->total_qty }}</td>
-						<td>{{ $po->carton_id }}</td>
-						<td><a href="{{ $url_detail . '&receiver_no=' . $po->receiver_no }}">{{$po->receiver_no}}</a></td>
-						<td>{{ $po->fullname }}</td>
+				<!--	<td>{{ $po->carton_id }}</td>
+						<td><a href="{{ $url_detail . '&receiver_no=' . $po->receiver_no }}">{{$po->receiver_no}}</a></td>  
+						<td>{{ $po->fullname }}</td>-->
 						<td>{{ $po->slot_code }}</td>
 						<td>{{ date("M d, Y", strtotime($po->created_at)) }}</td>
+						<!--
 						<td>{{ $po->data_display }}</td>
+						-->
 						<td class="align-center">
 							@if ( CommonHelper::valueInArray('CanClosePurchaseOrders', $permissions) )
 								@if($po->data_display === 'Posted')
@@ -186,7 +227,8 @@
 									<a style="width: 70px;" disabled="disabled" class="btn">{{ $button_close_po }}</a>
 								@endif
 
-								{{ Form::open(array('url'=>'purchase_order/close_po', 'id' => 'closePO_' . $po->purchase_order_no, 'style' => 'margin: 0px;')) }}
+								{{ Form::open(array('url'=>'purchase_order/close_po', 'id' => 'closePO_' . $po->
+								purchase_order_no, 'style' => 'margin: 0px;')) }}
 									{{ Form::hidden('po_no', $po->purchase_order_no) }}
 									{{ Form::hidden('invoice_no') }}
 									{{ Form::hidden('invoice_amount') }}
@@ -202,6 +244,7 @@
 									{{ Form::hidden('page', $page) }}
 									{{ Form::hidden('module', 'purchase_order') }}
 									{{ Form::hidden('receiver_no', $po->receiver_no) }}
+
 						  		{{ Form::close() }}
 
 						  		{{ Form::open(array('url'=>'purchase_order/reopen', 'id' => 'reopenForm', 'style' => 'margin: 0px;')) }}
@@ -209,6 +252,7 @@
 						  		{{ Form::close() }}
 
 					  		@endif
+
 						</td>
 					</tr>
 					@endforeach

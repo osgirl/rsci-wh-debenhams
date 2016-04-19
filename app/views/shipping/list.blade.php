@@ -81,6 +81,7 @@
 					<tr>
 						<th>{{ $col_id }}</th>
 						<th>{{ $col_type }}</th>
+						
 						<th><a href="{{ $sort_doc_no }}" class="@if( $sort=='doc_no' ) {{ $order }} @endif">{{ $col_doc_number }}</a></th>
 					</tr>
 				</thead>
@@ -93,6 +94,9 @@
 					<tr class="font-size-13 tblrow" data-id="{{ $ld->id }}">
 						<td>{{ $ld->id }}</td>
 						<td>{{ $ld->type }}</td>
+						<td></td>
+						<td></td>
+						<td></td>
 						<td><a href="{{ $url_detail . '?doc_no=' . $ld->move_doc_number}}">{{ $ld->move_doc_number }}</a></td>
 					</tr>
 					</tr>

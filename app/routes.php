@@ -30,17 +30,31 @@ Route::group(array('prefix'=>'api/v1'), function()
 
 Route::group(array("before"=>"auth.basic"), function()
 {
+	Route::get('shipping/list', 'shippingController@index');
+    Route::get('shipping/assigned', 'shippingController@assignPilerForm');
+    Route::post('shipping/assigned_to', 'shippingController@assignToPiler');
+
 	Route::get('purchase_order', 'PurchaseOrderController@showIndex');
 	Route::post('purchase_order/assign_to_piler', 'PurchaseOrderController@assignToStockPiler');
 	Route::post('purchase_order/close_po', 'PurchaseOrderController@closePO');
-	Route::get('purchase_order/detail', 'PurchaseOrderController@getPODetails');
 	Route::get('purchase_order/export', 'PurchaseOrderController@exportCSV');
 	Route::get('purchase_order/export_detail', 'PurchaseOrderController@exportDetailsCSV');
 	Route::get('purchase_order/export_backorder', 'PurchaseOrderController@exportBackorder');
 	Route::post('purchase_order/reopen', 'PurchaseOrderController@reopen');
 	Route::get('purchase_order/assign', 'PurchaseOrderController@assignPilerForm');
 	Route::get('purchase_order/pulljda', 'PurchaseOrderController@pullJDA');
+
 	Route::get('purchase_order/get_division', 'PurchaseOrderController@getDivisionv2');
+
+	
+
+	Route::get('purchase_order/division', 'PurchaseOrderController@showdivision');
+	Route::get('purchase_order/discrepansy', 'PurchaseorderController@discrepansy');
+	Route::get('purchase_order/updateqty', 'PurchaseOrderController@updateqty');
+
+	Route::get('purchase_order/detail', 'PurchaseOrderController@getPODetails');
+	Route::get('purchase_order/sync_to_mobile', 'PurchaseOrderController@synctomobile');
+
 
 	Route::get('store_order', 'StoreOrderController@showIndex');
 	Route::get('store_order/detail', 'StoreOrderController@getSODetails');
@@ -50,7 +64,7 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::post('store_order/generate_picklist', 'StoreOrderController@generatePicklist');
 	Route::get('store_order/mts_detail', 'StoreOrderController@getMtsDetails');
 
-	Route::get('store_return', 'StoreReturnController@showIndex');
+	Route::get('reverse_logistic', 'StoreReturnController@showIndex');
 	Route::get('store_return/detail', 'StoreReturnController@getSODetails');
 	Route::get('store_return/assign', 'StoreReturnController@assignPilerForm');
 	Route::post('store_return/assign_to_piler', 'StoreReturnController@assignToStockPiler');
@@ -156,7 +170,7 @@ Route::group(array("before"=>"auth.basic"), function()
     Route::get('load/printpacklist/update/{loadCode}', 'LoadController@updatePrintPackingList');
     Route::get('load/printloadingsheet/{loadCode}', 'LoadController@printLoadingSheet');
 
-	Route::get('unlisted', 'UnlistedController@showIndex');
+	Route::get('purchase_order/unlisted', 'UnlistedController@showIndex');
 	Route::get('unlisted/export', 'UnlistedController@exportCSV');
 
 	Route::get('expiry_items', 'ExpiryItemsController@showIndex');

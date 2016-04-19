@@ -47,8 +47,8 @@ class StoreController extends BaseController {
 		$this->data = Lang::get('stores');
 		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
 		$arrParams = array(
-							'filter_store_code'	=> Input::get('filter_store_code', NULL),
-							'filter_store_name' => Input::get('filter_store_name', NULL),
+							'store_code'	=> Input::get('filter_store_code', NULL),
+							'store_name' => Input::get('filter_store_name', NULL),
 							'sort'				=> Input::get('sort', 'store_code'),
 							'order'				=> Input::get('order', 'ASC'),
 							'page'				=> NULL,
@@ -66,6 +66,7 @@ class StoreController extends BaseController {
 	}
 
 	protected function getList() {
+		{
 		$this->data['heading_title'] = Lang::get('stores.heading_title');
 
 		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
@@ -83,7 +84,7 @@ class StoreController extends BaseController {
 		$this->data['button_clear'] = Lang::get('general.button_clear');
 		$this->data['button_export'] = Lang::get('general.button_export');
 		$this->data['button_jda'] = Lang::get('general.button_jda');
-
+		}
 		// URL
 		$this->data['url_export'] = URL::to('stores/export');
 

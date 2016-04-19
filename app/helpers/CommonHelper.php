@@ -33,6 +33,48 @@ class CommonHelper {
     	}
     }
 
+
+
+    public static function filternator($query,$arrparam=array(),$limit,$getcount=false)
+    {
+        $x=0;
+        foreach ($arrparam as $key => $filcol) 
+        {
+           $subkey= substr($key,7);
+            if ($x<$limit)
+            {
+               if( CommonHelper::hasValue($filcol) && CommonHelper::hasValue($key) ) $query->where(''.$subkey.'', 'LIKE', '%'. $filcol .'%');
+            }
+            if ($key=='sort')$sort=$filcol;
+            if ($key=='order')$order=$filcol;
+            if ($key=='page')$page=$filcol;
+            $x++;
+        }
+        if($getcount) return count($query);
+        
+        if( CommonHelper::hasValue($sort) && CommonHelper::hasValue($order))  
+        {
+            $query->orderBy($sort,$order);
+        }
+        if(CommonHelper::hasValue($page))
+        {
+            $query->skip(30 * ($page - 1))
+                  ->take(30);
+        }
+        
+        return $query;
+    }
+
+        public static function pagenator($query,$page)
+    {
+        if(CommonHelper::hasValue($page))
+        {
+            $query->skip(30 * ($page - 1))
+                  ->take(30);
+        }
+        return $query;
+    }
+
     /**
     * checks if variable is a valid array and not empty
     *

@@ -17,38 +17,25 @@
 		<div class="span3">&nbsp;</div>
 		<div class="span7 add-piler-wrapper">
 			<div class="control-group">
-				<label class="control-label">{{ $entry_purchase_no }}</label>
+				<label class="control-label">Division :</label>
 				<div class="controls">
 					{{ Form::text('po_no', $po_no, array('id' => 'po_no', 'readonly' => 'readonly')) }}
+					{{ Form::hidden('receiver_num', Input::get('receiver_no'), array('id' => 'po_no', 'readonly' => 'readonly')) }}
+				
 				</div> <!-- /controls -->
 			</div> <!-- /control-group -->
 
-		@if(count($params) > 1)
+
+
+		
 			<div class="control-group">
 				<label class="control-label">{{ $entry_stock_piler }}</label>
 				<div class="controls">
 					{{ Form::select('stock_piler[]', $stock_piler_list, '', array('id' => 'stock_piler_select') ) }}
-				<a class="add-piler-btn"><i class="icon-plus-sign" style="font-size: 1.5em;"></i></a>
+				
 				</div> <!-- /controls -->
 			</div> <!-- /control-group -->
-		@else
-			<?php
-				$pilers = explode(',',$po_info[0]['assigned_to_user_id']);
-			?>
-			@foreach($pilers as $key => $piler)
-			<div class="control-group">
-				<label class="control-label">{{ $entry_stock_piler }}</label>
-				<div class="controls">
-					{{ Form::select('stock_piler[]', $stock_piler_list, $piler, array('id' => 'stock_piler_select') ) }}
-				@if($key == 0)
-					<a class="add-piler-btn"><i class="icon-plus-sign" style="font-size: 1.5em;"></i></a>
-				@else
-					<a class="remove-piler-btn" style="margin-left: 3px;"><i class="icon-minus-sign" style="font-size: 1.5em; color:#CB1212;"></i></a>
-				@endif
-				</div> <!-- /controls -->
-			</div> <!-- /control-group -->
-			@endforeach
-		@endif
+		
         </div>
         <!-- <div class="span10">&nbsp;</div> -->
         <div class="span3">&nbsp;</div>

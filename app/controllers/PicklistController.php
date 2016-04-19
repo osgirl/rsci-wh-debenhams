@@ -33,106 +33,7 @@ class PicklistController extends BaseController {
 		$this->getList();
 	}
 
-	/*public function exportCSV()
-	{
-		$this->checkPermissions('CanExportPickingDocuments');
-		$arrParams = array(
-							'filter_type' 		=> Input::get('filter_type', NULL),
-							'filter_doc_no' 	=> Input::get('filter_doc_no', NULL),
-							'filter_status' 		=> Input::get('filter_status', NULL),
-							'sort'					=> Input::get('sort', 'doc_no'),
-							'order'					=> Input::get('order', 'ASC'),
-							'page'					=> NULL,
-							'limit'					=> NULL
-						);
-		$results = Picklist::getPickingList($arrParams);
-
-		$output = Lang::get('picking.col_id'). ',';
-		$output .= Lang::get('picking.col_type'). ',';
-		$output .= Lang::get('picking.col_doc_no'). ',';
-		$output .= Lang::get('picking.col_status'). "\n";
-
-		$pl_status_type = Dataset::getTypeWithValue("PICKLIST_STATUS_TYPE");
-
-		foreach ($results as $key => $value) {
-
-	    	$exportData = array(
-	    						'"' . $value->id . '"',
-	    						'"' . $value->type . '"',
-	    						'"' . $value->move_doc_number . '"',
-	    						'"' . $pl_status_type[$value->pl_status] . '"'
-	    					);
-
-	      	$output .= implode(",", $exportData);
-	      	$output .= "\n";
-	  	}
-
-	  	$headers = array(
-			'Content-Type' => 'text/csv',
-			'Content-Disposition' => 'attachment; filename="picklist_' . date('Ymd')  . '_' . time() . '.csv"',
-		);
-
-		return Response::make(rtrim($output, "\n"), 200, $headers);
-
-	}*/
-
-	public function exportCSV()
-	{
-		$this->checkPermissions('CanExportPacking');
-		$this->data = Lang::get('picking');
-		$this->data['text_empty_results']     = Lang::get('general.text_empty_results');
-		$arrParams = array(
-							'filter_type'   => Input::get('filter_type', NULL),
-							'filter_doc_no' => Input::get('filter_doc_no', NULL),
-							'filter_status' => Input::get('filter_status', NULL),
-							'filter_store' 	=> Input::get('filter_store', NULL),
-							'filter_stock_piler' 	=> Input::get('filter_stock_piler', NULL),
-							'sort'          => Input::get('sort', 'doc_no'),
-							'order'         => Input::get('order', 'ASC'),
-							'page'          => NULL,
-							'limit'         => NULL
-						);
-
-		$results = Picklist::getPickingListv2($arrParams)->toArray();
-		$this->data['results'] = $results;
-
-		$pdf = App::make('dompdf');
-		$pdf->loadView('picking.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
-		// return $pdf->stream();
-		return $pdf->download('picking_' . date('Ymd') . '.pdf');
-	}
-
-	public function exportDetailCSV()
-	{
-		$this->checkPermissions('CanExportPacking');
-
-		if (Picklist::where('move_doc_number'== Input::get('picklist_doc', NULL))!=NULL) {
-			$this->data = Lang::get('picking');
-			$this->data['text_empty_results']     = Lang::get('general.text_empty_results');
-			$arrParams = array(
-						'filter_sku'			=> Input::get('filter_sku', NULL),
-						'filter_upc'			=> Input::get('filter_upc', NULL),
-						'filter_so'				=> Input::get('filter_so', NULL),
-						'filter_from_slot'		=> Input::get('filter_from_slot', NULL),
-						'sort'					=> Input::get('sort', 'sku'),
-						'order'					=> Input::get('order', 'ASC'),
-						'page'					=> NULL,
-						'picklist_doc'			=> Input::get('picklist_doc', NULL),
-						'limit'					=> NULL
-					);
-			$results = PicklistDetails::getFilteredPicklistDetail($arrParams);
-
-			$this->data['results'] = $results;
-
-			$pdf = App::make('dompdf');
-			$pdf->loadView('picking.report_detail', $this->data)->setPaper('a4')->setOrientation('landscape');
-			// return $pdf->stream();
-			return $pdf->download('picking_detail_' . date('Ymd') . '.pdf');
-		}
-		return;
-	}
-
-	public function getList()
+public function getList()
 	{
 		$this->data                           = Lang::get('picking');
 		$this->data['text_empty_results']     = Lang::get('general.text_empty_results');
@@ -242,6 +143,106 @@ class PicklistController extends BaseController {
 
 		$this->layout->content = View::make('picking.list', $this->data);
 	}
+	/*public function exportCSV()
+	{
+		$this->checkPermissions('CanExportPickingDocuments');
+		$arrParams = array(
+							'filter_type' 		=> Input::get('filter_type', NULL),
+							'filter_doc_no' 	=> Input::get('filter_doc_no', NULL),
+							'filter_status' 		=> Input::get('filter_status', NULL),
+							'sort'					=> Input::get('sort', 'doc_no'),
+							'order'					=> Input::get('order', 'ASC'),
+							'page'					=> NULL,
+							'limit'					=> NULL
+						);
+		$results = Picklist::getPickingList($arrParams);
+
+		$output = Lang::get('picking.col_id'). ',';
+		$output .= Lang::get('picking.col_type'). ',';
+		$output .= Lang::get('picking.col_doc_no'). ',';
+		$output .= Lang::get('picking.col_status'). "\n";
+
+		$pl_status_type = Dataset::getTypeWithValue("PICKLIST_STATUS_TYPE");
+
+		foreach ($results as $key => $value) {
+
+	    	$exportData = array(
+	    						'"' . $value->id . '"',
+	    						'"' . $value->type . '"',
+	    						'"' . $value->move_doc_number . '"',
+	    						'"' . $pl_status_type[$value->pl_status] . '"'
+	    					);
+
+	      	$output .= implode(",", $exportData);
+	      	$output .= "\n";
+	  	}
+
+	  	$headers = array(
+			'Content-Type' => 'text/csv',
+			'Content-Disposition' => 'attachment; filename="picklist_' . date('Ymd')  . '_' . time() . '.csv"',
+		);
+
+		return Response::make(rtrim($output, "\n"), 200, $headers);
+
+	}*/
+
+	public function exportCSV()
+	{
+		$this->checkPermissions('CanExportPacking');
+		$this->data = Lang::get('picking');
+		$this->data['text_empty_results']     = Lang::get('general.text_empty_results');
+		$arrParams = array(
+							'filter_type'   => Input::get('filter_type', NULL),
+							'filter_doc_no' => Input::get('filter_doc_no', NULL),
+							'filter_status' => Input::get('filter_status', NULL),
+							'filter_store' 	=> Input::get('filter_store', NULL),
+							'filter_stock_piler' 	=> Input::get('filter_stock_piler', NULL),
+							'sort'          => Input::get('sort', 'doc_no'),
+							'order'         => Input::get('order', 'ASC'),
+							'page'          => NULL,
+							'limit'         => NULL
+						);
+
+		$results = Picklist::getPickingListv2($arrParams)->toArray();
+		$this->data['results'] = $results;
+
+		$pdf = App::make('dompdf');
+		$pdf->loadView('picking.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
+		// return $pdf->stream();
+		return $pdf->download('picking_' . date('Ymd') . '.pdf');
+	}
+
+	public function exportDetailCSV()
+	{
+		$this->checkPermissions('CanExportPacking');
+
+		if (Picklist::where('move_doc_number'== Input::get('picklist_doc', NULL))!=NULL) {
+			$this->data = Lang::get('picking');
+			$this->data['text_empty_results']     = Lang::get('general.text_empty_results');
+			$arrParams = array(
+						'filter_sku'			=> Input::get('filter_sku', NULL),
+						'filter_upc'			=> Input::get('filter_upc', NULL),
+						'filter_so'				=> Input::get('filter_so', NULL),
+						'filter_from_slot'		=> Input::get('filter_from_slot', NULL),
+						'sort'					=> Input::get('sort', 'sku'),
+						'order'					=> Input::get('order', 'ASC'),
+						'page'					=> NULL,
+						'picklist_doc'			=> Input::get('picklist_doc', NULL),
+						'limit'					=> NULL
+					);
+			$results = PicklistDetails::getFilteredPicklistDetail($arrParams);
+
+			$this->data['results'] = $results;
+
+			$pdf = App::make('dompdf');
+			$pdf->loadView('picking.report_detail', $this->data)->setPaper('a4')->setOrientation('landscape');
+			// return $pdf->stream();
+			return $pdf->download('picking_detail_' . date('Ymd') . '.pdf');
+		}
+		return;
+	}
+
+	
 
 	public function getPicklistDetails()
 	{

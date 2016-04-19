@@ -18,17 +18,10 @@
           <div class="accordion-group" style="background-color: #FFFFFF;">
             {{ Form::open(array('url'=>'box/list', 'class'=>'form-signin', 'id'=>'form-box', 'role'=>'form', 'method' => 'get')) }}
             <div id="collapseOne" class="accordion-body collapse in" style="padding-top: 20px;">
-	                <div class="span4">
-			        	<div>
-				        	<span class="search-po-left-pane">{{ $label_store }}</span>
-				        	<span class="search-po-right-pane">
-				        		{{ Form::text('filter_store', $filter_store, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_store")) }}
-				        	</span>
-				        </div>
-			      	</div>
+	               
 			      	<div class="span4">
 			      		<div>
-				        	<span class="search-po-left-pane">{{ $label_box_code }}</span>
+				        	<span class="search-po-left-pane">Load Number :</span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::text('filter_box_code', $filter_box_code, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_box_code")) }}
 				        	</span>
@@ -70,22 +63,25 @@
 		@endif
 	</div>
 	<div class="div-buttons">
+	<!--
 		{{-- @if ( CommonHelper::valueInArray('CanAccessBoxingLoading', $permissions) ) --}}
 			<a role="button" class="btn btn-warning" id="load-boxes" title="{{ $button_load }}" data-toggle="modal">{{ $button_load }}</a>
 		{{-- @endif --}}
+	-->
 		{{-- @if ( CommonHelper::valueInArray('CanAccessBoxingLoading', $permissions) ) --}}
 		<a  class="btn btn-info btn-darkblue" id="generate-load">{{ $button_add_store }}</a>
 		{{-- @endif --}}
+	<!--
 		{{-- @if ( CommonHelper::valueInArray('CanAccessBoxingLoading', $permissions) ) --}}
 		<a class="btn btn-info btn-darkblue" href="{{$url_add_box}}">{{ $button_create_box }}</a>
 		{{-- @endif --}}
-
+	-->
         @if ( CommonHelper::valueInArray('CanExportPacking', $permissions) )
-            <a role="button" class="btn btn-info btn-darkblue assignPicklist" title="{{ $button_assign_to_user }}" data-toggle="modal">{{ $button_assign_to_user }}</a>
+            <a role="button" class="btn btn-info btn-darkblue assignPicklist" title="Assign To Picker" data-toggle="modal">{{ $button_assign_to_user }}</a>
         @endif
 
 		@if ( CommonHelper::valueInArray('CanExportBoxingLoading', $permissions) )
-		<a class="btn btn-info btn-darkblue" href="{{$url_export_box}}" >{{ $button_export_box }}</a>
+		<a class="btn btn-info btn-darkblue" href="Report" >{{ $button_export_box }}</a>
 		@endif
 
 	</div>
@@ -114,10 +110,10 @@
 			            {{ Form::close() }}
 						<th style="width: 20px;" class="align-center"><input type="checkbox" id="main-selected"></th>
 						<th>{{ $col_id }}</th>
-						<th><a href="{{ $sort_store }}" class="@if( $sort=='store' ) {{ $order }} @endif">{{ $col_store }}</a></th>
-						<th><a href="{{ $sort_box_code }}" class="@if( $sort=='box_code' ) {{ $order }} @endif">{{ $col_box_code }}</a></th>
+						<th><a href="{{ $sort_store }}" class="@if( $sort=='store' ) {{ $order }} @endif">Load Number</a></th>
 						<th>{{ $col_box_assign }}</th>
-						<th><a href="{{ $sort_date_created }}" class="@if( $sort=='date_created' ) {{ $order }} @endif">{{ $col_date_created }}</a></th>
+						<th><a href="{{ $sort_date_created }}" class="@if( $sort=='date_created' ) {{ $order }} @endif">{{ $col_date_created }}
+						<th><a href="{{ $sort_box_code }}" class="@if( $sort=='box_code' ) {{ $order }} @endif">SHIP BY DATE</a></th></a></th>
 						<th>{{ $col_action }}</th>
 					</tr>
 				</thead>
@@ -134,10 +130,15 @@
 							@endif
 						</td>
 						<td>{{ $counter++ }}</td>
-						<td>{{ $box['store_name'] }}</td>
+						<!--<td>{{ $box['store_name'] }}</td>-->
+						
 						<td><a href="{{ $url_detail . '&id=' . $box['id'] . '&box_code=' . $box['box_code'] }}">{{ $box['box_code'] }}</a></td>
+
+
 						<td>{{ $box['username'] }}</td>
+
 						<td>{{ date("M d, Y", strtotime($box['created_at']))}}</td>
+
 						<td class="align-center">
 							{{-- @if ( CommonHelper::valueInArray('CanLoadPicking', $permissions)  || CommonHelper::valueInArray('CanEditPicklist', $permissions)) --}}
 								{{-- @if ( CommonHelper::valueInArray('CanLoadPicking', $permissions) )--}}
@@ -152,8 +153,8 @@
 							@if ( !CommonHelper::hasValue($box['picklist_detail_id']) )
 								<a  data-id="{{$box['box_code']}}"  class="icon-remove single-box-delete"></a>
 							@endif
-
 						</td>
+						<td></td>
 					</tr>
 					</tr>
 					@endforeach

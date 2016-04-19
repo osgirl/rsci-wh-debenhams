@@ -20,7 +20,7 @@
             <div id="collapseOne" class="accordion-body collapse in" style="padding-top: 20px;">
 	                <div class="span4">
 			        	<div>
-				        	<span class="search-po-left-pane">{{ $label_store_order_no }}</span>
+				        	<span class="search-po-left-pane">TL Number :</span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::text('filter_so_no', $filter_so_no, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_so_no")) }}
 				        	</span>
@@ -75,11 +75,13 @@
 			&nbsp;
 		@endif
 	</div>
-	<div class="div-buttons">
-		@if ( CommonHelper::valueInArray('CanExportStoreOrders', $permissions) )
-		<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
-		@endif
-	</div>
+	<div class="btn-group div-buttons">
+        <button type="button" class="btn btn-info btn-darkblue dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Report  <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="#">Store Receiving Discrepansy</a></li>
+        </ul>
+  	</div>
 </div>
 
 <div class="widget widget-table action-table">
@@ -94,12 +96,12 @@
 				<thead>
 					<tr>
 						<th>{{ $col_id }}</th>
-						<th><a href="{{ $sort_so_no }}" class="@if( $sort=='so_no' ) {{ $order }} @endif">{{ $col_so_no }}</a></th>
-						<th><a href="{{ $sort_store }}" class="@if( $sort=='store' ) {{ $order }} @endif">{{ $col_store }}</a></th>
+						<th><a href="{{ $sort_so_no }}" class="@if( $sort=='so_no' ) {{ $order }} @endif">Load Code</a></th>
+						<th><a href="{{ $sort_so_no }}" class="@if( $sort=='so_no' ) {{ $order }} @endif">TL Number</a></th>
+						<th>{{ $col_store }}</th>
 						<th>{{ $col_store_name }}</th>
-						<th><a href="{{ $sort_order_date }}" class="@if( $sort=='order_date' ) {{ $order }} @endif">{{ $col_order_date }}</a></th>
+						<th><a href="{{ $sort_order_date }}" class="@if( $sort=='order_date' ) {{ $order }} @endif">Ship By Date</a></th>
 						<th>{{ $col_status }}</th>
-						<th>{{ $col_load_code }}</th>
 						<th>{{ $col_action }}</th>
 					</tr>
 				</thead>
@@ -111,12 +113,12 @@
 					@foreach( $store_orders as $so )
 					<tr class="font-size-13 tblrow" data-id="{{ $so->so_no }}">
 						<td>{{ $counter++ }}</td>
+						<td><a href="{{ $url_detail . '&id='.$so->id.'&so_no=' . $so->so_no }}">{{ $so->load_code }}</a></td>
 						<td><a href="{{ $url_detail . '&id='.$so->id.'&so_no=' . $so->so_no }}">{{ $so->so_no }}</a></td>
 						<td>{{ $so->store_code }}</td>
 						<td>{{ $so->store_name }}</td>
 						<td>{{ date("M d, Y", strtotime($so->order_date)) }}</td>
 						<td>{{$so_status_type[$so->so_status]}}</td>
-						<td>{{ $so->load_code }}</td>
 						<td class="align-center">
 							<a href="{{ $url_mts_detail . '&id='.$so->id.'&so_no=' . $so->so_no }}" class="icon-share" title="{{ $link_view_mts }}"></a>&nbsp;
 						</td>

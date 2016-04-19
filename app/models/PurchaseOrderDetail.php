@@ -9,6 +9,69 @@ class PurchaseOrderDetail extends Eloquent {
 	 */
 	protected $table = 'purchase_order_details';
 	protected $fillable = array('sku', 'receiver_no');
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+public static function getPOInfoDetail($receiver_no = NULL,$division = NULL) {
+		$query = DB::table('purchase_order_details')
+			->join('users', 'purchase_order_details.assigned_to_user_id', '=', 'users.id', 'left')
+			->join('dataset','purchase_order_details.po_status','=','dataset.id','left')
+			->join('purchase_order_lists','purchase_order_details.receiver_no','=','purchase_order_lists.receiver_no','left')
+			->join('vendors', 'purchase_order_lists.vendor_id', '=', 'vendors.id', 'left')
+			->where('purchase_order_details.receiver_no', '=', $receiver_no)
+			->where('purchase_order_details.division', '=', $division)
+			->first();
+
+		return $query;
+	}
+
+	public static function getPOInfo($receiver_no = NULL) {
+		$query = DB::table('purchase_order_lists')
+					// ->join('users', 'purchase_order_lists.assigned_to_user_id', '=', 'users.id', 'LEFT')
+					->join('dataset', 'purchase_order_lists.po_status', '=', 'dataset.id', 'LEFT')
+					->join('vendors', 'purchase_order_lists.vendor_id', '=', 'vendors.id', 'LEFT')
+					->where('purchase_order_lists.receiver_no', '=', $receiver_no);
+
+		$result = $query->get(array(
+									'purchase_order_lists.*',
+									'vendors.vendor_name',
+									'dataset.data_display'
+									// 'users.firstname',
+									// 'users.lastname'
+								)
+							);
+
+		// get the multiple stock piler fullname
+		foreach ($result as $key => $po) {
+			$assignedToUserId       = explode(',', $po->assigned_to_user_id);
+			$getUsers               = User::getUsersFullname($assignedToUserId);
+			$result[$key]->fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $getUsers));
+		}
+
+		return $result[0];
+	}
+
+	public static function updateqty($receiver_no,$division,$sku,$quantity)
+	{
+		$query=DB::table('purchase_order_details')
+		->where('receiver_no','=',$receiver_no)
+		->where('division','=',$division)
+		->where('sku','=',$sku)
+		->update(['quantity_delivered'=> $quantity]);
+	}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 	public static function getAPIPoDetail($data = array())
 	{
@@ -83,7 +146,8 @@ class PurchaseOrderDetail extends Eloquent {
 					->select(DB::raw('convert(wms_product_lists.sku, decimal) as sku,convert(wms_product_lists.upc, decimal(20,0)) as upc'),'product_lists.short_description','purchase_order_details.quantity_ordered','purchase_order_details.quantity_delivered','purchase_order_details.expiry_date')
 					->join('purchase_order_details', 'purchase_order_lists.receiver_no', '=', 'purchase_order_details.receiver_no', 'RIGHT')
 					->join('product_lists', 'purchase_order_details.sku', '=', 'product_lists.upc')
-					->where('purchase_order_details.receiver_no', '=', $receiver_no);
+					->where('purchase_order_details.receiver_no', '=', $receiver_no)
+					->where('purchase_order_details.division', '=', $data['division']);
 
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if ($data['sort']=='sku') $data['sort'] = 'product_lists.sku';

@@ -16,6 +16,22 @@ class Load extends Eloquent {
     	return $loadCodes;
     }
 
+
+
+public static function assignToStockPiler($Box_code = '', $data = array())
+    {
+        $query = Box::where('box_code', '=', $Box_code)->update($data);
+        DebugHelper::log(__METHOD__, $query);
+
+        
+
+
+        
+    }
+
+
+
+
     public static function getLoads()
     {
         return Load::where('is_shipped', '=', 0)->get(array('id','load_code'));
@@ -60,6 +76,25 @@ class Load extends Eloquent {
         DebugHelper::log(__METHOD__, $result);
         return $result;
 
+    }
+
+    public static function getlist($data = array(), $getCount = false)
+    {
+        $query = DB::table('load')
+        ->select('load.*','firstname','lastname')
+        ->join('users','assigned_to_user_id','=','users.id','Left');
+        CommonHelper::filternator($query,$data,2,$getCount);
+        if( CommonHelper::hasValue($data['filter_ship_at']) ) $query->where('ship_at', 'LIKE', '%'.$data['filter_ship_at'].'%');
+        $result = $query->get();
+        if($getCount) {
+            $result = count($result);
+        }
+        return $result;
+
+    }
+    public static function getInfoLoad($data)
+    {
+        return Load::whereIn('load_code', $data)->get()->toArray();
     }
 
     public static function getOpenPicklist($move_doc_number) {
