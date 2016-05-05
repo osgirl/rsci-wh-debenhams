@@ -35,6 +35,9 @@ class shippingController extends \BaseController {
 		//$order 	= Input::get('order', 'ASC');
 		//$page 	= Input::get('page', 1);
 
+		
+		
+
 		$this->data['filter_load_code']		= Input::get('filter_load_code', NULL);
 		$this->data['filter_stock_piler']	= Input::get('filter_stock_piler', NULL);
 		$this->data['filter_entry_date']  = Input::get('filter_entry_date', NULL);
@@ -45,8 +48,8 @@ class shippingController extends \BaseController {
 
 		$arrparam=$arrayName = array(
 			'filter_load_code' 			=> $this->data['filter_load_code'],
-			'filter_assigned_to_user_id'	=> $this->data['filter_stock_piler'],
-			'filter_ship_at'	=> $this->data['filter_entry_date'],
+			'filter_assigned_to_user_id'=> $this->data['filter_stock_piler'],
+			'filter_ship_at'			=> $this->data['filter_entry_date'],
 			'sort' 						=> $this->data['sort'],
 			'order' 					=> $this->data['order'],
 			'page' 						=> $this->data['page']
@@ -55,21 +58,20 @@ class shippingController extends \BaseController {
 		$results_total = load::getlist($arrparam,True);
 
 		$this->data['load_list']       = Paginator::make($results, $results_total, 30);
-		$this->data['list_count']         = $results_total;
-		$this->data['arrparam']         = $arrparam;
+		$this->data['list_count']      = $results_total;
+		$this->data['arrparam']        = $arrparam;
 		$this->data['counter']         = $this->data['load_list']->getFrom();
-
-		$this->data['permissions']           = unserialize(Session::get('permissions'));
+		$this->data['permissions']     = unserialize(Session::get('permissions'));
 
 		
 
-		$url                                 = '?filter_load_code=' . $this->data['filter_load_code'];
-		$url                                 .= '&filter_assigned_to_user_id=' . $this->data['filter_stock_piler'];
-		$url                                 .= '&page=' .$this->data['page'];
+		$url                         = '?filter_load_code=' . $this->data['filter_load_code'];
+		$url                        .= '&filter_assigned_to_user_id=' . $this->data['filter_stock_piler'];
+		$url                        .= '&page=' .$this->data['page'];
 
-		$order_load_code                    = ($this->data['sort']=='load_code' 		&& $this->data['order']=='ASC') ? 'DESC' : 'ASC';
-		$order_date_created                 = ($this->data['sort']=='load.created_at'	&& $this->data['order']=='ASC') ? 'DESC' : 'ASC';
-		$order_ship_at                 		= ($this->data['sort']=='ship_at'			&& $this->data['order']=='ASC') ? 'DESC' : 'ASC';
+		$order_load_code = ($this->data['sort']=='load_code' && $this->data['order']=='ASC') ? 'DESC' : 'ASC';
+		$order_date_created = ($this->data['sort']=='load.created_at'&& $this->data['order']=='ASC') ? 'DESC' : 'ASC';
+		$order_ship_at = ($this->data['sort']=='ship_at'&& $this->data['order']=='ASC') ? 'DESC' : 'ASC';
 
 		$this->data['sort_load_code']       = URL::to('shipping/list' . $url .'&sort=load_code&order=' . $order_load_code, NULL, FALSE);
 		$this->data['sort_date_created']	= URL::to('shipping/list' . $url . '&sort=load.created_at&order=' . $order_date_created, NULL, FALSE);
@@ -155,29 +157,26 @@ class shippingController extends \BaseController {
 
 	public function assignToPiler() {
         // Check Permissions
-
-
         
         $pilers = implode(',' , Input::get('stock_piler'));
         //get moved_to_reserve id
-        //$arrParams = array('data_code' => 'BOX_STATUS_TYPE', 'data_value'=> 'assigned');
-        //$boxStatus = Dataset::getType($arrParams)->toArray();
+       //arrParams = array('data_code' => 'BOX_STATUS_TYPE', 'data_value'=> 'assigned');
+        //oxStatus = Dataset::getType($arrParams)->toArray();
 
         $arrBoxCode = explode(',', Input::get("load_code"));
 
-
-
-
-
 		
-        foreach ($arrBoxCode as $box_codes) {
+        foreach ($arrBoxCode as $codes) {
             $arrParams = array(
-                'userid' 	    => $pilers,
-                'updated_at' 	=> date('Y-m-d H:i:s')
+                'assigned_by' 			=> Auth::user()->id,
+				'assigned_to_user_id' 	=> $pilers, //Input::get('stock_piler'),
+				'updated_at' 			=> date('Y-m-d H:i:s')
             );
-            Box::assignToStockPiler($box_codes, $arrParams);
+            
+            load::assignToStockPiler($codes, $arrParams);
 
             // AuditTrail
+            /**
             $users = User::getUsersFullname(Input::get('stock_piler'));
 
             $fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $users));
@@ -194,9 +193,11 @@ class shippingController extends \BaseController {
                 'user_id'		=> Auth::user()->id,
                 'created_at'	=> date('Y-m-d H:i:s'),
                 'updated_at'	=> date('Y-m-d H:i:s')
+               
             );
-            AuditTrail::addAuditTrail($arrParams);
+            //AuditTrail::addAuditTrail($arrParams);
             // AuditTrail
+             **/
         }
 
 		

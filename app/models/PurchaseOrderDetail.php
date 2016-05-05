@@ -1,3 +1,5 @@
+
+
 <?php
 
 class PurchaseOrderDetail extends Eloquent {

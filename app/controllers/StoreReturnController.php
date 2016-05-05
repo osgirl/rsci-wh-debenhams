@@ -389,7 +389,7 @@ class StoreReturnController extends BaseController {
 		// Permissions
 		$this->data['permissions'] = unserialize(Session::get('permissions'));
 
-		$this->layout->content = View::make('store_return.list', $this->data);
+		$this->layout->content = View::make('store_return.StoreReturn_list', $this->data);
 	}
 
 	protected function setURL($forDetail = false, $forBackToList = false) {

@@ -98,7 +98,7 @@
 						<th>{{ $col_id }}</th>
 						<th><a href="{{ $sort_so_no }}" class="@if( $sort=='so_no' ) {{ $order }} @endif">Load Code</a></th>
 						<th><a href="{{ $sort_so_no }}" class="@if( $sort=='so_no' ) {{ $order }} @endif">TL Number</a></th>
-						<th>{{ $col_store }}</th>
+					<!--	<th>{{ $col_store }}</th>-->
 						<th>{{ $col_store_name }}</th>
 						<th><a href="{{ $sort_order_date }}" class="@if( $sort=='order_date' ) {{ $order }} @endif">Ship By Date</a></th>
 						<th>{{ $col_status }}</th>
@@ -115,12 +115,13 @@
 						<td>{{ $counter++ }}</td>
 						<td><a href="{{ $url_detail . '&id='.$so->id.'&so_no=' . $so->so_no }}">{{ $so->load_code }}</a></td>
 						<td><a href="{{ $url_detail . '&id='.$so->id.'&so_no=' . $so->so_no }}">{{ $so->so_no }}</a></td>
-						<td>{{ $so->store_code }}</td>
+						<!--<td>{{ $so->store_code }}</td>-->
 						<td>{{ $so->store_name }}</td>
 						<td>{{ date("M d, Y", strtotime($so->order_date)) }}</td>
 						<td>{{$so_status_type[$so->so_status]}}</td>
 						<td class="align-center">
-							<a href="{{ $url_mts_detail . '&id='.$so->id.'&so_no=' . $so->so_no }}" class="icon-share" title="{{ $link_view_mts }}"></a>&nbsp;
+						<a style="width: 70px;" class="btn btn-success closePicklist" data-id=""> Close</a>
+					
 						</td>
 					</tr>
 					@endforeach

@@ -31,8 +31,12 @@ Route::group(array('prefix'=>'api/v1'), function()
 Route::group(array("before"=>"auth.basic"), function()
 {
 	Route::get('shipping/list', 'shippingController@index');
+
     Route::get('shipping/assigned', 'shippingController@assignPilerForm');
     Route::post('shipping/assigned_to', 'shippingController@assignToPiler');
+    Route::get('load/load_details','BoxController@index');
+    Route::get('load/box_content', 'BoxController@getBoxDetails');
+  //  Route::get('box_list_details/{id}', array('as' => 'box_list_details', 'uses' => 'BoxController@getListBox'));
 
 	Route::get('purchase_order', 'PurchaseOrderController@showIndex');
 	Route::post('purchase_order/assign_to_piler', 'PurchaseOrderController@assignToStockPiler');
@@ -71,6 +75,8 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::get('store_return/export', 'StoreReturnController@exportCSV');
 	Route::get('store_return/export_detail', 'StoreReturnController@exportDetailsCSV');
 	Route::post('store_return/close', 'StoreReturnController@closeStoreReturn');
+	Route::get('store_return/StoreReturn_list','StoreReturnController@showIndex');
+
 
 	Route::get('box/list', 'BoxController@index');
 	Route::get('box/detail', 'BoxController@getBoxDetails');
@@ -224,7 +230,6 @@ Route::group(array('prefix'=>'api/v1', 'before'=>'oauth|auth.piler'), function()
 	//load
 	Route::post('loads/create', 'ApiLoads@generateLoadCode');
 	Route::get('loads/list', 'ApiLoads@getList');
-
 
 	//get status types
 	Route::get('status/values', 'HomeController@getStatusValues');

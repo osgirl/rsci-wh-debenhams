@@ -72,6 +72,8 @@ class LoadController extends BaseController {
 		$this->data['url_ship_load'] = URL::to('load/ship');
 		$this->data['url_load_print'] = URL::to('load/print');
 
+
+
 		// Search Filters
 		$filter_load_code = Input::get('filter_load_code', NULL);
 		$filter_status = Input::get('filter_status', NULL);
@@ -101,10 +103,10 @@ class LoadController extends BaseController {
 										'order'				=> $order
 									);
 
-		$this->data['loads'] = Paginator::make($results, $results_total, 30);
+		$this->data['load'] = Paginator::make($results, $results_total, 30);
 		$this->data['load_count'] = $results_total;
 
-		$this->data['counter'] 	= $this->data['loads']->getFrom();
+		$this->data['counter'] 	= $this->data['load']->getFrom();
 
 		$this->data['filter_load_code'] = $filter_load_code;
 		$this->data['filter_status'] = $filter_status;
@@ -127,7 +129,8 @@ class LoadController extends BaseController {
 		$this->data['url_back'] =$this->setURL();
 		$this->data['permissions'] = unserialize(Session::get('permissions'));
 
-		$this->layout->content = View::make('loads.list', $this->data);
+		$this->layout->content = View::make('loads.load_details', $this->data);
+
 	}
 
 	public function shipLoad()
@@ -398,4 +401,151 @@ class LoadController extends BaseController {
 		return $plNo;
 		
 	}
+
+	public function showdivision() {
+// Check Permissions
+	if (Session::has('permissions')) {
+		if (!in_array('CanAccessPurchaseOrders', unserialize(Session::get('permissions'))))  {
+			return Redirect::to('user/profile');
+		}
+	} else {
+		return Redirect::to('users/logout');
+	}
+
+	$this->getListdivision();
 }
+
+protected function getListdivision() {
+
+		
+		// URL
+
+		//$this->data['url_export']                   = URL::to('purchase_order/export' . $this->setURL());
+		//$this->data['url_export_backorder']         = URL::to('purchase_order/export_backorder' . $this->setURL());
+		//$this->data['url_reopen']                   = URL::to('purchase_order/reopen');
+		//$this->data['url_assign']                   = URL::to('purchase_order/assign' . $this->setURL());
+		//$this->data['url_detail']                   = URL::to('purchase_order/detail' . $this->setURL(true));
+
+
+		
+
+		// Message
+		$this->data['error'] = '';
+		if (Session::has('error')) {
+			$this->data['error'] = Session::get('error');
+		}
+
+		$this->data['success'] = '';
+		if (Session::has('success')) {
+			$this->data['success'] = Session::get('success');
+		}
+
+		// Search Options
+	//	$this->data['po_status_type']   = Dataset::getTypeInList("PO_STATUS_TYPE");
+		//$this->data['stock_piler_list'] = $this->getStockPilers();
+	//	$this->data['brands_list'] = $this->getBrands();
+		//$this->data['divisions_list'] = $this->getDivisions();
+
+		// Search Filters
+		$load_code   = Input::get('load_code', NULL);
+		$filer = Input::get('filer', NULL);
+		$date_at = Input::get('date_at', NULL);
+		
+		
+		$filter_po_no = Input::get('filter_receiver_no', NULL);
+		$filter_receiver_no = Input::get('filter_receiver_no', NULL);
+		$filter_entry_date  = Input::get('filter_entry_date', NULL);
+		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
+		$filter_status      = Input::get('filter_status', NULL);
+		$filter_back_order  = Input::get('filter_back_order', NULL);
+		$filter_brand       = Input::get('filter_brand', NULL);
+		$filter_division    = Input::get('filter_division', NULL);
+		$filter_shipment_reference_no = Input::get('filter_shipment_reference_no', NULL);
+
+		$sort               = Input::get('sort', 'po_no');
+		$order              = Input::get('order', 'DESC');
+		$page               = Input::get('page', 1);
+
+		$receiver_no = Input::get('receiver_no', NULL);
+		//$this->data['po_info'] = load::getPOInfodiv($receiver_no);
+		//Data
+		$arrParams = array(
+						'filter_po_no'       				=> $filter_po_no,
+						'filter_receiver_no' 				=> $filter_receiver_no,
+						'filter_entry_date'  				=> $filter_entry_date,
+						'filter_stock_piler' 				=> $filter_stock_piler,
+						'filter_back_order' 				=> $filter_back_order,
+						'filter_status'      				=> $filter_status,
+						'filter_brand'       				=> $filter_brand,
+						'filter_division'	 				=> $filter_division,
+						'filter_shipment_reference_no' 		=> $filter_shipment_reference_no,
+						'receiver_no'		 				=> $receiver_no,
+						'sort'               				=> $sort,
+						'order'              				=> $order,
+						'page'              				=> $page,
+						'limit'              				=> 30
+					);
+
+		$results 		= PurchaseOrder::getPoListsdivision($arrParams);
+		$results_total	= PurchaseOrder::getPoListsdiv($arrParams, TRUE);
+		// echo "<pre>"; print_r($results); die();
+		// $results_total 	= PurchaseOrder::getPOQuery($arrParams, TRUE); //count($results);//
+		// print_r($results_total); die();
+		DebugHelper::log(__METHOD__, $results_total);
+
+		// Pagination
+		$this->data['arrFilters'] = array(
+									'filter_po_no'       => $filter_po_no,
+									'filter_receiver_no' => $filter_receiver_no,
+									'filter_shipment_reference_no'	=> $filter_shipment_reference_no,
+									'filter_entry_date'  => $filter_entry_date,
+									'filter_stock_piler' => $filter_stock_piler,
+									'filter_back_order'  => $filter_back_order,
+									'filter_status'      => $filter_status,
+									'filter_brand'       => $filter_brand,
+									'filter_division'	 => $filter_division,
+									'sort'               => $sort,
+									'order'              => $order
+								);
+
+		$this->data['purchase_orders']       = Paginator::make($results, $results_total, 30);
+		$this->data['load_code']       =$load_code;
+		$this->data['filer']       =$filer;
+		$this->data['date_at']       =$date_at;
+		
+	/**	$this->data['purchase_orders_count'] = $results_total;
+		$this->data['counter']               = $this->data['purchase_orders']->getFrom();
+		$this->data['filter_po_no']          = $filter_po_no;
+		$this->data['filter_receiver_no']    = $filter_receiver_no;
+		$this->data['filter_shipment_reference_no']    = $filter_shipment_reference_no;
+		$this->data['filter_entry_date']     = $filter_entry_date;
+		$this->data['filter_stock_piler']    = $filter_stock_piler;
+		$this->data['filter_status']         = $filter_status;
+		$this->data['filter_back_order']     = $filter_back_order;
+		$this->data['filter_brand']          = $filter_brand;
+		$this->data['filter_division']       = $filter_division;
+		$this->data['sort']                  = $sort;
+		$this->data['order']                 = $order;
+		$this->data['page']                  = $page; **/
+
+		$url                                 = '?filter_po_no=' . $filter_po_no;
+		$url                                 .= '&filter_entry_date=' . $filter_entry_date;
+		$url                                 .= '&filter_status=' . $filter_status;
+		$url                                 .= '&page=' . $page;
+
+		$order_po_no                         = ($sort=='po_no' && $order=='ASC') ? 'DESC' : 'ASC';
+		$order_receiver_no                   = ($sort=='receiver_no' && $order=='ASC') ? 'DESC' : 'ASC';
+		$order_entry_date                    = ($sort=='entry_date' && $order=='ASC') ? 'DESC' : 'ASC';
+
+		$this->data['url_back']              = URL::to('purchase_order' . $this->setURL(false, true));
+		$this->data['sort_po_no']            = URL::to('purchase_order/division' . $url .'&receiver_no='.$receiver_no. '&sort=po_no&order=' . $order_po_no, NULL, FALSE);
+		$this->data['sort_receiver_no']      = URL::to('purchase_order' . $url . '&sort=receiver_no&order=' . $order_receiver_no, NULL, FALSE);
+		$this->data['sort_entry_date']       = URL::to('purchase_order' . $url . '&sort=entry_date&order=' . $order_entry_date, NULL, FALSE);
+
+		// Permissions
+		$this->data['permissions']           = unserialize(Session::get('permissions'));
+
+		$this->layout->content = View::make('loads.load_details', $this->data);
+	}
+}
+

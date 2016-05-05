@@ -81,6 +81,9 @@ class BoxController extends BaseController {
 
         $this->data['stock_piler_list'] = $this->getStockPilers();
 
+		$load_code = Input::get('load_code', NULL);
+		$this->data['Contentbox'] = BoxDetails::getboxcontent($load_code);
+
 		$filter_store 		= Input::get('filter_store', NULL);
 		$filter_box_code	= Input::get('filter_box_code', NULL);
         $filter_stock_piler = Input::get('filter_stock_piler', NULL);
@@ -91,24 +94,25 @@ class BoxController extends BaseController {
 
 
 		$arrParams = array(
+						'load_code'				=> $load_code,
 						'filter_store' 			=> $filter_store,
 						'filter_box_code' 		=> $filter_box_code,
                         'filter_stock_piler' 	=> $filter_stock_piler,
-						'sort'					=> $sort,
+                       	'sort'					=> $sort,
 						'order'					=> $order,
 						'page'					=> $page,
 						'limit'					=> 30
 					);
 
 		$results 		= Box::getBoxesWithFilters($arrParams)->toArray();
-		// echo '<pre>'; dd($results);
 		// echo '<pre>';
 		// print_r($results);
 		$results_total 	= Box::getBoxesCount($arrParams);
 
+		
 
 
-		$this->data['arrFilters'] = array(
+		$arrparam = array(
 									'filter_store' 			=> $filter_store,
 									'filter_box_code' 		=> $filter_box_code,
                                     'filter_stock_piler' 	=> $filter_stock_piler,
@@ -117,13 +121,14 @@ class BoxController extends BaseController {
 								);
 
 
-		$this->data['boxes'] = Paginator::make($results, $results_total, 30);
+		$this->data['BigBoxes'] = Paginator::make($results, $results_total, 30);
 		$this->data['boxes_count'] = $results_total;
+		$this->data['counter'] 	= $this->data['BigBoxes']->getFrom();
 
-		$this->data['counter'] 	= $this->data['boxes']->getFrom();
-
+	$this->data['arrParams']        = $arrParams;
 		$this->data['filter_store'] = $filter_store;
 		$this->data['filter_box_code'] = $filter_box_code;
+		$this->data['load_code'] = $load_code;
         $this->data['filter_stock_piler'] = $filter_stock_piler;
 
 		$this->data['url_add_box'] = URL::to('box/create' . $this->setURL());
@@ -151,9 +156,24 @@ class BoxController extends BaseController {
 
 		$this->data['permissions'] = unserialize(Session::get('permissions'));
 
-		$this->layout->content = View::make('box.list', $this->data);
+		$this->layout->content = View::make('loads.load_details', $this->data);
 
 	}
+/**
+	public function getListBox($id) {
+		$query = Box::getDetailsBox($id);
+		$this->layout->content = View::make('loads.box_list_details', $query);
+
+		$this->data['arrFilters'] = array(
+									'filter_store' 			=> $filter_store,
+									'filter_box_code' 		=> $filter_box_code,
+                              //      'filter_stock_piler' 	=> $filter_stock_piler,
+									'sort'					=> $sort,
+									'order'					=> $order
+								);
+		$this->data['filter_store'] = $filter_store;
+		$this->data['filter_box_code'] = $filter_box_code;
+	} **/
 
 	public function getBoxDetails() {
 		// Check Permissions
@@ -181,6 +201,8 @@ class BoxController extends BaseController {
 			$this->data['success'] = Session::get('success');
 		}
 
+		$box_code = Input::get('box_code', NULL);
+		$this->data['Contentbox'] = box::getboxcontent($box_code);
 		// Search Filters
 		$filter_sku = Input::get('filter_sku', NULL);
 		$filter_store = Input::get('filter_store', NULL);
@@ -229,13 +251,15 @@ class BoxController extends BaseController {
 									'id'			=> $box_id
 								);
 
-		$this->data['boxes'] = Paginator::make($results, $results_total, 30);
+		$this->data['boxesYong'] = Paginator::make($results, $results_total, 30);
 		$this->data['boxes_count'] = $results_total;
 
-		$this->data['counter'] 	= $this->data['boxes']->getFrom();
+		$this->data['counter'] 	= $this->data['boxesYong']->getFrom();
 		$this->data['box_id'] = $box_id;
 		$this->data['box_code'] = $box_code;
 		// Main
+		//$this->data['load_code'] = $load_code;
+
 		$this->data['filter_sku'] = $filter_sku;
 		$this->data['filter_store'] = $filter_store;
 		$this->data['filter_box_code'] = $filter_box_code;
@@ -266,7 +290,7 @@ class BoxController extends BaseController {
 		$this->data['permissions'] = unserialize(Session::get('permissions'));
 		$this->data['url_detail'] = URL::to('box/detail');
 
-		$this->layout->content = View::make('box.detail', $this->data);
+		$this->layout->content = View::make('loads.box_content', $this->data);
 	}
 
 	public function loadBoxes()

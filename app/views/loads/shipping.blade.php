@@ -100,7 +100,7 @@
 						@endif
 						</td>
 						<td>{{ $counter++ }}</td>
-						<td>{{ $lo->load_code }}</td>
+						<td><a href="{{ Url::to('load/load_details?load_code='.$lo->load_code.'&filer='.$lo->firstname.' '.$lo->lastname.'&date_at='.date("M d, Y",strtotime($lo->created_at)).'&shipped='.$lo->ship_at) }}"> {{ $lo->load_code }}</a></td>
 						<td>{{ $lo->firstname.' '.$lo->lastname }}</td>
 						<td>{{ date("M d, Y",strtotime($lo->created_at)) }}</td>
 						<td>
@@ -119,7 +119,10 @@
 								@endif
 							@else
 								<a disabled class="btn btn-danger">Shipped</a>
+
 							@endif
+							
+							&nbsp;&nbsp;<a href="" target="_blank" class="btn btn-info">Print MTS</a>
 							
 						</td>
 					@endforeach

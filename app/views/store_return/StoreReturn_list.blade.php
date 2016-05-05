@@ -79,9 +79,9 @@
 		@if ( CommonHelper::valueInArray('CanAssignStoreReturn', $permissions))
 			<a role="button" class="btn btn-info btn-darkblue assignStoreOrder" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a>
 		@endif
-		@if ( CommonHelper::valueInArray('CanExportStoreReturn', $permissions) )
+	<!--	@if ( CommonHelper::valueInArray('CanExportStoreReturn', $permissions) )
 			<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
-		@endif
+		@endif-->	
 	</div>
 </div>
 

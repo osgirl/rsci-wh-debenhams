@@ -76,12 +76,14 @@ class Box extends Eloquent {
             ->leftJoin('box_details', 'box_details.box_code', '=', 'box.box_code');
             */
 
-        $query = Box::select('box_details.picklist_detail_id', 'box.box_code', 'box.id', 'box.store_code', 'box.in_use', 'box.created_at', 'stores.store_name', 'picklist.pl_status', 'box.userid', 'users.username')
+        $query = Box::select('box_details.picklist_detail_id', 'box.box_code', 'box.id', 'box.store_code', 'box.in_use', 'box.created_at', 'stores.store_name', 'picklist.pl_status', 'box.userid', 'users.username','box.tl_number','picklist.move_doc_number')
             ->join('stores', 'stores.store_code', '=', 'box.store_code')
+            
             ->leftJoin('box_details', 'box_details.box_code', '=', 'box.box_code')
             ->leftJoin('picklist_details', 'picklist_details.id', '=', 'box_details.picklist_detail_id')
             ->leftJoin('picklist', 'picklist.move_doc_number', '=', 'picklist_details.move_doc_number')
-            ->leftJoin('users', 'users.id', '=', 'box.userid');
+            ->leftJoin('users', 'users.id', '=', 'box.userid')
+            ->where ('box.tl_number','=', $data['load_code']);
 
         if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
             if ($data['sort']=='store') $data['sort'] = 'box.store_code';
@@ -113,6 +115,17 @@ class Box extends Eloquent {
         DebugHelper::log(__METHOD__, $result);
 
         return $result;
+    }
+
+    public static function getboxcontent($id)
+    {
+        $query= DB::table('box')
+        ->leftJoin('load','box.tl_number','=','load.load_code')
+        ->leftJoin('users','users.id','=','assigned_to_user_id')
+        ->leftJoin('stores', 'box.store_code','=','stores.store_code')
+        ->where('box_code','=',$id)
+        ->first();
+        return $query;
     }
 
     public static function getBoxesCount($data= array())
@@ -187,7 +200,15 @@ class Box extends Eloquent {
         $query = Box::where('box_code', '=', $Box_code)->update($data);
         DebugHelper::log(__METHOD__, $query);
     }
+/**
+    public static function getDetailsBox()
+    {
 
+            $query = DB::table('wms_box_details')
+            ->where('box_code', '=', $id);
+            return $query;
+    }
+**/
 
 
     //TODO :: remove if not in use

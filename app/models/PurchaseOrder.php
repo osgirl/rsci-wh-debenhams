@@ -256,7 +256,8 @@ class PurchaseOrder extends Eloquent {
 		//$query = PurchaseOrder::getPOQuery($data);
 		// echo "<pre>"; print_r($data); die();
 		$query=DB::table('purchase_order_details')
-			->select('purchase_order_details.receiver_no','purchase_order_lists.purchase_order_no','shipment_reference_no','sku','purchase_order_details.division','quantity_ordered','quantity_delivered','purchase_order_details.assigned_to_user_id','data_display','purchase_order_lists.created_at', DB::raw('CONCAT(firstname, " ", lastname) AS fullname'))
+			->select('purchase_order_details.receiver_no','purchase_order_lists.purchase_order_no','shipment_reference_no','sku','purchase_order_details.division','quantity_ordered','quantity_delivered','purchase_order_details.assigned_to_user_id','data_display','purchase_order_lists.created_at', 
+				DB::raw('CONCAT(firstname, " ", lastname) AS fullname'))
 			->join('purchase_order_lists','purchase_order_details.receiver_no','=','purchase_order_lists.receiver_no','LEFT')
 			->join('dataset','purchase_order_details.po_status','=','dataset.id')
 			->join('users','purchase_order_details.assigned_to_user_id','=','users.id')

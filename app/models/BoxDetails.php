@@ -81,7 +81,18 @@ class BoxDetails extends Eloquent {
         return $boxes;
     }
 
+public static function getboxcontent($id)
+    {
+        $query= DB::table('box')
+        ->select('load.load_code', 'box.created_at')
 
+        ->leftJoin('load','box.tl_number','=','load.load_code')
+        ->leftJoin('users','users.id','=','assigned_to_user_id')
+        ->leftJoin('stores', 'box.store_code','=','stores.store_code')
+        ->where('box.box_code','=',$id)
+        ->first();
+        return $query;
+    }
     /**************** For CMS only******************/
 
     /******************Methods for CMS only*************************/
@@ -90,7 +101,7 @@ class BoxDetails extends Eloquent {
 	{
 
 		$query = DB::table('box_details')
-					->select('picklist_details.sku', 'box_details.moved_qty', 'box_details.box_code', 'product_lists.short_description')
+					->select('picklist_details.sku', 'box_details.moved_qty', 'box_details.box_code', 		'product_lists.short_description','stores.store_name','box.created_at')
 					->join('box', 'box_details.box_code', '=', 'box.box_code', 'LEFT')
 					->join('stores', 'stores.store_code', '=', 'box.store_code', 'LEFT')
 					->join('picklist_details', 'picklist_details.id', '=', 'box_details.picklist_detail_id', 'LEFT')

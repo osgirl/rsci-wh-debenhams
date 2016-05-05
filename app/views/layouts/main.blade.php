@@ -79,7 +79,7 @@
     @if ( CommonHelper::valueInArray('CanAccessLetdown', $permissions) ||
     CommonHelper::valueInArray('CanAccessPacking', $permissions) ||
     CommonHelper::valueInArray('CanAccessBoxingLoading', $permissions) ||
-    CommonHelper::valueInArray('CanAccessShipping', $permissions))
+    CommonHelper::valueInArray('CanAccessStoreReturn', $permissions))
 		<li class="dropdown">
 			<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
 				<i class="icon-share"></i>
@@ -96,16 +96,16 @@
             <li><a href="{{ URL::to('picking/list') }}">{{ $menu_picking }}</a></li>
 			    @endif
           @if ( CommonHelper::valueInArray('CanAccessBoxingLoading', $permissions) )
-            <li><a href="{{ URL::to('box/list') }}">Loading</a></li>
+            <li><a href="{{ URL::to('shipping/list') }}">Loading</a></li>
           @endif
-          @if ( CommonHelper::valueInArray('CanAccessShipping', $permissions) )
-            <li><a href="{{ URL::to('load/list') }}">Stocks Transfer</a></li>
+          @if ( CommonHelper::valueInArray('CanAccessStoreReturn', $permissions) )
+            <li><a href="{{ URL::to('store_return/StoreReturn_list') }}"> Stock Transfer</a></li>
           @endif
       </ul>
 		</li>
     @endif
 
-    @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) ||
+   <!-- @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) ||
     CommonHelper::valueInArray('CanAccessStoreReturn', $permissions))
     <li class="dropdown">
       <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
@@ -118,14 +118,15 @@
           @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) )
             <li><a href="{{ URL::to('store_order') }}">{{ $menu_store_order }}</a></li>
           @endif
-          <!--
-          @if ( CommonHelper::valueInArray('CanAccessStoreReturn', $permissions) )
+          
+       @if ( CommonHelper::valueInArray('CanAccessStoreReturn', $permissions) )
             <li><a href="{{ URL::to('store_return') }}">{{ $menu_store_return }}</a></li>
           @endif
-          -->
+        
       </ul>
     </li>
-    @endif <!--end if drop down for store receiving-->
+    @endif   -->
+
 
     @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) ||
     CommonHelper::valueInArray('CanAccessStoreReturn', $permissions))

@@ -18,9 +18,10 @@ class Load extends Eloquent {
 
 
 
+
 public static function assignToStockPiler($Box_code = '', $data = array())
     {
-        $query = Box::where('box_code', '=', $Box_code)->update($data);
+        $query = load::where('load_code', '=', $Box_code)->update($data);
         DebugHelper::log(__METHOD__, $query);
 
         
@@ -83,6 +84,8 @@ public static function assignToStockPiler($Box_code = '', $data = array())
         $query = DB::table('load')
         ->select('load.*','firstname','lastname')
         ->join('users','assigned_to_user_id','=','users.id','Left');
+     
+
         CommonHelper::filternator($query,$data,2,$getCount);
         if( CommonHelper::hasValue($data['filter_ship_at']) ) $query->where('ship_at', 'LIKE', '%'.$data['filter_ship_at'].'%');
         $result = $query->get();
@@ -92,6 +95,7 @@ public static function assignToStockPiler($Box_code = '', $data = array())
         return $result;
 
     }
+ 
     public static function getInfoLoad($data)
     {
         return Load::whereIn('load_code', $data)->get()->toArray();
@@ -379,5 +383,29 @@ public static function getPackingDetails($loadCode)
         return $result;
 
     }*/
+public static function getPOInfodiv($receiver_no = NULL) {
+        $query = DB::table('purchase_order_lists')
+                    // ->join('users', 'purchase_order_lists.assigned_to_user_id', '=', 'users.id', 'LEFT')
+                    ->join('dataset', 'purchase_order_lists.po_status', '=', 'dataset.id', 'LEFT')
+                    ->join('vendors', 'purchase_order_lists.vendor_id', '=', 'vendors.id', 'LEFT')
+                    ->where('purchase_order_lists.receiver_no', '=', $receiver_no);
 
+        $result = $query->get(array(
+                                    'purchase_order_lists.*',
+                                    'vendors.vendor_name',
+                                    'dataset.data_display'
+                                    // 'users.firstname',
+                                    // 'users.lastname'
+                                )
+                            );
+
+        // get the multiple stock piler fullname
+        foreach ($result as $key => $lo) {
+            $assignedToUserId       = explode(',', $lo->assigned_to_user_id);
+            $getUsers               = User::getUsersFullname($assignedToUserId);
+            $result[$key]->fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $getUsers));
+        }
+
+        return $result[0];
+}
 }
