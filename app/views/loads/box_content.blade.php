@@ -15,7 +15,7 @@
 	      	<div class="span4">
 	        	<div>
 		        	<span class="left-pane">Load Number :</span>
-		        	<span class="left-pane">{{Form::text('stockpiler', $Contentbox->load_code, array('readonly'=>'readonly')) }}
+		        	<span class="left-pane">{{Form::text('loadNumber', $Contentbox->load_code, array('readonly'=>'readonly')) }}
 		        	
 		        	
 		        </div>
@@ -31,14 +31,14 @@
 		        	</span>
 		        </div>
 		        
-		         <div>
+		     <!--    <div>
 		        	<span class="left-pane">TL Number : </span>
 		        	<span class="left-pane">
 		        	{{Form::text('tl_number', $Contentbox->box_code, array('readonly'=>'readonly')) }}
 
 
 		        	</span>
-		        </div>
+		        </div>-->
 	      	</div>
 
 	      	<div class="span4">
@@ -105,7 +105,7 @@
 			
 			@foreach($boxesYong as $boxYong)
 				<tr>
-							<td>  {{ $counter++ }}</td>
+							<td>{{ $counter++ }}</td>
 							<td>{{$boxYong->sku}} </td>
 							<td>{{$boxYong->short_description}}</td>
 							<td>{{$boxYong->box_code}}</td>

@@ -22,7 +22,8 @@
 		 
 	        	<div>
 		        	<span class="left-pane">Picker : </span>
-		        	<span class="left-pane"><input  type="textfield" disabled value="" >
+		        	<span class="left-pane">
+		        
 		        	</span>
 		        </div>
 	      	</div>
@@ -30,7 +31,8 @@
 	      	<div class="span4">
 	      		<div>
 		        	<span class="left-pane">Entry Date :</span>
-		        	<span class="left-pane"> </span>
+		        	<span class="left-pane"> 
+				</span>
 		        </div>
 		       <div>
 

@@ -99,13 +99,13 @@
             <li><a href="{{ URL::to('shipping/list') }}">Loading</a></li>
           @endif
           @if ( CommonHelper::valueInArray('CanAccessStoreReturn', $permissions) )
-            <li><a href="{{ URL::to('store_return/StoreReturn_list') }}"> Stock Transfer</a></li>
+            <li><a href="{{ URL::to('store_return/stocktransfer') }}"> Stock Transfer</a></li>
           @endif
       </ul>
 		</li>
     @endif
-
-   <!-- @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) ||
+<!--
+    @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) ||
     CommonHelper::valueInArray('CanAccessStoreReturn', $permissions))
     <li class="dropdown">
       <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
@@ -126,7 +126,6 @@
       </ul>
     </li>
     @endif   -->
-
 
     @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) ||
     CommonHelper::valueInArray('CanAccessStoreReturn', $permissions))

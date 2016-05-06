@@ -119,7 +119,7 @@ class Box extends Eloquent {
 
     public static function getboxcontent($id)
     {
-        $query= DB::table('box')
+        $query= DB::table('box', 'load')
         ->leftJoin('load','box.tl_number','=','load.load_code')
         ->leftJoin('users','users.id','=','assigned_to_user_id')
         ->leftJoin('stores', 'box.store_code','=','stores.store_code')

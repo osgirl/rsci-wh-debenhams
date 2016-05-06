@@ -75,7 +75,7 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::get('store_return/export', 'StoreReturnController@exportCSV');
 	Route::get('store_return/export_detail', 'StoreReturnController@exportDetailsCSV');
 	Route::post('store_return/close', 'StoreReturnController@closeStoreReturn');
-	Route::get('store_return/StoreReturn_list','StoreReturnController@showIndex');
+	Route::get('store_return/stocktransfer','StoreReturnController@showIndex');
 
 
 	Route::get('box/list', 'BoxController@index');

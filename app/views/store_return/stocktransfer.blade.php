@@ -25,34 +25,34 @@
 				        		{{ Form::text('filter_so_no', $filter_so_no, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_so_no")) }}
 				        	</span>
 				        </div>
-				        <div>
+				       <!-- <div>
 				        	<span class="search-po-left-pane">{{ $label_status }}</span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::select('filter_status', array('' => $text_select) + $so_status_type, $filter_status, array('class'=>'select-width', 'id'=>"filter_status")) }}
 				        	</span>
-				        </div>
+				        </div>-->
 			      	</div>
 			      	<div class="span4">
 			      		<div>
-				        	<span class="search-po-left-pane">{{ $label_store }}</span>
+				        	<span class="search-po-left-pane">To : </span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::select('filter_store', array('' => $text_select) + $store_list, $filter_store, array('class'=>'select-width', 'id'=>"filter_store")) }}
 				        	</span>
 				        </div>
 				     </div>
-			      	<div class="span3">
-			      		<div>
+			     <br>
+			      		<!--<div>
 				        	<span class="search-po-left-pane">{{ $label_order_date }}</span>
 				        	<div class="search-po-right-pane input-append date">
 								{{ Form::text('filter_created_at', $filter_created_at, array('class'=>'span2', 'id'=>"filter_created_at", 'readonly'=>'readonly')) }}
 								<span class="add-on"><i class="icon-th"></i></span>
-				        	</div>
-				        </div>
-			      	</div>
-			      	<div class="span11 control-group collapse-border-top">
+				        	</div>-->
+				    <div class="span11 control-group collapse-border-top">
 			      		<a class="btn btn-success btn-darkblue" id="submitForm">{{ $button_search }}</a>
 		      			<a class="btn" id="clearForm">{{ $button_clear }}</a>
 			      	</div>
+			      	</div>
+
             </div>
             {{ Form::hidden('sort', $sort) }}
 		    {{ Form::hidden('order', $order) }}
@@ -100,12 +100,14 @@
 							<th style="width: 20px;" class="align-center"><input type="checkbox" id="main-selected" /></th>
 						@endif
 						<th>{{ $col_id }}</th>
-						<th><a href="{{ $sort_so_no }}" class="@if( $sort=='so_no' ) {{ $order }} @endif">{{ $col_so_no }}</a></th>
-						<th><a href="{{ $sort_store }}" class="@if( $sort=='store' ) {{ $order }} @endif">{{ $col_store }}</a></th>
-						<th>{{ $col_store_name }}</th>
-						<th><a href="{{ $sort_created_at }}" class="@if( $sort=='created_at' ) {{ $order }} @endif">{{ $col_order_date }}</a></th>
-						<th>{{ $col_receiving_stock_piler }}</th>
-						<th>SLOT</th>
+						<th><a href="{{ $sort_so_no }}" class="@if( $sort=='so_no' ) {{ $order }} @endif">TL number</a></th>
+						<!--<th><a href="{{ $sort_store }}" class="@if( $sort=='store' ) {{ $order }} @endif">{{ $col_store }}</a></th>-->
+						<th> From</th>
+						<th> To</th>
+					<!--	<th><a href="{{ $sort_created_at }}" class="@if( $sort=='created_at' ) {{ $order }} @endif">{{ $col_order_date }}</a></th>-->
+						<th>  slot number</th>
+						<th>Stock Piler</th>
+						<th> received date</th>
 						<th>{{ $col_status }}</th>
 						<th>{{ $col_action }}</th>
 					</tr>
@@ -130,10 +132,13 @@
 						@endif
 						<td>{{ $counter++ }}</td>
 						<td><a href="{{ $url_detail . '&id='.$so['id'].'&so_no=' . $so['so_no'] }}">{{ $so['so_no'] }}</a></td>
-						<td>{{ $so['store_code'] }}</td>
+					<!--	<td>{{ $so['store_code'] }}</td>-->
 						<td>{{ $so['store_name'] }}</td>
-						<td>{{ date("M d, Y", strtotime($so['created_at'])) }}</td>
+					
+						<td> </td>
+						<td></td>
 						<td>{{ $so['fullname'] }}</td>
+					
 						<td>{{ $so['slot_code'] }}</td>
 						<td>{{ $so['data_display'] }}</td>
 						<td class="align-center">
