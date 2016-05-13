@@ -215,9 +215,9 @@ class StoreOrderController extends BaseController {
 		//Data
 		$so_id = Input::get('id', NULL);
 		$so_no = Input::get('so_no', NULL);
-
+	
 		$this->data['so_info'] = StoreOrder::getSOInfo($so_id);
-
+	
 		// echo '<pre>'; print_r($this->data['so_info']); exit;
 		$arrParams = array(
 						'sort'		=> $sort_detail,

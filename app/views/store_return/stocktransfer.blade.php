@@ -16,7 +16,7 @@
 	<div class="controls">
 		<div class="accordion" id="accordion2">
           <div class="accordion-group" style="background-color: #FFFFFF;">
-            {{ Form::open(array('url'=>'store_return', 'class'=>'form-signin', 'id'=>'form-store-order', 'role'=>'form', 'method' => 'get')) }}
+            {{ Form::open(array('url'=>'filter_transfer', 'class'=>'form-signin', 'id'=>'form_store_return', 'role'=>'form', 'method' => 'get')) }}
             <div id="collapseOne" class="accordion-body collapse in" style="padding-top: 20px;">
 	                <div class="span4">
 			        	<div>
@@ -34,7 +34,7 @@
 			      	</div>
 			      	<div class="span4">
 			      		<div>
-				        	<span class="search-po-left-pane">To : </span>
+				        	<span class="search-po-left-pane">From : </span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::select('filter_store', array('' => $text_select) + $store_list, $filter_store, array('class'=>'select-width', 'id'=>"filter_store")) }}
 				        	</span>
@@ -103,7 +103,7 @@
 						<th><a href="{{ $sort_so_no }}" class="@if( $sort=='so_no' ) {{ $order }} @endif">TL number</a></th>
 						<!--<th><a href="{{ $sort_store }}" class="@if( $sort=='store' ) {{ $order }} @endif">{{ $col_store }}</a></th>-->
 						<th> From</th>
-						<th> To</th>
+						<th> To     </th>
 					<!--	<th><a href="{{ $sort_created_at }}" class="@if( $sort=='created_at' ) {{ $order }} @endif">{{ $col_order_date }}</a></th>-->
 						<th>  slot number</th>
 						<th>Stock Piler</th>
@@ -120,7 +120,7 @@
 					@foreach( $store_return as $so )
 					<tr class="font-size-13 tblrow" data-id="{{ $so['so_no'] }}"
 						@if ( array_key_exists('discrepancy',$so) )
-							style="background-color:#F29F9F"
+							
 						@endif
 					>
 						@if ( CommonHelper::valueInArray('CanAssignStoreReturn', $permissions) )
@@ -131,15 +131,15 @@
 						</td>
 						@endif
 						<td>{{ $counter++ }}</td>
-						<td><a href="{{ $url_detail . '&id='.$so['id'].'&so_no=' . $so['so_no'] }}">{{ $so['so_no'] }}</a></td>
+						<td><a href="{{ $url_detail . '&id='.$so['id'].'&so_no=' . $so['so_no'].'&fullname='.$so['fullname'].'&created_at='.$so['created_at'].'&fromStore='.$so['store_name'] }}">{{ $so['so_no'] }}</a></td>
 					<!--	<td>{{ $so['store_code'] }}</td>-->
 						<td>{{ $so['store_name'] }}</td>
 					
 						<td> </td>
-						<td></td>
+						<td>{{$so['so_no']}}</td>
 						<td>{{ $so['fullname'] }}</td>
-					
-						<td>{{ $so['slot_code'] }}</td>
+			
+						<td>{{ date("M d, Y",strtotime($so['created_at'])) }}</td>
 						<td>{{ $so['data_display'] }}</td>
 						<td class="align-center">
 						@if ( CommonHelper::valueInArray('CanCloseStoreReturn', $permissions) )
@@ -199,12 +199,12 @@ $(document).ready(function() {
 
     // Submit Form
     $('#submitForm').click(function() {
-    	$('#form-store-order').submit();
+    	$('#form-store_return').submit();
     });
 
     $('#form-store-order input').keydown(function(e) {
 		if (e.keyCode == 13) {
-			$('#form-store-order').submit();
+			$('#form-store_return').submit();
 		}
 	});
 

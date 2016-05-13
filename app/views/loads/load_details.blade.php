@@ -22,7 +22,7 @@
 		 
 	        	<div>
 		        	<span class="left-pane">Picker : </span>
-		        	<span class="left-pane">
+		        	<span class="left-pane"><input  type="textfield" disabled value=" {{$filer}}"> </input>
 		        
 		        	</span>
 		        </div>
@@ -31,13 +31,16 @@
 	      	<div class="span4">
 	      		<div>
 		        	<span class="left-pane">Entry Date :</span>
-		        	<span class="left-pane"> 
+		        	<span class="left-pane"> <input  type="textfield" disabled value="{{$date_at}}"> </input>
 				</span>
 		        </div>
 		       <div>
-
-		        	<span class="left-pane">Total QTY :</span>
-		        	<span class="left-pane"><input  type="textfield" disabled value=" "> </input></span>
+		        	<span class="left-pane">Ship by Date :</span>
+		        	@if($is_shipped == "0000-00-00 00:00:00")
+		        		<span class="left-pane">{{Form::text('is_shipped', 'Not Available', array('readonly'=>'readonly')) }}</span>
+		        	@else
+		        		<span class="left-pane">{{Form::text('is_shipped', date("M d, Y", strtotime($is_shipped)), array('readonly'=>'readonly')) }}</span>
+		        	@endif
 		        </div>
 	      </div>
 
@@ -48,9 +51,9 @@
 </div>
 <div class="clear">
 	<div class="div-paginate">
-		@if(CommonHelper::arrayHasValue($BigBoxes) ) 
+		@if(CommonHelper::arrayHasValue($BigBoxes)) 
 		    <h6 class="paginate">
-				<span>{{ $BigBoxes->appends($arrParams)->links() }}&nbsp;</span>
+				<span>{{$BigBoxes->appends($arrFilters)->links()}}&nbsp;</span>
 			</h6>
 		@else
 			&nbsp;
@@ -61,7 +64,7 @@
 <div class="widget widget-table action-table">
     <div class="widget-header"> <i class="icon-th-list"></i>
       <h3>Loading Content</h3>
-      <span class="pagination-totalItems"></span>
+      <span class="pagination-totalItems">{{$boxes_count}}</span>
     </div>
     <!-- /widget-header -->
     <div class="widget-content">

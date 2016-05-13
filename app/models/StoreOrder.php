@@ -49,6 +49,7 @@ class StoreOrder extends Eloquent {
 	public static function getSOInfo($so_id = NULL) {
 		$query = DB::table('store_order')
 					->join('dataset', 'store_order.so_status', '=', 'dataset.id', 'LEFT')
+				
 					->where('store_order.id', '=', $so_id);
 
 		$result = $query->get(array(

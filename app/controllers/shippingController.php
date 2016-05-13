@@ -127,7 +127,7 @@ class shippingController extends \BaseController {
 	    $this->data['url_back']         = URL::to('picking/list'). $this->setURL();
 	   
 	*/
-	    $this->layout->content          = View::make('loads.shipping_assign_piler', $this->data);
+	    $this->layout->content  = View::make('loads.shipping_assign_piler', $this->data);
 	}
 
 	protected function setURL($forDetail = false, $forBackToList = false) {

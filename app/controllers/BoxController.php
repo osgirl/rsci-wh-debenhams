@@ -92,6 +92,10 @@ class BoxController extends BaseController {
 		$order = Input::get('order', 'ASC');
 		$page = Input::get('page', 1);
 
+		//pulling data  to other page
+		$filer = Input::get('filer', null);
+		$date_at = Input::get('date_at', null);
+		$is_shipped = Input::get('is_shipped', null);
 
 		$arrParams = array(
 						'load_code'				=> $load_code,
@@ -107,17 +111,21 @@ class BoxController extends BaseController {
 		$results 		= Box::getBoxesWithFilters($arrParams)->toArray();
 		// echo '<pre>';
 		// print_r($results);
-		$results_total 	= Box::getBoxesCount($arrParams);
+		$results_total 	= Box::getBoxesCount($arrParams, true);
 
 		
 
 
-		$arrparam = array(
+		$this->data['arrFilters'] = array(
 									'filter_store' 			=> $filter_store,
 									'filter_box_code' 		=> $filter_box_code,
                                     'filter_stock_piler' 	=> $filter_stock_piler,
 									'sort'					=> $sort,
-									'order'					=> $order
+									'order'					=> $order,
+									'filer'					=> $filer,
+									'date_at'				=> $date_at,
+									'is_shipped'			=> $is_shipped
+
 								);
 
 
@@ -125,10 +133,18 @@ class BoxController extends BaseController {
 		$this->data['boxes_count'] = $results_total;
 		$this->data['counter'] 	= $this->data['BigBoxes']->getFrom();
 
-	$this->data['arrParams']        = $arrParams;
-		$this->data['filter_store'] = $filter_store;
-		$this->data['filter_box_code'] = $filter_box_code;
-		$this->data['load_code'] = $load_code;
+		$this->data['arrParams']        	= $arrParams;
+		$this->data['filter_store'] 		= $filter_store;
+		$this->data['filter_box_code'] 		= $filter_box_code;
+
+
+		$this->data['load_code'] 			= $load_code;
+
+		$this->data['filer'] 		= $filer;
+		$this->data['date_at'] 		= $date_at;
+		$this->data['is_shipped'] 	= $is_shipped;
+
+
         $this->data['filter_stock_piler'] = $filter_stock_piler;
 
 		$this->data['url_add_box'] = URL::to('box/create' . $this->setURL());
@@ -223,13 +239,13 @@ class BoxController extends BaseController {
 		$box_code = Input::get('box_code', NULL);
 
 		$arrParams = array(
-						'sort'		=> $sort_detail,
-						'order'		=> $order_detail,
-						'page'		=> $page_detail,
-						'filter_sku' => $filter_sku,
-						'filter_store' => $filter_store,
+						'sort'				=> $sort_detail,
+						'order'				=> $order_detail,
+						'page'				=> $page_detail,
+						'filter_sku' 		=> $filter_sku,
+						'filter_store' 		=> $filter_store,
 						'filter_box_code'	=> $filter_box_code,
-						'limit'		=> 30
+						'limit'				=> 30
 					);
 		// dd($box_code);
 		$results 		= BoxDetails::getBoxDetails($box_code, $arrParams);

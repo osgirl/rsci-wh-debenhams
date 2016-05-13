@@ -58,7 +58,7 @@ class Box extends Eloquent {
     *
     * @return boxes
     */
-    public static function getBoxesWithFilters($data= array())
+    public static function getBoxesWithFilters($data= array(), $getCount = FALSE)
     {
         /*$query = Box::select('box_details.picklist_detail_id', 'box.box_code', 'box.id', 'box.store_code', 'box.in_use', 'box.created_at', 'stores.store_name')
             ->join('stores', 'stores.store_code', '=', 'box.store_code')
@@ -94,6 +94,7 @@ class Box extends Eloquent {
 
             $query->orderBy($data['sort'], $data['order']);
         }
+     
         if( CommonHelper::hasValue($data['filter_store']) ) {
             $query->where('stores.store_name', 'LIKE', '%'. $data['filter_store']. '%');
         }
@@ -110,8 +111,10 @@ class Box extends Eloquent {
         }
         $query->groupBy('box.box_code');
 
+
         $result = $query->get();
 
+        if($getCount) return count($result);
         DebugHelper::log(__METHOD__, $result);
 
         return $result;
@@ -130,6 +133,7 @@ class Box extends Eloquent {
 
     public static function getBoxesCount($data= array())
     {
+
         $query = Box::select(DB::raw('count(distinct wms_box.box_code) as count'))
             ->join('stores', 'stores.store_code', '=', 'box.store_code')
             ->leftJoin('box_details', 'box_details.box_code', '=', 'box.box_code');
@@ -148,7 +152,9 @@ class Box extends Eloquent {
             $query->where('box.box_code', 'LIKE', '%'.$data['filter_box_code']. '%');
         }
         $result = $query->pluck('count');
-        return $result;
+        
+
+        return count($result);
     }
 
     /**

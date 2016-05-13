@@ -78,12 +78,11 @@ class StoreReturn extends Eloquent {
 	}
 
 	public static function getStoreList(){
-		$storeList = StoreReturn::lists('store_code');
-
+		$storeList = StoreReturn::lists('store_code');				
 		return $storeList;
 	}
 
-	/***************************Methods for API only*********************************/
+	/***********************00000*Methods for API only*00000*******************************/
 	public static function getListByPiler($pilerId)
 	{
 		return StoreReturn::whereRaw('find_in_set('. $pilerId . ',assigned_to_user_id) > 0')

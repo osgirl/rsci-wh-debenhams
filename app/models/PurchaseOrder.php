@@ -149,6 +149,8 @@ class PurchaseOrder extends Eloquent {
 	}
 
 	public static function getPoListsdiv($data = array(), $getCount = FALSE) {
+
+		
 		$query = PurchaseOrder::getPOQuerydivision($data);
 		// echo "<pre>"; print_r($data); die();
 

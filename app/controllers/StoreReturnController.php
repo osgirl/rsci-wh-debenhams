@@ -184,6 +184,12 @@ class StoreReturnController extends BaseController {
 		$so_id = Input::get('id', NULL);
 		$so_no = Input::get('so_no', NULL);
 
+		//pulling data to other pages
+		$fullname = Input::get('fullname', null);
+		$created_at = Input::get('created_at', null);
+		$fromStore=Input::get('fromStore', Null);
+
+
 		$this->data['so_info'] = StoreReturn::getSOInfo($so_id);
 
 		$arrParams = array(
@@ -202,6 +208,8 @@ class StoreReturnController extends BaseController {
 
 		$results 		= StoreReturnDetail::getSODetails($so_no, $arrParams)->toArray();
 		$results_total 	= StoreReturnDetail::getCountSODetails($so_no, $arrParams);
+		
+
 		// Pagination
 		$this->data['arrFilters'] = array(
 									'filter_so_no'      => $filter_so_no,
@@ -214,7 +222,10 @@ class StoreReturnController extends BaseController {
 									'id'             	=> $so_id,
 									'so_no'             => $so_no,
 									'sort'              => $sort_detail,
-									'order'             => $order_detail
+									'order'             => $order_detail,
+									'fullname'			=> $fullname,
+									'created_at'		=> $created_at,
+									'fromStore'			=> $fromStore
 								);
 
 		$this->data['store_return'] = Paginator::make($results, $results_total, 30);
@@ -228,6 +239,9 @@ class StoreReturnController extends BaseController {
 		$this->data['filter_created_at'] = $filter_created_at;
 		$this->data['filter_status'] = $filter_status;
 
+		$this->data['fullname'] = $fullname;
+		$this->data['created_at'] =$created_at;
+		$this->data['fromStore'] =$fromStore;
 		$this->data['sort'] = $sort_detail;
 		$this->data['order'] = $order_detail;
 		$this->data['page'] = $page_detail;
@@ -235,7 +249,7 @@ class StoreReturnController extends BaseController {
 		// Details
 		$this->data['sort_detail']  = $sort_detail;
 		$this->data['order_detail'] = $order_detail;
-		// $this->data['page_detail'] = $page_detail;
+		$this->data['page_detail'] = $page_detail;
 		$this->data['sort_back']    = $sort_back;
 		$this->data['order_back']   = $order_back;
 		$this->data['page_back']    = $page_back;
@@ -268,6 +282,8 @@ class StoreReturnController extends BaseController {
 	}
 
 	protected function getList() {
+
+
 		$this->data = Lang::get('store_return');
 
 		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
@@ -277,7 +293,7 @@ class StoreReturnController extends BaseController {
 		$this->data['button_clear'] = Lang::get('general.button_clear');
 		$this->data['button_export'] = Lang::get('general.button_export');
 		// URL
-		$this->data['url_assign']         = URL::to('store_return/assign'. $this->setURL());
+		$this->data['url_assign'] = URL::to('store_return/assign'. $this->setURL());
 		$this->data['url_export'] = URL::to('store_return/export');
 		$this->data['url_detail'] = URL::to('store_return/detail' . $this->setURL(true));
 
@@ -341,7 +357,7 @@ class StoreReturnController extends BaseController {
 			foreach($details as $detail){
 				if($detail['received_qty'] != $detail['delivered_qty'] ){
 					$result->discrepancy=1;
-					break;
+					break;	
 				}
 			}
 		}
@@ -599,3 +615,20 @@ class StoreReturnController extends BaseController {
 	}
 
 }
+
+
+public function getstocktransfer()
+	{
+	
+
+		$filter_so_no = Input::get('filter_so_no', NULL);
+		$filter_store = Input::get('filter_store', NULL);
+		$filter_created_at = Input::get('filter_created_at', NULL);
+		$filter_status = Input::get('filter_status', NULL);
+
+
+		$this->layout->content = View::make('store_return.stocktransfer', $this->data);
+
+
+
+	}
