@@ -68,7 +68,7 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::post('store_order/generate_picklist', 'StoreOrderController@generatePicklist');
 	Route::get('store_order/mts_detail', 'StoreOrderController@getMtsDetails');
 
-	Route::get('reverse_logistic', 'StoreReturnController@showIndex');
+//	Route::get('reverse_logistic', 'store_return/reverse_logistic');
 	Route::get('store_return/detail', 'StoreReturnController@getSODetails');
 	Route::get('store_return/assign', 'StoreReturnController@assignPilerForm');
 	Route::post('store_return/assign_to_piler', 'StoreReturnController@assignToStockPiler');
@@ -77,6 +77,15 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::post('store_return/close', 'StoreReturnController@closeStoreReturn');
 	Route::get('store_return/stocktransfer','StoreReturnController@showIndex');
 
+
+Route::get('reverse_logistic/list', [
+	'as' => 'reverse_logistic/list',
+	'uses' => 'ReverseLogisticController@index'
+	]);
+Route::get('reverse_logistic/assign', 'ReverseLogisticController@assignPilerForm');
+
+	//Route::get('reverse_logistic/list', 'ReverseLogisticController@index');
+	
 
 	Route::get('box/list', 'BoxController@index');
 	Route::get('box/detail', 'BoxController@getBoxDetails');

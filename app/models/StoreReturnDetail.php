@@ -11,13 +11,14 @@ class StoreReturnDetail extends Eloquent {
 	public static function getSODetails($so_no,$data = array()){
 		// print_r($data); die();
 		$query =  StoreReturnDetail::join('product_lists', 'store_return_detail.sku', '=', 'product_lists.upc')
+				
 					->join('store_return', 'store_return.so_no', '=', 'store_return_detail.so_no', 'LEFT')
 					->select(DB::raw('convert(wms_product_lists.sku, decimal) as sku, convert(wms_product_lists.upc, decimal(20,0)) as upc'),'product_lists.description','store_return_detail.received_qty','store_return_detail.delivered_qty','store_return.created_at')
 					// ->join('dataset', 'store_return.so_status', '=', 'dataset.id');
 					->where('store_return_detail.so_no', '=', $so_no);
 
 		if( CommonHelper::hasValue($data['filter_so_no']) ) $query->where('store_return.so_no', 'LIKE', '%'.$data['filter_so_no'].'%');
-		if( CommonHelper::hasValue($data['filter_store']) ) $query->where('store_code', 'LIKE', '%'.$data['filter_store'].'%');
+		if( CommonHelper::hasValue($data['filter_store_name']) ) $query->where('store_name', 'LIKE', '%'.$data['filter_store_name'].'%');
 		if( CommonHelper::hasValue($data['filter_created_at']) ) $query->where('store_return.created_at', 'LIKE', '%'.$data['filter_created_at'].'%');
 		if( CommonHelper::hasValue($data['filter_status']) ) {
 			$arrParams = array('data_code' => 'SR_STATUS_TYPE', 'data_value'=> $data['filter_status']);

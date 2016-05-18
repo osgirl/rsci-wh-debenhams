@@ -43,4 +43,11 @@ class Store extends Eloquent {
 		return $storeName;
 	}
 	
+	public static function getStoreList1(){
+		$storeList = Store::lists('store_name');
+			
+		return $storeList;
+	}	
 }
+
+	

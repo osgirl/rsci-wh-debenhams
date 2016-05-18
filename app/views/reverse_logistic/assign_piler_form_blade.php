@@ -12,7 +12,7 @@
     <!-- /widget-header -->
 
     <div class="widget-content">
-    	{{ Form::open(array('url'=>'store_return/assign_to_piler', 'id'=>"form-assign", 'class'=>'form-horizontal', 'style' => 'margin: 0px;', 'role'=>'form')) }}
+    	{{ Form::open(array('url'=>'reverse_logistic/assign_to_piler', 'id'=>"form-assign", 'class'=>'form-horizontal', 'style' => 'margin: 0px;', 'role'=>'form')) }}
 		<!-- <div class="span3">&nbsp;</div> -->
 		<div class="span3">&nbsp;</div>
 		<div class="span7 add-piler-wrapper">

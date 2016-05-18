@@ -64,7 +64,7 @@
 <div class="widget widget-table action-table">
     <div class="widget-header"> <i class="icon-th-list"></i>
       <h3>Loading Content</h3>
-      <span class="pagination-totalItems">{{$boxes_count}}</span>
+      <span class="pagination-totalItems"><!--{{$boxes_count}}--></span>
     </div>
     <!-- /widget-header -->
     <div class="widget-content">

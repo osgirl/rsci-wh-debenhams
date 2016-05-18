@@ -128,7 +128,7 @@ class BoxController extends BaseController {
 
 								);
 
-
+	
 		$this->data['BigBoxes'] = Paginator::make($results, $results_total, 30);
 		$this->data['boxes_count'] = $results_total;
 		$this->data['counter'] 	= $this->data['BigBoxes']->getFrom();
@@ -137,9 +137,8 @@ class BoxController extends BaseController {
 		$this->data['filter_store'] 		= $filter_store;
 		$this->data['filter_box_code'] 		= $filter_box_code;
 
-
-		$this->data['load_code'] 			= $load_code;
-
+		//data pnapasahan ng data sa kabila page
+		$this->data['load_code'] 	= $load_code;
 		$this->data['filer'] 		= $filer;
 		$this->data['date_at'] 		= $date_at;
 		$this->data['is_shipped'] 	= $is_shipped;

@@ -138,7 +138,7 @@
 
       <ul class="dropdown-menu">
           @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) )
-            <li><a href="{{ URL::to('reverse_logistic') }}">Reverse Logistics</a></li>
+            <li><a href="{{ URL::to('reverse_logistic/list') }}">Reverse Logistics</a></li>
           @endif
           
       </ul>
