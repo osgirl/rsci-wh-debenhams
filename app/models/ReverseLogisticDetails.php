@@ -49,4 +49,14 @@ class ReverseLogisticDetails extends Eloquent {
 
 		return $result;
 	}
+
+	public static function getCountSODetails($so_no) {
+		$storeOrderDetail = StoreReturnDetail::select('store_return_detail.*', 'product_lists.description')
+			->join('product_lists', 'store_return_detail.sku', '=', 'product_lists.upc')
+			// ->join('store_return', 'store_return.so_no', '=', 'store_return_detail.so_no', 'LEFT')
+			->where('so_no', '=', $so_no)
+			->get();
+
+		return $storeOrderDetail->count();
+	}
 }

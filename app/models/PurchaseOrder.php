@@ -9,6 +9,26 @@ class PurchaseOrder extends Eloquent {
 	 */
 	protected $table = 'purchase_order_lists';
 
+public static function GetApiRPoList($piler_id) {
+
+        $query = DB::select(DB::raw("SELECT purchase_order_no,wms_purchase_order_lists.receiver_no,division as division_id,division,wms_purchase_order_details.po_status from wms_purchase_order_lists inner JOIN wms_purchase_order_details on wms_purchase_order_lists.receiver_no=wms_purchase_order_details.receiver_no where wms_purchase_order_details.assigned_to_user_id=$piler_id and wms_purchase_order_lists.po_status<>5"));
+            
+        return $query;
+
+        
+    }
+  
+     public static function GetApiRPoListDetail($receiver_no,$division_id) {
+
+        $query = DB::select(DB::raw("SELECT receiver_no,division,upc,short_description,quantity_ordered,quantity_delivered,po_status FROM wms_purchase_order_details inner join wms_product_lists on wms_purchase_order_details.sku=upc WHERE receiver_no=$receiver_no and division=$division_id"));
+            
+        return $query;
+    }
+
+    public static function UpdateApiRPoSlot($receiver_no,$division) {
+        $query = DB::select(DB::raw("update wms_purchase_order_details set po_status=3 WHERE receiver_no=$receiver_no and division=$division"));
+        return $query;
+    }
 	public static function getAPIPoLists($data = array()) {
 		$arrParams = array('data_code' => 'PO_STATUS_TYPE', 'data_value'=> 'closed');
 		$piler_id  = (int) $data['stock_piler_id'];
@@ -81,6 +101,7 @@ class PurchaseOrder extends Eloquent {
 		$query = PurchaseOrder::getPOQuerydivision($data);
 		// echo "<pre>"; print_r($data); die();
 
+
 		if( CommonHelper::hasValue($data['limit']) && CommonHelper::hasValue($data['page']) && !$getCount)  {
 			$query->skip($data['limit'] * ($data['page'] - 1))
 		          ->take($data['limit']);
@@ -89,7 +110,7 @@ class PurchaseOrder extends Eloquent {
 		$result = $query->get(array(
 									'purchase_order_lists.*',
 									'vendors.vendor_name',
-									'division',
+									'purchase_order_details.Division_Name',
 									'dataset.data_display'
 									// 'users.firstname',
 									// 'users.lastname'
@@ -115,6 +136,7 @@ class PurchaseOrder extends Eloquent {
 					
 			->select('*',DB::raw('sum(quantity_ordered) as quantity_ordered1'),DB::raw('sum(quantity_delivered) as quantity_delivered1'))
 		 	 	// ->join('users', 'purchase_order_lists.assigned_to_user_id', 'IN', 'users.id', 'LEFT')
+			//->join('division','purchase_order_details.division','=', 'division.id','LEFT')
 			->join('purchase_order_details', 'purchase_order_lists.receiver_no', '=', 'purchase_order_details.receiver_no', 'LEFT')
 			->join('product_lists', 'purchase_order_details.sku', '=', 'product_lists.upc', 'LEFT')
 			->join('dataset', 'purchase_order_details.po_status', '=', 'dataset.id', 'LEFT')
@@ -131,7 +153,7 @@ class PurchaseOrder extends Eloquent {
 		if( CommonHelper::hasValue($data['filter_status']) && $data['filter_status'] !== 'default' ) $query->where('purchase_order_lists.po_status', '=', $data['filter_status']);
 		if( CommonHelper::hasValue($data['filter_back_order']) ) $query->where('back_order', '=', $data['filter_back_order']);
 		if( CommonHelper::hasValue($data['filter_brand']) ) $query->where('dept_code', '=', $data['filter_brand']);
-		if( CommonHelper::hasValue($data['filter_division']) ) $query->where('division', '=', $data['filter_division']);
+		if( CommonHelper::hasValue($data['filter_Division_Name']) ) $query->where('division', '=', $data['filter_division']);
 		if( CommonHelper::hasValue($data['filter_shipment_reference_no']) ) $query->where('shipment_reference_no', '=', $data['filter_shipment_reference_no']);
 
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
@@ -162,7 +184,7 @@ class PurchaseOrder extends Eloquent {
 		$result = $query->get(array(
 									'purchase_order_lists.*',
 									'vendors.vendor_name',
-									'division',
+									'purchase_order_details.Division_Name',
 									'dataset.data_display'
 									// 'users.firstname',
 									// 'users.lastname'

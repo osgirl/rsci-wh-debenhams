@@ -31,7 +31,7 @@
 	      	<div class="span4">
 	      		<div>
 		        	<span class="left-pane">Stockpiler :</span>
-		        	<span class="right-pane">{{ Form::text('fullname', $fullname, array('readonly' => 'readonly')) }}</span>
+		        	<span class="left-pane">{{ Form::text('fullname', $fullname, array('readonly' => 'readonly')) }}</span>
 		        </div>
 		        <div>
 		        	<span class="left-pane"> To :</span>
@@ -82,10 +82,11 @@
 					<tr>
 						<th>{{ $col_id }}</th>
 					<!--	<th><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif">{{ $col_sku }}</a></th> -->
-						<th><a href="{{ $sort_upc }}" class="@if( $sort=='upc' ) {{ $order }} @endif">{{ $col_upc }}</a></th>
-						<th><a href="{{ $sort_short_name }}" class="@if( $sort=='short_name' ) {{ $order }} @endif">{{ $col_short_name }}</a></th>
+						<th>
+						{{ $col_upc }}</th>
+						<th>{{ $col_short_name }}</th>
 					<!--	<th><a href="{{ $sort_delivered_quantity }}" class="@if( $sort=='delivered_quantity' ) {{ $order }} @endif">{{ $col_delivered_quantity }}</a></th> -->
-					<th>order quantity </th>
+						<th>order quantity </th>
 						<th> RECEIVED Quantity </th>
 						<th> VARIANCE Quantity </th>
 					</tr>

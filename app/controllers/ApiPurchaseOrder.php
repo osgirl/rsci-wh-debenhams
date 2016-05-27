@@ -16,6 +16,81 @@ class ApiPurchaseOrder extends BaseController {
 	* @throws Some_Exception_Class If something interesting cannot happen
 	* @return json encoded paginated purchase order list
 	*/
+	  public function RPolist($piler_id)
+    {
+    	try {
+			$polist = PurchaseOrder::GetApiRPoList($piler_id);
+
+			return Response::json(array('result' => $polist),200);
+			//return $polist;
+		}
+		catch(Exception $e) 
+	{
+			return Response::json(array(
+				"error" => true,
+				"result" => $e->getMessage()
+				),400
+			);
+		}
+
+    }
+    public function RPoListDetailUpdate($receiver_no,$division,$quantity,$sku,$slot_no)
+    {
+    	try {
+		$polistdetails = PurchaseOrderDetail::updateqty($receiver_no,$division,$quantity,$sku,$slot_no);
+
+			return Response::json(array('result' => $polistdetails),200);
+			//return $polist;
+		}
+		catch(Exception $e) 
+		{
+			return Response::json(array(
+				"error" => true,
+				"result" => $e->getMessage()
+				),400
+			);
+		}
+
+    }
+     public function RPolistDetail($receiver_no,$division_id)
+    {
+    	try {
+			$polistdetail = PurchaseOrder::GetApiRPoListDetail($receiver_no,$division_id);
+
+			return Response::json(array('result' => $polistdetail),200);
+			//return $polist;
+		}
+		catch(Exception $e) 
+		{
+			return Response::json(array(
+				"error" => true,
+				"result" => $e->getMessage()
+				),400
+			);
+		}
+
+   }
+
+
+
+    public function UpdateApiRPoSlot($receiver_no,$division_id)
+    {
+    	try {
+			$poupdatastatus = PurchaseOrder::UpdateApiRPoSlot($receiver_no,$division_id);
+
+			return Response::json(array('result'),200);
+		}
+		catch(Exception $e) 
+		{
+			return Response::json(array(
+				"error" => true,
+				"result" => $e->getMessage()
+				),400
+			);
+		}
+
+    }
+
 	public function index($piler_id) {
 
 		try {

@@ -482,7 +482,7 @@ public function getList()
 		// Permissions
 		$this->data['permissions'] = unserialize(Session::get('permissions'));
 
-		$this->layout->content = View::make('picking.locklist', $this->data);
+		$this->layout->content = View::make('picking.locklist_details', $this->data);
 
 	}
 

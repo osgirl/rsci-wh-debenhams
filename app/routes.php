@@ -16,7 +16,8 @@ Route::controller('users', 'UsersController');
 
 Route::group(array('prefix'=>'api/v1'), function()
 {
-	Route::controller('user', 'ApiUsers');
+	//Route::controller('user', 'ApiUsers');
+	Route::post('user', 'Api\UserController@validateUser');
 });
 //stores api
 Route::group(array('prefix'=>'api/v1'), function()
@@ -25,6 +26,7 @@ Route::group(array('prefix'=>'api/v1'), function()
 	Route::get('store_receive', 'ApiStoreSO@getSO');
 	Route::get('store_receive/detail/{so_no}', 'ApiStoreSO@getSoDetails');
 	Route::post('store_receive/accept/{so_no}', 'ApiStoreSO@postAcceptSo');
+
 });
 //end stores api
 
@@ -68,7 +70,7 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::post('store_order/generate_picklist', 'StoreOrderController@generatePicklist');
 	Route::get('store_order/mts_detail', 'StoreOrderController@getMtsDetails');
 
-//	Route::get('reverse_logistic', 'store_return/reverse_logistic');
+
 	Route::get('store_return/detail', 'StoreReturnController@getSODetails');
 	Route::get('store_return/assign', 'StoreReturnController@assignPilerForm');
 	Route::post('store_return/assign_to_piler', 'StoreReturnController@assignToStockPiler');
@@ -82,10 +84,16 @@ Route::get('reverse_logistic/list', [
 	'as' => 'reverse_logistic/list',
 	'uses' => 'ReverseLogisticController@index'
 	]);
-Route::get('reverse_logistic/assign', 'ReverseLogisticController@assignPilerForm');
+Route::get('reverse_logistic/assign', [
+	'as' => 'reverse_logistic/assign',
+	'uses'=> 'ReverseLogisticController@assignPilerForm'
+	]);
+Route::get('reverse_logistic/detail', [
+	'as' => 'reverse_logistic/detail',
+	'uses' => 'ReverseLogisticController@getSODetails'
+	]);
 
-	//Route::get('reverse_logistic/list', 'ReverseLogisticController@index');
-	
+
 
 	Route::get('box/list', 'BoxController@index');
 	Route::get('box/detail', 'BoxController@getBoxDetails');
@@ -199,8 +207,13 @@ Route::group(array('prefix'=>'api/v1'), function()
 	    return Response::json(Authorizer::issueAccessToken());
 	});
 });
-Route::group(array('prefix'=>'api/v1', 'before'=>'oauth|auth.piler'), function()
+//Route::group(array('prefix'=>'api/v1', 'before'=>'oauth|auth.piler'), function()
+Route::group(array('prefix'=>'api'), function()
 {
+	Route::get('RPoList/{piler_id}','ApiPurchaseOrder@RPolist');
+	Route::get('RPoListDetailUpdate/{receiver_no}/{division}/{upc}/{quantity_delivered}','ApiPurchaseOrder@RPoListDetailUpdate');
+	Route::get('RPoListDetail/{receiver_no}/{division_id}','ApiPurchaseOrder@RPolistDetail');
+	Route::get('RPoUpdatestatus/{receiver_no}/{division_id}','ApiPurchaseOrder@UpdateApiRPoSlot');
 
 	Route::get('products', 'ApiProductList@index');
 	Route::get('products/upc_exist', 'ApiProductList@checkUpc');

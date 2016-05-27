@@ -9,14 +9,14 @@ class ReverseLogistic extends Eloquent {
 	public static function getSOList($data = array())
 	{
 		// print_r($data); die();
-		$query = StoreReturn::select('store_return.*','stores.store_name','dataset.data_code', 'dataset.data_value', 'dataset.data_display')
+		$query = ReverseLogistic::select('store_return.*','stores.store_name','dataset.data_code', 'dataset.data_value', 'dataset.data_display')
 		
 			->join('stores', 'store_return.store_code', '=', 'stores.store_code', 'LEFT')
 
 			->join('dataset', 'so_status', '=', 'dataset.id');
 
 		if( CommonHelper::hasValue($data['filter_so_no']) ) $query->where('so_no', 'LIKE', '%'.$data['filter_so_no'].'%');
-		if( CommonHelper::hasValue($data['filter_store_name']) ) $query->where('stores.store_name', 'LIKE', $data['filter_store_name']);
+		if( CommonHelper::hasValue($data['filter_store']) ) $query->where('stores.store_name', 'LIKE', $data['filter_store']);
 		if( CommonHelper::hasValue($data['filter_created_at']) ) $query->where('store_return.created_at', 'LIKE', '%'.$data['filter_created_at'].'%');
 		if( CommonHelper::hasValue($data['filter_status']) ) $query->where('data_value', 'LIKE', '%'.$data['filter_status'].'%');
 
@@ -46,20 +46,25 @@ class ReverseLogistic extends Eloquent {
 		return $result;
 	}
 
-public static function getCount($data = array()){
-		$query = StoreReturn::join('stores', 'store_return.store_code', '=', 'stores.store_code', 'LEFT')
+	public static function getCount($data = array()){
+		$query = ReverseLogistic::join('stores', 'store_return.store_code', '=', 'stores.store_code', 'LEFT')
 			->join('dataset', 'so_status', '=', 'dataset.id');
 
 		if( CommonHelper::hasValue($data['filter_so_no']) ) $query->where('so_no', 'LIKE', '%'.$data['filter_so_no'].'%');
-		if( CommonHelper::hasValue($data['filter_store_name']) ) $query->where('stores.store_name', 'LIKE', $data['filter_store_name']);
+		if( CommonHelper::hasValue($data['filter_store']) ) $query->where('stores.store_name', 'LIKE', $data['filter_store']);
 		if( CommonHelper::hasValue($data['filter_created_at']) ) $query->where('store_return.created_at', 'LIKE', '%'.$data['filter_created_at'].'%');
 		if( CommonHelper::hasValue($data['filter_status']) ) $query->where('data_value', 'LIKE', '%'.$data['filter_status'].'%');
 
 		return $query->count();
 	}
+		public static function getSOInfo($so_id) {
+		$query = ReverseLogistic::join('dataset', 'store_return.so_status', '=', 'dataset.id', 'LEFT')
+					->where('store_return.id', '=', $so_id)
+					->first();
+					return $query;
+				}
+	
 }
 
 
-
-
-
+	

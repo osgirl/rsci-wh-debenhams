@@ -39,6 +39,43 @@ class UsersController extends BaseController {
 		$this->layout->content = View::make('users.login', $this->data);
 	}
 
+
+	public function validateUser(){
+		$username = $request->get('username');
+      	$password = $request->get('password');
+
+      if($username  == '' && $password == '') {
+       return response()->json([
+                              "message" => "Fields are all required",
+                              "error"   => true],405);
+      }
+      if (Auth::attempt(array('username' => $username, 'password' => $password)))
+      {
+
+        if(in_array(Auth::user()->role_id, array(0))) {
+          return response()->json(['message' => 'Account not allowed'], 405);
+        }
+        $user_detail = array('id' => Auth::user()->id,
+                             'username' => Auth::user()->username,
+                             'firstname' => Auth::user()->firstname,
+                             'lastname'  => Auth::user()->lastname,
+                             'location'  => Auth::user()->location);
+          return response()->json([
+                                  'message'  => 'Successfully login!',
+                                  'result' => $user_detail
+                                  ],200);
+      }
+      else
+      {
+          return response()->json([
+                                  'message' => 'Invalid credentials.Please try again',
+                                  'error'   => true
+                                  ], 404);
+      }
+    
+
+
+	}
 	public function postSignin() {
 		$username = Input::get('username');
 		$password = Input::get('password');

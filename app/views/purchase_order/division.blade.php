@@ -241,7 +241,7 @@
   		</div>
   		{{ Form::hidden('filter_po_no', $filter_po_no) }}
 		{{ Form::hidden('filter_receiver_no', $filter_receiver_no) }}
-		{{-- Form::hidden('filter_supplier', $filter_supplier) --}}
+		
 		{{ Form::hidden('filter_entry_date', $filter_entry_date) }}
 		{{ Form::hidden('filter_stock_piler', $filter_stock_piler) }}
 		{{ Form::hidden('filter_status', $filter_status) }}
@@ -286,7 +286,7 @@
     </div><!-- /.modal-content -->
 </div>
 
-<!-- endi of modal for close po-->
+<!-- end of modal for close po -->
 
 <script type="text/javascript">
 $(document).ready(function() {

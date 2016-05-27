@@ -90,7 +90,7 @@ protected function getListdivision() {
 		$filter_status      = Input::get('filter_status', NULL);
 		$filter_back_order  = Input::get('filter_back_order', NULL);
 		$filter_brand       = Input::get('filter_brand', NULL);
-		$filter_division    = Input::get('filter_division', NULL);
+		$filter_Division_Name    = Input::get('filter_Division_Name', NULL);
 		$filter_shipment_reference_no = Input::get('filter_shipment_reference_no', NULL);
 
 		$sort               = Input::get('sort', 'po_no');
@@ -108,7 +108,7 @@ protected function getListdivision() {
 						'filter_back_order'  => $filter_back_order,
 						'filter_status'      => $filter_status,
 						'filter_brand'       => $filter_brand,
-						'filter_division'	 => $filter_division,
+						'filter_Division_Name'	 => $filter_Division_Name,
 						'filter_shipment_reference_no' => $filter_shipment_reference_no,
 						'receiver_no'		 => $receiver_no,
 						'sort'               => $sort,
@@ -134,7 +134,7 @@ protected function getListdivision() {
 									'filter_back_order'  => $filter_back_order,
 									'filter_status'      => $filter_status,
 									'filter_brand'       => $filter_brand,
-									'filter_division'	 => $filter_division,
+									'filter_Division_Name'	 => $filter_Division_Name,
 									'sort'               => $sort,
 									'order'              => $order
 								);
@@ -150,7 +150,7 @@ protected function getListdivision() {
 		$this->data['filter_status']         = $filter_status;
 		$this->data['filter_back_order']     = $filter_back_order;
 		$this->data['filter_brand']          = $filter_brand;
-		$this->data['filter_division']       = $filter_division;
+		$this->data['filter_Division_Name']  = $filter_Division_Name;
 		$this->data['sort']                  = $sort;
 		$this->data['order']                 = $order;
 		$this->data['page']                  = $page;
@@ -346,7 +346,7 @@ public function getPODetails() {
 		// Main
 		$this->data['filter_po_no']          = $filter_po_no;
 		$this->data['filter_receiver_no']    = $filter_receiver_no;
-		$this->data['filter_shipment_reference_no']    = $filter_shipment_reference_no;
+		$this->data['filter_shipment_reference_no'] = $filter_shipment_reference_no;
 		// $this->data['filter_supplier']    = $filter_supplier;
 		$this->data['filter_entry_date']     = $filter_entry_date;
 		$this->data['filter_stock_piler']    = $filter_stock_piler;
@@ -432,15 +432,15 @@ public function getPODetails() {
 		$this->data['divisions_list'] = $this->getDivisions();
 
 		// Search Filters
-		$filter_po_no       = Input::get('filter_po_no', NULL);
-		$filter_receiver_no = Input::get('filter_receiver_no', NULL);
-		$filter_entry_date  = Input::get('filter_entry_date', NULL);
-		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
-		$filter_status      = Input::get('filter_status', NULL);
-		$filter_back_order  = Input::get('filter_back_order', NULL);
-		$filter_brand       = Input::get('filter_brand', NULL);
-		$filter_division       = Input::get('filter_division', NULL);
-		$filter_shipment_reference_no = Input::get('filter_shipment_reference_no', NULL);
+		$filter_po_no       			= Input::get('filter_po_no', NULL);
+		$filter_receiver_no 			= Input::get('filter_receiver_no', NULL);
+		$filter_entry_date  			= Input::get('filter_entry_date', NULL);
+		$filter_stock_piler 			= Input::get('filter_stock_piler', NULL);
+		$filter_status      			= Input::get('filter_status', NULL);
+		$filter_back_order  			= Input::get('filter_back_order', NULL);
+		$filter_brand       			= Input::get('filter_brand', NULL);
+		$filter_division       			= Input::get('filter_division', NULL);
+		$filter_shipment_reference_no 	= Input::get('filter_shipment_reference_no', NULL);
 
 		$sort               = Input::get('sort', 'po_no');
 		$order              = Input::get('order', 'DESC');
