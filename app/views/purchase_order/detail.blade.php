@@ -3,7 +3,8 @@
     <a class="btn btn-info btn-darkblue" href="{{url('purchase_order/division?filter_po_no='.$filter_po_no.'&filter_stock_piler='.$filter_stock_piler.'&division='.$division.'&receiver_no='.$receiver_no.'&filter_shipment_reference_no='.$filter_shipment_reference_no. '&total_qty='.$total_qty)}}"><i class="icon-chevron-left"></i> {{ $button_back }}</a>
   
 </div>
-
+ 
+ {{ Form::open(array('url'=>'purchase_order/detail', 'id'=>"form-assign", 'class'=>'form-horizontal', 'style' => 'margin: 0px;', 'role'=>'form')) }}
 
 <div class="widget widget-table action-table">
     <div class="widget-header"> <i class="icon-th-list"></i>

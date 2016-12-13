@@ -533,7 +533,7 @@ quantity_ordered = 0 and wms_purchase_order_details.assigned_to_user_id != 0 and
 
 	public static function getPOInfoByPoNos($dept_code,$receiver_no) {
 
-		return PurchaseOrderDetail::whereIn('dept_number', $dept_code)
+		return PurchaseOrderDetail::select('division')->whereIn('dept_number', $dept_code)
 		->whereIn('receiver_no', $receiver_no)
 		->get()
 		->toArray();

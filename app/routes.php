@@ -101,7 +101,7 @@ Route::group(array("before"=>"auth.basic"), function()
 		'as'	=> 'purchase_order/export_excel_file',
 		'uses'	=> 'PurchaseorderController@exportCSVexcelfile',]);*/
 
-	Route::get('purchase_order/export123', array('uses' => 'PurchaseorderController@getExcelFile', 'as' => 'purchase_order/export123'));
+	Route::get('purchase_order/export123', array('uses' => 'PurchaseOrderController@getExcelFile', 'as' => 'purchase_order/export123'));
 
 
  
