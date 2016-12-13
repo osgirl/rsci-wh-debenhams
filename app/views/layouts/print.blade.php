@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>eWMS</title>
-<link rel="shortcut icon" href="{{asset('resources/img/favicon.ico')}}" />
+<link rel="shortcut icon" href="{{asset('resources/img/deb.ico')}}" />
 </head>
 <body>
 	<div id="mainContainer">

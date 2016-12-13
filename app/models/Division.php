@@ -49,6 +49,7 @@
 			->join('dataset', 'purchase_order_details.po_status', '=', 'dataset.id', 'LEFT')
 			->join('vendors', 'purchase_order_lists.vendor_id', '=', 'vendors.id', 'LEFT')
 			->where('purchase_order_details.receiver_no','=', $data['receiver_no'])
+			->where('purchase_order_details.division','=',$data['division'])
 			->groupBy('purchase_order_details.division');
 
 		
@@ -56,7 +57,7 @@
 		if( CommonHelper::hasValue($data['filter_po_no']) ) $query->where('purchase_order_no', 'LIKE', '%'.$data['filter_po_no'].'%');
 		if( CommonHelper::hasValue($data['filter_receiver_no']) ) $query->where('purchase_order_lists.receiver_no', '=', $data['filter_receiver_no']);
 		if( CommonHelper::hasValue($data['filter_entry_date']) ) $query->where('purchase_order_lists.created_at', 'LIKE', '%'.$data['filter_entry_date'].'%');
-		if( CommonHelper::hasValue($data['filter_stock_piler']) ) $query->whereRaw('find_in_set('. $data['filter_stock_piler'] . ',assigned_to_user_id) > 0');
+	 
 		if( CommonHelper::hasValue($data['filter_status']) && $data['filter_status'] !== 'default' ) $query->where('purchase_order_lists.po_status', '=', $data['filter_status']);
 		if( CommonHelper::hasValue($data['filter_back_order']) ) $query->where('back_order', '=', $data['filter_back_order']);
 		if( CommonHelper::hasValue($data['filter_brand']) ) $query->where('dept_code', '=', $data['filter_brand']);
@@ -111,7 +112,7 @@
 		return $result;
 	}
 
-	public static function getPOInfodiv($receiver_no = NULL) {
+	public static function getPOInfodiv($receiver_no) {
 		$query = DB::table('purchase_order_lists')
 					// ->join('users', 'purchase_order_lists.assigned_to_user_id', '=', 'users.id', 'LEFT')
 					->join('dataset', 'purchase_order_lists.po_status', '=', 'dataset.id', 'LEFT')

@@ -26,32 +26,37 @@ return array(
 	'label_stock_piler'	=> 'Stock piler:',
 	'label_store'	=> 'Store Name:',
 	'label_receiver'			=> 'Receiver:',
-
+	'print_pagkaging_slip'	=> 'Print Package Slip',
+	'col_pell_no_label'		=> 'Pell number :',
+	'btn_rem_box'			=> 'Assign to Pell no.',
 	'col_id'			=> 'Id',
 	'col_no'			=> 'No.',
 	'col_type'			=> 'Type',
-	'col_doc_no'		=> 'Document Number',
+	'col_mts_no'		=> 'Mts no.',
 	'col_status'		=> 'Status',
 	'col_action'		=> 'Action',
-
+	'col_pell_no'		=> 'Pell number content',
 	'col_store_code'	=> 'Store Code',
 	'col_store_name'	=> 'Store Name',
 	'col_sku'			=> 'Sku',
 	'col_upc'			=> 'UPC',
 	'col_so_no'			=> 'Transfer #',
-	'col_from_slot_code'=> 'From slot code',
-	'col_to_slot_code'	=> 'To slot code',
+	'col_from_slot_code'=> 'From Sub loc ',
+	'col_to_slot_code'	=> 'To Sub loc',
 	'col_qty_to_pick'	=> 'Quantity to pick',
 	'col_to_move'		=> 'Quantity picked',
     'col_action_date'	=> 'Action Date',
-
+    'col_entry_date'	=> 'Entry Date',
+    'col_var'			=> 'Variance',
+    'col_to_label_print'=> ' To    :',
+    	
 	'col_time_locked'			=> 'Time Locked',
 	'col_stock_piler'			=> 'Stock Piler',
 	'col_receiving_stock_piler'	=> 'Receiving Stock Piler',
 	'col_doc_number'			=> 'Document Number',
 	'col_product_name'			=> 'Product name',
 	'col_store'					=> 'Store',
-
+	'col_shrt_nm'				=> 'Short Name',
 	'button_load'				=> 'Load',
 	'button_change_to_store'	=> 'Change type to store',
 	'button_to_picking'			=> 'To Picklist module',
@@ -63,7 +68,7 @@ return array(
 	'button_add_store'			=> 'Add load',
 	'button_assign_to_stock_piler' 	=> 'Assign to Stock Piler',
 	'button_close_picklist'				=> 'Close',
-
+	'assign_to_stock_piler'			=> 'Assign to Stock Piler',
 	'error_load'		=> 'Please choose picklist/s',
 	'error_not_exist'	=> 'Picklist id does not exist.',
 	'error_no_lock_tag'			=> 'Please choose a lock tag to unlock.',
@@ -90,7 +95,7 @@ return array(
 	'text_posted'			=> 'Posted',
 	'text_success_posted'		=> 'Successfully closed picklist!',
 
-	'entry_doc_no'			=> 'TL number :',
+	'entry_doc_no'			=> 'MTS no.:',
 	'entry_stock_piler'			=> 'Stock Piler :',
 
 );

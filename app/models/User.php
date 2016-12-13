@@ -12,7 +12,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	public static $rules = array(
 	    'firstname'=>'required|min:2',
 	    'lastname'=>'required|min:2',
-	    // 'email'=>'required|email|unique:users',
+	    // ' e m a i l ' = > ' r e q u i r e d | e m a i l | u n i q u e : u s e r s ' ,
 	    'username'=>'required',
 	    'password'=>'required|alpha_num|between:6,12|confirmed',
 	    'password_confirmation'=>'required|alpha_num|between:6,12'
@@ -106,10 +106,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	public static function getUsers($data = array(), $getCount=false) {
-		$query = DB::table('users')->select(DB::raw('wms_users.*, CONCAT(wms_users.firstname, \' \', wms_users.lastname) AS name, wms_user_roles.role_name, brand_name'))
+		$query = DB::table('users')->select(DB::raw('wms_users.*, CONCAT(wms_users.firstname, \' \', wms_users.lastname) AS name, wms_user_roles.role_name, brand_name, store_name'))
 								   ->join('user_roles', 'users.role_id', '=', 'user_roles.id', 'LEFT')
 								   // ->join('settings', 'users.brand', '=', 'settings.id', 'LEFT')
 								   ->join('brands', 'users.brand_id', '=', 'brands.id', 'LEFT')
+								   ->join('stores','users.store_code','=','stores.store_code', 'LEFT')
 								   ->where('users.id', '!=', 1)
 								   ->where(function($query_sub)
 							            {
@@ -242,6 +243,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return $result;
 	}
 
+	
 	public static function getUsersFullname($data = array()) {
 		// return User::whereIn('id', $data)->get(array('firstname', 'lastname'))->toArray();
 		return User::select(DB::raw('CONCAT(wms_users.firstname, \' \', wms_users.lastname) AS name'))

@@ -44,19 +44,9 @@
 					</div> <!-- /controls -->
 				</div> <!-- /control-group -->
 
-				<div class="control-group">
-					<label class="control-label" for="barcode">{{ $entry_barcode }}</label>
-					<div class="controls">
-						{{ Form::text('barcode', $user->barcode) }}
-					</div> <!-- /controls -->
-				</div> <!-- /control-group -->
+			 
 
-				<div class="control-group">
-					<label class="control-label" for="brand_id">{{ $entry_brand }}</label>
-					<div class="controls">
-						{{ Form::select('brand', $brand_options, $user->brand_id, array('disabled'=>'disabled')) }}
-					</div> <!-- /controls -->
-				</div> <!-- /control-group -->
+			 
 
 				<div class="control-group">
 					<label class="control-label" for=""></label>
@@ -68,8 +58,7 @@
         </div>
         <div class="span2">&nbsp;</div>
         {{ Form::hidden('id', $user->id) }}
-        {{ Form::hidden('role_id', $user->role_id) }}
-        {{ Form::hidden('brand', $user->brand_id) }}
+        {{ Form::hidden('role_id', $user->role_id) }} 
         {{ Form::hidden('mode', 'profile') }}
 
 		{{ Form::close() }}

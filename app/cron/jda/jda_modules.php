@@ -131,6 +131,7 @@ class jdaModules
 
 		$getPicklist = $picklist->getPickNumber();
 		print_r($getPicklist);
+		
 		if(! empty($getPicklist) ) 
 		{
 			$params = array();

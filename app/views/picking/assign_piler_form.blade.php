@@ -7,7 +7,7 @@
 
 <div class="widget">
     <div class="widget-header"> <i class="icon-th-list"></i>
-    	<h3>{{ $heading_title_assign_picking }}</h3>
+    	<h3>{{ $assign_to_stock_piler }}</h3>
     </div>
     <!-- /widget-header -->
 
@@ -25,7 +25,7 @@
 
 		@if(count($params) > 1)
 			<div class="control-group">
-				<label class="control-label">{{ $entry_stock_piler }}</label>
+				<label class="control-label">{{ $entry_doc_no }}</label>
 				<div class="controls">
 					{{ Form::select('stock_piler[]', $stock_piler_list, '', array('id' => 'stock_piler_select') ) }}
 				<!-- <a class="add-piler-btn"><i class="icon-plus-sign" style="font-size: 1.5em;"></i></a> -->

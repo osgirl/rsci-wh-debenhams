@@ -110,7 +110,7 @@ class ProductListController extends BaseController {
 							'limit'						=> NULL
 						);
 		$results = ProductList::getProductLists($arrParams);
-
+	 
 	    $this->data['results'] = $results;
 
 		$pdf = App::make('dompdf');

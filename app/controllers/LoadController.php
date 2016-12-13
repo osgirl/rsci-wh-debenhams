@@ -34,33 +34,73 @@ class LoadController extends BaseController {
 
 		$this->getList();
 	}
+	public function getBarcode()
+	{
 
+/*
+ *  Author	David S. Tufts
+ *  Company	davidscotttufts.com
+ *	  
+ *  Date:	05/25/2003
+ *  Usage:	<img src="/barcode.php?text=testing" alt="testing" />
+ */
+// For demonstration purposes, get pararameters that are passed in through $_GET or set to the default value
+ 
+ 
+	}
 	public function exportCSV() {
 		// Check Permissions
-		if (Session::has('permissions')) {
+	/*	if (Session::has('permissions')) {
 	    	if (!in_array('CanExportShipping', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('load/list');
 			}
     	} else {
 			return Redirect::to('users/logout');
 		}
+	*/
 		$this->data = Lang::get('loads');
+		$loadnumber 		= Input::get('loadnumber', NULL);
+
+		$filter_load_code 		= Input::get('filter_load_code', NULL);
 		$arrParams = array(
-							'filter_load_code'	=> Input::get('filter_load_code', NULL),
-							'filter_status' 	=> Input::get('filter_status', NULL),
+							'filter_load_code'	=> Input::get('filter_load_code', NULL), 
+
 							'sort'				=> Input::get('sort', 'load_code'),
 							'order'				=> Input::get('order', 'ASC'),
 							'page'				=> NULL,
 							'limit'				=> NULL
 						);
 
-		$results = Load::getLoadList($arrParams);
+		$results = Load::getExportLoadList($loadnumber, $arrParams);
+		print_r($results);
+		exit();
 		$this->data['results'] = $results;
+
+		$this->data['filter_load_code'] 	= $filter_load_code;
+		$this->data['loadnumber'] 		=$loadnumber;
 
 		$pdf = App::make('dompdf');
 		$pdf->loadView('loads.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
 		// return $pdf->stream();
 		return $pdf->download('loads_' . date('Ymd') . '.pdf');
+	}
+	public function exportCSVbarcode() {
+		// Check Permissions
+	 
+
+	 
+
+		$results = Load::all(["load_code"]);
+
+echo '<img src="data:image/png;base64,' . DNS1D::getBarcodePNG("1", "C128",3,33) . '" alt="barcode"   />';
+ 
+ 
+ exit();
+		/*$this->layout->content = View::make('picking/barcode')->with('producto',$results);*/
+	 /*	$pdf = App::make('dompdf');
+		$pdf->loadView('picking.barcode', $this->data)->setPaper('a7')->setOrientation('landscape');
+		// return $pdf->stream();
+		return $pdf->download('loads_' . date('Ymd') . '.pdf'); */
 	}
 
 	protected function getList()
@@ -137,7 +177,8 @@ class LoadController extends BaseController {
 	{
 		try {
 			$data = Input::all();
-			if(!isset($data['load_code'])) throw new Exception("Load code empty.");
+			if(!isset($data['load_code'])) 
+			throw new Exception("Load code empty.");
 			DB::beginTransaction();
 			$params = array('load_code' => $data['load_code']);
 			$isSuccess = Load::shipLoad($params);
@@ -166,7 +207,6 @@ class LoadController extends BaseController {
 			DB::rollback();
 			return Redirect::to('load/list'. $this->setURL())->withErrors(Lang::get('loads.text_fail_load'));
 		}
-
 		die();
 	}
 
@@ -222,22 +262,39 @@ class LoadController extends BaseController {
 
             $this->data['loadCode'] = $loadCode;
             $this->data['records'] = Load::getPackingDetails($loadCode);
+			$this->data['storelocation'] = load::getStoreLocationwarehouse($loadCode);
             $this->data['permissions'] = unserialize(Session::get('permissions'));
             $load=Load::select('printPacking')->where('load_code','=',$loadCode)->get();
             $this->data['print_status']=$load[0]['printPacking'];
-
-            $pl=Load::select('pl_number')->where('load_code','=',$loadCode)->get();
-            $pl_num=$pl[0]['pl_number'];
-            if($pl_num==''){
-            	$pl_num= self::plNumberGeneration();
-            	Load::where('load_code','=',$loadCode)->update(array('pl_number'=>$pl_num));
-            	$this->data['pl_num'] = $pl_num;
-            }
-            else
-            	$this->data['pl_num'] = $pl_num;
-
+ 
             $this->layout = View::make('layouts.print');
             $this->layout->content = View::make('loads.print_packing_list', $this->data);
+    }
+    public function printPackingListstock($loadCode)
+    {
+		// Search Filters
+		$filter_load_code = Input::get('filter_load_code', NULL);
+
+		$sort = Input::get('sort', 'doc_no');
+		$order = Input::get('order', 'ASC');
+		$page = Input::get('page', 1);
+
+		$this->data['filter_load_code'] = $filter_load_code;
+		$this->data['sort'] = $sort;
+		$this->data['order'] = $order;
+		$this->data['page'] = $page;
+
+		$this->data['url_back'] = $this->setURL();
+
+            $this->data['loadCode'] = $loadCode;
+            $this->data['records'] = Load::getPackingDetailsstock($loadCode);
+			$this->data['storelocation'] = load::getStoreLocation($loadCode);
+            $this->data['permissions'] = unserialize(Session::get('permissions'));
+            $load=Load::select('printPacking')->where('load_code','=',$loadCode)->get();
+            $this->data['print_status']=$load[0]['printPacking'];
+ 
+            $this->layout = View::make('layouts.print');
+            $this->layout->content = View::make('store_return.print_packing_list', $this->data);
     }
 
 	public function updatePrintLoad($loadCode)
@@ -275,10 +332,7 @@ class LoadController extends BaseController {
 
 	public function updatePrintPackingList($loadCode)
 	{
-		Load::where('load_code', '=', $loadCode)
-                ->update(array(
-                    "printPacking" => 1
-                ));
+		 
 			// Search Filters
 			$filter_load_code = Input::get('filter_load_code', NULL);
 
@@ -296,18 +350,7 @@ class LoadController extends BaseController {
 			$this->data['loadCode'] = $loadCode;
             $this->data['records'] = Load::getPackingDetails($loadCode);
 			$this->data['permissions'] = unserialize(Session::get('permissions'));
-            $load=Load::select('printPacking')->where('load_code','=',$loadCode)->get();
-            $this->data['print_status']=$load[0]['printPacking'];
-
-            $pl=Load::select('pl_number')->where('load_code','=',$loadCode)->get();
-            $pl_num=$pl[0]['pl_number'];
-            if($pl_num==''){
-            	$pl_num= self::plNumberGeneration();
-            	Load::where('load_code','=',$loadCode)->update(array('pl_number'=>$pl_num));
-            	$this->data['pl_num'] = $pl_num;
-            }
-            else
-            	$this->data['pl_num'] = $pl_num;
+           
 
             $this->layout = View::make('layouts.print');
             $this->layout->content = View::make('loads.print_packing_list', $this->data);
@@ -323,12 +366,15 @@ class LoadController extends BaseController {
 		$order = Input::get('order', 'ASC');
 		$page = Input::get('page', 1);
 
+		/*$asdf 			= Input::get('load_code', null);
+		$this->data['po_info'] 		=Load::getStoreLocation($asdf);*/
+
 		$this->data['filter_load_code'] = $filter_load_code;
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
 		$this->data['page'] = $page;
 
-		$this->data['url_back'] = URL::to('load/list' . $this->setURL());
+		$this->data['url_back'] = URL::to('load/shipping' . $this->setURL());
 
             $this->data['loadCode'] = $loadCode;
             $this->data['records'] = Load::getLoadingDetails($loadCode);
@@ -336,6 +382,38 @@ class LoadController extends BaseController {
 
             $this->layout = View::make('layouts.print');
             $this->layout->content = View::make('loads.print_loading_sheet', $this->data);
+
+        // } catch (Exception $e) {
+        //     return Redirect::to('load/list'. $this->setURL())->withErrors(Lang::get('loads.text_fail_load'));
+        // }
+    }
+    public function printLoadingSheetstock($loadCode)
+    {
+        // try {
+		// Search Filters
+		$filter_load_code = Input::get('filter_load_code', NULL);
+
+		$sort = Input::get('sort', 'doc_no');
+		$order = Input::get('order', 'ASC');
+		$page = Input::get('page', 1);
+
+	 
+
+		$this->data['filter_load_code'] = $filter_load_code;
+		$this->data['sort'] = $sort;
+		$this->data['order'] = $order;
+		$this->data['page'] = $page;
+
+		$this->data['url_back'] = URL::to('stocktransfer/stocktranferload' . $this->setURL());
+
+            $this->data['loadCode'] = $loadCode;
+            $this->data['records'] = Load::getLoadingDetailsstock($loadCode);
+			$this->data['storelocation'] = load::getStoreLocation($loadCode);
+
+            $this->data['permissions'] = unserialize(Session::get('permissions'));
+
+            $this->layout = View::make('layouts.print');
+            $this->layout->content = View::make('store_return.print_loading_sheet', $this->data);
 
         // } catch (Exception $e) {
         //     return Redirect::to('load/list'. $this->setURL())->withErrors(Lang::get('loads.text_fail_load'));

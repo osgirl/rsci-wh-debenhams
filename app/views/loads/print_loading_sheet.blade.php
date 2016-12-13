@@ -10,7 +10,7 @@
 }
 body { font: normal 12px arial; margin: 0; counter-reset:pageNumber;}
 table {padding: 0; border-collapse: collapse;}
-h1 {margin-bottom: 5px;}
+h2 {margin-bottom: 1px;}
 header {margin-bottom: 20px;}
 
 .soContainer { border: solid 1px #000; padding: 10px;}
@@ -21,10 +21,14 @@ header {margin-bottom: 20px;}
 .commonInfo th, .commonInfo td  {text-align: left;}
 .commonInfo th {width: 150px;}
 
-.contents {margin-top: 10px; width: 100%;}
+.contents {margin-top: 5px; width: 100%;}
 .contents th, .contents td {border: solid 1px #F0F0F0; margin: 0; }
 .contents th {text-align: left;}
 .contents th {background-color: #F0F0F0}
+
+.contentasdfs {width: 100%; }
+.contentasdfs th, .contentasdfs  td {border: solid 0px #F0F0F0; margin-right: 0px; }
+  
 
 .comments {width: 100%; margin-top: 15px;}
 .comments hr{ margin-top:25px;}
@@ -45,195 +49,182 @@ header {margin-bottom: 20px;}
 
 </div>
 	<section class="soContainer">
-		<header>
-			<div class="doctitle">
-				<h1>Casual Clothing Retailers Inc.<br/>WAREHOUSE LOADING SHEET</h1>
-				Print Date: {{ date('m/d/y h:i A')}}
-			</div>
-		</header>
+	  			<div class="doctitle"> <h2>RSCI - eWMS<br/>PACKING, EQUIPMENT & LOADING LIST</h2></div>
+				 <!-- <div style="text-align: center">Print Date: {{ date('m/d/y h:i A')}}</div> -->
+			<hr>
+	 
 		<table class="commonInfo">
 			<tr>
 				<td>
 					<table>
-					    <tr>
-					    <th style="text-align: right">Delivery Van Plate No:</th>
-					    <td>_____________</td>
-						</tr><tr>
-							<th style="text-align: right">Destination:</th>
-							<td></td>
-					    </tr>
+				 
+					    <tr><th><td>Van Seal Number:</td></th></tr>
+					    <tr><th style="text-align: right";>Seal #1 :
+					    <td><input type=""  value="" placeholder="" style="border: solid 0px #000;"> </td>
+					    </th></tr>
+					     <tr><th style="text-align: right";>Seal #2 :
+					    <td><input type=""   value="" style="border: solid 0px #000;"></td>
+					    </th></tr>
+					    <tr><th style="text-align: right";>Seal #3 :
+					    <td><input type=""   value="" style="border: solid 0px #000;"></td>
+					    </th></tr>
+					    <tr><th style="text-align: right";>Seal #4 :
+					    <td><input type=""  value="" style="border: solid 0px #000;"></td>
+					    </th></tr>
+					
+					     <tr><th style="text-align: right";>Truck Van Plate no.:
+					    <td><input type=""  value="" style="border: solid 0px #000;"></td>
+					    </th></tr>
+					  <tr><th style="text-align: right";>Delivery Date:
+					    <td><input type=""  value="" style="border: solid 0px #000;"></td>
+					    </th></tr>
 					</table>
 				</td>
 
 				<td>
+				 
 					<table>
-					    <tr>
-					    <th style="text-align: right">Seal #1:</th>
-					    <td>_____________</td>
-						</tr>
-					    <tr>
-					    <th style="text-align: right">Seal #2:</th>
-					    <td>_____________</td>
-						</tr>
-						<tr>
-					    <th style="text-align: right">PL#:</th>
-					    <td>_____________</td>
-					    </tr>
-						<tr>
-					    <th style="text-align: right">Load ID:</th>
-					    <td>{{$loadCode}}</td>
-					    </tr>
+
+						<tr><th><td>Van Sealed By:</td></th></tr>
+						 <tr><th style="text-align: right";>Seal #1 :
+					    <td><input type=""  value=""  style="border: solid 0px #000;"></td>
+					    </th></tr>
+					 
+						 <tr><th style="text-align: right";>Seal #2 :
+					    <td><input type=""  value=""  style="border: solid 0px #000;"></td>
+					    </th></tr>
+						 <tr><th style="text-align: right";>Seal #3 :
+					    <td><input type=""  value=""  style="border: solid 0px #000;"></td>
+					    </th></tr>
+						 <tr><th style="text-align: right";>Seal #4 :
+					    <td><input type=""  value=""  style="border: solid 0px #000;"></td>
+					    </th></tr>
+					    <tr><th style="text-align: right";>Origin :
+					    <td><input type=""  placeholder="8001 - Warehouse "  style="border: solid 0px #000;"></td>
+					    </th></tr>   
+						<tr><th style="text-align: right";>Destination : 
+					    <td> </td>
+					    </th></tr>
+				 
 					</table>
 				</td>
-                <td>
-					<table>
-					    <tr>
-					    <td></td>
-						</tr><tr>
-							<td></td>
-					    </tr>
-					</table>
-				</td>
+          		 
 			<tr>
 		</table>
 		<table class="contents">
 			<tr>
-				<th colspan="3" style="text-align: center">Regular Transfer from Warehouse</th>
+				<th colspan="3" style="text-align: center"><h3> Pell no. : {{$loadCode}}</h3></th>
 			</tr>
+			 
             <tr>
 				<th style="text-align: center">MTS No.</th>
-				<th style="text-align: center">Box #</th>
-				<th style="text-align: center">QTY</th>
+				<th style="text-align: center">Box No.</th>
+				<th style="text-align: center">QTY</th> 
 			</tr>
             <tr>
 	<?php
 		$boxarray=[];
 		$grandTotal = 0;
 	?>
-			@foreach($records['StoreOrder'] as $soNo => $val)
-				<?php
-					$counter=0;
-				?>
-				<tr>
-					<td align="center"><strong>{{$soNo}}</strong></td>
-			    @foreach($val['items'] as $boxNo => $items)
+	<?php
+	$boxcount=0;
+	$qtycount=0;
+	$mtscount=0;
+	?>
+			@foreach( $records as $doc_no )
+				<tr class="font-size-13 tblrow" >
+			 	
+	 				<td style="text-align: center">{{$doc_no->move_doc_number}} </td>
+	 				<td style="text-align: center"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{$doc_no->box_code}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+	 				<td style="text-align: center"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{$doc_no->total_qty}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+
 					<?php
-						if(!in_array($boxNo, $boxarray))
-							array_push($boxarray, $boxNo);
-	    				$boxTotal = 0;
-						$counter++;
-					?>
-					@if($counter>1)
-						<tr>
-							<td></td>
-					@endif
-			    	<td align="center">{{$boxNo}}</td>
-					@foreach($items as $item)
-						<?php
-							if($item->so_no == $soNo){
-								$boxTotal += $item->moved_qty;
-								$grandTotal += $item->moved_qty;
-							}
-						?>
-					@endforeach
-					<td align="center"> {{$boxTotal}} </td>
-					@if($counter>1)
-						</tr>
-					@endif
-				@endforeach
+					//$boxcount+=1;
+	 			 	$boxcount=$boxcount+1;
+	 			 	$qtycount=$qtycount+$doc_no->total_qty;
+	 			 	$mtscount+=1;
+	 			 	?>
 				</tr>
-			@endforeach
-			</tr>
+			 @endforeach
 			<tr>
-				<?php
-					$numOfBoxTotal=count($boxarray);
-				?>
-				<th style="text-align: center">Total: </th>
-				<td align="center">{{$numOfBoxTotal}}</td>
-				<td align="center">{{$grandTotal}}</td>
+				 
+	 				<th style="text-align: right"> Total : </th> 
+	 				<th style="text-align: center"><?php echo $boxcount; ?></th>
+	 				<th style="text-align: center"> <?php echo $qtycount; ?> </th>
+
 			</tr>
 		</table>
-		<table class="contents">
+	 
+<br>
+	<table class="commonInfo">
 			<tr>
-				<th colspan="4" style="text-align: center">Inter-Store Transfer (IT)</th>
-			</tr>
-            <tr>
-				<th style="text-align: center">MTS No.</th>
-				<th style="text-align: center">Box #</th>
-				<th style="text-align: center">No. of Boxes</th>
-				<th style="text-align: center">Remarks</th>
-			</tr>
-            <tr>
-			<?php
-				$boxarray=[];
-				$grandTotal = 0;
-			?>
-			@foreach($records['InterTransfer'] as $soNo => $val)
-				<?php
-					$boxes[$soNo]=[];
-					$counter=0;
-				?>
-				<tr>
-					<td align="center"><strong>{{$soNo}}</strong></td>
-			    @foreach($val['items'] as $boxNo => $items)
-					<?php
-						if(!in_array($boxNo, $boxarray)){
-							array_push($boxarray, $boxNo);
-						}
-						if(!in_array($boxNo, $boxes[$soNo])){
-							array_push($boxes[$soNo], $boxNo);
-		    				$boxTotal = 0;
-							$counter++;
-						}
-					?>
-					@if($counter>1)
-						<tr>
-							<td></td>
-					@endif
+				<td>
+					<table>
+					   <tr><th style="text-align: right";> Counted by:
+					   <td><input type=""  placeholder=" (Whse. Sup.)"  style="border: solid 0px #000;"></td> </td>
+					   </th></tr>
+					   <tr><th style="text-align: right";> Loaded By/Date:
+					   <td><input    style="border: solid 0px #000;"></td> </td>
+					   </th></tr>
+					   <tr><th style="text-align: right";> Driver:
+					   <td><input    style="border: solid 0px #000;"></td> </td>
+					   </th></tr>
+					</table>
+				</td>
 
-			    	<td align="center">{{$boxNo}}</td>
-					@foreach($items as $item)
-						<?php
-							if($item->mts_number == $soNo){
-								$boxTotal += $item->no_of_boxes;
-								$grandTotal += $item->no_of_boxes;
-							}
-						?>
-					@endforeach
-				    <td align="center">{{$boxTotal}}</td>
-				    <td></td>
-					@if($counter>1)
-						</tr>
-					@endif
-			    @endforeach
-				</tr>
-			@endforeach
-			@if($records['InterTransfer']==null)
-				<tr>
-					<td align="center" colspan="4">N/A</td>
-				</tr>
-			@else
+				<td>
+					<table>
+					<tr><th style="text-align: right";> Witnessed By/Date:
+					   <td><input type=""  placeholder=" (Sec. Guard)"  style="border: solid 0px #000;"></td> </td>
+					   </th></tr>
+					<tr><th style="text-align: right";> Rec'd Date/Time:
+					   <td><input   style="border: solid 0px #000;"></td> </td>
+					   </th></tr>
+					<tr><th style="text-align: right";> Helper:
+					   <td><input   style="border: solid 0px #000;"></td> </td>
+					   </th></tr>
+					</table>
+				</td>
+				<div >
+                 <table class="contentasdfs" >
+                 	
+                 	<tr  >
+                 		<th style="text-align: right;";>Equipment:</th>
+                 		<th style="text-align: center";> Tray</th>
+                 		<th style="text-align: center";> Bag</th>'
+
+                 	</tr>
+                 	<tr class="font-size-13 tblrow"  >
+                 		
+                 		<td style="text-align: right;"> Beginning Balance:</td>
+                 		<td style="text-align: center"><input  rows="2" cols="30"> </input></td>
+                 		<td style="text-align: center"><input  rows="2" cols="30"> </input></td>
+                 		 
+                 	</tr>
+                 	<tr class="font-size-13 tblrow"  >
+                 		
+                 		<td style="text-align: right;">Issued to Store:</td>
+                 		<td style="text-align: center"><input  rows="2" cols="30"> </input></td>
+                 		<td style="text-align: center"><input  rows="2" cols="30"> </input></td>
+                 		 
+                 	</tr>
+                 	<tr class="font-size-13 tblrow"  >
+                 		
+                 		<td style="text-align: right;">Additional (from Warehouse):</td>
+                 		<td style="text-align: center"><input  rows="2" cols="30"> </input></td>
+                 		<td style="text-align: center"><input  rows="2" cols="30"> </input></td>
+                 		 
+                 	</tr>
+                 	<tr class="font-size-13 tblrow"  >
+                 		
+                 		<td style="text-align: right;" >Ending Balance:</td>
+                 		<td style="text-align: center"><input  rows="2" cols="30"> </input></td>
+                 		<td style="text-align: center"><input  rows="2" cols="30"> </input></td>
+                 		 
+                 	</tr>
+                  
+                 </table>
+                 </div>
 			<tr>
-				<th style="text-align: center">Total: </th>
-				<td align="center">{{count($boxarray)}}</td>
-				<td align="center">{{$grandTotal}}</td>
-				<td></td>
-			</tr>
-			@endif
 		</table>
-
-		<div class="signatories">
-			<div>
-				Prepared by: <hr/>
-				Signature over Printed Name<br/>
-			</div>
-			<div>
-				<br/>
-			</div>
-
-			<div>
-				Checked by: <hr/>
-				Signature over Printed Name<br/>
-			</div>
-		</div>
 	</section>

@@ -2,7 +2,7 @@
 
 return array(
 	'heading_title' 			=> 'Shipping',
-
+	 'text_success_assign'		=> 'Successfully assigned TL number!',
 	'text_success_shipped'		=> 'Successfully shipped',
 	'text_warning'				=> 'Close PO?',
 	'text_confirm_load'			=> 'Continue to ship this?',
@@ -17,7 +17,9 @@ return array(
 	'label_app_sync'			=> 'Latest App Sync Date:',
 	'label_filter_load_code'		=> 'Load No.',
 	'label_invoice_number'		=> 'Invoice Number',
-
+	'col_pell_no_label'			=> 'Pell number :',
+	'header_pell_list'			=> 'Pell number list',
+	'pell_no_th'				=> 'Pell no.',
 	'button_close_po'				=> 'Close PO',
 	'button_assign_to_stock_piler' 	=> 'Assign to Stock Piler',
 	'button_search' 			=> 'Search',
@@ -25,11 +27,14 @@ return array(
 	'button_export'				=> 'Export to PDF',
 	'button_ship'				=> 'Ship',
 	'button_shipped'			=> 'Shipped',
-
+'button_gnerteload'			=> 'Generate load',
 	'col_id'					=> 'Id.',
 	'col_load_no'				=> 'Load no.',
 	'col_status'				=> 'Is shipped',
 	'col_action'				=> 'Action',
+	'col_A_loNum' 				=> 'Assign Box no.',
+	'col_mts_report'			=> 'Print MTS List',
+	'col_load_sheet'			=> 'Print Load Sheet',
 
 	'error_cancel'		=> 'Canceled transaction.',
 

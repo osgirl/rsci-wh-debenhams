@@ -380,16 +380,17 @@ class PicklistDetails extends Eloquent {
 	}
 
 	/**********for cms*************/
-
+	
 	public static function getFilteredPicklistDetail($data, $getCount= false)
 	{
 		$query = PicklistDetails::where('move_doc_number', $data['picklist_doc'])
-			->select(DB::raw('convert(wms_product_lists.sku, decimal) as sku,convert(wms_product_lists.upc, decimal(20,0)) as upc'),'product_lists.short_description','stores.store_name','stores.store_code','picklist_details.quantity_to_pick','picklist_details.moved_qty','picklist_details.so_no','picklist_details.from_slot_code')
-			->leftJoin('stores', 'stores.store_code', '=', 'picklist_details.store_code')
-			->leftJoin('product_lists', 'picklist_details.sku', '=', 'product_lists.upc');
+			->select(DB::raw('convert(wms_product_lists.sku, decimal(20)) as sku,convert(wms_picklist_details.sku, decimal(20,0)) as upc'),'product_lists.description','stores.store_name','stores.store_code','picklist_details.quantity_to_pick','picklist_details.moved_qty','picklist_details.so_no','picklist_details.from_slot_code')
+		
+			->Join('stores', 'stores.store_code', '=', 'picklist_details.store_code', 'left')
+			->Join('product_lists', 'picklist_details.sku', '=', 'product_lists.upc','left');
 
 		if( CommonHelper::hasValue($data['filter_sku']) ) $query->where('picklist_details.sku', 'LIKE', '%'.$data['filter_sku'].'%');
-		if( CommonHelper::hasValue($data['filter_so']) ) $query->where('so_no', 'LIKE', '%'.$data['filter_so'].'%');
+		if( CommonHelper::hasValue($data['filter_so']) ) $query->where('product_lists.sku', 'LIKE', '%'.$data['filter_so'].'%');
 		if( CommonHelper::hasValue($data['filter_from_slot']) ) $query->where('from_slot_code', 'LIKE', '%'.$data['filter_from_slot'].'%');
 		// if( CommonHelper::hasValue($data['filter_to_slot']) ) $query->where('to_slot_code', 'LIKE', '%'.$data['filter_to_slot'].'%');
 		// if( CommonHelper::hasValue($data['filter_status_detail']) ) $query->where('move_to_shipping_area', '=', $data['filter_status_detail']);

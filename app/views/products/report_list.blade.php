@@ -37,11 +37,13 @@
 				<td>{{ $product->upc }}</td>
 				<td>{{ $product->description }}</td>
 				<td>{{ $product->short_description }}</td>
-				<td>{{ $product->dept_code . ' - ' . $product->dept_name }}</td>
-				<td>{{ $product->sub_dept . ' - ' . $product->sub_dept_name }}</td>
+				
 			</tr>
 			@endforeach
 		@endif
+			<tr>
+			<td>Total item:{{count($results) }} </td>
+		</tr>
 	</table>
 </div>
 

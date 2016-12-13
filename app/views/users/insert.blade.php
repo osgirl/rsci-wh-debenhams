@@ -50,13 +50,8 @@
 						{{ Form::text('lastname', Input::old('lastname'), array('maxlength'=>'50')) }}
 					</div> <!-- /controls -->				
 				</div> <!-- /control-group -->
-				
-				<div class="control-group" id="barcode-wrapper">											
-					<label class="control-label" for="barcode">{{ $entry_barcode }}</label>
-					<div class="controls">
-						{{ Form::text('barcode', Input::old('barcode')) }}
-					</div> <!-- /controls -->				
-				</div> <!-- /control-group -->
+			 
+				 
 				
 				<div class="control-group">											
 					<label class="control-label" for="role_id">{{ $entry_user_role }}</label>
@@ -64,14 +59,14 @@
 						{{ Form::select('role_id', $user_role_options, Input::old('role_id'), array('id'=>'user_role')) }}
 					</div> <!-- /controls -->				
 				</div> <!-- /control-group -->
-				
+
 				<div class="control-group">											
-					<label class="control-label" for="role_id">{{ $entry_brand }}</label>
+					<label class="control-label" for="filter_store">Store :</label>
 					<div class="controls">
-						{{ Form::select('brand', $brand_options, Input::old('brand')) }}
+					{{ Form::select('filter_store', array('' => $text_select) + $stores, $filter_store, array('class'=>'select-width', 'id'=>"filter_store")) }}
 					</div> <!-- /controls -->				
 				</div> <!-- /control-group -->
-								
+			 		
 				<div class="control-group">											
 					<label class="control-label" for=""></label>
 					<div class="controls">

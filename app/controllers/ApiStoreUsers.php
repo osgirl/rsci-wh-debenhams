@@ -30,6 +30,7 @@ class ApiStoreUsers extends BaseController {
 				$user_detail = array(
 								'user_id' 	=> $userinfo['id'],
 								'username' 	=> $userinfo['username'],
+								
 								'role_id'	=> $userinfo['role_id']
 							);
 				DebugHelper::log(__METHOD__ .' User detail ',$user_detail);

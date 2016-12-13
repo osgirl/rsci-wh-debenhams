@@ -1,0 +1,69 @@
+cron/ewms_connection: mysql:host=localhost;dbname=db 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=172.16.1.2;DBQ=MMRSTLIB 
+Resource id #10 
+
+ Running method cronEWMS::picklist
+
+ CSV FILE:  
+
+  
+File not found. Make sure you specified the correct path.
+ Running method cronEWMS::picklistDetail
+
+ CSV FILE:  
+
+  
+File not found. Make sure you specified the correct path.Closing odbc connection... 
+Closing pdo connection... 
+cron/ewms_connection: mysql:host=localhost;dbname=db 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=172.16.1.2;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT   whsmvh.whmove   
+FROM  whsmvh
+where whsmvh.whmvtp = 2  AND whsmvh.WHMVST = 1 
+Exporting to CSV 
+
+ Running method cronEWMS::picklist
+
+ CSV FILE: db2_dump/picklist_header_1470726609.csv 
+
+ db2_dump/picklist_header_1470726609.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_header_1470726609.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@move_doc_number ) set move_doc_number=@move_doc_number 
+Loaded a total of 11 records from this csv file.
+Executing SQL: SELECT  whmove, invupc.IUPC, Whmfsl, WHMVQR, trfhdr.TRFTLC , trfbdt
+from whsmvd
+LEFT join invupc on whsmvd.inumbr = invupc.inumbr
+LEFT JOIN TRFHDR ON WHSMVD.WHMVSR = TRFHDR.TRFBCH 
+Exporting to CSV 
+
+ Running method cronEWMS::picklistDetail
+
+ CSV FILE: db2_dump/picklist_detail_1470726637.csv 
+
+ db2_dump/picklist_detail_1470726637.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_detail_1470726637.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (  @move_doc_number, @sku, @from_slot_code, @quantity_to_pick, @store_code, @created_at )
+				set  move_doc_number=@move_doc_number, sku=@sku, from_slot_code=@from_slot_code,
+					quantity_to_pick=@quantity_to_pick, store_code=@store_code, created_at=@created_at 
+Loaded a total of 702 records from this csv file.
+Closing odbc connection... 
+Closing pdo connection... 

@@ -211,6 +211,7 @@ textarea {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+  text-align:  center;
 }
 
 @media print {
@@ -269,6 +270,7 @@ table {
   .table td,
   .table th {
     background-color: #fff !important;
+    text-align:  center;
   }
   .btn > .caret,
   .dropup > .btn > .caret {
@@ -282,7 +284,8 @@ table {
   }
   .table-bordered th,
   .table-bordered td {
-    border: 1px solid #ddd !important;
+    
+    text-align:  center;
   }
 }
 
@@ -354,6 +357,7 @@ hr {
 
 p {
   margin: 0 0 10px;
+  text-align: center;
 }
 
 .lead {
@@ -1112,10 +1116,11 @@ th {
   line-height: 1.428571429;
   vertical-align: top;
   border-top: 1px solid #dddddd;
+
 }
 
 .table thead > tr > th {
-  vertical-align: bottom;
+  text-align: center;
 }
 
 .table caption + thead tr:first-child th,
@@ -1866,7 +1871,8 @@ fieldset[disabled] .btn-success.active {
   background-color: #5cb85c;
   border-color: #5cb85c;
 }
-
+ 
+ 
 .btn-info {
   color: #ffffff;
   background-color: #5bc0de;
@@ -2042,9 +2048,19 @@ input[type="button"].btn-block {
 
 .dropdown-menu > li > a:hover,
 .dropdown-menu > li > a:focus {
-  color: #ffffff;
+  
   text-decoration: none;
   background-color: #357ebd;
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+}
+a {
+    cursor: pointer;
 }
 
 .dropdown-menu > .active > a,
@@ -2054,6 +2070,7 @@ input[type="button"].btn-block {
   text-decoration: none;
   background-color: #357ebd;
   outline: 0;
+
 }
 
 .dropdown-menu > .disabled > a,
@@ -3172,18 +3189,18 @@ button.close {
   right: 0;
   left: 0;
   z-index: 1050;
-  width: auto;
+  width: 750px;
   padding: 10px;
 }
 
 .modal-content {
   position: relative;
-  background-color: #ffffff;
-  border: 1px solid #999999;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: #ffffff; 
   outline: none;
   background-clip: padding-box;
+  border: solid 1px #000; padding: 10px;
 }
+ 
 
 .modal-backdrop {
   position: fixed;
@@ -3268,8 +3285,8 @@ button.close {
 @media screen and (min-width: 768px) {
   .modal-dialog {
     right: auto;
-    left: 50%;
-    width: 560px;
+    left: auto;
+    width: 1000px;
     padding-top: 30px;
     padding-bottom: 30px;
     margin-left: -280px;

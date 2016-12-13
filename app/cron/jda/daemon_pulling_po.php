@@ -12,5 +12,11 @@ $po 		= $db2->purchaseOrder();
 $ewms->purchaseOrder();			sleep(2);
 $poDetail 	= $db2->purchaseOrderDetails();
 $ewms->purchaseOrderDetails();	sleep(2);
+$picking 		=$db2->picking(); 
+$ewms->picklist();		sleep(2); 
+$pickingDetail 		=$db2->pickingDetail();
+$ewms->picklistDetail();	sleep(2);
+
+
 $db2->close();
 $ewms->close();

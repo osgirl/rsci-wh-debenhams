@@ -1,0 +1,298 @@
+cron/ewms_connection: mysql:host=localhost;dbname=db 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=172.16.1.2;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT   whsmvh.whmove   
+FROM  whsmvh
+where whsmvh.whmvtp = 2  AND whsmvh.WHMVST = 1 
+Exporting to CSV 
+
+ Running method cronEWMS::picklist
+
+ CSV FILE: db2_dump/picklist_header_1470805946.csv 
+
+ db2_dump/picklist_header_1470805946.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_header_1470805946.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@move_doc_number ) set move_doc_number=@move_doc_number 
+Loaded a total of 10 records from this csv file.
+Executing SQL: SELECT  whmove, invupc.IUPC, Whmfsl, WHMVQR, trfhdr.TRFTLC , trfbdt
+from whsmvd
+LEFT join invupc on whsmvd.inumbr = invupc.inumbr
+LEFT JOIN TRFHDR ON WHSMVD.WHMVSR = TRFHDR.TRFBCH 
+Exporting to CSV 
+
+ Running method cronEWMS::picklistDetail
+
+ CSV FILE: db2_dump/picklist_detail_1470806233.csv 
+
+ db2_dump/picklist_detail_1470806233.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_detail_1470806233.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (  @move_doc_number, @sku, @from_slot_code, @quantity_to_pick, @store_code, @created_at )
+				set  move_doc_number=@move_doc_number, sku=@sku, from_slot_code=@from_slot_code,
+					quantity_to_pick=@quantity_to_pick, store_code=@store_code, created_at=@created_at 
+Loaded a total of 702 records from this csv file.
+Closing odbc connection... 
+Closing pdo connection... 
+cron/ewms_connection: mysql:host=localhost;dbname=db 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=172.16.1.2;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT   whsmvh.whmove   
+FROM  whsmvh
+where whsmvh.whmvtp = 2  AND whsmvh.WHMVST = 1 
+Exporting to CSV 
+
+ Running method cronEWMS::picklist
+
+ CSV FILE: db2_dump/picklist_header_1470806349.csv 
+
+ db2_dump/picklist_header_1470806349.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_header_1470806349.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@move_doc_number ) set move_doc_number=@move_doc_number 
+Loaded a total of 9 records from this csv file.
+Executing SQL: SELECT  whmove, invupc.IUPC, Whmfsl, WHMVQR, trfhdr.TRFTLC , trfbdt
+from whsmvd
+LEFT join invupc on whsmvd.inumbr = invupc.inumbr
+LEFT JOIN TRFHDR ON WHSMVD.WHMVSR = TRFHDR.TRFBCH 
+Exporting to CSV 
+
+ Running method cronEWMS::picklistDetail
+
+ CSV FILE: db2_dump/picklist_detail_1470806357.csv 
+
+ db2_dump/picklist_detail_1470806357.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_detail_1470806357.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (  @move_doc_number, @sku, @from_slot_code, @quantity_to_pick, @store_code, @created_at )
+				set  move_doc_number=@move_doc_number, sku=@sku, from_slot_code=@from_slot_code,
+					quantity_to_pick=@quantity_to_pick, store_code=@store_code, created_at=@created_at 
+Loaded a total of 702 records from this csv file.
+Closing odbc connection... 
+Closing pdo connection... 
+cron/ewms_connection: mysql:host=localhost;dbname=db 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=172.16.1.2;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT POMRCH.POMRCV, POMRCH.PONUMB, POMRCH.POUNTS , POMHDR.POSHP1, POEDAT FROM POMRCH 
+		LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB 
+		WHERE POMRCH.POSTAT = 3 
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1470807211.csv 
+
+ db2_dump/purchase_order_header_1470807211.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1470807211.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @purchase_order_no, @total_qty,@shipment_reference_no, @entry_date)
+				set id="", receiver_no=@receiver_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty, shipment_reference_no=@shipment_reference_no, entry_date=@entry_date 
+Loaded a total of 7 records from this csv file.
+Executing SQL: SELECT DISTINCT POMRCD.INUMBR, INVUPC.IUPC, POMRCD.POMRCV,   INVDPT.IDEPT, pomrcd.pomqty, INVDPT.DPTNAM
+FROM POMRCD
+LEFT JOIN INVUPC ON POMRCD.INUMBR = INVUPC.INUMBR
+LEFT JOIN INVMST ON POMRCD.INUMBR = INVMST.INUMBR
+LEFT JOIN INVDPT ON INVMST.IDEPT = INVDPT.IDEPT
+LEFT JOIN POMRCH ON POMRCD.POMRCV = POMRCH.POMRCV
+WHERE POMRCH.POSTAT = 3 AND INVDPT.ISDEPT=0  AND INVDPT.ICLAS=0 AND INVDPT.ISCLAS=0  
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1470807214.csv 
+
+ db2_dump/purchase_order_detail_1470807214.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1470807214.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name 
+Loaded a total of 22 records from this csv file.
+Closing odbc connection... 
+Closing pdo connection... 
+cron/ewms_connection: mysql:host=localhost;dbname=db 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=172.16.1.2;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT POMRCH.POMRCV, POMRCH.PONUMB, POMRCH.POUNTS , POMHDR.POSHP1, POEDAT FROM POMRCH 
+		LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB 
+		WHERE POMRCH.POSTAT = 3 
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1470818641.csv 
+
+ db2_dump/purchase_order_header_1470818641.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1470818641.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @purchase_order_no, @total_qty,@shipment_reference_no, @entry_date, @po_status)
+				set id="", receiver_no=@receiver_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty, shipment_reference_no=@shipment_reference_no, entry_date=@entry_date, 1=@po_status 
+
+Fatal error: Uncaught exception 'PDOException' with message 'SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '1=@po_status' at line 10' in C:\xampp\htdocs\wh-debenhams\app\cron\ewms_connection.php:91
+Stack trace:
+#0 C:\xampp\htdocs\wh-debenhams\app\cron\ewms_connection.php(91): PDO->exec('LOAD DATA LOCAL...')
+#1 C:\xampp\htdocs\wh-debenhams\app\cron\ewms_cron_class.php(139): eWMSMigration->import('db2_dump/purcha...', 'wms_purchase_or...', '( @receiver_no,...')
+#2 C:\xampp\htdocs\wh-debenhams\app\cron\jda\daemon_pulling_po.php(12): cronEWMS->purchaseOrder()
+#3 {main}
+  thrown in C:\xampp\htdocs\wh-debenhams\app\cron\ewms_connection.php on line 91
+PHP Fatal error:  Uncaught exception 'PDOException' with message 'SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '1=@po_status' at line 10' in C:\xampp\htdocs\wh-debenhams\app\cron\ewms_connection.php:91
+Stack trace:
+#0 C:\xampp\htdocs\wh-debenhams\app\cron\ewms_connection.php(91): PDO->exec('LOAD DATA LOCAL...')
+#1 C:\xampp\htdocs\wh-debenhams\app\cron\ewms_cron_class.php(139): eWMSMigration->import('db2_dump/purcha...', 'wms_purchase_or...', '( @receiver_no,...')
+#2 C:\xampp\htdocs\wh-debenhams\app\cron\jda\daemon_pulling_po.php(12): cronEWMS->purchaseOrder()
+#3 {main}
+  thrown in C:\xampp\htdocs\wh-debenhams\app\cron\ewms_connection.php on line 91
+cron/ewms_connection: mysql:host=localhost;dbname=db 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=172.16.1.2;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT POMRCH.POMRCV, POMRCH.PONUMB, POMRCH.POUNTS , POMHDR.POSHP1, POEDAT FROM POMRCH 
+		LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB 
+		WHERE POMRCH.POSTAT = 3 
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1470818720.csv 
+
+ db2_dump/purchase_order_header_1470818720.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1470818720.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @purchase_order_no, @total_qty,@shipment_reference_no, @entry_date, @po_status)
+				set id="", receiver_no=@receiver_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty, shipment_reference_no=@shipment_reference_no, entry_date=@entry_date, po_status=1 
+Loaded a total of 6 records from this csv file.
+Executing SQL: SELECT DISTINCT POMRCD.INUMBR, INVUPC.IUPC, POMRCD.POMRCV,   INVDPT.IDEPT, pomrcd.pomqty, INVDPT.DPTNAM
+FROM POMRCD
+LEFT JOIN INVUPC ON POMRCD.INUMBR = INVUPC.INUMBR
+LEFT JOIN INVMST ON POMRCD.INUMBR = INVMST.INUMBR
+LEFT JOIN INVDPT ON INVMST.IDEPT = INVDPT.IDEPT
+LEFT JOIN POMRCH ON POMRCD.POMRCV = POMRCH.POMRCV
+WHERE POMRCH.POSTAT = 3 AND INVDPT.ISDEPT=0  AND INVDPT.ICLAS=0 AND INVDPT.ISCLAS=0  
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1470818723.csv 
+
+ db2_dump/purchase_order_detail_1470818723.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1470818723.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name 
+Loaded a total of 16 records from this csv file.
+Closing odbc connection... 
+Closing pdo connection... 
+
+Parse error: syntax error, unexpected '1' (T_LNUMBER) in C:\xampp\htdocs\wh-debenhams\app\cron\ewms_cron_class.php on line 147
+PHP Parse error:  syntax error, unexpected '1' (T_LNUMBER) in C:\xampp\htdocs\wh-debenhams\app\cron\ewms_cron_class.php on line 147
+cron/ewms_connection: mysql:host=localhost;dbname=db 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=172.16.1.2;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT POMRCH.POMRCV, POMRCH.PONUMB, POMRCH.POUNTS , POMHDR.POSHP1, POEDAT FROM POMRCH 
+		LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB 
+		WHERE POMRCH.POSTAT = 3 
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1470819092.csv 
+
+ db2_dump/purchase_order_header_1470819092.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1470819092.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @purchase_order_no, @total_qty,@shipment_reference_no, @entry_date)
+				set id="", receiver_no=@receiver_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty, shipment_reference_no=@shipment_reference_no, entry_date=@entry_date 
+Loaded a total of 6 records from this csv file.
+Executing SQL: SELECT DISTINCT POMRCD.INUMBR, INVUPC.IUPC, POMRCD.POMRCV,   INVDPT.IDEPT, pomrcd.pomqty, INVDPT.DPTNAM
+FROM POMRCD
+LEFT JOIN INVUPC ON POMRCD.INUMBR = INVUPC.INUMBR
+LEFT JOIN INVMST ON POMRCD.INUMBR = INVMST.INUMBR
+LEFT JOIN INVDPT ON INVMST.IDEPT = INVDPT.IDEPT
+LEFT JOIN POMRCH ON POMRCD.POMRCV = POMRCH.POMRCV
+WHERE POMRCH.POSTAT = 3 AND INVDPT.ISDEPT=0  AND INVDPT.ICLAS=0 AND INVDPT.ISCLAS=0  
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1470819094.csv 
+
+ db2_dump/purchase_order_detail_1470819094.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1470819094.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 16 records from this csv file.
+Closing odbc connection... 
+Closing pdo connection... 

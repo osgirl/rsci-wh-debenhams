@@ -1,7 +1,7 @@
 <?
 
 $databasehost = "localhost";
-$databasename = "tt";
+$databasename = "deve";
 $databaseusername ="root";
 $databasepassword = "";
 

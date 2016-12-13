@@ -15,8 +15,8 @@ return array(
 	'col_id' 					=> 'No.',
 	'col_prod_sku'				=> 'SKU',
 	'col_prod_upc'				=> 'UPC',
-	'col_prod_full_name'		=> 'Full Name',
-	'col_prod_short_name'		=> 'Short Name',
+	'col_prod_full_name'		=> 'Short Name',
+	'col_prod_short_name'		=> 'Syle No.',
 	'col_department'			=> 'Department',
 	'col_sub_department'		=> 'Sub-Deparment',
 	

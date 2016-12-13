@@ -40,15 +40,7 @@
 				        	</span>
 				        </div>
 				     </div>
-			      	<div class="span3">
-			      		<div>
-				        	<span class="search-po-left-pane">{{ $label_order_date }}</span>
-				        	<div class="search-po-right-pane input-append date">
-								{{ Form::text('filter_order_date', $filter_order_date, array('class'=>'span2', 'id'=>"filter_order_date", 'readonly'=>'readonly')) }}
-								<span class="add-on"><i class="icon-th"></i></span>
-				        	</div>
-				        </div>
-			      	</div>
+			      	 
 			      	<div class="span11 control-group collapse-border-top">
 			      		<a class="btn btn-success btn-darkblue" id="submitForm">{{ $button_search }}</a>
 		      			<a class="btn" id="clearForm">{{ $button_clear }}</a>

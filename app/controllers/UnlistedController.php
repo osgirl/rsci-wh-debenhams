@@ -35,7 +35,7 @@ class UnlistedController extends BaseController {
 		$this->getList();
 	}
 
-	/*public function exportCSV() {
+	public function exportCSV() {
 		// Check Permissions
 		if (Session::has('permissions')) {
 	    	if (!in_array('CanExportUnlisted', unserialize(Session::get('permissions'))))  {
@@ -76,7 +76,7 @@ class UnlistedController extends BaseController {
 		);
 
 		return Response::make(rtrim($output, "\n"), 200, $headers);
-	}*/
+	}
 
 	public function exportCSV() {
 		// Check Permissions
@@ -121,8 +121,8 @@ class UnlistedController extends BaseController {
 		$filter_sku = Input::get('filter_sku', NULL);
 		$filter_reference_no = Input::get('filter_reference_no', NULL);
 		$filter_shipment_reference_no = Input::get('filter_shipment_reference_no', NULL);
-
-		$sort = Input::get('sort', 'reference_no');
+		$ship_ref_count 		= Input::get('ship_ref_count',NULL);
+		$sort = Input::get('sort');
 		$order = Input::get('order', 'ASC');
 		$page = Input::get('page', 1);
 
@@ -136,9 +136,9 @@ class UnlistedController extends BaseController {
 							'page'				=> $page,
 							'limit'				=> 30
 						);
-		$results = Unlisted::getList($arrParams);
+		$results = PurchaseOrderDetail::getUnlistedDebenhams($arrParams);
 		// echo '<pre>'; dd($results);
-		$results_total = Unlisted::getList($arrParams,true);
+		$results_total = PurchaseOrderDetail::getUnlistedDebenhams($arrParams,true);
 
 		// Pagination
 		$this->data['arrFilters'] = array(
@@ -149,9 +149,9 @@ class UnlistedController extends BaseController {
 										'order'				=> $order
 									);
 
-		$this->data['unlisted'] = Paginator::make($results['result'], $results_total, 30);
-		$this->data['unlisted_count'] = $results_total;
-		$this->data['ship_ref_count'] = $results['ship_ref_count'];
+		$this->data['unlisted'] = Paginator::make($results, $results_total, 30);
+	 	$this->data['unlisted_count'] = $results_total;
+		//$this->data['ship_ref_count'] = $results['ship_ref_count']; 
 
 		$this->data['counter'] 	= $this->data['unlisted']->getFrom();
 
@@ -162,7 +162,7 @@ class UnlistedController extends BaseController {
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
 		$this->data['page'] = $page;
-
+		$this->data['ship_ref_count'] = $ship_ref_count;
 		$url = '?filter_reference_no=' . $filter_reference_no;
 		$url .= '&filter_sku=' . $filter_sku;
 		$url .= '&filter_shipment_reference_no=' . $filter_shipment_reference_no;

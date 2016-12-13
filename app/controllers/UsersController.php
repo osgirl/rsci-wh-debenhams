@@ -112,7 +112,7 @@ class UsersController extends BaseController {
 		return Redirect::to('/')->with('message', Lang::get('users.text_success_logout'));
 	}
 
-	public function updateProfileForm() {
+	public function 	updateProfileForm() {
 		$this->data['heading_title_profile'] = Lang::get('users.heading_title_profile');
 
 		$this->data['entry_username'] = Lang::get('users.entry_username');
@@ -123,11 +123,7 @@ class UsersController extends BaseController {
 		$this->data['entry_brand'] = Lang::get('users.entry_brand');
 
 		$this->data['button_submit'] = Lang::get('general.button_submit');
-		$brands = array('' => Lang::get('general.text_select'));
-		foreach (Brands::getBrandsOption() as $item) {
-			$brands[$item->id] = $item->brand_name;
-		}
-		$this->data['brand_options'] = $brands;
+	 
 		// Options
 		$user_roles = array('' => Lang::get('general.text_select'));
 		foreach (UserRoles::getUserRolesOptions() as $item) {
@@ -264,7 +260,7 @@ class UsersController extends BaseController {
 		}
 
 		$this->data['heading_title_insert'] = Lang::get('users.heading_title_insert');
-
+		$this->data['text_select']            = Lang::get('general.text_select');
 		$this->data['entry_username'] = Lang::get('users.entry_username');
 		$this->data['entry_password'] = Lang::get('users.entry_password');
 		$this->data['entry_confirm_password'] = Lang::get('users.entry_confirm_password');
@@ -277,13 +273,15 @@ class UsersController extends BaseController {
 		$this->data['button_submit'] = Lang::get('general.button_submit');
 		$this->data['button_cancel'] = Lang::get('general.button_cancel');
 
+		$this->data['stores']                 = Store::lists( 'store_name', 'store_code');
 		// URL
 		$this->data['url_cancel'] = URL::to('user' . $this->setURL());
 
 		// Search Filters
-		$this->data['filter_username'] = Input::get('filter_username');
+		$this->data['filter_username'] = Input::get('filter_username'); 
 		$this->data['filter_barcode'] = Input::get('filter_barcode');
 		$this->data['filter_user_role'] = Input::get('filter_user_role');
+		$this->data['filter_store'] = Input::get('filter_store');
 
 		$this->data['sort'] = Input::get('sort', 'username');
 		$this->data['order'] = Input::get('order', 'ASC');
@@ -296,14 +294,7 @@ class UsersController extends BaseController {
 
 		$this->data['user_role_options'] = $user_roles;
 
-		$brands = array('' => Lang::get('general.text_select'));
-		foreach (Brands::getBrandsOption() as $item) {
-			$brands[$item->id] = $item->brand_name;
-		}
-
-		$this->data['brand_options'] = $brands;
-
-
+	 
 		$this->layout->content = View::make('users.insert', $this->data);
 	}
 
@@ -322,10 +313,10 @@ class UsersController extends BaseController {
 						'password'				=> 'required|alpha_num|between:6,12|confirmed',
 					    'password_confirmation'	=> 'required|alpha_num|between:6,12',
 						'firstname'				=> 'required|min:2',
-					    'lastname'				=> 'required|min:2',
-					    'barcode'				=> 'unique:users,barcode,NULL,id,deleted_at,0000-00-00 00:00:00',
-					    'role_id'				=> 'required',
-					    'brand'					=> 'required'
+					    'lastname'				=> 'required|min:2',/*
+					    'barcode'				=> 'unique:users,barcode,NULL,id,deleted_at,0000-00-00 00:00:00',*/
+					    'role_id'				=> 'required', 
+					    'filter_store'			=> 'required'
 					);
 		$validator = Validator::make(Input::all(), $rules);
 
@@ -339,9 +330,9 @@ class UsersController extends BaseController {
 							'password'		=> Hash::make(Input::get('password')),
 							'firstname'		=> Input::get('firstname'),
 							'lastname'		=> Input::get('lastname'),
-							'barcode'		=> ( Input::get('role_id') == 2 ) ? '' : Input::get('barcode'), //if admin no barcode must empty
-							'role_id'		=> Input::get('role_id'),
-							'brand_id'			=> Input::get('brand'),
+							/*'barcode'		=> ( Input::get('role_id') == 2 ) ? '' : Input::get('barcode'), //if admin no barcode must empty*/
+							'role_id'		=> Input::get('role_id'), 
+							'store_code'	=> Input::get('filter_store'),
 							'deleted_at'	=> '0000-00-00 00:00:00',
 							'created_at'	=> date('Y-m-d H:i:s'),
 							'updated_at'	=> date('Y-m-d H:i:s')
@@ -351,15 +342,14 @@ class UsersController extends BaseController {
 
 			// AuditTrail
 			$role = UserRoles::find(Input::get('role_id'));
-			$brand = Brands::find(Input::get('brand'));
+		 
 
 			$data_before = '';
 			$data_after = 'Username: ' . Input::get('username') . '<br />' .
 						  'First Name: ' . Input::get('firstname') . '<br />' .
 						  'Last Name: ' . Input::get('lastname') . '<br />' .
-						  'Barcode: ' . Input::get('barcode') . '<br />' .
-						  'Role: ' . $role->role_name . '<br />' .
-						  'Brand: ' . $brand->brand_name;
+
+						  'Role: ' . $role->role_name;
 
 			$arrParams = array(
 							'module'		=> 'Users',
@@ -396,17 +386,18 @@ class UsersController extends BaseController {
 		$this->data['entry_lastname'] = Lang::get('users.entry_lastname');
 		$this->data['entry_user_role'] = Lang::get('users.entry_user_role');
 		$this->data['entry_brand'] = Lang::get('users.entry_brand');
-
+		$this->data['text_select']   = Lang::get('general.text_select');
 		$this->data['button_submit'] = Lang::get('general.button_submit');
 		$this->data['button_cancel'] = Lang::get('general.button_cancel');
 
 		// URL
 		$this->data['url_cancel'] = URL::to('user' . $this->setURL());
-
+		
+		$this->data['stores']                 = Store::lists( 'store_name', 'store_code');
 		// Search Filters
-		$this->data['filter_username'] = Input::get('filter_username');
-		$this->data['filter_barcode'] = Input::get('filter_barcode');
+		$this->data['filter_username'] = Input::get('filter_username'); 
 		$this->data['filter_user_role'] = Input::get('filter_user_role');
+		$this->data['filter_store']	 	= Input::get('filter_store');
 
 		$this->data['sort'] = Input::get('sort', 'username');
 		$this->data['order'] = Input::get('order', 'ASC');
@@ -419,13 +410,8 @@ class UsersController extends BaseController {
 
 		$this->data['user_role_options'] = $user_roles;
 
-		$brands = array('' => Lang::get('general.text_select'));
-		foreach (Brands::getBrandsOption() as $item) {
-			$brands[$item->id] = $item->brand_name;
-		}
-
-		$this->data['brand_options'] = $brands;
-
+	 
+ 
 		// Data
 		$this->data['user'] = User::find(Input::get('id'));
 
@@ -445,9 +431,9 @@ class UsersController extends BaseController {
 		$rules = array(
 						'firstname'				=> 'required|min:2',
 					    'lastname'				=> 'required|min:2',
-					    'barcode'				=> 'unique:users,barcode,' . Input::get('id') . ',id,deleted_at,0000-00-00 00:00:00',
+					    /*'barcode'				=> 'unique:users,barcode,' . Input::get('id') . ',id,deleted_at,0000-00-00 00:00:00',*/
 					    'role_id'				=> 'required',
-					    'brand'					=> 'required'
+					   
 					);
 		$validator = Validator::make(Input::all(), $rules);
 
@@ -474,7 +460,7 @@ class UsersController extends BaseController {
 			$data_before = 'Username: ' . $user->username . '<br />' .
 						   'First Name: ' . $user->firstname . '<br />' .
 						   'Last Name: ' . $user->lastname . '<br />' .
-						   'Barcode: ' . $user->barcode . '<br />' .
+						  /* 'Barcode: ' . $user->barcode . '<br />' .*/
 						   'Role: ' . $role_name . '<br />' .
 						   'Brand: ' . $brand_name;
 			// AuditTrail
@@ -483,9 +469,10 @@ class UsersController extends BaseController {
 			$arrParams = array(
 							'firstname'		=> Input::get('firstname'),
 							'lastname'		=> Input::get('lastname'),
-							'barcode'		=> ( Input::get('role_id') == 2 ) ? '' : Input::get('barcode'), //if admin no barcode must empty
-							'role_id'		=> Input::get('role_id'),
-							'brand_id'			=> Input::get('brand'),
+							/*'barcode'		=> ( Input::get('role_id') == 2 ) ? '' : Input::get('barcode'),*/ //if admin no barcode must empty
+							'store_code'	=> Input::get('filter_store'),
+							'role_id'		=> Input::get('role_id'),/*
+							'brand_id'			=> Input::get('brand'),*/
 							'updated_at'	=> date('Y-m-d H:i:s')
 							);
 			User::updateUser(Input::get('id'), $arrParams);
@@ -497,7 +484,7 @@ class UsersController extends BaseController {
 			$data_after = 'Username: ' . Input::get('username') . '<br />' .
 						  'First Name: ' . Input::get('firstname') . '<br />' .
 						  'Last Name: ' . Input::get('lastname') . '<br />' .
-						  'Barcode: ' . Input::get('barcode') . '<br />' .
+						/*  'Barcode: ' . Input::get('barcode') . '<br />' .*/
 						  'Role: ' . $role_name . '<br />' .
 						  'Brand: ' . $brand_name;
 
@@ -781,7 +768,7 @@ class UsersController extends BaseController {
 	protected function setURL() {
 		// Search Filters
 		$url = '?filter_username=' . Input::get('filter_username', NULL);
-		$url .= '&filter_barcode=' . Input::get('filter_barcode', NULL);
+		$url .= '&filter_store=' . Input::get('filter_store', NULL);
 		$url .= '&filter_user_role=' . Input::get('filter_user_role', NULL);
 		$url .= '&sort=' . Input::get('sort', 'username');
 		$url .= '&order=' . Input::get('order', 'ASC');

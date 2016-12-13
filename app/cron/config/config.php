@@ -6,15 +6,15 @@ function mysql_credentials() {
 	return array(
 	    "hostname" => "localhost",
 	    "user"     => "root",
-	    "password" => 'root',
-	    "db_name"  => "ccri"
+	    "password" => '',
+	    "db_name"  => "db"
 	);
 }
 
 function jda_credentials() {
 	return array(
-	    'jda_lib' => 'MMGAPLIB',
-	    'user'	=> 'STRATSYS',
+	    'jda_lib' => 'MMRSTLIB',
+	    'user'	=> 'DEBSPGMR',
 	    'password' => 'PASSWORD'
 	);
 }

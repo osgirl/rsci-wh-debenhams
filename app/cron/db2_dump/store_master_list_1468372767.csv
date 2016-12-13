@@ -1,0 +1,44 @@
+store_code,store_name,address1,address2,address3,city
+800,"Wellworth FT","Fairview Terraces",,,"Quezon City"
+820,"DEBENHAMS SLP",Mandaluyong,,,Mandaluyong
+884,"DEBENHAMS RCC Makati","Ayala, Makati",,,Makati
+893,"DEBENHAMS Trinoma","North Avenue, Q.C.",,,"Quezon City"
+944,"DEBENHAMS ABREEZA","JP Laurel Avenue",Bajada,,Davao
+975,"DEBENHAMS Paseo de Sta. Rosa","Sta Rosa Laguna",,,Laguna
+7000,"POP UP Main",Makati,,,Makati
+8001,"DEBENHAMS Warehouse","Tunasan Muntinlupa",,,Muntinlupa
+8002,"DEBENHAMS CENTRAL OFFICE",Makati,,,Makati
+8003,"DEBENHAMS OFFSITE SALE",Makati,,,Makati
+8004,"Wellworth Warehouse","Tunasan, Muntinlupa",,,Muntinlupa
+8201,"SLP LAUNDRY/CLEAN/BORROWED",Mandaluyong,,,Mandaluyong
+8202,"SLP Tester/Promo Item",Madaluyong,,,Mandaluyong
+8203,"SLP Conditional Sale",Mandaluyong,,,Mandaluyong
+8841,"RCC LAUNDRY/CLEAN/BORROWED","Ayala, Makati",RCC,,Makati
+8842,"RCC TESTER/Promo Item","Ayala, Makati",RCC,,Makati
+8843,"RCC Conditional Sale","Ayala, Makati",RCC,,Makati
+8931,"TNM LAUNDRY/CLEAN/BORROWED","North Avenue, Q.C.",,,"Quezon City"
+8932,"TNM TESTER/Promo Item","North Ave, Q.C.",,,"Quezon City"
+8933,"TNM Conditional Sale","North Ave. Q.C.",,,"Quezon City"
+9441,"DVO Laundry/Clean/Borrowed","JP Laurel Avenue",Bajada,,Davao
+9442,"DVO Tester/Promo Item","JP Laurel Avenue",Bajada,,Davao
+9443,"DVO Conditional Sale","JP Laurel Avenue",Bajada,,Davao
+9500,"DAVAO Warehouse DEBENHAMS",Davao,,,Davao
+9501,"DAVAO S&D WAREHOUSE DEBENHAMS","DAVAO CITY",,,DAVAO
+9502,"Davao Warehouse Sale Location","Davao City",,,Davao
+9503,"Davao Warehouse ForDestruction","Davao City",,,Davao
+9504,"Davao Warehouse Employee Sale","Davao City",,,Davao
+9751,"PDR LAUNDRY/CLEAN/BORROWED","Sta Rosa Laguna",,,Laguna
+9752,"PDR TESTER/Promo Item","Sta Rosa Laguna",,,Laguna
+9753,"PDR Conditional Sale","Sta Rosa Laguna",,,Laguna
+70001,"Pop up store1",Makati,,,Makati
+70002,"Pop up store2",Makati,,,Makati
+80011,"WAREHOUSE SALE LOCATION","Tunasan Muntinlupa",,,Muntinlupa
+80012,"WHOUSE LAUNDRY/CLEAN/BORROWED","Tunasan Muntinlupa",,,Muntinlupa
+80013,"WAREHOUSE SOILED 30%","Tunasan Muntinlupa",,,Muntinlupa
+80014,"WAREHOUSE DAMAGED 50%","Tunasan Muntinlupa",,,Muntinlupa
+80015,"S&D - For Employee Sale","Tuansan, Muntinlupa",,,Muntinlupa
+80016,"WAREHOUSE DESTRUCTION","Tunasan, Muntinlupa",,,Muntinlupa
+80017,"For Investigation","Audit for Investigation Location",,,Makati
+80021,"Debenhams Employee Sale",Makati,,,Makati
+80022,"Cosmetics Employee Sale","Head Office",,,Makati
+922,"DEBENHAMS ONLINE STORE",ONLINE,,,MAKATI

@@ -9,14 +9,15 @@ return array(
 
 	'entry_load'		=> 'Load Boxes',
 	'entry_load_create'	=> 'New Load Code',
-
+	'header_pell_details' 		=> 'Pell number details',
+	'col_pell_no_label'			=> ' Pell number :',
 	'label_store'				=> 'Store:',
 	'label_box_code'			=> 'Box Codes:',
 	'label_upc'					=> 'UPC:',
 	'label_load_code'			=> 'Load Code:',
 	'label_doc_no'		        => 'Document Number:',
     'label_assign_to'			=> 'Assign To:',
-
+    'assign_to_stock_piler'		=> 'Assign to stock piler',
 	'col_id' 					=> 'No.',
 	'col_id_export'				=> 'Id',
 	'col_store'					=> 'Store',
@@ -60,12 +61,14 @@ return array(
 
 	'error_delete'				=> 'Please select boxes to be deleted',
 	'error_required_fields'		=> 'Please complete required fields.',
-	'error_load'		=> 'Please choose box/s',
+	'error_load'			=> 'Please choose box/s',
 	'error_load_no_load_code'	=> 'Please select load code',
     'error_assign'				=> 'Please select the items to be assigned',
 
 	'entry_store'				=> 'Store: ',
 	'entry_box_code'			=> 'Box Code: ',
     'entry_stock_piler'			=> 'Stock Piler:',
+    'pell_no_header_contnt'		=> 'Pell number Content',
+    'btn_rem_box'				=> 'Remove Box no.',
 
 );

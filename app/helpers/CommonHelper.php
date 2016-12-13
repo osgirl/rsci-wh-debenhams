@@ -54,7 +54,7 @@ class CommonHelper {
         
         if( CommonHelper::hasValue($sort) && CommonHelper::hasValue($order))  
         {
-            $query->orderBy($sort,$order);
+            
         }
         if(CommonHelper::hasValue($page))
         {
@@ -238,7 +238,7 @@ class CommonHelper {
     */
     public static function execInBackground($cmd,$source)
     {
-        $cmd = 'nohup php -q ' . __DIR__.'/../../app/cron/jda/' . $cmd;
+        $cmd = 'php -q ' . __DIR__.'/../../app/cron/jda/' . $cmd;
         $filename=$source . "_" . date('m_d_y');
         $outputfile = __DIR__.'/../../app/cron/jda/logs/'.$filename.'.log';
     	$pidfile = __DIR__.'/../../app/cron/jda/logs/pidfile.log';

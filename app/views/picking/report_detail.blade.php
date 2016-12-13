@@ -8,49 +8,68 @@
 {{ HTML::style('resources/css/bootstrap.min.css') }}
 {{ HTML::style('resources/css/bootstrap-responsive.min.css') }}
 {{ HTML::style('resources/css/style.css') }}
+<style type="text/css">
+<link  rel="stylesheet" type="text/css" media="print" />
+.single_record{
+ page-break-after: always;
+}
+</style>
+
 </head>
-<body>
-<div class="table-responsive">
-			<div style="text-align: center">
-				<h1>Casual Clothing Retailers Inc.<br/>PICKING DETAIL REPORT</h1>
-				Print Date: {{ date('m/d/y h:i A')}}
-			</div>
-	<table class="table table-striped table-bordered">
-		<thead>
-			<tr>
-				<th>{{ $col_sku }}</th>
-				<th>{{ $col_upc }}</th>
-				<th>SHORT DESCRIPTION</th>
-				<th>{{ $col_so_no }}</th>
-				<th>{{ $col_from_slot_code }}</th>
-				<th>{{ $col_qty_to_pick }}</th>
-				<th>{{ $col_to_move }}</th>
-				<th>{{ $col_store_name }}</th>
-				<th>{{ $col_store_code }}</th>
-			</tr>
-		</thead>
-		@if( !CommonHelper::arrayHasValue($results) )
-			<tr class="font-size-13">
-				<td colspan="10" class="align-center">{{ $text_empty_results }}</td>
-			</tr>
-			@else
-				@foreach( $results as $pd )
-				<tr class="font-size-13">
-					<td>{{$pd['sku']}}</td>
-					<td>{{$pd['upc']}}</td>
-					<td>{{$pd['short_description']}}</td>
-					<td>{{$pd['so_no']}}</td>
-					<td>{{$pd['from_slot_code']}}</td>
-					<td>{{$pd['quantity_to_pick']}}</td>
-					<td>{{$pd['moved_qty']}}</td>
-					<td>{{$pd['store_name']}}</td>
-					<td>{{$pd['store_code']}}</td>
+<body> 
+	 
+<div>
 
+			 
+	<table>
+	<thead> 
+	<tr>
+			<th></th>
+			 
+		</tr> 
+ 	</thead>
+<thead> 
+	<tr>
+			<th>TL number : {{$picklist_doc}} </th>
+			 
+		</tr> 
+ 	</thead>
+		 </table>
+
+		 <table>
+ 
+		  <thead> 
+		 
+		 <tr class="font-size-02 tblrow">
+					
+
+					<td  > From </td>
+
+					<td  > To  </td>
+				 	<td>QTY </td>
+				 </tr>
+
+				</thead>
+	 	
+		 
+			@foreach( $results as $asdf )
+				<tr class="single_record">
+			 
+		 
+				 <td> 8001-Warehouse  </td>
+		 		
+				 <td> {{$asdf->store_code.'-'.$asdf->store_name}}</td>
+
+				 <td> {{$asdf->total_qty}}</td>
+	 	
+	 
 				</tr>
+			 
 				@endforeach
-			@endif
-	</table>
-</div>
+	 
 
+	</table>
+ 
+</div>
 </body>
 </html>

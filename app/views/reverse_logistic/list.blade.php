@@ -14,11 +14,10 @@
 	<div class="controls">
 		<div class="accordion" id="accordion2">
           <div class="accordion-group" style="background-color: #FFFFFF;">
- {{ Form::open(array('url'=>'reverse_logistic/list', 'class'=>'form-signin', 'id'=>'form-store-order', 'role'=>'form', 'method' => 'get')) }}
-            <div id="collapseOne" class="accordion-body collapse in" style="padding-top: 20px;">
+  <div id="collapseOne" class="accordion-body collapse in" style="padding-top: 20px;">
 	                <div class="span4">
 			        	<div>
-				        	<span class="search-po-left-pane"> TL Number : </span>
+				        	<span class="search-po-left-pane"> MTS Number : </span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::text('filter_so_no', '', array('class'=>'login', 'placeholder'=>'', 'id'=>"")) }}
 				        	</span>
@@ -28,7 +27,7 @@
 			      	<div class="span4">
 			      		<div>
 				        	<span class="search-po-left-pane">To :</span>
-				        	<span class="search-po-right-pane"> 		{{ Form::select('filter_store_name', array('' => $text_select) + $store_list, $filter_store_name, array('class'=>'select-width', 'id'=>"filter_store_name")) }}
+				        	<span class="search-po-right-pane">{{ Form::select('filter_store_name', array('' => $text_select) + $store_list, $filter_store_name, array('class'=>'select-width', 'id'=>"filter_store_name")) }}
 				        	</span>
 				        </div>
 				     </div>
@@ -85,11 +84,12 @@
 					
 						<th>No.</th>
 						<th><a href=""> TL Number</a></th>
-						<th> From</th>
-						<th> To     </th>
+						<th> Store From</th>
+					 
 						<th>Stock Piler</th>
+					 
 						<th> received date</th>
-						<th>status</th>
+					 
 						<th>action</th>
 					</tr>
 				</thead>
@@ -114,15 +114,16 @@
 
 					
 						<td>{{ $counter++ }}</td>
-						<td><a href="detail?so_no={{$so['so_no'].'&fromStore='.$so['store_name'].'&ToStore='.''.'&fullname='.$so['fullname'].'&CreatedAt='.date('M d, Y',strtotime($so['created_at'])).'&filter_status='.$so['data_display']}}">{{ $so['so_no'] }}</a></td>
-					<!--	<td>{{ $so['store_code'] }}</td>-->
+						<td><a href="detail?so_no={{$so['so_no'].'&fromStore='.$so['store_name'].'&ToStore='.''.
+						'&fullname='.$so['fullname'].'&CreatedAt='.date('M d, Y',strtotime($so['created_at'])).'
+						&DataDisplay='.$so['data_display']}}">{{ $so['so_no'] }}</a></td>
+			 
 						<td>{{ $so['store_name'] }}</td>
-<!-- "TO" store--> 		<td> </td> 
-				<!--		<td>{{$so['so_no']}}</td>-->
+ 
 						<td>{{ $so['fullname'] }}</td>
-		
+						  
 						<td>{{ date("M d, Y",strtotime($so['created_at'])) }}</td>
-						<td>{{ $so['data_display'] }}</td>
+					 
 						<td class="align-center">
 						@if ( CommonHelper::valueInArray('CanCloseStoreReturn', $permissions) )
 
@@ -236,9 +237,45 @@ $(document).ready(function() {
    	});
 
    	// Assign PO
-    
-   
+    $('.assignReverseLogistic').click(function() {
+    	var count = $("[name='selected[]']:checked").length;
+
+		if (count>0) {
+			var answer = confirm('{{ $text_confirm_assign }}')
+
+			if (answer) {
+				var so_no = new Array();
+				$.each($("input[name='selected[]']:checked"), function() {
+					so_no.push($(this).val());
+				});
+
+    			$('#so_no').val(so_no.join(','));
+
+    			// http://local.ccri.com/purchase_order/assign
+    			location = "assign?" + '&so_no=' + encodeURIComponent(so_no.join(','));
+    		
+			} else {
+				return false;
+			}
+		} else {
+			alert('{{ $error_assign }}');
+			return false;
+		}
+    });
+
+    $('.closeStoreReturn').click(function() {
+    	var so_no = $(this).data('id');
+
+    	var answer = confirm('Are you sure you want to close this Store Return?');
+   		if (answer) {
+	    	$('#closeSO_' + so_no).submit();
+    	} else {
+			return false;
+		}
+
+    });
 });
+   
 </script>
 	
   

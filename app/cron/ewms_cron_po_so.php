@@ -9,14 +9,14 @@ $ewms 		= new cronEWMS();
 $db2 		= new cronDB2();
 
 
-$po 		= $db2->purchaseOrder();
+/*$po 		= $db2->purchaseOrder();
 $ewms->purchaseOrder();			sleep(2);
 $poDetail 	= $db2->purchaseOrderDetails();
-$ewms->purchaseOrderDetails();	sleep(2);
+$ewms->purchaseOrderDetails();	sleep(2);*/
 $so 		= $db2->storeOrder();
 $ewms->storeOrder();			sleep(2);
-$soDetail 	= $db2->storeOrderDetails();
-$ewms->storeOrderDetails();		sleep(2);
+//$soDetail 	= $db2->storeOrderDetails();
+//$ewms->storeOrderDetails();		sleep(2);
 
 
 $db2->close();

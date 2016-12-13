@@ -1,0 +1,18 @@
+sql/mysql: mysql:host=localhost;dbname=db
+
+ Getting reference # from db 
+
+ SELECT reference FROM wms_transactions_to_jda
+					WHERE module = 'Purchase Order' AND jda_action='Receiving' AND reference = '10823' AND sync_status = 0 
+ 
+ No rows found!. Proceed to Closing of PO...
+php -qC:\xampp\htdocs\wh-debenhams\app\cron\jda\sql/../../jda/classes/close_po.php 10823Closing pdo connection... 
+sql/mysql: mysql:host=localhost;dbname=db
+
+ Getting reference # from db 
+
+ SELECT reference FROM wms_transactions_to_jda
+					WHERE module = 'Purchase Order' AND jda_action='Receiving' AND reference = '10860' AND sync_status = 0 
+ 
+ No rows found!. Proceed to Closing of PO...
+php -qC:\xampp\htdocs\wh-debenhams\app\cron\jda\sql/../../jda/classes/close_po.php 10860Closing pdo connection... 

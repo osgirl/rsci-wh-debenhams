@@ -17,7 +17,7 @@ class ApiPurchaseOrder extends BaseController {
 	* @return json encoded paginated purchase order list
 	*/
 	  public function RPolist($piler_id)
-    {
+    	{
     	try {
 			$polist = PurchaseOrder::GetApiRPoList($piler_id);
 
@@ -25,7 +25,7 @@ class ApiPurchaseOrder extends BaseController {
 			//return $polist;
 		}
 		catch(Exception $e) 
-	{
+		{
 			return Response::json(array(
 				"error" => true,
 				"result" => $e->getMessage()
@@ -33,7 +33,7 @@ class ApiPurchaseOrder extends BaseController {
 			);
 		}
 
-    }
+    	}
     public function RPoListDetailUpdate($receiver_no,$division,$quantity,$sku,$quantity_delivered)
     {
     	try {
@@ -234,8 +234,29 @@ class ApiPurchaseOrder extends BaseController {
 		if((int)$poInfo->purchase_order_no !== (int)$poNumber) throw new Exception("Passed purchase order number does not match purchase order id.");
 
 	}
-
-
+	public function UpdateRPoListDetailUpdate($receiver_no,$division_id,$upc,$rqty)
+    {
+    	try {
+			$poList = PurchaseOrder::UpdateRPoListDetailUpdate($receiver_no,$division_id,$upc,$rqty);
+			PurchaseOrder::UpdateApiRpoList($receiver_no,$division_id);
+			return Response::json(array('result' => $poList),200);
+		}
+		catch(Exception $e) 
+		{
+			return Response::json(array(
+				"error" => true,
+				"result" => $e->getMessage()
+				),400
+			);
+		}
+    }
+    public static function UpdateApiRpoList($receiver_no,$division) {
+          $query = DB::select(DB::raw("select * from wms_purchase_order_details WHERE receiver_no=$receiver_no and po_status<>4"));
+       if(count($query)==0)
+        {
+           $query =  DB::select(DB::raw("update wms_purchase_order_lists set po_status= '4' where receiver_no=$receiver_no"));
+        }
+    }
 	/*********************Unused functions remove******************************/
 	//TODO::Why 5? Is this function used? Ask Mobile
 	/**

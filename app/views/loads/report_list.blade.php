@@ -10,40 +10,36 @@
 {{ HTML::style('resources/css/style.css') }}
 </head>
 <body>
-<div class="table-responsive">
-			<div style="text-align: center">
-				<h1>Casual Clothing Retailers Inc.<br/>LOADS REPORT</h1>
+<!-- <div class="table-responsive">
+ -->		<div style="text-align: center">
+				<a class="font-size-02"> RSCI- eWMS<br/>Shipping Reports<br/></a>
+				Printed By: {{Auth::user()->username}} <br>
 				Print Date: {{ date('m/d/y h:i A')}}
-			</div>
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
-				<th>{{ $col_load_no }}</th>
-				<th>STORES</th>
-				<th>{{ $col_status }}</th>
+				<th>{{ $col_load_no }}</th>  
+				<th> TL no.</th>  
+				<th>Store</th>  
+				<th>Box no.</th>  
+				<th> Total Qty</th>  
+				<th> Ship Date</th>  
+				<th> Piler name</th>  
 			</tr>
 		</thead>
 		@if( !CommonHelper::arrayHasValue($results) )
-			<tr class="font-size-13">
+			<tr class="font-size-08">
 				<td colspan="3" class="align-center">{{ $text_empty_results }}</td>
 			</tr>
 		@else
 			@foreach($results as $load)
-			<tr class="font-size-13">
-				<td>{{ $load['load_code'] }}</td>
-				<td>{{ $load['stores'] }}</td>
-				<td>
-					@if( $load['is_shipped'] == 0 )
-						{{$text_ship}}
-					@else
-						{{$text_shipped}}
-					@endif
-				</td>
+			<tr class="font-size-01"> 
+			 	<td></td>
 			</tr>
 			@endforeach
 		@endif
 	</table>
-</div>
+<!-- </div> -->
 
 </body>
 </html>

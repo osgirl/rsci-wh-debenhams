@@ -7,7 +7,31 @@ class StoreReturnDetail extends Eloquent {
 
 	/********************Methods for CMS only**************************/
 
+public static function getFilteredPicklistDetailasdf($picklistDoc, $data = array(), $getCount= false)
 
+	{
+		$query = StoreReturnDetail::SELECT('store_return_detail.sku as upc', 'product_lists.sku', 'product_lists.description',
+		'store_return_detail.delivered_qty', 'store_return_detail.received_qty')
+		->join('product_lists','store_return_detail.sku','=','product_lists.upc')
+		 ->WHERE('store_return_detail.so_no','=', $picklistDoc);
+
+
+		 if( CommonHelper::hasValue($data['filter_sku']) ) $query->where('store_return_detail.sku', 'LIKE', '%'.$data['filter_sku'].'%');
+		if( CommonHelper::hasValue($data['filter_so']) ) $query->where('product_lists.sku', 'LIKE', '%'.$data['filter_so'].'%');
+
+		if( CommonHelper::hasValue($data['limit']) && CommonHelper::hasValue($data['page'])  && !$getCount)  {
+			$query->skip($data['limit'] * ($data['page'] - 1))
+		          ->take($data['limit']);
+		}
+		$result = $query->get();
+
+		if($getCount) {
+			$result = $query->count();
+		}
+
+		return $result;
+
+	}
 	public static function getSODetails($so_no,$data = array()){
 		// print_r($data); die();
 		$query =  StoreReturnDetail::join('product_lists', 'store_return_detail.sku', '=', 'product_lists.upc')
@@ -18,7 +42,7 @@ class StoreReturnDetail extends Eloquent {
 					->where('store_return_detail.so_no', '=', $so_no);
 
 		if( CommonHelper::hasValue($data['filter_so_no']) ) $query->where('store_return.so_no', 'LIKE', '%'.$data['filter_so_no'].'%');
-		//if( CommonHelper::hasValue($data['filter_store_name']) ) $query->where('stores.store_name', 'LIKE', '%'.$data['filter_store_name'].'%');
+	//	if( CommonHelper::hasValue($data['filter_store_name']) ) $query->where('store_name', 'LIKE', '%'.$data['filter_store_name'].'%');
 		if( CommonHelper::hasValue($data['filter_created_at']) ) $query->where('store_return.created_at', 'LIKE', '%'.$data['filter_created_at'].'%');
 		if( CommonHelper::hasValue($data['filter_status']) ) {
 			$arrParams = array('data_code' => 'SR_STATUS_TYPE', 'data_value'=> $data['filter_status']);
@@ -49,7 +73,6 @@ class StoreReturnDetail extends Eloquent {
 
 		return $result;
 	}
-
 	public static function getCountSODetails($so_no) {
 		$storeOrderDetail = StoreReturnDetail::select('store_return_detail.*', 'product_lists.description')
 			->join('product_lists', 'store_return_detail.sku', '=', 'product_lists.upc')

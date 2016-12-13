@@ -27,29 +27,33 @@ class shippingController extends \BaseController {
 	public function getlist()
 	{
 
+
+
 		$this->data['stock_piler_list'] = $this->getStockPilers();
 
-		
+		$this->data                       = Lang::get('loads');
 		//$filter_stock_piler 	= Input::get('filter_stock_piler', NULL);
 		//$sort 	= Input::get('sort', 'load_code');
 		//$order 	= Input::get('order', 'ASC');
 		//$page 	= Input::get('page', 1);
 
-		
-		
-
 		$this->data['filter_load_code']		= Input::get('filter_load_code', NULL);
 		$this->data['filter_stock_piler']	= Input::get('filter_stock_piler', NULL);
 		$this->data['filter_entry_date']  = Input::get('filter_entry_date', NULL);
-
+		$this->data['url_print_shit']	 	= URL::to('load/printloadingsheet');
+		$this->data['url_back']				= URL::to('load/shipping');
 		$this->data['sort'] = Input::get('sort', 'load_code');
 		$this->data['order'] = Input::get('order', 'DESC');
 		$this->data['page'] = Input::get('page', 1);
 
+		$this->data['url_export'] = URL::to('load/export');
+		$taggingload 						= Input::get('taggingload', NULL);
+
+
 		$arrparam=$arrayName = array(
 			'filter_load_code' 			=> $this->data['filter_load_code'],
 			'filter_assigned_to_user_id'=> $this->data['filter_stock_piler'],
-			'filter_ship_at'			=> $this->data['filter_entry_date'],
+			'filter_entry_date'			=> $this->data['filter_entry_date'],
 			'sort' 						=> $this->data['sort'],
 			'order' 					=> $this->data['order'],
 			'page' 						=> $this->data['page']
@@ -61,27 +65,77 @@ class shippingController extends \BaseController {
 		$this->data['list_count']      = $results_total;
 		$this->data['arrparam']        = $arrparam;
 		$this->data['counter']         = $this->data['load_list']->getFrom();
-		$this->data['permissions']     = unserialize(Session::get('permissions'));
+	
+		$this->data['taggingload']		= $taggingload;
 
-		
+		$this->data['permissions']     = unserialize(Session::get('permissions'));
 
 		$url                         = '?filter_load_code=' . $this->data['filter_load_code'];
 		$url                        .= '&filter_assigned_to_user_id=' . $this->data['filter_stock_piler'];
 		$url                        .= '&page=' .$this->data['page'];
 
+
 		$order_load_code = ($this->data['sort']=='load_code' && $this->data['order']=='ASC') ? 'DESC' : 'ASC';
 		$order_date_created = ($this->data['sort']=='load.created_at'&& $this->data['order']=='ASC') ? 'DESC' : 'ASC';
 		$order_ship_at = ($this->data['sort']=='ship_at'&& $this->data['order']=='ASC') ? 'DESC' : 'ASC';
 
-		$this->data['sort_load_code']       = URL::to('shipping/list' . $url .'&sort=load_code&order=' . $order_load_code, NULL, FALSE);
+		$this->data['sort_load_code']       = URL::to('load/shipping' . $url .'&sort=load_code&order=' . $order_load_code, NULL, FALSE);
 		$this->data['sort_date_created']	= URL::to('shipping/list' . $url . '&sort=load.created_at&order=' . $order_date_created, NULL, FALSE);
 		$this->data['sort_ship_at']			= URL::to('shipping/list' . $url . '&sort=ship_at&order=' . $order_ship_at, NULL, FALSE);
-		//$this->data['sort_entry_date']       = URL::to('purchase_order' . $url . '&sort=entry_date&order=' . $order_entry_date, NULL, FALSE);
+	 
 
-
-
-
+		$this->data['url_generate_load_code']	= URL::to('box/new/load');
+		$this->data['url_closepicklist']	= URL::to('picking/close');
+		$this->data['url_shipped'] = 		URL::to('load/shipLoad');
 		$this->layout->content=view::make('loads.shipping',$this->data);
+	}
+	public function getStockStransferLoad()
+	{
+
+		$this->data['stock_piler_list'] = $this->getStockPilers();
+
+		$this->data                       = Lang::get('loads');
+	 
+		$this->data['filter_load_code']		= Input::get('filter_load_code', NULL);
+		$this->data['filter_stock_piler']	= Input::get('filter_stock_piler', NULL);
+		$this->data['filter_entry_date']  = Input::get('filter_entry_date', NULL);
+
+		$this->data['sort'] = Input::get('sort', 'load_code');
+		$this->data['order'] = Input::get('order', 'DESC');
+		$this->data['page'] = Input::get('page', 1);
+
+		$this->data['url_export'] = URL::to('load/export');
+		$taggingload 			= Input::get('taggingload', NULL);
+
+
+		$arrparam=$arrayName = array(
+			'filter_load_code' 			=> $this->data['filter_load_code'],
+			'filter_assigned_to_user_id'=> $this->data['filter_stock_piler'],
+			'filter_entry_date'			=> $this->data['filter_entry_date'],
+			'sort' 						=> $this->data['sort'],
+			'order' 					=> $this->data['order'],
+			'page' 						=> $this->data['page']
+			);
+		$results = load::getliststock($arrparam);
+		$results_total = load::getliststock($arrparam,True);
+
+		$this->data['load_list']       = Paginator::make($results, $results_total, 30);
+		$this->data['list_count']      = $results_total;
+		$this->data['arrparam']        = $arrparam;
+		$this->data['counter']         = $this->data['load_list']->getFrom();
+	
+
+		$this->data['permissions']     = unserialize(Session::get('permissions'));
+
+		$url                         = '?filter_load_code=' . $this->data['filter_load_code'];
+		$url                        .= '&filter_assigned_to_user_id=' . $this->data['filter_stock_piler'];
+		$url 						.= '&filter_entry_date='. $this->data['filter_entry_date'];
+		$url                        .= '&page=' .$this->data['page'];
+ 
+		$this->data['url_generate_load_code']	= URL::to('stock/new/load');
+
+		$this->layout->content=view::make('store_return.stocktransfer_load',$this->data);
+
 	}
 
     public function assignPilerForm() {
@@ -113,18 +167,20 @@ class shippingController extends \BaseController {
 
 	    $this->data['stock_piler_list'] = $this->getStockPilers();
 
-	    $this->data['url_back']         = URL::to('shipping/list'). $this->setURL();
+	    
 	    $this->data['filter_assigned_to_user_id'] = $filter_assigned_to_user_id;
 	    $this->data['sort'] = $sort;
 	    $this->data['order'] = $order;
 	    $this->data['page'] = $page;
+
+	    $this->data['url_back']         = URL::to('load/shipping'). $this->setURL();
 	/*
 	    $this->data['filter_type'] = $filter_type;
 	    $this->data['filter_doc_no'] = $filter_doc_no;
 	    $this->data['filter_status'] = $filter_status;
 	    $this->data['filter_store'] = $filter_store;
 
-	    $this->data['url_back']         = URL::to('picking/list'). $this->setURL();
+	    
 	   
 	*/
 	    $this->layout->content  = View::make('loads.shipping_assign_piler', $this->data);
@@ -202,9 +258,9 @@ class shippingController extends \BaseController {
 
 		
 
-        return Redirect::to('shipping/list' . $this->setURL())->with('message','Successfully assigned the Load!');
+        return Redirect::to('load/shipping' . $this->setURL())->with('message','Successfully assigned the Load!');
     }
-
+ 
  	private function getStockPilers()
     {
         $stock_pilers = array();

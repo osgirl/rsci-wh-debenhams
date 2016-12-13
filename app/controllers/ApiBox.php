@@ -13,6 +13,25 @@ class ApiBox extends BaseController {
 	* @example  www.example.com/api/{version}/boxes/{store_code}
 	* @return boxes
 	*/
+
+	public function RPolist($piler_id)
+    {
+    	try {
+			$polist = Box::GetApiRPoList($piler_id);
+
+			return Response::json(array('result' => $polist),200);
+			//return $polist;
+		}
+		catch(Exception $e) 
+		{
+			return Response::json(array(
+				"error" => true,
+				"result" => $e->getMessage()
+				),400
+			);
+		}
+
+    }
 	public static function getBoxesByStore($storeCode)
 	{
 		try {

@@ -21,7 +21,7 @@
 				        	</span>
 				        </div>
 				        <div>
-				        	<span class="search-po-left-pane">{{ $entry_so }}</span>
+				        	<span class="search-po-left-pane"> SKU :</span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::text('filter_so', $filter_so, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_so")) }}
 				        	</span>
@@ -31,9 +31,15 @@
 
 			      	<div class="span4">
 			        	<div>
-				        	<span class="search-po-left-pane">{{ $entry_from_slot_code }}</span>
+				        	<span class="search-po-left-pane">{{$entry_doc_no}}</span>
 				        	<span class="search-po-right-pane">
-				        		{{ Form::text('filter_from_slot', $filter_from_slot, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_from_slot")) }}
+				        		{{ Form::text('picklist_doc', $picklist_doc, array('readonly' => 'readonly')) }}
+				        	</span>
+				        </div>
+			        	<div>
+				        	<span class="search-po-left-pane"> Piler Name:</span>
+				        	<span class="search-po-right-pane">
+				        		{{ Form::text('filter_stock_piler', $filter_stock_piler, array('readonly' => 'readonly')) }}
 				        	</span>
 				        </div>
 			      	</div>
@@ -96,7 +102,6 @@
 						<th><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif">{{ $col_sku }}</a></th>
 						<th><a href="{{ $sort_upc }}" class="@if( $sort=='upc' ) {{ $order }} @endif">{{ $col_upc }}</a></th>
 						<th>SHORT DESCRIPTION</th>
-						<th><a href="{{ $sort_so_no }}" class="@if( $sort=='so_no' ) {{ $order }} @endif">{{ $col_so_no }}</a></th>
 						<th><a href="{{ $sort_from_slot_code }}" class="@if( $sort=='from_slot_code' ) {{ $order }} @endif">{{ $col_from_slot_code }}</th>
 						<th>{{ $col_qty_to_pick }}</th>
 						<th>{{ $col_to_move }}</th>
@@ -119,12 +124,11 @@
 						<td>{{$pd['store_name']}}</td>
 						<td>{{$pd['sku']}}</td>
 						<td>{{$pd['upc']}}</td>
-						<td>{{$pd['short_description']}}</td>
-						<td>{{$pd['so_no']}}</td>
+						<td>{{$pd['description']}}</td>
 						<td>{{$pd['from_slot_code']}}</td>
 						<td>{{$pd['quantity_to_pick']}}</td>
 						<td>{{$pd['moved_qty']}}</td>
-						<td>{{$pd['quantity_to_pick'] - $pd['moved_qty']}}</td>
+						<td>{{$pd['moved_qty'] - $pd['quantity_to_pick']  }}</td>
 
 					</tr>
 					@endforeach

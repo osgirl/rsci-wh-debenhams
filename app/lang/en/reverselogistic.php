@@ -7,13 +7,15 @@ return array(
 	'heading_title_assign_store_return' 	=> 'Assign Store Return/s to Stock Piler',
 
 	'text_success_close_so'		=> 'Successfully closed the SO!',
+	'reverse_text_successfully'		=> 'Successfully closed the Reverse TL Number!',
 	'text_closed_so'			=> 'Closed',
 	'text_warning'				=> 'Close Store Order',
 	'text_generate_letdown'     => 'Generate Letdown list',
 	'text_print_manifest'    	=> 'Print Delivery Manifest',
 	'text_success_generated'	=> 'Letdown list Generated',
 	'text_confirm_assign'		=> 'Assign selected items?',
-
+	'heading_title_reverse'		=> 'Reverse Logistic List',
+'button_close_picklist'			=> 'CLOSE',
 	'label_store_order_no'		=> 'Transfer No.:',
 	'label_store'				=> 'Store:',
 	'label_order_date'			=> 'Delivered Date:',
@@ -32,7 +34,7 @@ return array(
 	'button_close_store_return'				=> 'Close',
 	'button_assign_to_stock_piler' 	=> 'Assign to Stock Piler',
 
-	'col_id' 					=> 'No.',
+	'col_no' 					=> 'No.',
 	'col_so_no'					=> 'Transfer No.',
 	'col_store'					=> 'Store',
 	'col_tl_number'				=> 'TL number',

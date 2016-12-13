@@ -124,6 +124,7 @@ return array(
 		'LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider',
 		'LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider',
 		'Barryvdh\DomPDF\ServiceProvider',
+		'Milon\Barcode\BarcodeServiceProvider',
 	),
 
 	/*
@@ -192,6 +193,8 @@ return array(
 		'View'              => 'Illuminate\Support\Facades\View',
 		'Authorizer' 		=> 'LucaDegasperi\OAuth2Server\Facades\AuthorizerFacade',
 		'PDF'				=> 'Barryvdh\DomPDF\Facade',
+    'DNS1D' => 'Milon\Barcode\Facades\DNS1DFacade',
+    'DNS2D' => 'Milon\Barcode\Facades\DNS2DFacade',
 	),
 
 );

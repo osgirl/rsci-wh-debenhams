@@ -22,7 +22,7 @@
 
 			      	<div class="span5">
 			      		<div>
-				        	<span class="search-po-left-pane">TL Number :</span>
+				        	<span class="search-po-left-pane">{{$entry_doc_no}}</span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::text('filter_doc_no', $filter_doc_no, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_doc_no")) }}
 				        	</span>
@@ -107,19 +107,23 @@
 		@if ( CommonHelper::valueInArray('CanAssignPacking', $permissions))
 			<a role="button" class="btn btn-info btn-darkblue assignPicklist" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">Assign Picker</a>
 		@endif
-		@if ( CommonHelper::valueInArray('CanExportPacking', $permissions) )
-			<a href="{{$url_export}}" class="btn btn-info btn-darkblue">Report</a>
-		@endif
+	<!-- 	@if ( CommonHelper::valueInArray('CanExportPacking', $permissions) )
+			<a href="{{url::to('picking/discrepansy')}}" class="btn btn-info btn-darkblue">Report</a>
+		@endif -->
 
-		@if ( CommonHelper::valueInArray('CanSyncPurchaseOrders', $permissions) )
+	<!-- 	@if ( CommonHelper::valueInArray('CanSyncPurchaseOrders', $permissions) )
 			<a class="btn btn-info btn-darkblue" href={{URL::to('purchase_order/pulljda')}}>Pull Data(JDA)</a>
-		@endif
+		@endif -->
 					
 
 		@if ( CommonHelper::valueInArray('CanViewPickingLockTags', $permissions) )
 		<!-- <a href="{{$url_lock_tags}}" class="btn btn-info btn-darkblue">{{ $button_to_lock_tags }}</a> -->
 		@endif
 
+		@if ( CommonHelper::valueInArray('CanAssignPacking', $permissions)) 
+		<a class="btn btn-info btn-darkblue" href={{URL::to('picking/TLnumbersync')}}>Sync To Mobile </a> 
+		@endif
+ 
  
 	
 </div>
@@ -134,7 +138,7 @@
     <div class="widget-content">
     	<div class="table-responsive">
 			<table class="table table-striped table-bordered">
-				<thead>
+				<thead >
 					@if ( CommonHelper::valueInArray('CanAssignPacking', $permissions))
 			  		{{ Form::open(array('url'=>$url_change_to_store,'id' => 'form-picking-change', 'style' => 'margin: 0px;', 'method'=> 'post')) }}
 						{{ Form::hidden('picklist_doc_no', '', array('id'=>'picklist-docno-change' )) }}
@@ -142,13 +146,12 @@
 					<th style="width: 20px;" class="align-center"><input type="checkbox" id="main-selected" /></th>
 					@endif
 					<th>{{ $col_no }}</th>
-					<th style="width: 20px;"><a href="{{ $sort_doc_no }}" class="@if( $sort=='doc_no' ) {{ $order }} @endif">TL Number</a></th>
-					<th>Ship By Date</th>
-					<th>Division</th>
-					<th>STORE</th>
-					<th>PICKER</th>
-					<th>{{ $col_status }}</th>
-					<th>{{ $col_action }}</th>
+					<th style="width: 20px;"><a href="{{ $sort_doc_no }}" class="@if( $sort=='doc_no' ) {{ $order }} @endif">{{$col_mts_no}}</a></th>
+					<th  >Ship date ('Y : M : D')</th>
+					<th  >STORE</th>
+					<th  >Piler Name</th>
+					
+					<th  class="align-center">{{ $col_action }}</th>
 				</thead>
 				@if( !CommonHelper::arrayHasValue($picklist) )
 					<tr class="font-size-13">
@@ -172,38 +175,54 @@
 							<!-- <td>{{ $value['type'] }}</td> -->
 							<td>
       							@if( CommonHelper::valueInArray('CanAccessPacking', $permissions))
-								<a href="{{$url_detail}}&picklist_doc={{$value['move_doc_number']}}">{{ $value['move_doc_number'] }}
+								<a href="{{$url_detail}}&picklist_doc={{$value['move_doc_number']}}&filter_stock_piler={{ $value['fullname'] }}">{{ $value['move_doc_number'] }}
 								@else
 								{{ $value['move_doc_number'] }}
 								@endif
 							</td>
-
-							<td>{{ date("M d, Y", strtotime($value['created_at'])) }}</td>
-							<td>{{ $value['Division_Name'] }}</td>
-							<td>{{ Store::getStoreName($value['store_code']) }}</td>
+ 
+							<td style="text-align: center">    
+							 
+							{{ Form::open(array('url'=>'picking/updatedate', 'class'=>'form-signin', 'id'=>'form-pick-list', 'role'=>'form', 'method' => 'get')) }}
+							{{ Form::hidden('move_doc_number', $value['move_doc_number']) }}
+                           <!--      {{ Form::text('filter_date_entry', date('M d, Y', strtotime($value['created_at'])), array('class'=>'span2', 'id'=>"filter_date_entry")) }} -->
+                                {{ Form::text('filter_date_entry',  ($value['ship_date']), array('class'=>'form-signin', 'placeholder'=>'', 'id'=>"readonly")) }}
+                                
+							{{ Form::close() }}
+                            </div></td>
+						
+							<td >{{ Store::getStoreName($value['store_code']) }}</td>
 							<!--<td>{{ Store::getStoreName($value['store_code']) }}</td>-->
 							<td>{{ $value['fullname'] }}</td>
 					<!--		<td>{{ date("M d, Y", strtotime($value['created_at'])) }}</td>   -->
-							<td>{{ $value['data_display'] }}</td>
-							{{--<td>{{$value['action_date']}} </td>--}}
+							 
+							
 					<!--		<td>{{ date("M d, Y", strtotime($value['action_date'])) }}</td>    -->
 							<td class="align-center">
+							
 								@if($value['data_display'] === 'Posted')
-									<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_posted }}</a> <br><br>
-									<a href="{{url('picking/printboxlabel/' .$value['move_doc_number'] ). $url_back}}" target="_blank" class="btn btn-info">Print MTS</a>
+									<a style="width: 80px;" disabled="disabled" class="btn btn-info">{{ $text_posted }}</a>  <a style="width: 140px;"   class="btn btn-danger" href={{URL('picking/printboxlabel/'.$value['move_doc_number'])}}>{{$print_pagkaging_slip}}</a> 
+									
 									 <!-- && ($value['quantity_to_pick'] != $value['moved_qty']) -->
 								@elseif ( $value['data_display'] === 'Done' )
+								
+										<a style="width: 80px;" class="btn btn-success closePicklist" data-id="{{ $value['move_doc_number'] }}">{{ $button_close_picklist }}</a> 
+<a style="width: 140px;"   disabled class="btn btn-danger">{{$print_pagkaging_slip}}</a>
+									  
+								@elseif ( $value['data_display'] === 'Assigned' )
 
+								<a style="width: 80px;" disabled="disabled" class="btn btn-danger">Assigned</a>
+<a style="width: 140px;"   disabled class="btn btn-danger">{{$print_pagkaging_slip}}</a>
+								@elseif ( $value['data_display'] === 'In Process' )
 
-									@if(is_array(PicklistDetails::getPicklistLoad($value['move_doc_number'])) && CommonHelper::arrayHasValue(PicklistDetails::getPicklistLoad($value['move_doc_number'])))
-										<a style="width: 70px;" class="btn btn-success closePicklist" data-id="{{ $value['move_doc_number'] }}">{{ $button_close_picklist }}</a> <br><br>
-									@endif
-									<a href="{{url('picking/printboxlabel/' .$value['move_doc_number'] ). $url_back}}" target="_blank" class="btn btn-success">Print Box Label</a> 
+								<a style="width: 80px;" disabled="disabled" class="btn btn-danger">In Process</a>
+<a style="width: 140px;"   disabled class="btn btn-danger">{{$print_pagkaging_slip}}</a>
 								@else
-									&nbsp;&nbsp;<a style="width: 70px;" disabled="disabled" class="btn">{{ $button_close_picklist }}</a>
-									&nbsp;&nbsp;<a href="" target="_blank" class="btn btn-info">Print MTS</a>
+									<a style="width: 80px;" disabled="disabled" class="btn">{{ $button_close_picklist }}</a>
+									
+<a style="width: 140px;"   disabled class="btn btn-danger">{{$print_pagkaging_slip}}</a>
+								
 								@endif
-
 								
 
 								{{ Form::open(array('url'=>'picking/close', 'id' => 'closePicklist_' . $value['move_doc_number'], 'style' => 'margin: 0px;')) }}
@@ -211,12 +230,13 @@
 									{{ Form::hidden('filter_doc_no', $filter_doc_no) }}
 									{{ Form::hidden('filter_status', $filter_status) }}
 									{{ Form::hidden('filter_store', $filter_store) }}
-									{{ Form::hidden('filter_stock_piler', $filter_stock_piler) }}
+								{{ Form::hidden('filter_stock_piler', $filter_stock_piler) }}
 							  		{{ Form::hidden('sort', $sort) }}
 									{{ Form::hidden('order', $order) }}
 									{{ Form::hidden('page', $page) }}
 									{{ Form::hidden('module', 'picklist') }}
 						  		{{ Form::close() }}
+
 							</td>
 						</tr>
 					@endforeach
@@ -399,10 +419,10 @@ $(document).ready(function() {
     $('.assignPicklist').click(function() {
     	var count = $("[name='selected[]']:checked").length;
 
-		if (count>0) {
-			var answer = confirm('{{ $text_confirm_assign }}')
+		if (count>0) {/*
+			var answer = confirm('{{ $text_confirm_assign }}')*/
 
-			if (answer) {
+			if (count) {
 				var doc_no = new Array();
 				$.each($("input[name='selected[]']:checked"), function() {
 					doc_no.push($(this).val());
@@ -431,6 +451,9 @@ $(document).ready(function() {
 			return false;
 		}
 
+    });
+      $('.date').datepicker({
+      format: 'yyyy-mm-dd'
     });
 });
 </script>

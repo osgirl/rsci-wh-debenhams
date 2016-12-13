@@ -3,23 +3,17 @@
 	<div class="controls">
 		<div class="accordion" id="accordion2">
           <div class="accordion-group" style="background-color: #FFFFFF;">
-            {{ Form::open(array('url'=>'shipping/list', 'class'=>'form-signin', 'id'=>'form-shipping', 'role'=>'form', 'method' => 'get')) }}
+            {{ Form::open(array('url'=>'load/shipping', 'class'=>'form-signin', 'id'=>'form-shipping', 'role'=>'form', 'method' => 'get')) }}
             <div id="collapseOne" class="accordion-body collapse in" style="padding-top: 20px;">
 	               
 			      	<div class="span4">
 			      		<div>
-				        	<span class="search-po-left-pane">Load Number :</span>
+				        	<span class="search-po-left-pane">{{$col_pell_no_label}}</span>
 				        	<span class="search-po-right-pane">
 				        		{{ Form::text('filter_load_code', $filter_load_code , array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_load_code")) }}
 				        	</span>
 				        </div>
-				
-                        <div>
-                            <span class="search-po-left-pane">Assign To :</span>
-                            <span class="search-po-right-pane">
-                                {{ Form::select('filter_assigned_to_user_id', array('' => 'Please Select') + $stock_piler_list, $filter_stock_piler, array('class'=>'select-width', 'id'=>"filter_stock_piler")) }}
-                            </span>
-                        </div>
+			 
                     </div>
                     <div class="span4">
 			      		<div>
@@ -57,19 +51,22 @@
 	</div>
 	<div class="div-buttons">
 		{{-- @if ( CommonHelper::valueInArray('CanAccessBoxingLoading', $permissions) ) --}}
-		<a  class="btn btn-info btn-darkblue" id="generate-load">Add Load</a>
-		{{-- @endif --}}
-		@if ( CommonHelper::valueInArray('CanExportPacking', $permissions) )
+		<a  class="btn btn-info btn-darkblue" id="generate-load">{{$button_gnerteload}}</a>
+		
+	 
             <a role="button" class="btn btn-info btn-darkblue assignPicklist" title="Assign To Picker" data-toggle="modal">Assign To Stock Piler</a>
 
-        @endif
-
+	 
+			
+	<a class="btn btn-info btn-darkblue" href={{URL::to('load/loadnumbersync')}}>Sync To Mobile </a>
+	{{-- @endif --}}
 
 	</div>
+	
 </div>
 <div class="widget widget-table action-table">
 	<div class="widget-header"> <i class="icon-th-list"></i>
-	 <h3>Load Lists</h3>
+	 <h3>{{$header_pell_list}}</h3>
       <span class="pagination-totalItems">{{$list_count}}</span>
 	</div>
 
@@ -80,51 +77,83 @@
 					<tr>
 						<th style="width: 20px;" class="align-center"><input type="checkbox" id="main-selected"></th>
 						<th>NO.</th>
-						<th><a href="{{ $sort_load_code}}" class="@if( $sort=='load_code' ) {{ $order }} @endif">Load Number</a></th>
+						<th>{{$pell_no_th}}</th>
 						<th>Stock Piler</th>
-						<th><a href="{{ $sort_date_created}}" class="@if( $sort=='created_at' ) {{ $order }} @endif">Date Created</a></th>
-						<th><a href="{{ $sort_ship_at}}" class="@if( $sort=='ship_at' ) {{ $order }} @endif">Ship By Date</a></th>
-						<th>ACTION</th>
+						<th> Date Created </th>
+						<th> Ship By Date </th>
+						<th class="align-center">ACTION</th>
 					</tr>
 				</thead>
-				@if( !CommonHelper::arrayHasValue($load_list) )
+				@if( !CommonHelper::arrayHasValue($load_list)  )
 					<tr class="font-size-13">
 						<td colspan="13" style="text-align: center;">No Results Found</td>
 					</tr>
 				@else
 					@foreach( $load_list as $lo)
-						<tr class="font-size-13 tblrow" data-id="{{ $lo->load_code }}">
-						<td class="align-center">
-						@if( $lo->is_shipped == 0 )
+
+					<tr class="font-size-13 tblrow" data-id="{{ $lo->load_code }}">
+					<td class="align-center">
+						@if( $lo->is_shipped == 0 && $lo->data_value != 1)
 							<input type="checkbox" class="checkbox item-selected" name="selected[]" id="selected-{{ $lo->load_code }}" value="{{ $lo->load_code }}" /> 
 						@endif
-						</td>
-						<td>{{ $counter++ }}</td>
-						<td><a href="{{ Url::to('load/load_details?load_code='.$lo->load_code.'&filer='.$lo->firstname.' '.$lo->lastname.'&date_at='.date("M d, Y",strtotime($lo->created_at)).'&shipped='.$lo->ship_at) }}"> {{ $lo->load_code }}</a></td>
-						<td>{{ $lo->firstname.' '.$lo->lastname }}</td>
-						<td>{{ date("M d, Y",strtotime($lo->created_at)) }}</td>
-						<td>
-								@if($lo->ship_at!='0000-00-00 00:00:00')
+					</td>
+					<td>{{ $counter++ }}</td>
+					<td> <a href="{{URL::to('load/boxdetails?loadnumber='.$lo->load_code.'&pilername='.$lo->firstname.' '.$lo->lastname.'&filter_data_value='.$lo->data_value)}}">{{ $lo->load_code }}</a></td>
+					<td>{{ $lo->firstname.' '.$lo->lastname }}</td>
+					<td>{{ date("M d, Y",strtotime($lo->created_at)) }}</td>
+					<td>
+								@if($lo->ship_at != Null	)
 									{{ date("M d, Y",strtotime($lo->ship_at)) }}
+								@else 
+									'Not yet Available'
 								@endif
-						</td>
-						<td>
-							@if( $lo->is_shipped == 0 )
-								@if ( CommonHelper::valueInArray('CanAccessShipping', $permissions))
-								<a class="btn btn-info shipLoad" data-id="{{ $lo->id }}">Shipped</a>
-						  		{{ Form::open(array('url','id' => 'formLoadShip_' . $lo->id, 'style' => 'margin: 0px;display:none;', 'method'=> 'post')) }}
-									{{ Form::hidden('load_code', $lo->load_code) }}
-									{{ Form::hidden('id', $lo->id) }}
-						  		{{ Form::close() }}
-								@endif
-							@else
-								<a disabled class="btn btn-danger">Shipped</a>
+					</td>
+					<td>	
 
+					@if( $lo->is_shipped == 1 &&  $lo->assigned_to_user_id != 0 && $lo->assigned_by != 0 && $lo->data_value == 1)
+							@if ( CommonHelper::valueInArray('CanAccessShipping', $permissions))
+							<a style="width: 60px;" class="btn btn-info" href="{{URL::to('load/shipLoad?loadnumber='.$lo->load_code)}}">Ship</a>
+						    		<a disabled class="btn btn-info">{{$col_A_loNum}}</a>
+									<a disabled class="btn btn-danger">{{$col_load_sheet}}</a> 
+									<a disabled  class="btn btn-danger">{{$col_mts_report}}</a>
+							@endif
+
+					
+					@endif
+
+					@if($lo->is_shipped == 2 )
+					<a disabled class="btn btn-info">Shipped</a>
+					<a class="btn btn-info" disabled>{{$col_A_loNum}}</a>
+					<a href="{{url('load/printloadingsheet/' . $lo->load_code)}}" target="_blank" class="btn btn-danger">{{$col_load_sheet}}</a> 
+					 <a href="{{url('load/printpacklist/' . $lo->load_code)}}" target="_blank" class="btn btn-danger">{{$col_mts_report}}</a>
+
+
+					 @endif
+			 
+
+				 
+					
+					@if( $lo->is_shipped == 0 )
+			 		<a style="width: 60px;" disabled class="btn btn-default" >Ship</a>
+							@if ($lo->data_value == 0)
+							<a href="{{URL::to('load/loadnumber?loadnumber='.$lo->load_code.'&pilername='.$lo->firstname.' '.$lo->lastname.'&created_at='.date('M d, Y',strtotime($lo->created_at)))}}" class="btn btn-info">{{$col_A_loNum}}</a>
+
+							@else
+							<a disabled class="btn btn-info">{{$col_A_loNum}}</a>
 							@endif
 							
-							&nbsp;&nbsp;<a href="" target="_blank" class="btn btn-info">Print MTS</a>
-							
-						</td>
+					<a disabled class="btn btn-danger">{{$col_load_sheet}}</a> 
+					<a disabled  class="btn btn-danger">{{$col_mts_report}}</a>
+				
+				 
+						@endif  
+					
+				 
+					 
+				<!-- 	<a class="btn btn-info btn-darkblue" href="{{URL('load/pringloadsheet/'.$lo->load_code)}}">
+					{{ $button_export }}</a> -->
+
+					</td>
 					@endforeach
 				@endif
 			</table>
@@ -139,15 +168,25 @@
         <h4 class="modal-title">New Load Code</h4>
       </div>
       <div class="modal-body">
-      	{{ Form::open(array('role'=> 'form', "class"=> "form-horizontal", "id"	=> 'add-load-form'))}}
+      	
+
+{{ Form::open(array('role'=> 'form', "class"=> "form-horizontal", "id"	=> 'add-load-form'))}}
       	{{ Form::close()}}
-       	<span id="load-code-created"></span>
+ 
+ 
+	 
+ <span id="load-code-created"></span>
+	 
+	</section>
+       	
       </div>
       <div class="modal-footer">
-      	  <button type="button" class="btn btn-default" id="close-add-load" >Close</button>
+      	  <button type="button" class="btn btn-default" id="close-add-load" >OK</button>
       </div>
     </div><!-- /.modal-content -->
 </div>
+
+ 
 
 
 
@@ -192,23 +231,28 @@ $(document).ready(function()
     $('#generate-load').click(function() {
 	var token = $('#add-load-form input[name="_token"]').val();
 	  $.ajax({
-	      url: "box/new/load",
+	  	 	  	
+	      url: "{{$url_generate_load_code}}",
 	      type: "POST",
 	      data: {'_token': token},
 	      success: function(response){
 	      	response = JSON.parse(response);
 	      	$('#load-code-created').html('You have generated ' + response.load_code);
 	        $('#add-load-modal').modal('show');
+	        $('#textfield-load-modal').modal('show');
 	      }
 	   });
+    });
+$('#close-add-load').click(function() {
+   		window.location.reload();
     });
 
     $('.assignPicklist').click(function() {
     var count = $("[name='selected[]']:checked").length;
 
     if (count>0) {
-        var answer = confirm('Assign Selected Loads?');
-        if (answer) {
+       /* var answer = confirm('Assign Selected Loads?');*/
+        if (count) {
 			var boxes = new Array();
 			$.each($("input[name='selected[]']:checked"), function() {
 				boxes.push($(this).val());
@@ -234,5 +278,18 @@ $(document).ready(function()
 		$('.table tbody tr > td').removeClass('tblrow-active');
 	}
    	});
+   	    $('#exportList').click(function() {
+    	url = '';
+
+		var filter_load_code = $('#filter_load_code').val();
+		var filter_load_code = $('#filter_load_code').val();
+
+		url += '?filter_load_code=' + encodeURIComponent(filter_load_code);
+		url += '&filter_load_code=' + encodeURIComponent(filter_load_code);
+		url += '&sort=' + encodeURIComponent('{{ $sort }}');
+		url += '&order=' + encodeURIComponent('{{ $order }}');
+
+      	location = "{{ $url_export }}" +url;
+    });
 });
 </script>

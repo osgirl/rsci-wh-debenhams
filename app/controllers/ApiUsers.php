@@ -18,8 +18,8 @@ class ApiUsers extends BaseController {
 			$credential['password'] = Request::get('password');
 
 
-			if(! CommonHelper::hasValue($credential['username']) ) throw new Exception( 'Username cannot be null!');
-			if(! CommonHelper::hasValue($credential['password']) ) throw new Exception( 'Password cannot be null!');
+	if(! CommonHelper::hasValue($credential['username']) ) throw new Exception( 'Username cannot be null!');
+	if(! CommonHelper::hasValue($credential['password']) ) throw new Exception( 'Password cannot be null!');
 
 			if(Auth::attempt($credential))
 			{
@@ -35,7 +35,8 @@ class ApiUsers extends BaseController {
 				$user_detail = array(
 								'user_id' 	=> Auth::user()->id,
 								'username' 	=> Auth::user()->username,
-								'barcode'	=> Auth::user()->barcode,
+								'firstname'	=>Auth::user()->firstname,
+								'lastname'	=> Auth::user()->lastname,
 								'role_id'	=> Auth::user()->role_id,
 								'brand'  => $brandName[Auth::user()->brand_id]
 							);
@@ -50,6 +51,7 @@ class ApiUsers extends BaseController {
 					200
 				);
 			}
+			
 			else
 			{
 				throw new Exception( 'Invalid username or password!');

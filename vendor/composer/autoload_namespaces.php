@@ -25,6 +25,7 @@ return array(
     'Predis' => array($vendorDir . '/predis/predis/lib'),
     'PHPParser' => array($vendorDir . '/nikic/php-parser/lib'),
     'Net' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
+    'Milon\\Barcode' => array($vendorDir . '/milon/barcode/src'),
     'Math' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
     'Jeremeamia\\SuperClosure' => array($vendorDir . '/jeremeamia/SuperClosure/src'),
     'Illuminate' => array($vendorDir . '/laravel/framework/src'),

@@ -7,7 +7,7 @@
 
 <div class="widget">
     <div class="widget-header"> <i class="icon-th-list"></i>
-    	<h3>{{ $heading_title_assign_po }}</h3>
+    	<h3>{{ $assign_to_stock_piler }}</h3>
     </div>
     <!-- /widget-header -->
 

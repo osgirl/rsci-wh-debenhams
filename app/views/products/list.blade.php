@@ -22,12 +22,12 @@
 					</div>
 
 					<div class="span4">
-						<div>
+						<!-- <div>
 							<span class="search-po-left-pane">{{ $label_filter_prod_full_name }}</span>
 							<span class="search-po-right-pane">
 								{{ Form::text('filter_prod_full_name', $filter_prod_full_name, array('id'=>'filter_prod_full_name', 'placeholder'=>'')) }}
 							</span>
-						</div>
+						</div> -->
 						<div>
 							<span class="search-po-left-pane">{{ $label_filter_prod_short_name }}</span>
 							<span class="search-po-right-pane">
@@ -36,7 +36,7 @@
 						</div>
 					</div>
 
-					<div class="span4">
+					<!-- <div class="span4">
 						<div>
 							<span class="search-po-left-pane">{{ $label_filter_dept_name }}</span>
 							<span class="search-po-right-pane">
@@ -49,7 +49,7 @@
 								{{ Form::select('filter_sub_dept_no', $filter_sub_department_options, $filter_sub_dept_no, array('id' => 'filter_sub_dept_no', 'class' => 'select-width')) }}
 							</span>
 						</div>
-					</div>
+					</div> -->
 
 					<div class="span11 control-group collapse-border-top" style="margin-top: 6px;">
 						<a class="btn btn-success btn-darkblue" id="submitForm">{{ $button_search }}</a>
@@ -116,8 +116,8 @@
 						<td>{{ $product->upc }}</td>
 						<td>{{ $product->description }}</td>
 						<td>{{ $product->short_description }}</td>
-						<td>{{ $product->dept_code . ' - ' . $product->dept_name }}</td>
-						<td>{{ $product->sub_dept . ' - ' . $product->sub_dept_name }}</td>
+						<td> </td>
+						<td>  </td>
 					</tr>
 					@endforeach
 				@endif
@@ -190,23 +190,11 @@ $(document).ready(function() {
 		var filter_prod_upc = $('#filter_prod_upc').val();
 		url += '&filter_prod_upc=' + encodeURIComponent(filter_prod_upc);
 
-		var filter_prod_full_name = $('#filter_prod_full_name').val();
-		url += '&filter_prod_full_name=' + encodeURIComponent(filter_prod_full_name);
 
 		var filter_prod_short_name = $('#filter_prod_short_name').val();
 		url += '&filter_prod_short_name=' + encodeURIComponent(filter_prod_short_name);
 
-		var filter_dept_no = $('#filter_dept_no').val();
-		url += '&filter_dept_no=' + encodeURIComponent(filter_dept_no);
 
-		var filter_dept_name = $('#filter_dept_name').val();
-		url += '&filter_dept_name=' + encodeURIComponent(filter_dept_name);
-
-		var filter_sub_dept_no = $('#filter_sub_dept_no').val();
-		url += '&filter_sub_dept_no=' + encodeURIComponent(filter_sub_dept_no);
-
-		var filter_sub_dept_name = $('#filter_sub_dept_name').val();
-		url += '&filter_sub_dept_name=' + encodeURIComponent(filter_sub_dept_name);
 
 		url += '&sort=' + encodeURIComponent('{{ $sort }}');
 		url += '&order=' + encodeURIComponent('{{ $order }}');

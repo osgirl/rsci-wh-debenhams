@@ -1,3 +1,6 @@
+
+
+
 <?php
 
 class BoxController extends BaseController {
@@ -23,13 +26,248 @@ class BoxController extends BaseController {
 			return Redirect::to('users/logout');
 		}
 
-		$this->getList();
+		$this->getList1();
 	}
+	
+		 
+ //return Redirect::to('load/loadnumber' . $this->setURL())->with('message', Lang::get('loads.text_success_assign'));
 
-	public function getList()
+
+	
+
+public function loadnumber()
+	{
+	 
+		$this->data                           = Lang::get('picking');
+		$this->data['text_empty_results']     = Lang::get('general.text_empty_results');
+		$this->data['text_total']             = Lang::get('general.text_total');
+		$this->data['text_select']            = Lang::get('general.text_select');
+		$this->data['button_search']          = Lang::get('general.button_search');
+		$this->data['button_clear']           = Lang::get('general.button_clear');
+		$this->data['button_export']          = Lang::get('general.button_export');
+		$this->data['url_detail']             = URL::to('loads/load_details' . $this->setURL(true));
+		$this->data['url_lock_tags']          = URL::to('picking/locktags');
+		$this->data['url_boxnumber']          = URL::to('load/boxnumber'.$this->setURL(true));
+		$this->data['url_assingload'] 		 = URL::to('load/assingload'.$this->setURL(true));
+		$this->data['url_loadnumber'] 		 = URL::to('load/loadnumber'.$this->setURL(true));
+		
+		$this->data['url_export']             = URL::to('picking/export'. $this->setURL(true));
+		$this->data['url_change_to_store']    = URL::to('picking/change_to_store');
+		$this->data['url_generate_load_code'] = URL::to('picking/new/load');
+		$this->data['url_assign']             = URL::to('picking/assign'). $this->setURL();
+
+
+		$this->data['url_back']             = URL::to('load/shipping'. $this->setURL(true));
+		$this->data['stores']                 = Store::lists( 'store_name', 'store_code');
+		$this->data['url_assigned']			= URL::to('load/assignTL');
+		
+		$this->data['stores']                 = Store::lists( 'store_name', 'store_code');
+		// $this->data['url_load']	= URL::to('picking/load');
+
+		// Message
+		$this->data['error'] = '';
+		if (Session::has('error')) {
+			$this->data['error'] = Session::get('error');
+		}
+
+		$this->data['success'] = '';
+		if (Session::has('success')) {
+			$this->data['success'] = Session::get('success');
+		}
+ 
+
+		$filter_type = Input::get('filter_type', NULL);
+		$filter_doc_no = Input::get('filter_doc_no', NULL);
+		$filter_box_code = Input::get('filter_box_code', null);
+		$filter_status = Input::get('filter_status', NULL);
+		$filter_store = Input::get('filter_store', NULL);
+		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
+
+        $filter_transfer_no = Input::get('filter_transfer_no', NULL);
+        $filter_action_date = Input::get('filter_action_date', NULL);
+        
+ 
+		$loadnumber  = Input::get('loadnumber', null);
+		$pilername	= Input::get('pilername', Null);
+		$created_at	= Input::get('created_at', Null);
+	 
+
+		$sort = Input::get('sort', 'doc_no');
+		$order = Input::get('order', 'ASC');
+		$page = Input::get('page', 1);
+
+
+		//Data
+		$arrParams = array(
+						'filter_type' 			=> $filter_type,
+						'filter_doc_no' 		=> $filter_doc_no,
+						'filter_box_code'		=> $filter_box_code,
+						'filter_status' 		=> $filter_status,
+						'filter_store' 			=> $filter_store,
+						'filter_stock_piler' 	=> $filter_stock_piler,
+                        'filter_transfer_no' 	=> $filter_transfer_no,
+                        'filter_action_date' 	=> $filter_action_date,
+						'sort'					=> $sort,
+						'order'					=> $order,
+						'page'					=> $page,
+						'limit'					=> 30
+					);
+
+		$results 		= Box::getLoadNumber(  $arrParams)->toArray();
+		$results_total 	= Box::getLoadNumber(  $arrParams, TRUE);
+
+		// Pagination
+		$this->data['arrFilters'] = array(
+									'filter_type' 			=> $filter_type,
+									'filter_doc_no' 		=> $filter_doc_no,
+									'filter_box_code'		=> $filter_box_code,
+									'filter_status' 		=> $filter_status,
+									'filter_store' 			=> $filter_store,
+									'filter_stock_piler' 	=> $filter_stock_piler,
+                                    'filter_transfer_no' 	=> $filter_transfer_no,
+                                    'filter_action_date' 	=> $filter_action_date,
+									'sort'					=> $sort,
+									'order'					=> $order
+								);
+
+		$this->data['picklist'] = Paginator::make($results, $results_total, 30);
+		$this->data['picklist_count'] = $results_total;
+		$this->data['counter'] 	= $this->data['picklist']->getFrom();
+
+		$this->data['filter_type'] = $filter_type;
+		$this->data['filter_doc_no'] = $filter_doc_no;
+		$this->data['filter_box_code'] = $filter_box_code;
+		$this->data['filter_status'] = $filter_status;
+		$this->data['filter_store'] = $filter_store;
+		$this->data['filter_stock_piler'] = $filter_stock_piler;
+        $this->data['filter_transfer_no'] = $filter_transfer_no;
+        $this->data['filter_action_date'] = $filter_action_date;
+ 		$this->data['loadnumber']		=$loadnumber;
+
+     
+		$this->data['sort'] = $sort;
+		$this->data['order'] = $order;
+		$this->data['page'] = $page;
+ 
+		$this->data['pilername']	= $pilername;
+		$this->data['loadnumber'] = $loadnumber;
+		$this->data['created_at'] =$created_at;
+
+		$url = '?filter_type=' . $filter_type . '&filter_doc_no=' . $filter_doc_no;
+		$url .= '&filter_status=' . $filter_status . '&filter_store=' . $filter_store;
+		$url .= '&filter_stock_piler=' . $filter_stock_piler;
+        $url .= '&filter_transfer_no=' . $filter_transfer_no;
+        $url .= '&filter_action_date=' . $filter_action_date;
+		$url .= '&page=' . $page;
+
+		$order_doc_no = ($sort=='doc_no' && $order=='ASC') ? 'DESC' : 'ASC';
+
+		$this->data['sort_doc_no'] = URL::to('picking/list' . $url . '&sort=doc_no&order=' . $order_doc_no, NULL, FALSE);
+
+		// Permissions
+		$this->data['permissions'] = unserialize(Session::get('permissions'));
+
+		$this->layout->content = View::make('loads.loadnumber', $this->data);
+	}
+	public function getlist1()
+
 	{
 
-		$this->data['heading_title'] = Lang::get('box.heading_title');
+		 $arrPO = explode(',', Input::get("tlnumber"));
+		 $loadnumber 		= Input::get('loadnumber', null);
+		 $tlnumber 			= Input::get('tlnumber', null);
+		
+
+			foreach ($arrPO as $assignTL) {
+
+			picklist::assignToTL($assignTL, $loadnumber);
+			picklist::assignToTLnumber($assignTL, $loadnumber);
+ 			}
+
+			return Redirect::to('load/shipping'. $this->setURL())->with('message', "Succefully Assigned in Load Number!");
+
+	}
+	public function getlist12()
+
+	{
+
+		  $arrPO = explode(',', Input::get("tlnumber"));
+		 $loadnumber 		= Input::get('loadnumber', null);
+		 $tlnumber 			= Input::get('tlnumber', null);
+		
+
+			foreach ($arrPO as $assignTL) {
+
+			Box::assignToTL($assignTL, $loadnumber);
+			Box::assignToTLnumberbox($assignTL, $loadnumber);
+ 			}
+
+			return Redirect::to('load/shipping'. $this->setURL())->with('message', "Succefully Assigned in Load Number!");
+
+	}
+	public function getremoved()
+
+	{
+
+		 $arrPO = explode(',', Input::get("tlnumber"));
+		 $loadnumber 		= Input::get('loadnumber', null);
+		 $tlnumber 			= Input::get('tlnumber', null);
+		
+	 
+
+			foreach ($arrPO as $assignTL) {
+		 
+
+			Box::getremovedTLUpdate($assignTL, $loadnumber);
+			Box::getremovedTL($assignTL, $loadnumber);
+ 			}
+
+			return Redirect::to('load/shipping'. $this->setURL())->with('message', "Succefully Removed Box Number!");
+
+	}
+	public function loadnumbersync()
+	{
+			load::getLoadNumbersync();
+		return Redirect::to('load/shipping'.$this->setURL())->with('message','Sync To Mobile Successfully');
+	}
+
+	public function getloadnumbersyncstock()
+	{
+			load::getLoadNumbersyncstockmodel();
+		return Redirect::to('stocktransfer/stocktranferload'.$this->setURL())->with('message','Sync To Mobile Successfully');
+	}
+	public function shippedload()
+	{ 
+			$boxcode = Input::get('boxcode', null);
+		$upc 	= Input::get('upc', null);
+		$loadnumber =Input::get('loadnumber',null);
+	 
+			load::getLoadShipped($loadnumber);
+			
+			//load::getInsertToSelect($loadnumber);
+			//load::getSOboxstatus($loadnumber);
+		return Redirect::to('load/shipping'.$this->setURL())->with('message','Successfully Shipped by load!!');
+	}
+
+	public function shippedloadstock()
+	{ 
+			$boxcode = Input::get('boxcode', null);
+		$upc 	= Input::get('upc', null);
+		$loadnumber =Input::get('loadnumber',null);
+	 
+			load::getLoadShipped($loadnumber);
+			
+			//load::getInsertToSelect($loadnumber);
+			//load::getSOboxstatus($loadnumber);
+		return Redirect::to('stocktransfer/stocktranferload'.$this->setURL())->with('message','Successfully Shipped by load!!');
+	}
+	
+
+	public function getList2()
+	{
+
+		$this->data                       = Lang::get('loads');
+		/*$this->data['heading_title'] = Lang::get('box.heading_title');
 
 		$this->data['entry_load'] = Lang::get('box.entry_load');
 		$this->data['entry_load_create'] = Lang::get('box.entry_load_create');
@@ -41,7 +279,7 @@ class BoxController extends BaseController {
 		$this->data['text_confirm_delete_single'] 	= Lang::get('box.text_confirm_delete_single');
 		$this->data['text_confirm_load'] 	= Lang::get('box.text_confirm_load');
         $this->data['text_confirm_assign'] 	= Lang::get('box.text_confirm_assign');
-
+        $this->data['url_detail']             = URL::to('load/loadnumber' . $this->setURL(true));
 		$this->data['button_create_box'] 	= Lang::get('box.button_create_box');
 		$this->data['button_export_box'] 	= Lang::get('box.button_export_box');
 		$this->data['button_delete_box'] 	= Lang::get('box.button_delete_box');
@@ -67,10 +305,10 @@ class BoxController extends BaseController {
 
 		$this->data['error_delete'] 	= Lang::get('box.error_delete');
 		$this->data['error_load'] 		= Lang::get('box.error_load');
-		$this->data['error_load_no_load_code'] = Lang::get('box.error_load_no_load_code');
+		$this->data['error_load_no_load_code'] = Lang::get('box.error_load_no_load_code');*/
 		$this->data['load_codes']		= $this->getLoadCodes();
         $this->data['url_assign']       = URL::to('box/assign'). $this->setURL();
-
+		$this->data['url_loadnumber']	= URL::to('load/loadnumber');
 
 		// Message
 		$this->data['error'] = '';
@@ -84,18 +322,21 @@ class BoxController extends BaseController {
 		$load_code = Input::get('load_code', NULL);
 		$this->data['Contentbox'] = BoxDetails::getboxcontent($load_code);
 
+
+
 		$filter_store 		= Input::get('filter_store', NULL);
 		$filter_box_code	= Input::get('filter_box_code', NULL);
         $filter_stock_piler = Input::get('filter_stock_piler', NULL);
-
+        $filer 				= Input::get('filer', null);
+        $date_at 				= Input::get('date_at', null);
+        $is_shipped			= Input::get('is_shipped', null);
         $sort = Input::get('sort', 'box_code');
 		$order = Input::get('order', 'ASC');
 		$page = Input::get('page', 1);
 
 		//pulling data  to other page
-		$filer = Input::get('filer', null);
-		$date_at = Input::get('date_at', null);
-		$is_shipped = Input::get('is_shipped', null);
+		$tlnumber = Input::get('tlnumber', null);
+		$storename = Input::get('storename', null);
 
 		$arrParams = array(
 						'load_code'				=> $load_code,
@@ -113,9 +354,6 @@ class BoxController extends BaseController {
 		// print_r($results);
 		$results_total 	= Box::getBoxesCount($arrParams, true);
 
-		
-
-
 		$this->data['arrFilters'] = array(
 									'filter_store' 			=> $filter_store,
 									'filter_box_code' 		=> $filter_box_code,
@@ -127,22 +365,20 @@ class BoxController extends BaseController {
 									'is_shipped'			=> $is_shipped
 
 								);
-
-	
 		$this->data['BigBoxes'] = Paginator::make($results, $results_total, 30);
 		$this->data['boxes_count'] = $results_total;
 		$this->data['counter'] 	= $this->data['BigBoxes']->getFrom();
-
 		$this->data['arrParams']        	= $arrParams;
+		
 		$this->data['filter_store'] 		= $filter_store;
 		$this->data['filter_box_code'] 		= $filter_box_code;
 
 		//data pnapasahan ng data sa kabila page
-		$this->data['load_code'] 	= $load_code;
+		$this->data['tlnumber'] 	= $tlnumber;
+		$this->data['storename'] 		= $storename;
 		$this->data['filer'] 		= $filer;
-		$this->data['date_at'] 		= $date_at;
-		$this->data['is_shipped'] 	= $is_shipped;
-
+		$this->data['date_at']				= $date_at;
+		$this->data['is_shipped']			= $is_shipped;
 
         $this->data['filter_stock_piler'] = $filter_stock_piler;
 
@@ -158,21 +394,24 @@ class BoxController extends BaseController {
 		$this->data['order'] = $order;
 		$this->data['page'] = $page;
 
-		$url = '?filter_store=' . $filter_store . '&filter_box_code=' . $filter_box_code .  '&filter_stock_piler=' . $filter_stock_piler;
+		$url = '?filter_box_code=' . $filter_box_code .  '&filter_stock_piler=' . $filter_stock_piler;
 		$url .= '&page=' . $page;
 
-		$order_store = ($sort=='store' && $order=='ASC') ? 'DESC' : 'ASC';
 		$order_box_code = ($sort=='box_code' && $order=='ASC') ? 'DESC' : 'ASC';
 		$order_date_created = ($sort=='date_created' && $order=='ASC') ? 'DESC' : 'ASC';
 
-		$this->data['sort_store'] = URL::to('box/list' . $url . '&sort=store&order=' . $order_store, NULL, FALSE);
-		$this->data['sort_box_code'] = URL::to('box/list' . $url . '&sort=box_code&order=' . $order_box_code, NULL, FALSE);
-		$this->data['sort_date_created'] = URL::to('box/list' . $url . '&sort=date_created&order=' . $order_date_created, NULL, FALSE);
+
+		$this->data['sort_box_code'] = URL::to('load/load_details' . $url . '&sort=box_code&order=' . $order_box_code, NULL, FALSE);
+		$this->data['sort_date_created'] = URL::to('load/load_details' . $url . '&sort=date_created&order=' . $order_date_created, NULL, FALSE);
 
 		$this->data['permissions'] = unserialize(Session::get('permissions'));
 
 		$this->layout->content = View::make('loads.load_details', $this->data);
 
+/////////////////////////////////////////////
+
+		
+////////////////////////////////
 	}
 /**
 	public function getListBox($id) {
@@ -189,8 +428,7 @@ class BoxController extends BaseController {
 		$this->data['filter_store'] = $filter_store;
 		$this->data['filter_box_code'] = $filter_box_code;
 	} **/
-
-	public function getBoxDetails() {
+public function boxnumber() {
 		// Check Permissions
 
 		$this->data = Lang::get('box');
@@ -222,12 +460,15 @@ class BoxController extends BaseController {
 		$filter_sku = Input::get('filter_sku', NULL);
 		$filter_store = Input::get('filter_store', NULL);
 
+		$filter_movedoc = Input::get('filter_movedoc', Null);
 		$filter_box_code = Input::get('filter_box_code', NULL);
 		$sort_back = Input::get('sort_back', 'sku');
 		$order_back = Input::get('order_back', 'ASC');
 		$page_back = Input::get('page_back', 1);
 
 		// Details
+		$movedoc = Input::get('movedoc',null);
+		$movedoc = Input::get('filter_movedoc', null);
 		$sort_detail = Input::get('sort', 'sku');
 		$order_detail = Input::get('order', 'ASC');
 		$page_detail = Input::get('page', 1);
@@ -247,9 +488,9 @@ class BoxController extends BaseController {
 						'limit'				=> 30
 					);
 		// dd($box_code);
-		$results 		= BoxDetails::getBoxDetails($box_code, $arrParams);
+		$results 		= BoxDetails::getboxnumber($movedoc, $arrParams);
 		DebugHelper::log(__METHOD__, $results);
-		$results_total 	= BoxDetails::getBoxDetails($box_code, $arrParams, true);
+		$results_total 	= BoxDetails::getboxnumber( $movedoc, $arrParams, true);
 		$this->data['total_moved_qty'] 	= BoxDetails::getTotalMovedQty($box_code, $arrParams);
 		// Pagination
 		$this->data['arrFilters'] = array(
@@ -274,7 +515,7 @@ class BoxController extends BaseController {
 		$this->data['box_code'] = $box_code;
 		// Main
 		//$this->data['load_code'] = $load_code;
-
+		$this->data['filter_movedoc']=$filter_movedoc;
 		$this->data['filter_sku'] = $filter_sku;
 		$this->data['filter_store'] = $filter_store;
 		$this->data['filter_box_code'] = $filter_box_code;
@@ -295,6 +536,147 @@ class BoxController extends BaseController {
 		$order_sku = ($sort_detail=='sku' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		$order_short_description = ($sort_detail=='short_description' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 		$order_moved_qty = ($sort_detail=='moved_qty' && $order_detail=='ASC') ? 'DESC' : 'ASC';
+		$this->data['sort_sku'] = URL::to('box/detail' . $url . '&sort=sku&order=' . $order_sku, NULL, FALSE);
+		$this->data['sort_short_description'] = URL::to('box/detail' . $url . '&sort=short_description&order=' . $order_short_description, NULL, FALSE);
+		$this->data['sort_moved_qty'] = URL::to('box/detail' . $url . '&sort=moved_qty&order=' . $order_moved_qty, NULL, FALSE);
+
+		// Permissions
+		$this->data['permissions'] = unserialize(Session::get('permissions'));
+		$this->data['url_detail'] = URL::to('box/detail');
+		$this->layout->content = View::make('loads.boxnumber', $this->data);
+	}
+
+
+public function getBoxDetails() {
+		// Check Permissions
+
+		$this->data = Lang::get('box');
+		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
+		$this->data['text_total'] = Lang::get('general.text_total');
+		$this->data['text_select'] = Lang::get('general.text_select');
+
+		$this->data['button_jda'] = Lang::get('general.button_jda');
+		$this->data['button_export'] = Lang::get('general.button_export');
+		$this->data['button_cancel'] = Lang::get('general.button_cancel');
+		$this->data['button_search'] = Lang::get('general.button_search');
+		$this->data['button_clear'] = Lang::get('general.button_clear');
+		// URL
+		$this->data['url_export'] = URL::to('box/export_detail');
+		$this->data['url_back'] = URL::to('load/shipping' . $this->setURL(true));
+
+		$this->data['stores']                 = Store::lists( 'store_name', 'store_code');
+		// Message
+		$this->data['error'] = '';
+		if (Session::has('error')) {
+			$this->data['error'] = Session::get('error');
+		}
+
+		$this->data['success'] = '';
+		if (Session::has('success')) {
+			$this->data['success'] = Session::get('success');
+		}
+
+		$box_code = Input::get('box_code', NULL);
+		$this->data['Contentbox'] = box::getboxcontent($box_code);
+		// Search Filters
+		$filter_sku = Input::get('filter_sku', NULL);
+		$filter_store = Input::get('filter_store', NULL);
+		$filter_doc_no = Input::get('filter_doc_no', NULL);
+		$filter_box_code 	= Input::get('filter_box_code', null);
+
+		$load_code 	= Input::get('load_code', null);
+
+		$filter_load_code = Input::get('filter_load_code', NULL);
+		$sort_back = Input::get('sort_back' );
+		$order_back = Input::get('order_back', 'ASC');
+		$page_back = Input::get('page_back', 1);
+
+		// Details
+		$sort_detail = Input::get('sort' );
+		$order_detail = Input::get('order', 'ASC');
+		$page_detail = Input::get('page', 1);
+
+		//Data
+		$box_id = Input::get('id', NULL);
+		// $this->data['letdown_info'] = Letdown::getLetDownInfo($letdown_id);
+		$box_code = Input::get('box_code', NULL);
+
+		$loadnumber 	= Input::get('loadnumber', null);
+		$pilername		= Input::get('pilername', null);
+		$filter_data_value		=Input::get('filter_data_value', null);
+
+	 
+		$arrParams = array(
+						'sort'				=> $sort_detail,
+						'order'				=> $order_detail,
+						'page'				=> $page_detail,
+						'filter_box_code'	=> $filter_box_code,
+						'filter_data_value'	=> $filter_data_value,
+						'filter_sku' 		=> $filter_sku,
+						'filter_store' 		=> $filter_store,
+						'filter_doc_no'		=> $filter_doc_no,
+						'filter_load_code'	=> $filter_load_code,
+						'limit'				=> 30
+					);
+
+		 
+		$results 		= load::getLoadList2($loadnumber, $arrParams);
+	//	DebugHelper::log(__METHOD__, $results);
+		$results_total 	= load::getLoadList2($loadnumber, $arrParams, true);
+		$this->data['total_moved_qty'] 	= BoxDetails::getTotalMovedQty($box_code, $arrParams);
+		// Pagination
+		$this->data['arrFilters'] = array(
+									'filter_store' 	=> $filter_store,
+									'filter_load_code' => $filter_load_code,
+									'filter_doc_no'	=> $filter_doc_no,
+									'filter_data_value'	=> $filter_data_value,
+									'filter_box_code'	=> $filter_box_code,
+									'sort_back'		=> $sort_back,
+									'order_back'	=> $order_back,
+									'page_back'		=> $page_back,
+									'filter_sku'	=> $filter_sku,
+									// 'filter_slot'	=> $filter_slot,
+									'sort'			=> $sort_detail,
+									'order'			=> $order_detail,
+								 
+									'id'			=> $box_id
+								);
+		 
+		$this->data['boxesdetails'] = Paginator::make($results, $results_total, 30);
+		$this->data['boxes_count'] = $results_total;
+
+		$this->data['counter'] 	= $this->data['boxesdetails']->getFrom();
+		$this->data['box_id'] = $box_id;
+		$this->data['box_code'] = $box_code;
+		// Main
+		//$this->data['load_code'] = $load_code;
+
+		$this->data['filter_sku'] = $filter_sku;
+		$this->data['filter_store'] = $filter_store;
+		$this->data['filter_load_code'] = $filter_load_code;
+		$this->data['filter_doc_no'] 	= $filter_doc_no;
+		$this->data['filter_box_code']	= $filter_box_code;
+		$this->data['sort'] = $sort_detail;
+		$this->data['order'] = $order_detail;
+		$this->data['page'] = $page_detail;
+
+		$this->data['loadnumber']		= $loadnumber;
+		$this->data['pilername'] 		= $pilername;
+		$this->data['filter_data_value'] 		=$filter_data_value;
+		
+		$this->data['box_code'] 	=$box_code;
+		// Details
+		$this->data['sort_back'] 	= $sort_back;
+		$this->data['order_back'] 	= $order_back;
+		$this->data['page_back'] 	= $page_back;
+
+		$url = '?filter_sku=' . $filter_sku . '&filter_store=' . $filter_store;
+		$url .= '&page_back=' . $page_back . '&sort_back=' . $sort_back . '&order_back=' . $order_back .'&id=' . $box_id   ;
+
+
+		$order_sku = ($sort_detail=='sku' && $order_detail=='ASC') ? 'DESC' : 'ASC';
+		$order_short_description = ($sort_detail=='short_description' && $order_detail=='ASC') ? 'DESC' : 'ASC';
+		$order_moved_qty = ($sort_detail=='moved_qty' && $order_detail=='ASC') ? 'DESC' : 'ASC';
 
 
 		$this->data['sort_sku'] = URL::to('box/detail' . $url . '&sort=sku&order=' . $order_sku, NULL, FALSE);
@@ -305,7 +687,7 @@ class BoxController extends BaseController {
 		$this->data['permissions'] = unserialize(Session::get('permissions'));
 		$this->data['url_detail'] = URL::to('box/detail');
 
-		$this->layout->content = View::make('loads.box_content', $this->data);
+		$this->layout->content = View::make('loads.boxdetails', $this->data);
 	}
 
 	public function loadBoxes()
@@ -410,12 +792,12 @@ class BoxController extends BaseController {
 		$palletNo 			= $getPallet['pallet_code'];
 		$loadNo 			= $getLoad['load_code'];
 	}
-
 	protected function getLoadCodes()
 	{
 		$loadCodes = Load::getLoadCodes();
 		return $loadCodes;
 	}
+
 
 	/**
 	* Generate Load Code
@@ -426,7 +808,10 @@ class BoxController extends BaseController {
 	*/
 	public function generateLoadCode()
 	{
+
 		$loadMax =  Load::select(DB::raw('max(id) as max_created, max(load_code) as load_code'))->first()->toArray();
+	
+		
 
 		if($loadMax['max_created'] === null) {
 			$loadCode = 'LD0000001';
@@ -444,242 +829,269 @@ class BoxController extends BaseController {
 		echo json_encode($load);
 		die();
 	}
-
-	public function createBox()
+	public function generateLoadCodestock()
 	{
-		self::checkPermissions('CanAccessBoxingLoading');
-		$this->data['heading_title_add'] = Lang::get('box.heading_title_add');
+		$taggingload 		= Input::get('taggingload', null);
+		$loadMax =  Load::select(DB::raw('max(id) as max_created, max(load_code) as load_code'))->first()->toArray();
+	
+		
 
-		$this->data['entry_store'] = Lang::get('box.entry_store');
-		$this->data['entry_box_code'] = Lang::get('box.entry_box_code');
-
-		$this->data['text_confirm_create'] = Lang::get('box.text_confirm_create');
-		$this->data['text_confirm_cancel'] = Lang::get('box.text_confirm_cancel');
-
-		$this->data['button_submit'] = Lang::get('box.button_submit');
-		$this->data['button_cancel'] = Lang::get('box.button_cancel');
-		$this->data['button_back'] = Lang::get('box.button_back');
-
-		$this->data['error_required_fields'] = Lang::get('box.error_required_fields');
-
-		$this->data['url_back'] = URL::to('box/list' . $this->setURL());
-		$this->data['url_create'] = 'box/create' . $this->setURL();
-
-		$stores = Store::lists( 'store_name', 'store_code');
-		$this->data['stores'] = $stores;
-
-		$this->data['filter_store'] 	= Input::get('filter_store', NULL);
-		$this->data['filter_box_code']	= Input::get('filter_box_code', NULL);
-
-		$this->data['sort']  = Input::get('sort', 'store');
-		$this->data['order'] = Input::get('order', 'ASC');
-		$this->data['page']  = Input::get('page', 1);
-
-		$this->data['error'] = '';
-		if (Session::has('error')) $this->data['error'] = Session::get('error');
-
-		$this->data['permissions'] = unserialize(Session::get('permissions'));
-
-		$this->layout->content = View::make('box.create', $this->data);
-	}
-
-	public function updateBox()
-	{
-		self::checkPermissions('CanAccessBoxingLoading');
-		$boxCode = Input::get('box_code');
-
-		$this->data['heading_title_update'] = Lang::get('box.heading_title_update');
-
-		$this->data['entry_store'] = Lang::get('box.entry_store');
-		$this->data['entry_box_code'] = Lang::get('box.entry_box_code');
-
-		$this->data['text_confirm_update'] = Lang::get('box.text_confirm_update');
-		$this->data['text_confirm_cancel'] = Lang::get('box.text_confirm_cancel');
-
-		$this->data['button_submit'] = Lang::get('box.button_submit');
-		$this->data['button_cancel'] = Lang::get('box.button_cancel');
-		$this->data['button_back'] = Lang::get('box.button_back');
-
-		$this->data['error_required_fields'] = Lang::get('box.error_required_fields');
-
-		$this->data['url_back'] = URL::to('box/list' . $this->setURL());
-		$this->data['url_update'] = 'box/update'. $this->setURL();
-
-		$stores = Store::lists( 'store_name', 'store_code');
-		$this->data['stores'] = $stores;
-
-		$this->data['box_details'] = Box::where('box_code', '=', $boxCode)->first();
-
-		if($this->data['box_details'] === null) {
-			return Redirect::to('box/list');
+		if($loadMax['max_created'] === null) {
+			$loadCode = 'LD0000001';
+		} else {
+			$loadCode = substr($loadMax['load_code'], -7);
+			$loadCode = (int) $loadCode + 1;
+			$loadCode = 'LD' . sprintf("%07s", (int)$loadCode);
 		}
 
-		$this->data['filter_store'] 	= Input::get('filter_store', NULL);
-		$this->data['filter_box_code']	= Input::get('filter_box_code', NULL);
+		Load::create(array(
+			'load_code'	=> $loadCode, 'tagging_load' => '2' )
+			);
+		$load = Load::where('load_code', '=',$loadCode)->first()->toArray();
+		self::generateLoadCodeAuditTrailstock($loadCode);
+		echo json_encode($load);
 
-		$this->data['sort']  = Input::get('sort', 'store');
-		$this->data['order'] = Input::get('order', 'ASC');
-		$this->data['page']  = Input::get('page', 1);
+	 	//load::getloadtagging($taggingload);
 
-		$this->data['error'] = '';
-		if (Session::has('error')) $this->data['error'] = Session::get('error');
 
-		$this->data['permissions'] = unserialize(Session::get('permissions'));
-
-		$this->layout->content = View::make('box.update', $this->data);
+		return Redirect::to('stocktransfer/stocktranferload'.$this->setURL())->with('message','Successfully Created load!!');
 	}
 
-	public function exportDetailsCSV() {
-		//TODO
-		///Check Permissions
-		$box_code = Input::get('box_code', NULL);
-		$this->data = Lang::get('box');
-		$this->data['text_empty_results'] 	= Lang::get('general.text_empty_results');
-		$arrParams = array(
-						'sort'			=> Input::get('sort', 'sku'),
-						'order'			=> Input::get('order', 'ASC'),
-						'filter_sku' 	=> Input::get('filter_sku', 'filter_sku'),
-						'filter_store' 	=> NULL,
-						'filter_box_code' => NULL,
-						'filter_status' => NULL,
-						'page'			=> NULL,
-						'limit'			=> NULL
-					);
+	// public function createBox()
+	// {
+	// 	self::checkPermissions('CanAccessBoxingLoading');
+	// 	$this->data['heading_title_add'] = Lang::get('box.heading_title_add');
 
-		// $ld_info = Letdown::getLetDownInfo($ld_id);
-		$results = BoxDetails::getBoxDetails($box_code, $arrParams);
+	// 	$this->data['entry_store'] = Lang::get('box.entry_store');
+	// 	$this->data['entry_box_code'] = Lang::get('box.entry_box_code');
 
-			$this->data['results'] = $results;
+	// 	$this->data['text_confirm_create'] = Lang::get('box.text_confirm_create');
+	// 	$this->data['text_confirm_cancel'] = Lang::get('box.text_confirm_cancel');
 
-		$pdf = App::make('dompdf');
-		$pdf->loadView('box.report_detail', $this->data)->setPaper('a4')->setOrientation('landscape');
-		// return $pdf->stream();
-		return $pdf->download('box_detail_' . date('Ymd') . '.pdf');
-	}
+	// 	$this->data['button_submit'] = Lang::get('box.button_submit');
+	// 	$this->data['button_cancel'] = Lang::get('box.button_cancel');
+	// 	$this->data['button_back'] = Lang::get('box.button_back');
 
-	public function exportBoxes()
-	{
-		self::checkPermissions('CanExportBoxingLoading');
-		$this->data = Lang::get('box');
-		$this->data['text_empty_results'] 	= Lang::get('general.text_empty_results');
-		$arrParams = array(
-						'filter_store' 			=> Input::get('filter_store', NULL),
-						'filter_box_code' 		=> Input::get('filter_box_code', NULL),
-						'sort'					=> Input::get('sort', 'store'),
-						'order'					=> Input::get('order', 'ASC'),
-						'page'					=> NULL,
-						'limit'					=> NULL
-					);
+	// 	$this->data['error_required_fields'] = Lang::get('box.error_required_fields');
 
-		$results 		= Box::getBoxesWithFilters($arrParams)->toArray();
-		$this->data['results'] = $results;
+	// 	$this->data['url_back'] = URL::to('box/list' . $this->setURL());
+	// 	$this->data['url_create'] = 'box/create' . $this->setURL();
 
-		$pdf = App::make('dompdf');
-		$pdf->loadView('box.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
-		// return $pdf->stream();
-		return $pdf->download('box_' . date('Ymd') . '.pdf');
-	}
+	// 	$stores = Store::lists( 'store_name', 'store_code');
+	// 	$this->data['stores'] = $stores;
 
-	public function deleteBoxes()
-	{
-		self::checkPermissions('CanAccessBoxingLoading');
-		try {
-			$data = Input::all();
-			DB::beginTransaction();
-			$boxCodes = explode(",", Input::get('box_codes'));
-			foreach ($boxCodes as $boxCode) {
-				Box::deleteByBoxCode($boxCode);
-			}
-			self::deleteBoxesAuditTrail(Input::get('box_codes'));
-			DB::commit();
-			return Redirect::to(URL::to('box/list' . $this->setURL() ))->with("message", Lang::get('box.text_success_delete'));
-		} catch (Exception $e) {
-			DB::rollback();
-			return Redirect::to(URL::to('box/list' . $this->setURL() ))->withErrors(Lang::get('box.text_fail_delete'));
-		}
-	}
+	// 	$this->data['filter_store'] 	= Input::get('filter_store', NULL);
+	// 	$this->data['filter_box_code']	= Input::get('filter_box_code', NULL);
 
-	public function postUpdateBox()
-	{
-		self::checkPermissions('CanAccessBoxingLoading');
-		try {
-			$input = Input::all();
-			$input['in_use'] = Config::get('box_statuses.not_in_use');
-			DB::beginTransaction();
-			$boxDetails = BoxDetails::getBoxDetailCount($input['box_code']);
-			if($boxDetails > 0) throw new Exception("Box details already exists");
-			Box::updateBox($input);
-			$storeName = Store::getStoreName($input['store']);
-			self::postUpdateBoxAuditTrail($input['box_code'], $storeName);
-			DB::commit();
-			return Redirect::to(URL::to('box/update' . $this->setURL(). '&box_code=' . $input['box_code']))->with('message', Lang::get('box.text_success_update'));
-		} catch (Exception $e) {
-			DB::rollback();
-			return Redirect::to(URL::to('box/update' . $this->setURL() . '&box_code=' . $input['box_code']))->withErrors(Lang::get('box.text_fail_update') . ': ' . $input['box_code']);
-		}
+	// 	$this->data['sort']  = Input::get('sort', 'store');
+	// 	$this->data['order'] = Input::get('order', 'ASC');
+	// 	$this->data['page']  = Input::get('page', 1);
 
-	}
+	// 	$this->data['error'] = '';
+	// 	if (Session::has('error')) $this->data['error'] = Session::get('error');
 
-	public function postCreateBox()
-	{
-		self::checkPermissions('CanAccessBoxingLoading');
-		try {
-			#box format: [{storecode}-00001] (eg 0005-00001)
-			$input = Input::all();
+	// 	$this->data['permissions'] = unserialize(Session::get('permissions'));
 
-			DB::beginTransaction();
-			if(! is_numeric($input['box_range']) || (int) $input['box_range'] == 0 || $input['box_range'] < 0 ) throw new Exception ('Invalid input.');
+	// 	$this->layout->content = View::make('box.create', $this->data);
+	// }
 
-			$storeCode = $input['store'];
-			$numberOfBoxes = (int)$input['box_range'];
+	// public function updateBox()
+	// {
+	// 	self::checkPermissions('CanAccessBoxingLoading');
+	// 	$boxCode = Input::get('box_code');
 
-			if(strlen($storeCode) == 1) $newStoreCodeFormat = "000{$storeCode}";
-			else if(strlen($storeCode) == 2) $newStoreCodeFormat = "00{$storeCode}";
-			else if(strlen($storeCode) == 3) $newStoreCodeFormat = "0{$storeCode}";
-			else if(strlen($storeCode) == 4) $newStoreCodeFormat = "{$storeCode}";
-			else throw new Exception("Invalid store");
+	// 	$this->data['heading_title_update'] = Lang::get('box.heading_title_update');
 
-			#check if a record exist in that store
-			$box = Box::where('box_code', 'LIKE', "{$newStoreCodeFormat}%")->max('box_code');
-			#if result is empty follow the format
-			if($box == null) $box = $newStoreCodeFormat."00000";
-			#if exists get the latest then increment box
-			$formattedBoxCode = array();
-			$containerBox = array(); //use for audit trail
-			foreach(range(1, $numberOfBoxes) as $number) {
-				$boxCode = substr($box, -5);
-				$boxCode = (int) $boxCode + $number;
-				$formattedBoxCode[$number]['box_code'] = $newStoreCodeFormat . sprintf("%05s", (int)$boxCode);
-				$formattedBoxCode[$number]['store_code'] = $storeCode;
-				$formattedBoxCode[$number]['created_at'] = date('Y-m-d H:i:s');
-				$containerBox[] = $newStoreCodeFormat . sprintf("%05s", (int)$boxCode);
-			}
-			/*print_r($formattedBoxCode);
-			die();*/
-			Box::insert($formattedBoxCode);
+	// 	$this->data['entry_store'] = Lang::get('box.entry_store');
+	// 	$this->data['entry_box_code'] = Lang::get('box.entry_box_code');
 
-			$storeName = Store::getStoreName($storeCode);
-			$max = max(array_keys($containerBox));
-			if(count($containerBox) > 2) $boxCodeInString = $containerBox[0] . " - " . $containerBox[$max];
-			else $boxCodeInString = implode(',', $containerBox);
+	// 	$this->data['text_confirm_update'] = Lang::get('box.text_confirm_update');
+	// 	$this->data['text_confirm_cancel'] = Lang::get('box.text_confirm_cancel');
 
-			self::postCreateBoxAuditTrail($boxCodeInString, $storeName);
-			DB::commit();
-			return Redirect::to(URL::to('box/create' . $this->setURL()))->with('message', Lang::get('box.text_success_create'));
-		} catch (Exception $e) {
-			DB::rollback();
-			// return Redirect::to(URL::to('box/create' . $this->setURL()))->withErrors(Lang::get('box.text_fail_create') . ': ' . $input['store']);
-			return Redirect::to(URL::to('box/create' . $this->setURL()))->withErrors($e->getMessage());
-		}
+	// 	$this->data['button_submit'] = Lang::get('box.button_submit');
+	// 	$this->data['button_cancel'] = Lang::get('box.button_cancel');
+	// 	$this->data['button_back'] = Lang::get('box.button_back');
 
-	}
+	// 	$this->data['error_required_fields'] = Lang::get('box.error_required_fields');
+
+	// 	$this->data['url_back'] = URL::to('box/list' . $this->setURL());
+	// 	$this->data['url_update'] = 'box/update'. $this->setURL();
+
+	// 	$stores = Store::lists( 'store_name', 'store_code');
+	// 	$this->data['stores'] = $stores;
+
+	// 	$this->data['box_details'] = Box::where('box_code', '=', $boxCode)->first();
+
+	// 	if($this->data['box_details'] === null) {
+	// 		return Redirect::to('box/list');
+	// 	}
+
+	// 	$this->data['filter_store'] 	= Input::get('filter_store', NULL);
+	// 	$this->data['filter_box_code']	= Input::get('filter_box_code', NULL);
+
+	// 	$this->data['sort']  = Input::get('sort', 'store');
+	// 	$this->data['order'] = Input::get('order', 'ASC');
+	// 	$this->data['page']  = Input::get('page', 1);
+
+	// 	$this->data['error'] = '';
+	// 	if (Session::has('error')) $this->data['error'] = Session::get('error');
+
+	// 	$this->data['permissions'] = unserialize(Session::get('permissions'));
+
+	// 	$this->layout->content = View::make('box.update', $this->data);
+	// }
+
+	// public function exportDetailsCSV() {
+	// 	//TODO
+	// 	///Check Permissions
+	// 	$box_code = Input::get('box_code', NULL);
+	// 	$this->data = Lang::get('box');
+	// 	$this->data['text_empty_results'] 	= Lang::get('general.text_empty_results');
+	// 	$arrParams = array(
+	// 					'sort'			=> Input::get('sort', 'sku'),
+	// 					'order'			=> Input::get('order', 'ASC'),
+	// 					'filter_sku' 	=> Input::get('filter_sku', 'filter_sku'),
+	// 					'filter_store' 	=> NULL,
+	// 					'filter_box_code' => NULL,
+	// 					'filter_status' => NULL,
+	// 					'page'			=> NULL,
+	// 					'limit'			=> NULL
+	// 				);
+
+	// 	// $ld_info = Letdown::getLetDownInfo($ld_id);
+	// 	$results = BoxDetails::getBoxDetails($box_code, $arrParams);
+
+	// 		$this->data['results'] = $results;
+
+	// 	$pdf = App::make('dompdf');
+	// 	$pdf->loadView('box.report_detail', $this->data)->setPaper('a4')->setOrientation('landscape');
+	// 	// return $pdf->stream();
+	// 	return $pdf->download('box_detail_' . date('Ymd') . '.pdf');
+	// }
+
+	// public function exportBoxes()
+	// {
+	// 	self::checkPermissions('CanExportBoxingLoading');
+	// 	$this->data = Lang::get('box');
+	// 	$this->data['text_empty_results'] 	= Lang::get('general.text_empty_results');
+	// 	$arrParams = array(
+	// 					'filter_store' 			=> Input::get('filter_store', NULL),
+	// 					'filter_box_code' 		=> Input::get('filter_box_code', NULL),
+	// 					'sort'					=> Input::get('sort', 'store'),
+	// 					'order'					=> Input::get('order', 'ASC'),
+	// 					'page'					=> NULL,
+	// 					'limit'					=> NULL
+	// 				);
+
+	// 	$results 		= Box::getBoxesWithFilters($arrParams)->toArray();
+	// 	$this->data['results'] = $results;
+
+	// 	$pdf = App::make('dompdf');
+	// 	$pdf->loadView('box.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
+	// 	// return $pdf->stream();
+	// 	return $pdf->download('box_' . date('Ymd') . '.pdf');
+	// }
+
+	// public function deleteBoxes()
+	// {
+	// 	self::checkPermissions('CanAccessBoxingLoading');
+	// 	try {
+	// 		$data = Input::all();
+	// 		DB::beginTransaction();
+	// 		$boxCodes = explode(",", Input::get('box_codes'));
+	// 		foreach ($boxCodes as $boxCode) {
+	// 			Box::deleteByBoxCode($boxCode);
+	// 		}
+	// 		self::deleteBoxesAuditTrail(Input::get('box_codes'));
+	// 		DB::commit();
+	// 		return Redirect::to(URL::to('box/list' . $this->setURL() ))->with("message", Lang::get('box.text_success_delete'));
+	// 	} catch (Exception $e) {
+	// 		DB::rollback();
+	// 		return Redirect::to(URL::to('box/list' . $this->setURL() ))->withErrors(Lang::get('box.text_fail_delete'));
+	// 	}
+	// }
+
+	// public function postUpdateBox()
+	// {
+	// 	self::checkPermissions('CanAccessBoxingLoading');
+	// 	try {
+	// 		$input = Input::all();
+	// 		$input['in_use'] = Config::get('box_statuses.not_in_use');
+	// 		DB::beginTransaction();
+	// 		$boxDetails = BoxDetails::getBoxDetailCount($input['box_code']);
+	// 		if($boxDetails > 0) throw new Exception("Box details already exists");
+	// 		Box::updateBox($input);
+	// 		$storeName = Store::getStoreName($input['store']);
+	// 		self::postUpdateBoxAuditTrail($input['box_code'], $storeName);
+	// 		DB::commit();
+	// 		return Redirect::to(URL::to('box/update' . $this->setURL(). '&box_code=' . $input['box_code']))->with('message', Lang::get('box.text_success_update'));
+	// 	} catch (Exception $e) {
+	// 		DB::rollback();
+	// 		return Redirect::to(URL::to('box/update' . $this->setURL() . '&box_code=' . $input['box_code']))->withErrors(Lang::get('box.text_fail_update') . ': ' . $input['box_code']);
+	// 	}
+
+	// }
+
+	// public function postCreateBox()
+	// {
+	// 	self::checkPermissions('CanAccessBoxingLoading');
+	// 	try {
+	// 		#box format: [{storecode}-00001] (eg 0005-00001)
+	// 		$input = Input::all();
+
+	// 		DB::beginTransaction();
+	// 		if(! is_numeric($input['box_range']) || (int) $input['box_range'] == 0 || $input['box_range'] < 0 ) throw new Exception ('Invalid input.');
+
+	// 		$storeCode = $input['store'];
+	// 		$numberOfBoxes = (int)$input['box_range'];
+
+	// 		if(strlen($storeCode) == 1) $newStoreCodeFormat = "000{$storeCode}";
+	// 		else if(strlen($storeCode) == 2) $newStoreCodeFormat = "00{$storeCode}";
+	// 		else if(strlen($storeCode) == 3) $newStoreCodeFormat = "0{$storeCode}";
+	// 		else if(strlen($storeCode) == 4) $newStoreCodeFormat = "{$storeCode}";
+	// 		else throw new Exception("Invalid store");
+
+	// 		#check if a record exist in that store
+	// 		$box = Box::where('box_code', 'LIKE', "{$newStoreCodeFormat}%")->max('box_code');
+	// 		#if result is empty follow the format
+	// 		if($box == null) $box = $newStoreCodeFormat."00000";
+	// 		#if exists get the latest then increment box
+	// 		$formattedBoxCode = array();
+	// 		$containerBox = array(); //use for audit trail
+	// 		foreach(range(1, $numberOfBoxes) as $number) {
+	// 			$boxCode = substr($box, -5);
+	// 			$boxCode = (int) $boxCode + $number;
+	// 			$formattedBoxCode[$number]['box_code'] = $newStoreCodeFormat . sprintf("%05s", (int)$boxCode);
+	// 			$formattedBoxCode[$number]['store_code'] = $storeCode;
+	// 			$formattedBoxCode[$number]['created_at'] = date('Y-m-d H:i:s');
+	// 			$containerBox[] = $newStoreCodeFormat . sprintf("%05s", (int)$boxCode);
+	// 		}
+	// 		/*print_r($formattedBoxCode);
+	// 		die();*/
+	// 		Box::insert($formattedBoxCode);
+
+	// 		$storeName = Store::getStoreName($storeCode);
+	// 		$max = max(array_keys($containerBox));
+	// 		if(count($containerBox) > 2) $boxCodeInString = $containerBox[0] . " - " . $containerBox[$max];
+	// 		else $boxCodeInString = implode(',', $containerBox);
+
+	// 		self::postCreateBoxAuditTrail($boxCodeInString, $storeName);
+	// 		DB::commit();
+	// 		return Redirect::to(URL::to('box/create' . $this->setURL()))->with('message', Lang::get('box.text_success_create'));
+	// 	} catch (Exception $e) {
+	// 		DB::rollback();
+	// 		// return Redirect::to(URL::to('box/create' . $this->setURL()))->withErrors(Lang::get('box.text_fail_create') . ': ' . $input['store']);
+	// 		return Redirect::to(URL::to('box/create' . $this->setURL()))->withErrors($e->getMessage());
+	// 	}
+
+	// }
 
 
 	protected function checkPermissions($permission)
 	{
 		if (Session::has('permissions')) {
 	    	if (!in_array($permission, unserialize(Session::get('permissions'))))  {
-				return Redirect::to('box/list' . $this->setURL());
+				return Redirect::to('load/shipping' . $this->setURL());
 			}
     	} else {
 			return Redirect::to('users/logout');
@@ -778,7 +1190,7 @@ class BoxController extends BaseController {
 	{
 		$data_after = 'Load code # '.$loadCode . ' generated by' . Auth::user()->username;
 		$arrParams = array(
-			'module'		=> Config::get("audit_trail_modules.picking"),
+			'module'		=> "Loading",
 			'action'		=> Config::get("audit_trail.generate_load_code"),
 			'reference'		=> 'Load code # ' . $loadCode,
 			'data_before'	=> '',
@@ -789,7 +1201,21 @@ class BoxController extends BaseController {
 		);
 		AuditTrail::addAuditTrail($arrParams);
 	}
-
+	private function generateLoadCodeAuditTrailstock($loadCode)
+	{
+		$data_after = 'Subloc transfer Load code # '.$loadCode . ' generated by' . Auth::user()->username;
+		$arrParams = array(
+			'module'		=> "Subloc transfer",
+			'action'		=> Config::get("audit_trail.generate_load_code"),
+			'reference'		=> 'Load code # ' . $loadCode,
+			'data_before'	=> '',
+			'data_after'	=> $data_after,
+			'user_id'		=> Auth::user()->id,
+			'created_at'	=> date('Y-m-d H:i:s'),
+			'updated_at'	=> date('Y-m-d H:i:s')
+		);
+		AuditTrail::addAuditTrail($arrParams);
+	}
 	/**
 	* Audit trail for picklist loading
 	*
@@ -823,7 +1249,18 @@ class BoxController extends BaseController {
             $stock_pilers[$item->id] = $item->firstname . ' ' . $item->lastname;
         }
         return array('' => Lang::get('general.text_select')) + $stock_pilers;
+    }  
+    private function getLoadnumberOpenToTLnumberposted()
+    {
+        $stock_pilers = array();
+        foreach (load::getLoadnumberOpen() as $item) {
+            $stock_pilers[$item->id] = $item->load_code;
+        }
+        return array('' => Lang::get('general.text_select')) + $stock_pilers;
     }
+
+	 
+	
 
     public function assignPilerForm() {
 
@@ -877,6 +1314,9 @@ class BoxController extends BaseController {
      * @param  stock_piler   int    Stock piler id
      * @return Status
      */
+    
+		
+ 
     public function assignToStockPiler() {
         // Check Permissions
         $pilers = implode(',' , Input::get('stock_piler'));
@@ -916,8 +1356,8 @@ class BoxController extends BaseController {
             // AuditTrail
         }
 
-
-        return Redirect::to('box/list' . $this->setURL())->with('message', Lang::get('box.text_success_assign'));
+return Redirect::to('box/list' . $this->setURL())->with('message', Lang::get('box.text_success_assign'));
+       
 
     }
-}
+} 

@@ -11,17 +11,24 @@
 </head>
 <body>
 <div class="table-responsive">
-			<div style="text-align: center">
-				<h1>Casual Clothing Retailers Inc.<br/>PICKING REPORT</h1>
+				<div style="text-align: center">
+				<a class="font-size-02"> RSCI<br/>Picking Reports<br/></a>
+				Printed By: {{Auth::user()->username}} <br>
 				Print Date: {{ date('m/d/y h:i A')}}
 			</div>
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
-				<th>{{ $col_doc_no }}</th>
-				<th>STORE</th>
-				<th>{{ $col_receiving_stock_piler }}</th>
-				<th>{{ $col_status }}</th>
+				<th>TL no. </th>
+						<th> Store </th>
+						<th>SKU</th>
+						<th>UPC</th>
+						<th>Short Name</th>
+						<th>F Slot Code</th>
+						<th>Qty Ord</th>
+					 	<th>Piler Name</th>
+					 	<th>Date Entry</th>
+						<th>Var</th>
 			</tr>
 		</thead>
 		@if( !CommonHelper::arrayHasValue($results) )
@@ -30,15 +37,25 @@
 			</tr>
 		@else
 			@foreach( $results as $value )
-				<tr class="font-size-13 tblrow" data-id="{{ $value['move_doc_number'] }}">
-					<td> {{ $value['move_doc_number'] }} </td>
-					<td>{{ Store::getStoreName($value['store_code']) }}</td>
-					<td>{{ $value['fullname'] }}</td>
-					<td>{{ $value['data_display'] }}</td>
+				<tr class="font-size-13 tblrow" data-id="{{ $value->move_doc_number }}">
+					 
+		 				<td>{{$value['move_doc_number']}}</td>
+		 				<td>{{$value['store_name']}}</td>
+		 				<td>{{$value['sku']}}</td>
+		 				<td>{{$value['upc']}}</td>
+		 				<td>{{$value['description']}}</td>
+		 				<td>{{$value['from_slot_code']}}</td>
+		 				<td>{{$value['quantity_to_pick']}}</td>
+		 				<td>{{$value['firstname']. ' '.$value['lastname']}}</td>
+		 				<td>{{$value['updated_at']}}</td>
+		 				<td>{{$value['moved_qty'] - $value['quantity_to_pick']}}</td>
 				</tr>
 			@endforeach
 		@endif
-	</table>
+		<tr>
+			<td>Total item:{{count($results) }} </td>
+		</tr>
+	</table>				 
 </div>
 
 </body>

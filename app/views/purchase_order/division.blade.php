@@ -1,4 +1,4 @@
-<div class="control-group">
+ <div class="control-group">
 	<a href="{{ $url_back }}" class="btn btn-info btn-darkblue"> <i class="icon-chevron-left"></i> Back To List</a>
 </div>
 @if( CommonHelper::arrayHasValue($error) )
@@ -17,7 +17,8 @@
 
 
 <div class="widget widget-table action-table">
-
+	
+	 
     <div class="widget-header"> <i class="icon-th-list"></i>
       <h3>PO Division</h3>
     </div>
@@ -27,13 +28,13 @@
 	      	<div class="span4">
 	        	<div>
 		        	<span class="left-pane">PO No.</span>
-		        	<span class="right-pane">{{ Form::text('purchase_order_no', $po_info->purchase_order_no, array('readonly' => 'readonly')) }}
+		        	<span class="right-pane">{{ Form::text('filter_po_no', $filter_po_no, array('readonly' => 'readonly')) }}
 		        	</span>
 		        </div>
 		 
 	        	<div>
 		        	<span class="left-pane">SHIPMENT REF :</span>
-		        	<span class="right-pane">{{ Form::text('purchase_order_no', $po_info->shipment_reference_no, array('readonly' => 'readonly')) }}
+		        	<span class="right-pane">{{ Form::text('purchase_order_no', $filter_shipment_reference_no, array('readonly' => 'readonly')) }}
 		        	</span>
 		        </div>
 	      	</div>
@@ -41,7 +42,7 @@
 	      	<div class="span4">
 	      		<div>
 		        	<span class="left-pane">Entry Date :</span>
-		        	<span class="right-pane">{{ Form::text('entry_date', date('M d, Y', strtotime($po_info->created_at)), array('readonly' => 'readonly')) }}</span>
+		        	<span class="right-pane">{{ Form::text('entry_date', date('M d, Y', strtotime($po_info->entry_date)), array('readonly' => 'readonly')) }}</span>
 		        </div>
 		       
 	      </div>
@@ -49,14 +50,14 @@
 	      <div class="span4">
 				<div>
 		        	<span class="left-pane">Total QTY :</span>
-		        	<span class="right-pane">{{ Form::text('totalqty',$po_info->total_qty, array('readonly' => 'readonly')) }}</span>
+		        	<span class="right-pane">{{ Form::text('totalqty',$total_qty, array('readonly' => 'readonly')) }}</span>
 		        </div>
-<!--		        
-		       <div>
+		        
+		      <!-- <div>
 		        	<span class="left-pane">Status :</span>
 		        	<span class="right-pane">{{ Form::text('data_display',$po_info->data_display, array('readonly' => 'readonly')) }}</span>
-		        </div>
--->
+		        </div>-->
+
 	      </div>
 
 	   </div>
@@ -77,13 +78,18 @@
 		<table>
 			<tr>
 				<th>
-					<div class="div-buttons">
-						@if ( CommonHelper::valueInArray('CanAssignPurchaseOrders', $permissions) )
+				@if ( CommonHelper::valueInArray('CanExportPurchaseOrders', $permissions) )
+				 
+				      <a href="{{URL::to('purchase_order/export?receiver_no='.$receiver_no.'&po_no='.$filter_po_no)}}"   class="btn btn-info btn-darkblue" title="Shortage/Overage Discrepancy"> Report </a>
+				  @endif
+				      
+			        
+						@if ( CommonHelper::valueInArray('CanAssignPurchaseOrders', $permissions) || CommonHelper::valueInArray('CanSyncPurchaseOrders', $permissions))
 						
 							<a role="button" class="btn btn-info btn-darkblue assignPO" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a>
-						@endif
 						
-						@if ( CommonHelper::valueInArray('CanExportPurchaseOrders', $permissions) )
+						
+						<!-- @if ( CommonHelper::valueInArray('CanExportPurchaseOrders', $permissions) ) -->
 					<!--<a href= {{ $url_export_backorder }} class="btn btn-info btn-darkblue">{{ $button_generate_backorder }}</a> -->
 					<!--  	<a href= {{ $url_export }} class="btn btn-info btn-darkblue">Sync To Mobile</a> id="exportList"
 						@endif
@@ -101,7 +107,8 @@
 					          <li><a href={{URL::to('purchase_order/unlisted')}}>Unlisted Report</a></li>
 				        </ul>
 			      	</div>
-			     </th>-->
+			     </th>--> <a href="{{url::to('purchase_order/sync_to_mobile_division?po_no='.$filter_po_no.'&shipment_no='.$filter_shipment_reference_no.'&total_qty='.$total_qty.'&receiver_no='.$receiver_no)}}"   class="btn btn-info btn-darkblue">Sync To Mobile</a>
+			      @endif
 			</tr>
 		</table>
 	</div>
@@ -127,10 +134,11 @@
 						<th>RECEIVED QTY</th>
 						<th>Stock Piler</th>
 
-				<!--	<th>{{ $col_carton_id }}</th>     -->
+				<!--	      -->
 				<!--	<th><a href="{{ $sort_receiver_no }}" class="@if( $sort=='receiver_no' ) {{ $order }} @endif">{{ $col_receiver_no }}</a></th>    
 						<th>{{ $col_receiving_stock_piler }}</th> -->
 						<th>Status</th>
+						<!-- <th>Action</th> -->
 						
 					</tr>
 				</thead>
@@ -140,63 +148,32 @@
 				</tr>
 				@else
 					@foreach( $purchase_orders as $po )
-					<tr class="font-size-13 tblrow" data-id="{{ $po->division }}">
+					<tr class="font-size-13 tblrow" data-id="{{ $po->dept_number }}">
 						@if ( CommonHelper::valueInArray('CanAssignPurchaseOrders', $permissions) )
 						<td class="align-center">
-							@if($po->data_display == 'Open' || $po->data_display == 'Assigned')
-							<input type="checkbox" class="checkbox item-selected" name="selected[]" id="selected-{{ $po->division }}" value="{{ $po->division }}" />
+							@if($po->data_display == 'Open' || $po->data_display == 'Assigned'  )
+							<input type="checkbox" class="checkbox item-selected" name="selected[]" id="selected-{{ $po->dept_number }}" value="{{ $po->dept_number }}" />
 							@endif
 						</td>
 						@endif
 						<td>{{ $counter++ }}</td>
-						<td><a href="{{ 'detail?&receiver_no=' . $po->receiver_no. '&division=' . $po->division }}">{{ $po->Division_Name }}</a></td>
+						<td><a href="{{ $url_po_detail . '&receiver_no=' . $po->receiver_no.'&division='.$po->division. '&division_id='.$po->dept_number.'&filter_stock_piler='.$po->fullname.'&total_qty='.$total_qty.'&filter_shipment_reference_no='.$filter_shipment_reference_no}}">{{ $po->division }}</a></td>
+					 
 						<td>{{ $po->quantity_ordered1 }}</td>
 						<td>{{ $po->quantity_delivered1 }}</td>
 						<td>{{ $po->fullname }}</td>
-				<!--	<td>{{ $po->carton_id }}</td>
-						<td><a href="{{ $url_detail . '&receiver_no=' . $po->receiver_no }}">{{$po->receiver_no}}</a></td>  
-						<td>{{ $po->fullname }}</td>-->
+			 
 						<td>{{ $po->data_display }}</td>
-						<!--
-						<td class="align-center">
-							
-							@if ( CommonHelper::valueInArray('CanClosePurchaseOrders', $permissions) )
-								@if($po->data_display === 'Posted')
-									<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_posted_po }}</a>
-								@elseif ($po->data_display === 'Done')
-									<a style="width: 70px;" class="btn btn-success closePO" data-id="{{ $po->purchase_order_no }}">{{ $button_close_po }}</a>
-							-->
-									<!-- <a style="width: 70px;" id="reopen" data-id="{{ $po->purchase_order_no }}" class="btn btn-primary">Reopen</a> -->
-							<!--		
-								@else
-									<a style="width: 70px;" disabled="disabled" class="btn">{{ $button_close_po }}</a>
-								@endif
+						<!-- <td>
+						 
+							@if($po->data_display === 'Done')
+							<a style="width: 120px;"  href="{{$url_po_partial. '&receiver_no=' . $po->receiver_no.'&division='.$po->division. '&division_id='.$po->dept_number.'&filter_shipment_reference_no='.$filter_shipment_reference_no.'&filter_po_no='.$filter_po_no.'&total_qty='.$total_qty}}" class="btn btn-success"> Partial Received</a>
 
-								{{ Form::open(array('url'=>'purchase_order/close_po', 'id' => 'closePO_' . $po->purchase_order_no, 'style' => 'margin: 0px;')) }}
-									{{ Form::hidden('po_no', $po->purchase_order_no) }}
-									{{ Form::hidden('invoice_no') }}
-									{{ Form::hidden('invoice_amount') }}
-									{{ Form::hidden('filter_po_no', $filter_po_no) }}
-									{{ Form::hidden('filter_receiver_no', $filter_receiver_no) }}
-									{{-- Form::hidden('filter_supplier', $filter_supplier) --}}
-									{{ Form::hidden('filter_entry_date', $filter_entry_date) }}
-									{{ Form::hidden('filter_stock_piler', $filter_stock_piler) }}
-									{{ Form::hidden('filter_status', $filter_status) }}
-									{{ Form::hidden('filter_shipment_reference_no', $filter_shipment_reference_no) }}
-							  		{{ Form::hidden('sort', $sort) }}
-									{{ Form::hidden('order', $order) }}
-									{{ Form::hidden('page', $page) }}
-									{{ Form::hidden('module', 'purchase_order') }}
-									{{ Form::hidden('receiver_no', $po->receiver_no) }}
-						  		{{ Form::close() }}
-
-						  		{{ Form::open(array('url'=>'purchase_order/reopen', 'id' => 'reopenForm', 'style' => 'margin: 0px;')) }}
-									{{ Form::hidden('purchase_order_no', '', array('id' => 'reopenPoNo')) }}
-						  		{{ Form::close() }}
-
-					  		@endif
-						</td>
-						-->
+							@elseif($po->data_display != 'Done')
+							<a style="width: 120px;"  disabled class="btn btn-default"> Partial Receive</a>
+							@endif
+						</td> -->
+						 
 					</tr>
 					@endforeach
 				@endif
@@ -241,7 +218,7 @@
   		</div>
   		{{ Form::hidden('filter_po_no', $filter_po_no) }}
 		{{ Form::hidden('filter_receiver_no', $filter_receiver_no) }}
-		
+		{{-- Form::hidden('filter_supplier', $filter_supplier) --}}
 		{{ Form::hidden('filter_entry_date', $filter_entry_date) }}
 		{{ Form::hidden('filter_stock_piler', $filter_stock_piler) }}
 		{{ Form::hidden('filter_status', $filter_status) }}
@@ -286,7 +263,7 @@
     </div><!-- /.modal-content -->
 </div>
 
-<!-- end of modal for close po -->
+<!-- endi of modal for close po-->
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -320,9 +297,9 @@ $(document).ready(function() {
     	var count = $("[name='selected[]']:checked").length;
 
 		if (count>0) {
-			var answer = confirm('{{ $text_confirm_assign }}')
+			/*var answer = confirm('{{ $text_confirm_assign }}')*/
 
-			if (answer) {
+			if (count) {
 				var division = new Array();
 				$.each($("input[name='selected[]']:checked"), function() {
 					division.push($(this).val());

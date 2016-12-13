@@ -17,14 +17,14 @@
 								{{ Form::text('filter_sku', $filter_sku, array('id'=>'filter_sku', 'placeholder'=>'')) }}
 							</span>
 						</div>
+					
+					</div>
 						<div>
-							<span class="search-po-left-pane">{{ $label_filter_shipment_reference_no }}</span>
-							<span class="search-po-right-pane">
+							<span class="search-po-left-pane">{{ $label_filter_shipment_reference_no }} :</span>
+							<span class="search-po-left-pane">
 								{{ Form::text('filter_shipment_reference_no', $filter_shipment_reference_no, array('id'=>'filter_shipment_reference_no', 'placeholder'=>'')) }}
 							</span>
 						</div>
-					</div>
-
 					<div class="span11 control-group collapse-border-top" style="margin-top: 6px;">
 						<a class="btn btn-success  btn-darkblue" id="submitForm">{{ $button_search }}</a>
 						<a class="btn" id="clearForm">{{ $button_clear }}</a>
@@ -41,25 +41,21 @@
 
 <div class="clear">
 	<div class="div-paginate">
-		@if(CommonHelper::arrayHasValue($unlisted) )
+	 
 		    <h6 class="paginate">
-				<span>{{ $unlisted->appends($arrFilters)->links() }}&nbsp;</span>
+				<span> &nbsp;</span>
 			</h6>
-		@else
+	 
 			&nbsp;
-		@endif
+		 
 	</div>
-	<div class="div-buttons">
-		@if ( CommonHelper::valueInArray('CanExportUnlisted', $permissions) )
-		<a class="btn btn-info  btn-darkblue" id="exportList">{{ $button_export }}</a>
-		@endif
-	</div>
+	 
 </div>
 
 <div class="widget widget-table action-table">
 	<div class="widget-header"> <i class="icon-th-list"></i>
-    	<h3>{{ $heading_title }}</h3>
-     	<span class="pagination-totalItems">{{ $text_total }} {{ $unlisted_count }}</span>
+    	<h3> Unlisted list</h3>
+     	<span class="pagination-totalItems"> </span>
     </div>
     <!-- /widget-header -->
 
@@ -68,94 +64,51 @@
 			<table class="table table-striped table-bordered" style="table-layout: fixed;">
 				<thead>
 					<tr>
-						<th style="width: 30px; max-width: 30px;">{{ $col_id }}</th>
-						<th style="width: 100px; max-width: 100px;"><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif"> {{ $col_upc }} </a></th>
-						<th style="width: 80px; max-width: 80px;"><a href="{{ $sort_reference }}" class="@if( $sort=='reference_no' ) {{ $order }} @endif">{{ $col_reference }}</a></th>
+							<th style="width: 30px; max-width: 30px;">{{ $col_id }}</th>
+						<th style="width: 100px; max-width: 100px;"><a href=" "> {{ $col_upc }} </a></th>
+						<th style="width: 80px; max-width: 80px;"><a href=" ">{{ $col_reference }}</a></th>
 						<th style="width: 100px; max-width: 100px;">{{ $col_shipment_reference }}</th>
-						<th style="width: 100px; max-width: 100px;">{{ $col_delivery_date }}</th>
+				 
 						<th style="width: 80px; max-width: 100px;">{{ $col_quantity_received }}</th>
 						<th style="width: 110px; max-width: 110px;">{{ $col_description }}</th>
 						<th style="width: 100px; max-width: 100px;">{{ $col_style_no }}</th>
-						<th style="width: 90px; max-width: 90px;">{{ $col_brand }}</th>
+				 
 						<th style="width: 90px; max-width: 90px;">{{ $col_division }}</th>
 						<th style="width: 100px; max-width: 100px;">{{ $col_scanned_by }}</th>
 					</tr>
 				</thead>
 				<tbody>
+			 
 				@if( !CommonHelper::arrayHasValue($unlisted) )
 					<tr class="font-size-13">
 						<td colspan="11" class="align-center">{{ $text_empty_results }}</td>
 					</tr>
 				@else
-					@foreach($unlisted as $unlist)
+				@foreach($unlisted as $unlist)
 					<tr class="font-size-13">
-						<td>{{ $counter++ }}</td>
-						<td style="word-wrap:break-word">{{ $unlist['sku'] }}</td>
-						<td>{{ $unlist['reference_no'] }}</td>
-						<td style="word-wrap:break-word">{{ $unlist['shipment_reference_no'] }}</td>
-						<td>{{ date('m/d/Y',strtotime($unlist['delivery_date'])) }}</td>
-						<td>{{ $unlist['quantity_received'] }}</td>
-						<td style="word-wrap:break-word">{{ $unlist['description'] }}</td>
-						<td style="word-wrap:break-word">{{ $unlist['style_no'] }}</td>
-						<td>{{ $unlist['brand'] }}</td>
-						<td>{{ $unlist['division'] }}</td>
-						<td style="word-wrap:break-word">{{ $unlist['firstname'] .' '. $unlist['lastname']}}</td>
+						<td> {{$counter++}}</td>
+						<td style="word-wrap:break-word"> {{$unlist->upc}}</td>
+						<td> {{$unlist->purchase_order_no}}</td>
+						<td style="word-wrap:break-word">{{$unlist->shipment_reference_no}} </td>
+					 
+						<td> {{$unlist->quantity_delivered}}</td>
+						<td style="word-wrap:break-word">{{$unlist->description}} </td>
+						<td style="word-wrap:break-word">{{$unlist->short_description}} </td>
+			 
+						<td>{{$unlist->division}} </td>
+						<td style="word-wrap:break-word"> {{$unlist->fullname}} </td>
 					</tr>
 					@endforeach
-				@endif
+			 	@endif
 				</tbody>
 			</table>
 		</div>
 	</div>
 
-	@if(CommonHelper::arrayHasValue($unlisted) )
+ 
     <h6 class="paginate">
-		<span>{{ $unlisted->appends($arrFilters)->links() }}</span>
+		<span> </span>
 	</h6>
-	@endif
+ 
 </div>
-
-<script type="text/javascript">
-$(document).ready(function() {
-    // Submit Form
-    $('#submitForm').click(function() {
-    	$('#form-unlisted').submit();
-    });
-
-    $('#form-unlisted input').keydown(function(e) {
-		if (e.keyCode == 13) {
-			$('#form-unlisted').submit();
-		}
-	});
-
-    // Clear Form
-    $('#clearForm').click(function() {
-    	$('#filter_reference_no, #filter_sku, #filter_shipment_reference_no').val('');
-    	$('#form-unlisted').submit();
-    });
-
-	// Export List
-    $('#exportList').click(function() {
-    	@if( !CommonHelper::arrayHasValue($unlisted) )
-    		alert('Empty Data. There is nothing to export');
-    	@elseif($ship_ref_count>1)
-    		alert('Multiple Shipment Reference Number is invalid. Search for specific Shipment Reference Number.');
-    	@else{
-	    	url = '';
-
-			var filter_reference_no = $('#filter_reference_no').val();
-			url += '?filter_reference_no=' + encodeURIComponent(filter_reference_no);
-			var filter_sku = $('#filter_sku').val();
-			url += '&filter_sku=' + encodeURIComponent(filter_sku);
-			var filter_shipment_reference_no = $('#filter_shipment_reference_no').val();
-			url += '&filter_shipment_reference_no=' + encodeURIComponent(filter_shipment_reference_no);
-
-			url += '&sort=' + encodeURIComponent('{{ $sort }}');
-			url += '&order=' + encodeURIComponent('{{ $order }}');
-
-	      	location = "{{ $url_export }}" + url;
-	    }
-	    @endif
-    });
-});
-</script>
+ 

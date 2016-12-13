@@ -436,12 +436,13 @@ class pdoConnection
     */
     private static function execInBackground($cmd,$source)
     {
-        $cmd = 'nohup php -q ' . __DIR__.'/../../jda/' . $cmd;
+        $cmd = 'php -q' . __DIR__.'/../../jda/' . $cmd;
     	$pidfile = __DIR__.'/../../jda/logs/pidfile.log';
-
+    	 
     	$filename=$source . "_" . date('m_d_y');
     	$outputfile = __DIR__.'/../../jda/logs/'.$filename.'.log';
-        exec(sprintf("%s >> %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile));
+        $s =sprintf("%s >> %s 2>&1 & echo $! >> %s", $cmd, $outputfile, $pidfile);
+        echo $cmd;
         // exec($cmd . " </dev/null 2> /dev/null & echo $!");
         // exec($cmd . " > /dev/null &");
     }

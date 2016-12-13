@@ -1,0 +1,18 @@
+sql/mysql: mysql:host=localhost;dbname=db
+
+ Getting reference # from db 
+
+ SELECT DISTINCT reference FROM wms_transactions_to_jda trans
+					INNER JOIN wms_picklist_details pick_d ON pick_d.move_doc_number = trans.reference
+					INNER JOIN wms_box_details bd ON bd.picklist_detail_id = pick_d.id
+					WHERE module = 'Picklist' AND jda_action = 'Closing' AND reference = 58 AND trans.sync_status = 0 
+Closing pdo connection... 
+sql/mysql: mysql:host=localhost;dbname=db
+
+ Getting reference # from db 
+
+ SELECT DISTINCT reference FROM wms_transactions_to_jda trans
+					INNER JOIN wms_picklist_details pick_d ON pick_d.move_doc_number = trans.reference
+					INNER JOIN wms_box_details bd ON bd.picklist_detail_id = pick_d.id
+					WHERE module = 'Picklist' AND jda_action = 'Closing' AND reference = 99 AND trans.sync_status = 0 
+Closing pdo connection... 

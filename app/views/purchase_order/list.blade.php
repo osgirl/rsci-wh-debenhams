@@ -1,3 +1,5 @@
+
+
 @if( CommonHelper::arrayHasValue($error) )
     <div class="alert alert-danger">
     	<button class="close" data-dismiss="alert" type="button">&times;</button>
@@ -123,7 +125,7 @@
 		<table>
 			<tr>
 				<th>
-					<div class="div-buttons">
+					<div class="div-buttons ">
 						<!--@if ( CommonHelper::valueInArray('CanAssignPurchaseOrders', $permissions) )
 						
 							<a role="button" class="btn btn-info btn-darkblue assignPO" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a>
@@ -131,26 +133,23 @@
 						-->
 						@if ( CommonHelper::valueInArray('CanExportPurchaseOrders', $permissions) )
 					<!--<a href= {{ $url_export_backorder }} class="btn btn-info btn-darkblue">{{ $button_generate_backorder }}</a> -->
-						<a class="btn btn-info btn-darkblue" href={{URL::to('purchase_order/sync_to_mobile')}}>Sync To Mobile </a>
+					
+						<a class="btn btn-info btn-darkblue" Title={{$col_report}} href={{URL::to('purchase_order/unlisted')}}>Report</a>
 						@endif 
 					</div>
 				</th>
 				<th>
-					<div class="div-buttons btn-group ">
-				        <button type="button" class="btn btn-info btn-darkblue " data-toggle="dropdown">Report <span class="caret"></span>
-				        </button>
-				        <ul class="dropdown-menu">
-				          <li><a href={{URL::to('purchase_order/discrepansy')}}>Overage/Shortage Report</a></li>
-					          <li><a href={{URL::to('purchase_order/unlisted')}}>Unlisted Report</a></li>
-				        </ul>
-			      	</div>
-			     </th>
+				<!--   <a class="btn btn-info btn-darkblue" href={{URL::to('purchase_order/pulljda')}}>{{ $button_jda }}</a> -->
+			     </th> 
 			     <th>
 					<div class="div-buttons">
-						@if ( CommonHelper::valueInArray('CanSyncPurchaseOrders', $permissions) )
-						<a class="btn btn-info btn-darkblue" href={{URL::to('purchase_order/pulljda')}}>{{ $button_jda }}</a>
+						@if ( CommonHelper::valueInArray('CanSyncPurchaseOrders', $permissions)  )
+						<a class="btn btn-info btn-darkblue" title="Pull item from JDA" href="{{url::to('purchase_order/pulljda')}}">{{ $button_jda }}</a>
 						@endif
 					</div>
+					<div class="div-buttons">
+					<!-- <a class="btn btn-info btn-darkblue" href={{URL::to('purchase_order/sync_to_mobile')}}>Sync To Mobile </a>
+					 --></div>
 				</th>
 			</tr>
 		</table>
@@ -164,28 +163,23 @@
     </div>
     <!-- /widget-header -->
     <div class="widget-content">
-    	<div class="table-responsive">
-			<table class="table table-striped table-bordered">
+    	<div class="table-responsive align-center">
+			<table class="table table-striped table-bordered " >
 				<thead>
-					<tr>
-					<!--
-						@if ( CommonHelper::valueInArray('CanAssignPurchaseOrders', $permissions) )
-						<th style="width: 20px;" class="align-center"><input type="checkbox" id="main-selected" /></th>
-						@endif
-					-->
+					<tr style="text-align: center;" >
+				 
 						<th>{{ $col_id }}</th>
 						<th><a href="{{ $sort_po_no }}" class="@if( $sort=='po_no' ) {{ $order }} @endif">{{ $col_po_no }}</a></th>
+						<th>Invoice no.</th>
 						<th>{{ $col_shipment_ref }}</th>
 						<th>{{ $col_total_qty }}</th>
-				<!--	<th>{{ $col_carton_id }}</th>     -->
-				<!--	<th><a href="{{ $sort_receiver_no }}" class="@if( $sort=='receiver_no' ) {{ $order }} @endif">{{ $col_receiver_no }}</a></th>    
-						<th>{{ $col_receiving_stock_piler }}</th> -->
-						<th>{{ $col_slot }}</th>
+						
 						<th><a href="{{ $sort_entry_date }}" class="@if( $sort=='entry_date' ) {{ $order }} @endif">{{ $col_entry_date }}</a></th>
-						<!--
+						
 						<th>{{ $col_status }}</th>
-						-->
+						 
 						<th class="align-center">{{ $col_action }}</th>
+					
 					</tr>
 				</thead>
 				@if( !CommonHelper::arrayHasValue($purchase_orders) )
@@ -194,42 +188,62 @@
 				</tr>
 				@else
 					@foreach( $purchase_orders as $po )
-					<tr class="font-size-13 tblrow" data-id="{{ $po->purchase_order_no }}">
+					<tr  class="font-size-13 tblrow" data-id="{{ $po->purchase_order_no }}">
 						@if ( CommonHelper::valueInArray('CanAssignPurchaseOrders', $permissions) )
-						<!--
-						<td class="align-center">
-							@if($po->data_display == 'Open' || $po->data_display == 'Assigned')
-							<input type="checkbox" class="checkbox item-selected" name="selected[]" id="selected-{{ $po->purchase_order_no }}" value="{{ $po->purchase_order_no }}" />
-							@endif
-						</td>
-						-->
+					 
 						@endif
-						<td>{{ $counter++ }}</td>
-						<td><a href="{{ $url_detail . '&receiver_no=' . $po->receiver_no }}">{{ $po->purchase_order_no }}</a></td>
-						<td>{{ $po->shipment_reference_no }}</td>
-						<td>{{ $po->total_qty }}</td>
-				<!--	<td>{{ $po->carton_id }}</td>
-						<td><a href="{{ $url_detail . '&receiver_no=' . $po->receiver_no }}">{{$po->receiver_no}}</a></td>  
-						<td>{{ $po->fullname }}</td>-->
-						<td>{{ $po->slot_code }}</td>
-						<td>{{ date("M d, Y", strtotime($po->created_at)) }}</td>
-						<!--
+						<td>{{ $counter++ }} .)</td>
+						<td><a href="{{ $url_detail . '&receiver_no=' . $po->receiver_no.'&filter_po_no='.$po->purchase_order_no.'&filter_shipment_reference_no='.$po->shipment_reference_no.'&total_qty='. $po->total_qty}}">{{ $po->purchase_order_no }}</a></td>
+						<td>{{$po->invoice_no}}</td>
+						<td >
+						{{ Form::open(array('url'=>'purchase_order/shipment_input', 'class'=>'form-signin', 'id'=>'form-purchase-order', 'role'=>'form', 'method' => 'get')) }}
+
+						{{Form::hidden('purchase_order_no', $po->purchase_order_no)}}
+                        {{ Form::hidden('receiver_no', $po->receiver_no) }}
+                         {{ Form::text('shipment_ref', $po->shipment_reference_no, array('class'=>'form-signin', 'placeholder'=>'', 'id'=>"readonly")) }}
+                        
+                         
+                         {{ Form::close() }}
+						 </td>
+									
+						<td>{{ $po-> total_qty}}</td>
+						<td>{{ date("M d, Y", strtotime($po->entry_date)) }}</td>
+						
 						<td>{{ $po->data_display }}</td>
-						-->
+						
+					 
 						<td class="align-center">
 							@if ( CommonHelper::valueInArray('CanClosePurchaseOrders', $permissions) )
 								@if($po->data_display === 'Posted')
 									<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_posted_po }}</a>
+
+								@elseif($po->po_status == 6)
+									  	<a style="width: 120px;" class="btn btn-success" disabled> Partial Received</a> 
+
 								@elseif ($po->data_display === 'Done')
-									<a style="width: 70px;" class="btn btn-success closePO" data-id="{{ $po->purchase_order_no }}">{{ $button_close_po }}</a>
+									<a style="width: 70px;" class="btn btn-success closePO" data-id="{{ $po->receiver_no }}">{{ $button_close_po }}</a>
+									
+									<a style="width: 120px;" class="btn btn-warning partialReceived" data-id="{{ $po->receiver_no }}">Partial Receive</a>
+								<!-- 	<a class="btn btn-info" href="{{URL::to('purchase_order/partial_received?filter_po_no='.$po->purchase_order_no)}}">Partial Received</a> -->
+
 									<!-- <a style="width: 70px;" id="reopen" data-id="{{ $po->purchase_order_no }}" class="btn btn-primary">Reopen</a> -->
-								@else
-									<a style="width: 70px;" disabled="disabled" class="btn">{{ $button_close_po }}</a>
+							 	@else
+									  	<a style="width: 120px;" class="btn btn-warning" disabled> Open</a> 
+
 								@endif
 
+								{{Form::open(array('url' => 'purchase_order/partialreceivebtn', 'id' => 'partialReceived_' .$po->receiver_no, 'style' => 'margin: 0px;' ))}} 
+								{{Form::hidden('po_no', $po->purchase_order_no)}}
+								{{Form::hidden('receiver_no', $po->receiver_no)}}
+
+
+								{{Form::close()}}
+
+
 								{{ Form::open(array('url'=>'purchase_order/close_po', 'id' => 'closePO_' . $po->
-								purchase_order_no, 'style' => 'margin: 0px;')) }}
+								receiver_no, 'style' => 'margin: 0px;')) }}
 									{{ Form::hidden('po_no', $po->purchase_order_no) }}
+									{{Form::hidden('receiver_no', $po->receiver_no)}}
 									{{ Form::hidden('invoice_no') }}
 									{{ Form::hidden('invoice_amount') }}
 									{{ Form::hidden('filter_po_no', $filter_po_no) }}
@@ -252,8 +266,9 @@
 						  		{{ Form::close() }}
 
 					  		@endif
-
+					  		
 						</td>
+					
 					</tr>
 					@endforeach
 				@endif
@@ -432,6 +447,17 @@ $(document).ready(function() {
     	var answer = confirm('Are you sure you want to close this PO?');
    		if (answer) {
 	    	$('#closePO_' + purchase_no).submit();
+    	} else {
+			return false;
+		}
+
+    });
+    $('.partialReceived').click(function() {
+    	var purchase_no = $(this).data('id');
+
+    	var answer = confirm('Partial Receive confirm?');
+   		if (answer) {
+	    	$('#partialReceived_' + purchase_no).submit();
     	} else {
 			return false;
 		}

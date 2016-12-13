@@ -13,10 +13,11 @@
 @endif
 
 <div class="control-group">
+<h2><span class="label label-important" style="font-size: 15px; font-weight: normal;">Notes: Please use filter first before using the Report button.</span></h2>
 	<div class="controls">
 		<div class="accordion" id="accordion2">
           <div class="accordion-group" style="background-color: #FFFFFF;">
-            {{ Form::open(array('url'=>'purchase_order', 'class'=>'form-signin', 'id'=>'form-purchase-order', 'role'=>'form', 'method' => 'get')) }}
+            {{ Form::open(array('url'=>'purchase_order/discrepansy', 'class'=>'form-signin', 'id'=>'form-purchase-order', 'role'=>'form', 'method' => 'get')) }}
             <div id="collapseOne" class="accordion-body collapse in" style="padding-top: 20px;">
 	                <div class="span4">
 			        	<div>
@@ -25,69 +26,22 @@
 				        		{{ Form::text('filter_po_no', $filter_po_no, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_po_no")) }}
 				        	</span>
 				        </div>
-				<!--
-				        <div>
-				        	<span class="search-po-left-pane">{{ $label_receiver_no }}</span>
-				        	<span class="search-po-right-pane">
-				        		{{ Form::text('filter_receiver_no', $filter_receiver_no, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_receiver_no")) }}
-				        	</span>
-				        </div>
-				-->
-				        <div>
-				        	<span class="search-po-left-pane">{{ $label_shipment_reference_no }}</span>
-				        	<span class="search-po-right-pane">
-				        		{{ Form::text('filter_shipment_reference_no', $filter_shipment_reference_no, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_shipment_reference_no")) }}
-				        	</span>
-				        </div>
+	 
 			      	</div>
 			      	<div class="span4">
-			      		<div>
+			      		<!-- <div>
 				        	<span class="search-po-left-pane">{{ $label_entry_date }}</span>
 				        	<div class="search-po-right-pane input-append date">
 								{{ Form::text('filter_entry_date', $filter_entry_date, array('class'=>'span2', 'id'=>"filter_entry_date", 'readonly'=>'readonly')) }}
 								<span class="add-on"><i class="icon-th"></i></span>
 				        	</div>
-				        </div>
-				<!--
-				        <div>
-				        	<span class="search-po-left-pane">{{ $label_back_order }}</span>
-				        	<span class="search-po-right-pane">
-				        		{{ Form::text('filter_back_order', $filter_back_order, array('class'=>'back-order', 'placeholder'=>'', 'id'=>"filter_back_order")) }}
-				        	</span>
-				        </div>
-				-->`
+				        </div> -->
+	 
+
 			      	</div>
 			    
 			      	<div class="span3">
-			      		<div>
-				        	<span class="search-po-left-pane">{{ $label_receiver }}</span>
-				        	<span class="search-po-right-pane">
-				        		{{ Form::select('filter_stock_piler', array('' => $text_select) + $stock_piler_list, $filter_stock_piler, array('class'=>'select-width', 'id'=>"filter_stock_piler")) }}
-				        	</span>
-				        </div>
-				<!--
-			      		<div>
-				        	<span class="search-po-left-pane">{{ $label_status }}</span>
-				        	<span class="search-po-right-pane">
-				        		{{ Form::select('filter_status', array('default' => $text_select) + $po_status_type, $filter_status, array('class'=>'select-width', 'id'=>"filter_status")) }}
-				        	</span>
-				        </div>
-				        <div>
-				        	<span class="search-po-left-pane">{{ $label_brand }}</span>
-				        	<span class="search-po-right-pane">
-				        		{{ Form::select('filter_brand', array('' => $text_select) + $brands_list, $filter_brand, array('class'=>'select-width', 'id'=>"filter_brand")) }}
-				        	</span>
-				        </div>
-				-->
-				        <div>
-				        	<span class="search-po-left-pane">{{ $label_division }}</span>
-				        	<span class="search-po-right-pane">
-				        		{{-- Form::select('filter_division', array('' => $text_select) + $divisions_list, $filter_division, array('class'=>'select-width', 'id'=>"filter_division")) --}}
-				        		<select class="select-width" id="filter_division" name="filter_division">
-				        			<option value="" selected="selected">Please Select</option>
-				        		</select>
-				        	</span>
-				        </div>
+			    
 			      	</div>
 			      	<div class="span11 control-group collapse-border-top">
 			      		<a class="btn btn-success btn-darkblue" id="submitForm">{{ $button_search }}</a>
@@ -106,52 +60,36 @@
 
 <div class="clear">
 	<div class="div-paginate">
-		@if(CommonHelper::arrayHasValue($purchase_orders) )
+		@if(CommonHelper::arrayHasValue($po_discrepancy) )
 		    <h6 class="paginate">
-				<span>{{ $purchase_orders->appends($arrFilters)->links() }}&nbsp;</span>
+				<span>{{ $po_discrepancy->appends($arrFilters)->links() }}&nbsp;</span>
 			</h6>
 		@else
 			&nbsp;
 		@endif
 	</div>
-	<!--
-	<div class="div-buttons">
-		<table>
-			<tr>
+ 
 				<th>
-					<div class="div-buttons">
-						@if ( CommonHelper::valueInArray('CanAssignPurchaseOrders', $permissions) )
-							<!-- <a href="#myModal" role="button" class="btn btn-info btn-darkblue assignPO" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a> -->
-	<!--						<a role="button" class="btn btn-info btn-darkblue assignPO" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a>
-						@endif
-						@if ( CommonHelper::valueInArray('CanExportPurchaseOrders', $permissions) )
-					<!--<a href= {{ $url_export_backorder }} class="btn btn-info btn-darkblue">{{ $button_generate_backorder }}</a> -->
-	<!--					<a href= {{ $url_export }} class="btn btn-info btn-darkblue">Sync To Mobile</a> <!--  id="exportList" -->
-	<!--					@endif
-						@if ( CommonHelper::valueInArray('CanSyncPurchaseOrders', $permissions) )
-						<a class="btn btn-info btn-darkblue" href={{URL::to('purchase_order/pulljda')}}>{{ $button_jda }}</a>
-						@endif
-					</div>
-				</th>
-				<th>
-					<div class="btn-group div-buttons">
+					
+			      	</div>
+			      	<div class="btn-group div-buttons">
 				        <button type="button" class="btn btn-info btn-darkblue dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Report <span class="caret"></span>
 				        </button>
 				        <ul class="dropdown-menu">
-				          <li><a href="picking/list">Overage/Shortage Report</a></li>
-					          <li><a href="#">Unlisted Report</a></li>
+				          <li><a id="exportlistpdf">Export pdf</a></li>
+					          <li><a id="exportList">Export excel</a></li>
 				        </ul>
 			      	</div>
 			     </th>
 			</tr>
 		</table>
 	</div>
-	-->
+	
 </div>
 
 <div class="widget widget-table action-table">
     <div class="widget-header"> <i class="icon-th-list"></i>
-      <h3>{{ $heading_title }}</h3>
+      <h3>{{ $heading_title_discrp }}</h3>
       <span class="pagination-totalItems">{{ $text_total }} {{ $purchase_orders_count }}</span>
     </div>
     <!-- /widget-header -->
@@ -159,85 +97,44 @@
     	<div class="table-responsive">
 			<table class="table table-striped table-bordered">
 				<thead>
+				<tr> 
+					<th rowspan="2">{{ $col_id }}</th>
+					<th rowspan="2">Dept</th>
+					<th rowspan="2">Style No. </th>
+					<th rowspan="2">SKU</th>
+						<th rowspan="2">UPC</th>
+					<th  style="text-align: center" colspan="2">Quantity</th>
+					<th style="text-align: center" rowspan="2">Discrepancy <br>(Short/Over)</th>
+					<th rowspan="2">Invoice No</th>
+					<th rowspan="2">Remarks</th>
+				</tr>
 					<tr>
-					<!--	@if ( CommonHelper::valueInArray('CanAssignPurchaseOrders', $permissions) )
-						<th style="width: 20px;" class="align-center"><input type="checkbox" id="main-selected" /></th>
-						@endif   -->
-						<th>{{ $col_id }}</th>
-						<th><a href="{{ $sort_po_no }}" class="@if( $sort=='po_no' ) {{ $order }} @endif">{{ $col_po_no }}</a></th>
-						<th>{{ $col_shipment_ref }}</th>
-						<th>Division</th>   
-						<th>{{ $col_total_qty }}</th>
-						<th>Received QTY.</th>
-				<!--	<th>{{ $col_carton_id }}</th>     -->
-				<!--	<th><a href="{{ $sort_receiver_no }}" class="@if( $sort=='receiver_no' ) {{ $order }} @endif">{{ $col_receiver_no }}</a></th>     -->
-						<th>{{ $col_receiving_stock_piler }}</th>
-						<th><a href="{{ $sort_entry_date }}" class="@if( $sort=='entry_date' ) {{ $order }} @endif">{{ $col_entry_date }}</a></th>
-				<!--	<th>{{ $col_status }}</th>  -->
-						<th class="align-center">{{ $col_action }}</th> 
+					 
+						<th>Advised Per RA </th>
+						<th> Actual Receipt</th>
+						 
+			 
+						 
 					</tr>
 				</thead>
-				@if( !CommonHelper::arrayHasValue($purchase_orders) )
+				@if( !CommonHelper::arrayHasValue($po_discrepancy) )
 				<tr class="font-size-13">
 					<td colspan="13" style="text-align: center;">{{ $text_empty_results }}</td>
 				</tr>
 				@else
-					@foreach( $purchase_orders as $po )
-					<tr class="font-size-13 tblrow" data-id="{{ $po->purchase_order_no }}">
-					<!--	
-						@if ( CommonHelper::valueInArray('CanAssignPurchaseOrders', $permissions) )
-						<td class="align-center">
-							@if($po->data_display == 'Open' || $po->data_display == 'Assigned')
-							<input type="checkbox" class="checkbox item-selected" name="selected[]" id="selected-{{ $po->purchase_order_no }}" value="{{ $po->purchase_order_no }}" />
-							@endif
-						</td>
-						@endif
-						-->
-						<td>{{ $counter++ }}</td>
-						<td><a href="{{ $url_detail . '&receiver_no=' . $po->receiver_no }}">{{ $po->purchase_order_no }}</a></td>
-						<td>{{ $po->shipment_reference_no }}</td>
-						<td>{{ $po->division }}</td>
-						<td>{{ $po->quantity_ordered }}</td>
-						<td>{{ $po->quantity_delivered }}</td>
-			
-						<td>{{ $po->fullname }}</td>
-						<td>{{ date("M d, Y", strtotime($po->created_at)) }}</td>
-				<!--		<td>{{ $po->data_display }}</td>-->
-						<td class="align-center">
-							@if ( CommonHelper::valueInArray('CanClosePurchaseOrders', $permissions) )
-								@if($po->data_display === 'Posted')
-									<a style="width: 70px;" disabled="disabled" class="btn btn-danger">{{ $text_posted_po }}</a>
-								@elseif ($po->data_display === 'Done')
-									<a style="width: 70px;" class="btn btn-success closePO" data-id="{{ $po->purchase_order_no }}">{{ $button_close_po }}</a>
-									<!-- <a style="width: 70px;" id="reopen" data-id="{{ $po->purchase_order_no }}" class="btn btn-primary">Reopen</a> -->
-								@else
-									<a style="width: 70px;" disabled="disabled" class="btn">{{ $button_close_po }}</a>
-								@endif
-								
-								{{ Form::open(array('url'=>'purchase_order/close_po', 'id' => 'closePO_' . $po->purchase_order_no, 'style' => 'margin: 0px;')) }}
-									{{ Form::hidden('po_no', $po->purchase_order_no) }}
-									{{ Form::hidden('invoice_no') }}
-									{{ Form::hidden('invoice_amount') }}
-									{{ Form::hidden('filter_po_no', $filter_po_no) }}
-									{{ Form::hidden('filter_receiver_no', $filter_receiver_no) }}
-									{{-- Form::hidden('filter_supplier', $filter_supplier) --}}
-									{{ Form::hidden('filter_entry_date', $filter_entry_date) }}
-									{{ Form::hidden('filter_stock_piler', $filter_stock_piler) }}
-									{{ Form::hidden('filter_status', $filter_status) }}
-									{{ Form::hidden('filter_shipment_reference_no', $filter_shipment_reference_no) }}
-							  		{{ Form::hidden('sort', $sort) }}
-									{{ Form::hidden('order', $order) }}
-									{{ Form::hidden('page', $page) }}
-									{{ Form::hidden('module', 'purchase_order') }}
-									{{ Form::hidden('receiver_no', $po->receiver_no) }}
-						  		{{ Form::close() }}
-
-						  		{{ Form::open(array('url'=>'purchase_order/reopen', 'id' => 'reopenForm', 'style' => 'margin: 0px;')) }}
-									{{ Form::hidden('purchase_order_no', '', array('id' => 'reopenPoNo')) }}
-						  		{{ Form::close() }}
-
-					  		@endif
-						</td>
+					@foreach( $po_discrepancy as $po )
+					<tr  style="text-align: center" class="font-size-13 tblrow" data-id="{{ $po->purchase_order_no }}">
+				 
+						<td style="text-align: center">{{ $counter++ }}</td>
+						<td style="text-align: center">{{$po->dept_number}} </td>
+						<td style="text-align: center">{{$po->short_description}}</td>
+						<td style="text-align: center">{{$po->sku}}</td>
+						<td style="text-align: center">{{$po->upc}}</td>
+						<td style="text-align: center"> {{$po->quantity_ordered}}</td> 
+						<td style="text-align: center">{{$po->quantity_delivered}}</td> 
+						<td style="text-align: center">{{ $po->quantity_delivered- $po->quantity_ordered }}</td>
+						<td style="text-align: center"></td> 
+						<td style="text-align: center" ></td> 
 					</tr>
 					@endforeach
 				@endif
@@ -245,57 +142,19 @@
 		</div>
 	</div>
 
-	@if( CommonHelper::arrayHasValue($purchase_orders) )
+	@if( CommonHelper::arrayHasValue($po_discrepancy) )
     <h6 class="paginate">
-		<span>{{ $purchase_orders->appends($arrFilters)->links() }}</span>
+		<span>{{ $po_discrepancy->appends($arrFilters)->links() }}</span>
 	</h6>
 	@endif
 
 	<!-- Button to trigger modal -->
 	<!-- Modal -->
-	@if( CommonHelper::arrayHasValue($purchase_orders) )
-	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		{{ Form::open(array('url'=>'purchase_order/assign_to_piler', 'id'=>"form-assign", 'class'=>'form-horizontal', 'style' => 'margin: 0px;', 'role'=>'form')) }}
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3 id="myModalLabel">{{ $heading_title_assign_po }}</h3>
-  		</div>
-  		<div class="modal-body add-piler-wrapper">
-			<div class="control-group">
-				<label class="control-label" for="po_no">{{ $entry_purchase_no }}</label>
-				<div class="controls">
-					{{ Form::text('po_no', '', array('id' => 'po_no', 'readonly' => 'readonly')) }}
-				</div> <!-- /controls -->
-			</div> <!-- /control-group -->
-
-			<div class="control-group piler-block">
-				<label class="control-label" for="stock_piler">{{ $entry_stock_piler }}</label>
-				<div class="controls">
-					{{ Form::select('stock_piler[]', $stock_piler_list, $po->assigned_to_user_id) }}
-					<a class="add-piler-btn"><i class="icon-plus-sign" style="font-size: 1.5em;"></i></a>
-				</div> <!-- /controls -->
-			</div> <!-- /control-group -->
-  		</div>
-  		<div class="modal-footer">
-  			<button class="btn btn-primary" id="btn-assign">{{ $button_assign }}</button>
-			<button class="btn" data-dismiss="modal" aria-hidden="true">{{ $button_cancel }}</button>
-  		</div>
-  		{{ Form::hidden('filter_po_no', $filter_po_no) }}
-		{{ Form::hidden('filter_receiver_no', $filter_receiver_no) }}
-		{{-- Form::hidden('filter_supplier', $filter_supplier) --}}
-		{{ Form::hidden('filter_entry_date', $filter_entry_date) }}
-		{{ Form::hidden('filter_stock_piler', $filter_stock_piler) }}
-		{{ Form::hidden('filter_status', $filter_status) }}
-  		{{ Form::hidden('sort', $sort) }}
-		{{ Form::hidden('order', $order) }}
-		{{ Form::hidden('page', $page) }}
-		{{ Form::hidden('module', 'purchase_order') }}
-
-  		{{ Form::close() }}
-	</div>
-	@endif
+ 
+ 
+ 
 	<!-- /widget-content -->
-</div>
+ 
 
 <!--modal for close po-->
 <div id="closePoModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="closePoModalLabel" aria-hidden="true">
@@ -453,8 +312,8 @@ $(document).ready(function() {
 
     // Clear Form
     $('#clearForm').click(function() {
-    	$('#filter_po_no, #filter_receiver_no, #filter_supplier, #filter_shipment_reference_no').val('');
-		$('#filter_entry_date, #filter_back_order').val('');
+    	$('#filter_po_no, #filter_entry_date, #filter_shipment_reference_no').val('');
+		$('#filter_back_order').val('');
 
 		$('select').val('');
 		$('#form-purchase-order').submit();
@@ -467,25 +326,25 @@ $(document).ready(function() {
 		var filter_po_no = $('#filter_po_no').val();
 		url += '?filter_po_no=' + encodeURIComponent(filter_po_no);
 
-		var filter_receiver_no = $('#filter_receiver_no').val();
-		url += '&filter_receiver_no=' + encodeURIComponent(filter_receiver_no);
-
-		// var filter_supplier = $('#filter_supplier').val();
-		// url += '&filter_supplier=' + encodeURIComponent(filter_supplier);
-
-		var filter_entry_date = $('#filter_entry_date').val();
-		url += '&filter_entry_date=' + encodeURIComponent(filter_entry_date);
-
-		var filter_stock_piler = $('select[name=\'filter_stock_piler\']').val();
-		url += '&filter_stock_piler=' + encodeURIComponent(filter_stock_piler);
-
-		var filter_status = $('select[name=\'filter_status\']').val();
-		url += '&filter_status=' + encodeURIComponent(filter_status);
-
-		url += '&sort=' + encodeURIComponent('{{ $sort }}');
-		url += '&order=' + encodeURIComponent('{{ $order }}');
+ 
 
       	location = "{{ $url_export }}" + url;
+    });
+
+
+
+	// Export List
+    $('#exportlistpdf').click(function() {
+    	url = '';
+
+		var filter_po_no = $('#filter_po_no').val();
+		url += '?filter_po_no=' + encodeURIComponent(filter_po_no);
+ 
+
+	 
+	 
+
+      	location = "{{ $url_exportpdf }}" + url;
     });
 
     // Select
@@ -538,30 +397,7 @@ $(document).ready(function() {
     	} else {
 			return false;
 		}
-    	/*url = '';
-
-		var filter_po_no = $('#filter_po_no').val();
-		url += '?filter_po_no=' + encodeURIComponent(filter_po_no);
-
-		var filter_receiver_no = $('#filter_receiver_no').val();
-		url += '&filter_receiver_no=' + encodeURIComponent(filter_receiver_no);
-
-		var filter_supplier = $('#filter_supplier').val();
-		url += '&filter_supplier=' + encodeURIComponent(filter_supplier);
-
-		var filter_entry_date = $('#filter_entry_date').val();
-		url += '&filter_entry_date=' + encodeURIComponent(filter_entry_date);
-
-		var filter_stock_piler = $('select[name=\'filter_stock_piler\']').val();
-		url += '&filter_stock_piler=' + encodeURIComponent(filter_stock_piler);
-
-		var filter_status = $('select[name=\'filter_status\']').val();
-		url += '&filter_status=' + encodeURIComponent(filter_status);
-
-		url += '&sort=' + encodeURIComponent('{{ $sort }}');
-		url += '&order=' + encodeURIComponent('{{ $order }}');
-
-      	location = "{{ $url_reopen }}" + url;*/
+    
     });
 	dataVal = { brand : $('#filter_brand').val()};
 	getDivision(dataVal);

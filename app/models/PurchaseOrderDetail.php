@@ -18,15 +18,20 @@ class PurchaseOrderDetail extends Eloquent {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-public static function getPOInfoDetail($receiver_no = NULL,$division = NULL) {
+
+public static function updateDivisionStatus($receiver_no) 
+{
+           $query =  DB::select(DB::raw("UPDATE wms_purchase_order_details set po_status= '5' where receiver_no=$receiver_no"));
+}
+public static function getPOInfoDetail($receiver_no = NULL,$quantity_delivered = NULL,$division_id = NULL) {
 		$query = DB::table('purchase_order_details')
 			->join('users', 'purchase_order_details.assigned_to_user_id', '=', 'users.id', 'left')
-			->join('division','purchase_order_details.division','=','division.id','left')
 			->join('dataset','purchase_order_details.po_status','=','dataset.id','left')
 			->join('purchase_order_lists','purchase_order_details.receiver_no','=','purchase_order_lists.receiver_no','left')
-			->join('vendors', 'purchase_order_lists.vendor_id', '=', 'vendors.id', 'left')
+			//->join('vendors', 'purchase_order_lists.vendor_id', '=', 'vendors.id', 'left')
 			->where('purchase_order_details.receiver_no', '=', $receiver_no)
-			->where('purchase_order_details.division', '=', $division)
+			->where('purchase_order_details.dept_number', '=', $division_id)
+			->where('purchase_order_details.quantity_delivered', '=', $quantity_delivered)
 			->first();
 
 		return $query;
@@ -52,19 +57,33 @@ public static function getPOInfoDetail($receiver_no = NULL,$division = NULL) {
 		foreach ($result as $key => $po) {
 			$assignedToUserId       = explode(',', $po->assigned_to_user_id);
 			$getUsers               = User::getUsersFullname($assignedToUserId);
-			$result[$key]->fullname = implode(',', array_map(function ($entry) { return $entry['name']; }, $getUsers));
+			$result[$key]->fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $getUsers));
 		}
 
 		return $result[0];
 	}
 
-	public static function updateqty($receiver_no,$division,$quantity,$sku, $slot_no)
-	{
-		$query=DB::table('purchase_order_details')
+	public static function updateqty($quantity_delivered,$receiver_no,$division_id, $upc)
+	{ 
+		/*$query=DB::table('purchase_order_details')
 		->where('receiver_no','=',$receiver_no)
-		->where('division','=',$division)
-		->where('sku','=',$sku)
-		->update(['quantity_delivered'=> $quantity]);
+		->where('dept_number','=',$division)
+		->where('upc','=', $upc)
+		->update(['quantity_delivered'=> $quantity_delivered]);*/
+
+		 $query = DB::select(DB::raw("UPDATE `wms_purchase_order_details` SET quantity_delivered='$quantity_delivered' where receiver_no='$receiver_no' and dept_number='$division_id' and upc='$upc'"));
+	}
+
+		public function getPOnumberupdate($receiver_no)
+	{
+
+		$query = DB::table('purchase_order_lists')
+				->select('purchase_order_lists.*','purchase_order_details.*')
+				->join('purchase_order_details','purchase_order_lists.receiver_no','=','purchase_order_details.receiver_no','left')
+				->where('purchase_order_lists.receiver_no','=', $receiver_no)
+				->first();
+
+		return $query;
 	}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,7 +91,7 @@ public static function getPOInfoDetail($receiver_no = NULL,$division = NULL) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -146,16 +165,57 @@ public static function getPOInfoDetail($receiver_no = NULL,$division = NULL) {
 
 	public static function getPODetails($receiver_no = NULL, $data = array()) {
 		$query = DB::table('purchase_order_lists')
-					->select(DB::raw('convert(wms_product_lists.sku, decimal) as sku,convert(wms_product_lists.upc, decimal(20,0)) as upc'),'product_lists.short_description','purchase_order_details.quantity_ordered','purchase_order_details.quantity_delivered','purchase_order_details.expiry_date')
+					->select(DB::raw( 'convert(wms_product_lists.sku, decimal(20,0)) as sku, wms_purchase_order_details.upc as upc'),'product_lists.description', 'purchase_order_details.po_status',
+						'purchase_order_details.quantity_ordered', 'dataset.id as partial',
+						'purchase_order_details.quantity_delivered','purchase_order_details.expiry_date','purchase_order_details.dept_number','dataset.data_display')
 					->join('purchase_order_details', 'purchase_order_lists.receiver_no', '=', 'purchase_order_details.receiver_no', 'RIGHT')
-					->join('product_lists', 'purchase_order_details.sku', '=', 'product_lists.upc')
+					->join('product_lists', 'purchase_order_details.upc', '=', 'product_lists.upc','LEFT')
+					->join('dataset','purchase_order_details.po_status','=','dataset.id','LEFT')
 					->where('purchase_order_details.receiver_no', '=', $receiver_no)
-					->where('purchase_order_details.division', '=', $data['division']);
+					->where('purchase_order_details.dept_number', '=', $data['division_id']);
 
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if ($data['sort']=='sku') $data['sort'] = 'product_lists.sku';
 			if ($data['sort']=='upc') $data['sort'] = 'product_lists.upc';
-			if ($data['sort']=='short_name') $data['sort'] = 'product_lists.short_description';
+			if ($data['sort']=='description') $data['sort'] = 'product_lists.description';
+			if ($data['sort']=='expected_quantity') $data['sort'] = 'purchase_order_details.quantity_ordered';
+			if ($data['sort']=='received_quantity') $data['sort'] = 'purchase_order_details.quantity_delivered';
+
+			$query->orderBy($data['sort'], $data['order']);
+		}
+
+		if( CommonHelper::hasValue($data['limit']) && CommonHelper::hasValue($data['page']))  {
+			$query->skip($data['limit'] * ($data['page'] - 1))
+		          ->take($data['limit']);
+		}
+
+		$result = $query->get();
+
+		return $result;
+	}
+	public static function getUnlistedDebenhams($data = array()){
+
+		$query = DB::SELECT(DB::raw("SELECT wms_purchase_order_details.upc, wms_product_lists.description, wms_product_lists.short_description, wms_purchase_order_details.division, wms_purchase_order_details.assigned_to_user_id, CONCAT(wms_users.firstname, wms_users.lastname ) as fullname, wms_purchase_order_lists.purchase_order_no, shipment_reference_no, quantity_delivered from wms_purchase_order_details left join wms_purchase_order_lists on wms_purchase_order_details.receiver_no = wms_purchase_order_lists.receiver_no left join wms_product_lists on wms_purchase_order_details.upc = wms_product_lists.upc left join  wms_users on wms_purchase_order_details.assigned_to_user_id = wms_users.id where quantity_ordered=0"));
+
+		 
+
+		return $query;
+	}
+	public static function getPODetailsUnlisted($data = array()) {
+		$query = DB::table('purchase_order_lists')
+					->select(DB::raw( 'convert(wms_product_lists.sku, decimal(20,0)) as sku, wms_purchase_order_details.upc as upc'),'product_lists.description',
+						'purchase_order_details.quantity_ordered',
+						'purchase_order_details.quantity_delivered','purchase_order_details.expiry_date')
+					->join('purchase_order_details', 'purchase_order_lists.receiver_no', '=', 'purchase_order_details.receiver_no', 'RIGHT')
+					->join('product_lists', 'purchase_order_details.sku', '=', 'product_lists.sku','LEFT')
+					->where('purchase_order_details.quantity_ordered','=',0);
+
+
+
+		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
+			if ($data['sort']=='sku') $data['sort'] = 'product_lists.sku';
+			if ($data['sort']=='upc') $data['sort'] = 'product_lists.upc';
+			if ($data['sort']=='description') $data['sort'] = 'product_lists.description';
 			if ($data['sort']=='expected_quantity') $data['sort'] = 'purchase_order_details.quantity_ordered';
 			if ($data['sort']=='received_quantity') $data['sort'] = 'purchase_order_details.quantity_delivered';
 
@@ -185,11 +245,12 @@ public static function getPOInfoDetail($receiver_no = NULL,$division = NULL) {
 	}
 
 
-	public static function getCountPODetails($receiver_no) {
+	public static function getCountPODetails($receiver_no, $division_id) {
 		$query = DB::table('purchase_order_lists')
 					->join('purchase_order_details', 'purchase_order_lists.receiver_no', '=', 'purchase_order_details.receiver_no', 'RIGHT')
-					->join('product_lists', 'purchase_order_details.sku', '=', 'product_lists.upc')
-					->where('purchase_order_details.receiver_no', '=', $receiver_no);
+					->join('product_lists', 'purchase_order_details.upc', '=', 'product_lists.upc','LEFT')
+					->where('purchase_order_details.receiver_no', '=', $receiver_no)
+					->WHERE('purchase_order_details.dept_number','=', $division_id);
 
 		return $query->count();
 	}
@@ -256,7 +317,7 @@ public static function getPOInfoDetail($receiver_no = NULL,$division = NULL) {
 
 		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
 			if ($data['sort']=='upc') $data['sort'] = 'product_lists.upc';
-			if ($data['sort']=='short_name') $data['sort'] = 'product_lists.short_description';
+			if ($data['sort']=='description') $data['sort'] = 'product_lists.description';
 			if ($data['sort']=='expected_quantity') $data['sort'] = 'purchase_order_details.quantity_ordered';
 			if ($data['sort']=='received_quantity') $data['sort'] = 'purchase_order_details.quantity_delivered';
 

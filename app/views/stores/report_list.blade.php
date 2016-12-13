@@ -12,7 +12,8 @@
 <body>
 <div class="table-responsive">
 			<div style="text-align: center">
-				<h1>Casual Clothing Retailers Inc.<br/>STORES REPORT</h1>
+				<a class="font-size-02"> Debenhams<br/>Stores<br/></a>
+				Printed By: {{Auth::user()->username}} <br>
 				Print Date: {{ date('m/d/y h:i A')}}
 			</div>
 	<table class="table table-striped table-bordered">

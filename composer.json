@@ -8,7 +8,9 @@
 		"laravel/framework": "4.2.*",
 		"lucadegasperi/oauth2-server-laravel": "3.*",
 		"barryvdh/laravel-dompdf": "0.4.*",
-		"doctrine/dbal": "~2.3"
+		"doctrine/dbal": "~2.3",
+		"picoprime/barcodegen": "@dev",
+		"milon/barcode": "^4.2"
 	},
 	"autoload": {
 		"classmap": [

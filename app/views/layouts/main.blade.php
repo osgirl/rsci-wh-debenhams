@@ -2,14 +2,23 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>CCRi</title>
+<title>eWMS Rustan Specialty Concepts, Inc.</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="shortcut icon" href="{{asset('resources/img/favicon.ico')}}" />
+<link rel="shortcut icon" href="{{asset('resources/img/deb.ico')}}" />
 {{ HTML::style('resources/css/bootstrap.min.css') }}
 {{ HTML::style('resources/css/bootstrap-responsive.min.css') }}
 <!--link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600"
         rel="stylesheet"-->
+  
+
+<!-- (((((((((((((imported bootstrap for subemenu))))))))))))) -->
+{{  HTML::style('resources/bootstrap-submenu-2.0.4/dist/css/bootstrap-submenu.css') }}
+{{  HTML::style('resources/bootstrap-submenu-2.0.4/dist/css/bootstrap-submenu.css.map') }}
+{{  HTML::style('resources/bootstrap-submenu-2.0.4/dist/css/bootstrap-submenu.min.css') }}
+<!-- (((((((((((((imported bootstrap for subemenu))))))))))))) -->
+
+
 {{ HTML::style('resources/css/font-awesome.css') }}
 {{ HTML::style('resources/css/datepicker.css') }}
 {{ HTML::style('resources/css/style.css') }}
@@ -17,6 +26,8 @@
 {{ HTML::style('resources/css/pages/signin.css') }}
 {{ HTML::style('resources/css/pages/reports.css') }}
 {{ HTML::script('resources/js/jquery-1.7.2.min.js') }}
+{{ HTML::script('resources/js/jquery-1.7.2.min.js') }}
+
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -31,7 +42,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </a>
-      <a class="navbar-brand" id="logo" href="{{ URL::to('/') }}"></a>
+      <a class="navbar-brand" id=" " href="{{ URL::to('/') }}"></a>
       <!-- <a class="navbar-brand" id="oldnavy" href="{{ URL::to('/') }}"></a> -->
       <a class="brand" href="{{ URL::to('/') }}">{{ $title_brand }}</a>
       <div class="nav-collapse">
@@ -61,7 +72,7 @@
     <div class="container">
       <ul class="mainnav">
         @if ( CommonHelper::valueInArray('CanAccessPurchaseOrders', $permissions) || CommonHelper::valueInArray('CanAccessInventory', $permissions) )
-        <li class="@if(Route::currentRouteUses('PurchaseOrderController@showIndex') || Route::currentRouteUses('PurchaseOrderController@getPODetails') || Route::currentRouteUses('InventoryController@showIndex') || Route::currentRouteUses('InventoryController@getDetails')) active @endif dropdown">
+        <li class="@if(Route::currentRouteUses('PurchaseOrderController@showIndex') || Route::currentRouteUses('PurchaseOrderController@getPODetails') || Route::currentRouteUses('InventoryController@showIndex') || Route::currentRouteUses('InventoryController@getDetails') ||  Route::currentRouteUses('PurchaseOrderController@showdivision') || Route::currentRouteUses('PurchaseOrderController@assignPilerForm')) active @endif dropdown">
 			<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
 				<i class="icon-shopping-cart"></i>
 				<span>{{ $menu_wh_receiving }}</span>
@@ -80,33 +91,88 @@
     CommonHelper::valueInArray('CanAccessPacking', $permissions) ||
     CommonHelper::valueInArray('CanAccessBoxingLoading', $permissions) ||
     CommonHelper::valueInArray('CanAccessStoreReturn', $permissions))
-		<li class="dropdown">
+		<li class="@if (Route::currentRouteUses('PicklistController@showIndex') || Route::currentRouteUses('PicklistController@getPicklistDetails') || Route::currentRouteUses('PicklistController@assignPilerForm') || Route::currentRouteUses('shippingController@index')|| Route::currentRouteUses('BoxController@loadnumber')|| Route::currentRouteUses('BoxController@getBoxDetails')|| Route::currentRouteUses('shippingController@assignPilerForm')) active @endif dropdown">
 			<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
 				<i class="icon-share"></i>
 				<span>{{ $menu_transfers }}</span>
 				<b class="caret"></b>
 			</a>
-
+  
+            
 			<ul class="dropdown-menu">
 
-          @if ( CommonHelper::valueInArray('CanAccessLetdown', $permissions) )
-            <li><a href="{{ URL::to('letdown') }}">{{ $menu_letdown }}</a></li>
-          @endif
+         
           @if ( CommonHelper::valueInArray('CanAccessPacking', $permissions) )
             <li><a href="{{ URL::to('picking/list') }}">{{ $menu_picking }}</a></li>
 			    @endif
           @if ( CommonHelper::valueInArray('CanAccessBoxingLoading', $permissions) )
-            <li><a href="{{ URL::to('shipping/list') }}">Loading</a></li>
+            <li><a href="{{ URL::to('load/shipping') }}">Loading / Shipping </a></li>
           @endif
-          @if ( CommonHelper::valueInArray('CanAccessStoreReturn', $permissions) )
-            <li><a href="{{ URL::to('store_return/stocktransfer') }}"> Stock Transfer</a></li>
-          @endif
+       
+
+
       </ul>
+     
 		</li>
+
     @endif
-<!--
-    @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) ||
-    CommonHelper::valueInArray('CanAccessStoreReturn', $permissions))
+ 
+     @if ( CommonHelper::valueInArray('CanAccessStoreReturn', $permissions) )
+         
+       <li class="@if (Route::currentRouteUses('StocktransferController@getSOList') || Route::currentRouteUses('StocktransferController@StockTransferpiler') || Route::currentRouteUses('StocktransferController@getMtsRecevingDetail') || Route::currentRouteUses('StocktransferController@PickAndPackStore')|| Route::currentRouteUses('StocktransferController@getMTSpickpackdetails')||     Route::currentRouteUses('shippingController@getStockStransferLoad') || Route::currentRouteUses('StoreReturnController@assignPilerFormpicking') || Route::currentRouteUses('StocktransferController@getStockTransferLoadnumberAssign') || Route::currentRouteUses('StocktransferController@getStockTLnumberPosted') || Route::currentRouteUses('StocktransferController@getstockloadassign')) active @endif dropdown">
+      <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+        <i class="icon-inbox"></i>
+        <span>  {{$menu_store_return}}</span>
+        <b class="caret"></b>
+      </a>
+  
+            
+      <ul class="dropdown-menu">
+ 
+          
+            <li  ><a href="{{ URL('stock_transfer/MTSReceiving')}}">MTS Receiving</a>  
+
+            <li><a href="{{ URL('stocktransfer/PickAndPackStore')}}">Picking / Packing</a></li>
+          
+            <li><a href="{{URL('stocktransfer/stocktranferload')}} ">Loading / Shipping</a></li>
+         
+       
+
+
+      </ul>
+     
+    </li>
+          
+       
+      
+         
+
+          @endif
+
+    @if ( CommonHelper::valueInArray('CanAccessStoreReturn', $permissions))
+    <li class="@if (Route::currentRouteUses('ReverseLogisticController@getreverselist') || Route::currentRouteUses('ReverseLogisticController@getSODetails') || Route::currentRouteUses('ReverseLogisticController@assignPilerFormReverse')) active @endif dropdown">
+      <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+        <i class="icon-refresh"></i>
+        <span> Return to Warehouse</span>
+        <b class="caret"></b>
+      </a>
+
+      <ul class="dropdown-menu">
+          @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) )
+          
+          <li> <a tabindex="-1" href="{{ URL::to('reverse_logistic/reverse_list') }}">Return to Warehouse</a> </li>
+  
+          
+         
+          </li>
+          @endif
+          
+      </ul>
+    </li>
+    @endif
+
+      <!--  @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions)  
+    )
     <li class="dropdown">
       <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
         <i class="icon-inbox"></i>
@@ -119,31 +185,11 @@
             <li><a href="{{ URL::to('store_order') }}">{{ $menu_store_order }}</a></li>
           @endif
           
-       @if ( CommonHelper::valueInArray('CanAccessStoreReturn', $permissions) )
-            <li><a href="{{ URL::to('store_return') }}">{{ $menu_store_return }}</a></li>
-          @endif
+   
         
       </ul>
     </li>
-    @endif   -->
-
-    @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) ||
-    CommonHelper::valueInArray('CanAccessStoreReturn', $permissions))
-    <li class="dropdown">
-      <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-        <i class="icon-refresh"></i>
-        <span>Reverse Logistics</span>
-        <b class="caret"></b>
-      </a>
-
-      <ul class="dropdown-menu">
-          @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) )
-            <li><a href="{{ URL::to('reverse_logistic/list') }}">Reverse Logistics</a></li>
-          @endif
-          
-      </ul>
-    </li>
-    @endif <!--end if drop down for store receiving-->
+    @endif  <!--end if drop down for store receiving-->
 
 		@if ( CommonHelper::valueInArray('CanAccessProductMasterList', $permissions) ||
     CommonHelper::valueInArray('CanAccessSlotMasterList', $permissions) ||
@@ -152,7 +198,7 @@
     CommonHelper::valueInArray('CanAccessUnlisted', $permissions) ||
     CommonHelper::valueInArray('CanAccessExpiryItems', $permissions) ||
     CommonHelper::valueInArray('CanAccessAuditTrail', $permissions))
-        <li class="@if(Route::currentRouteUses('ProductListController@showIndex') || Route::currentRouteUses('SlotListController@showIndex') || Route::currentRouteUses('AuditTrailController@showIndex')) active @endif dropdown">
+        <li class="@if(Route::currentRouteUses('ProductListController@showIndex') || Route::currentRouteUses('StoreController@showIndex') || Route::currentRouteUses('AuditTrailController@showIndex')) active @endif dropdown">
 			<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
 				<i class="icon-list-alt"></i>
 				<span>Masterlist</span>
@@ -164,26 +210,28 @@
           <li><a href="{{ URL::to('products') }}">{{ $menu_product_master_list }}</a></li>
 
         @endif
-        @if ( CommonHelper::valueInArray('CanAccessSlotMasterList', $permissions) )
+       <!--  @if ( CommonHelper::valueInArray('CanAccessSlotMasterList', $permissions) )
 				  <li><a href="{{ URL::to('slots') }}">{{ $menu_slot_master_list }}</a></li>
-        @endif
-        @if ( CommonHelper::valueInArray('CanAccessVendorMasterList', $permissions) )
+        @endif -->
+     <!--    @if ( CommonHelper::valueInArray('CanAccessVendorMasterList', $permissions) )
         <li><a href="{{ URL::to('vendors') }}">{{ $menu_vendor_master_list }}</a></li>
-        @endif
+        @endif -->
         @if ( CommonHelper::valueInArray('CanAccessStoreMasterList', $permissions) )
         <li><a href="{{ URL::to('stores') }}">{{ $menu_store_master_list }}</a></li>
         @endif
         @if ( CommonHelper::valueInArray('CanAccessInventory', $permissions) )
           <!-- <li><a href="{{ URL::to('inventory') }}">{{ $menu_inventory }}</a></li> -->
         @endif
-        @if ( CommonHelper::valueInArray('CanAccessUnlisted', $permissions) )
+   <!--      @if ( CommonHelper::valueInArray('CanAccessUnlisted', $permissions) )
         <li><a href="{{ URL::to('unlisted') }}">{{ $menu_unlisted_list }}</a></li>
-        @endif
+        @endif -->
+        
         <!--
         @if ( CommonHelper::valueInArray('CanAccessExpiryItems', $permissions) )
         <li><a href="{{ URL::to('expiry_items') }}">{{ $menu_expiry_items }}</a></li>
         @endif
         -->
+        
 				@if ( CommonHelper::valueInArray('CanAccessAuditTrail', $permissions) )
 				<li><a href="{{ URL::to('audit_trail') }}">{{ $menu_audit_trail }}</a></li>
 				@endif
@@ -209,7 +257,7 @@
 				<li><a href="{{ URL::to('user_roles') }}">{{ $menu_user_roles }}</a></li>
 				@endif
 				@if ( CommonHelper::valueInArray('CanAccessSettings', $permissions) )
-				<!-- <li><a href="{{ URL::to('settings') }}">{{ $menu_settings }}</a></li> -->
+				<!-- <li><a href="{{ URL::to('settings') }}">{{ $menu_settings }}</a></li>  
 				@endif
             </ul>
 		</li>
@@ -269,5 +317,15 @@
 {{ HTML::script('resources/js/full-calendar/fullcalendar.min.js') }}
 
 {{ HTML::script('resources/js/base.js') }}
+
+<script>
+$(document).ready(function(){
+  $('.dropdown-submenu a.test').on("click", function(e){
+    $(this).next('ul').toggle();
+    e.stopPropagation();
+    e.preventDefault();
+  });
+});
+</script>
 </body>
 </html>

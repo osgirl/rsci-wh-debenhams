@@ -1,19 +1,25 @@
 <?php
 
 return array(
-	"boxing"         => "Box Manifest",
-	// "letdown"     => "Letdown",
-	"picking"        => "Picking",
-	"product"        => "Product",
-	"storeorder"     => "Store Order",
+	/*"boxing"         => "Box Manifest",*/
+	// "letdown"     => "Letdown",/*
 	"purchaseorder"  => "Purchase Order",
-	"shipping"       => "Shipping",
-	"reservezone"    => "Picking Location",
-	"slotmaster"     => "Slots",
-	"users"          => "Users",
-	"settings"       => "Settings",
-	"user_roles"     => "User Roles",
-	"store_return"   => "Store Return",
-	"inter_transfer" => "Inter Transfer",
-	"manual_move"    => "Manual Move"
+	"picking/packing"        => "Picking",
+	"loading/shipping"       => "Shipping",
+	"subloc_receiving"   => "Subloc MTS Receiving",
+	"subloc_picking"   => "Subloc Picking ",
+	"subloc_loading"   => "Subloc Loading ", 
+	
+	/*"reservezone"    => "Picking Location",*/
+	/*"slotmaster"     => "Slots"*/
+
+	"productmaster"        => "Product Masterlist",
+
+	"stores"     => "Store Master list",
+	"users"          => "Users",/*
+	"settings"       => "Settings",*/
+	"user_roles"     => "User Roles"
+	
+/*	"inter_transfer" => "Inter Transfer",
+	"manual_move"    => "Manual Move"*/
 );

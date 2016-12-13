@@ -37,8 +37,9 @@ class cronEWMS {
 		echo "\n Running method " . __METHOD__ . "\n";
 		$csvfile_pattern = "product";
 		$eWMSTable = self::$products;
-		$columns = '(sku, upc, short_description, description, vendor, dept_code, sub_dept, class, sub_class, set_code)';
-
+		$columns = '(@sku, @upc, @short_description, @description, @vendor, @dept_code, @sub_dept, @class, @sub_class, @set_code)
+			SET sku=@sku, upc=@upc, short_description=@short_description, description=@description, vendor=@vendor, dept_code=@dept_code, sub_dept=@sub_dept, class=@class, sub_class=@sub_class, set_code=@set_code ';
+ 
 		$csvLocation = $this->instance->getLatestCsv($csvfile_pattern);
 		$this->instance->import($csvLocation, $eWMSTable, $columns);
 	}
@@ -78,42 +79,20 @@ class cronEWMS {
 		echo "\n Running method " . __METHOD__ . "\n";
 		$csvfile_pattern = "store_master";
 		$eWMSTable = self::$stores;
-		$columns = '(store_code, store_name, address1, address2, address3, city)';
+		$columns = '(@store_code, @store_name, @address1, @address2, @address3, @city ) set store_code=@store_code, store_name=@store_name, address1=@address1, address2=@address2, address3=@address3, city=@city';
 
 		$csvLocation = $this->instance->getLatestCsv($csvfile_pattern);
 		$this->instance->import($csvLocation, $eWMSTable, $columns);
 	}
 
-	public function letdown() {
-		echo "\n Running method " . __METHOD__ . "\n";
-		$csvfile_pattern = "letdown_header";
-		$eWMSTable = self::$letdown;
-		$columns = '(move_doc_number)';
 
-		$csvLocation = $this->instance->getLatestCsv($csvfile_pattern);
-		$this->instance->import($csvLocation, $eWMSTable, $columns);
-	}
-
-	public function letdownDetail() {
-		//unique index: store_or_sku, move_doc_number, from_slot_code, store_code, so_no
-		echo "\n Running method " . __METHOD__ . "\n";
-		$csvfile_pattern = "letdown_detail";
-		$eWMSTable = self::$letdownDetails;
-		$columns = '(@move_doc_number, @sku, @from_slot_code, @quantity_to_letdown, @store_code, @date_created, @sequence_no, @group_name)
-				set move_doc_number=@move_doc_number, sku=@sku, from_slot_code=@from_slot_code,
-					quantity_to_letdown=@quantity_to_letdown, store_code=@store_code,
-					sequence_no=@sequence_no, group_name=@group_name, to_slot_code=@to_slot_code';
-
-		$csvLocation = $this->instance->getLatestCsv($csvfile_pattern);
-		$this->instance->import($csvLocation, $eWMSTable, $columns);
-	}
 
 	public function picklist() {
 		echo "\n Running method " . __METHOD__ . "\n";
 		$csvfile_pattern = "picklist_header";
 		$eWMSTable = self::$picklist;
 		// $type = 'store';
-		$columns = '(move_doc_number)';
+		$columns = '(@move_doc_number) set move_doc_number=@move_doc_number';
 
 		// WHMOVE
 		// move_doc_number
@@ -127,10 +106,9 @@ class cronEWMS {
 		echo "\n Running method " . __METHOD__ . "\n";
 		$csvfile_pattern = "picklist_detail";
 		$eWMSTable = self::$picklistDetails;
-		$columns = '(@move_doc_number, @sku, @from_slot_code, @quantity_to_pick, @store_code, @so_no, @date_created, @sequence_no, @group_name)
-				set move_doc_number=@move_doc_number, sku=@sku, from_slot_code=@from_slot_code,
-					quantity_to_pick=@quantity_to_pick, store_code=@store_code, so_no=@so_no,
-					sequence_no=@sequence_no, group_name=@group_name';
+		$columns = '(  @move_doc_number, @sku, @from_slot_code, @quantity_to_pick, @store_code, @created_at )
+				set  move_doc_number=@move_doc_number, sku=@sku, from_slot_code=@from_slot_code,
+					quantity_to_pick=@quantity_to_pick, store_code=@store_code, created_at=@created_at';
 
 		$csvLocation = $this->instance->getLatestCsv($csvfile_pattern);
 		$this->instance->import($csvLocation, $eWMSTable, $columns);
@@ -153,9 +131,9 @@ class cronEWMS {
 		echo "\n Running method " . __METHOD__ . "\n";
 		$csvfile_pattern = "purchase_order_header";
 		$eWMSTable = self::$purchaseOrder;
-		$columns = '(@vendor_id,@receiver_no,@purchase_order_no,@destination, @carton_id, @total_qty, @back_order, @shipment_reference_no)
-				set vendor_id=@vendor_id, receiver_no=@receiver_no, purchase_order_no=@purchase_order_no, destination=@destination, carton_id=@carton_id,
-					total_qty=@total_qty, back_order=@back_order, shipment_reference_no=@shipment_reference_no';
+		$columns = '( @receiver_no, @purchase_order_no, @total_qty,@shipment_reference_no, @entry_date)
+				set id="", receiver_no=@receiver_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty, shipment_reference_no=@shipment_reference_no, entry_date=@entry_date';
 
 		$csvLocation = $this->instance->getLatestCsv($csvfile_pattern);
 		$this->instance->import($csvLocation, $eWMSTable, $columns);
@@ -166,12 +144,11 @@ class cronEWMS {
 		echo "\n Running method " . __METHOD__ . "\n";
 		$csvfile_pattern = "purchase_order_detail";
 		$eWMSTable = self::$purchaseOrderDetails;
-		$columns = '(@vendor,@receiver_no,@sku, @quantity_ordered,@unit_cost) set sku=@sku, receiver_no=@receiver_no, quantity_ordered=@quantity_ordered, unit_price=@unit_cost';
-
+		$columns = '(@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1"' ;
+		
 		$csvLocation = $this->instance->getLatestCsv($csvfile_pattern);
-
-		$result = $this->instance->import($csvLocation, $eWMSTable, $columns);
-		// $this->instance->_setPoIds(self::$purchaseOrder, $result);
+		 $this->instance->import($csvLocation, $eWMSTable, $columns);
+		// $this->instance->_setPoIds(self::$ purchaseOrder, $ result);
 	}
 
 	//blank
@@ -180,7 +157,7 @@ class cronEWMS {
 		echo "\n Running method " . __METHOD__ . "\n";
 		$csvfile_pattern = "store_order_header";
 		$eWMSTable = self::$storeOrder;
-		$columns = '(@so_no, @store_code, @so_status, @order_date, @comments) set so_no=@so_no, store_code=@store_code, order_date=@order_date, comments=@comments';
+		$columns = '(@move_doc_number, @store_code) set so_no=@move_doc_number, store_code=@store_code';
 		// so_no | store_name | so_status | order_date | created_at
 
 		$csvLocation = $this->instance->getLatestCsv($csvfile_pattern);

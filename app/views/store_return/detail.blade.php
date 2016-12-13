@@ -1,16 +1,9 @@
-<!--<div class="control-group">
-	<a href="{{ $url_back }}" class="btn btn-info btn-darkblue"> <i class="icon-chevron-left"></i> {{ $button_back }}</a>
 
-	@if ( CommonHelper::valueInArray('CanExportStoreReturn', $permissions) )
-	<a class="btn btn-info btn-darkblue" id="exportList">{{ $button_export }}</a>
-	@endif
-
-</div>-->
 
 <!-- PO Detail -->
 <div class="widget widget-table action-table">
     <div class="widget-header"> <i class="icon-th-list"></i>
-      <h3>{{ $heading_title_so_details }}</h3>
+      <h3> Stock Transfer Details</h3>
     </div>
     <!-- /widget-header -->
 	<div class="widget-content">
@@ -23,7 +16,7 @@
 
 		        <div>
 		        	<span class="left-pane"> From :</span>
-		        	<span class="left-pane">{{ Form::text('filter_store', $filter_store, array('readonly' => 'readonly')) }}	
+		        	<span class="left-pane">{{ Form::text('fromStore', $fromStore, array('readonly' => 'readonly')) }}	
 		        	 </input></span>
 		        </div>
 	      	</div>
@@ -31,11 +24,11 @@
 	      	<div class="span4">
 	      		<div>
 		        	<span class="left-pane">Stockpiler :</span>
-		        	<span class="left-pane">{{ Form::text('filter_fullname', $filter_fullname, array('readonly' => 'readonly')) }}</span>
+		        	<span class="right-pane">{{ Form::text('fullname', $fullname, array('readonly' => 'readonly')) }}</span>
 		        </div>
 		        <div>
 		        	<span class="left-pane"> To :</span>
-		        	<span class="left-pane"><input type="text" disabled="" value=""></input></span>
+		        	<span class="right-pane"><input type="text" disabled="" value=""></input></span>
 		        </div>
 		        
 	      </div>
@@ -71,7 +64,7 @@
 
 <div class="widget widget-table action-table">
     <div class="widget-header"> <i class="icon-th-list"></i>
-      <h3>{{ $heading_title_so_contents }}</h3>
+      <h3>Stock Transfer Content</h3>
       <span class="pagination-totalItems">{{ $text_total }} {{ $store_return_count }}</span>
     </div>
     <!-- /widget-header -->
@@ -82,11 +75,10 @@
 					<tr>
 						<th>{{ $col_id }}</th>
 					<!--	<th><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif">{{ $col_sku }}</a></th> -->
-						<th>
-						{{ $col_upc }}</th>
-						<th>{{ $col_short_name }}</th>
+						<th><a href="{{ $sort_upc }}" class="@if( $sort=='upc' ) {{ $order }} @endif">{{ $col_upc }}</a></th>
+						<th><a href="{{ $sort_short_name }}" class="@if( $sort=='short_name' ) {{ $order }} @endif">{{ $col_short_name }}</a></th>
 					<!--	<th><a href="{{ $sort_delivered_quantity }}" class="@if( $sort=='delivered_quantity' ) {{ $order }} @endif">{{ $col_delivered_quantity }}</a></th> -->
-						<th>order quantity </th>
+					<th>order quantity </th>
 						<th> RECEIVED Quantity </th>
 						<th> VARIANCE Quantity </th>
 					</tr>
@@ -97,7 +89,7 @@
 				</tr>
 				@else
 					@foreach( $store_return as $so )
-					<tr class="font-size-13">
+					<tr class="font-size-13" style="background-color:#F29F9F">
 				<!--	@if ( $so['received_qty'] !== $so['delivered_qty'] )
 					 		 style="background-color:#F29F9F" 
 					@endif-->

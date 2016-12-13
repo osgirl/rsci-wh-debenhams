@@ -1,0 +1,67 @@
+<?php
+
+	/**
+	 * jda screen scraping CLI for eWMS
+	 * Author: Randolf Arevalo
+	 * Date: 5/16/2016
+	 * Description: execute screen scraping process.
+	 * Format: php jda <action>
+	 */
+
+	require_once 'config/db.php';
+	require_once 'library/eWMS.php';
+
+	$action = (isset($argv[1]) ? strtolower($argv[1]) : null);
+	
+
+	if($action == 'po_receiving') {
+				
+		$jda_hostname = '172.16.1.2';
+		$jda_username = 'DEBSPGMR';
+		$jda_password = 'password';
+		$jda_library = 'MMRSTLIB';
+			
+		require_once 'POReceiving.php';
+		$po_receiving = new POReceiving($jda_hostname,$jda_username, $jda_password, $jda_library);
+		
+		$po_receiving->Login($jda_username, $jda_password, $jda_library);
+		if($po_receiving)
+		{
+			$po_receiving->Initiate();
+			
+			//loop here
+			print_r("Yong Gumagana na!!");
+			$po_receiving->DoReceiving("10562","0688123");
+		}
+	}
+	elseif ($action == 'picking') 
+	{
+		# code...
+		$jda_hostname = '172.16.1.2';
+		$jda_username = 'DEBSPGMR';
+		$jda_password = 'password';
+		$jda_library = 'MMRSTLIB';
+
+		require_once 'Picking.php';
+
+		$picking = new Picking($jda_hostname,$jda_username, $jda_password, $jda_library);
+
+	 	if($picking)
+	 	{
+
+	 		$picking->Initiate();
+
+
+	 		$picking->DoPicking();
+	 		print_r("expression picking!!");
+	 	}
+	}
+	else {
+		exit('action is invalid ('.$action.')\n');
+	}
+	
+
+
+
+
+

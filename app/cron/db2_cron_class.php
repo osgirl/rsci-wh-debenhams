@@ -105,26 +105,29 @@ class cronDB2 {
 	{
 		//move type is 2 = picking
 		// $sql = "SELECT WHMOVE, WHMCDT, WHMATM, WHMVDT
-		$sql = "SELECT WHMOVE
-		        FROM WHSMVH
-		        WHERE WHMCDT = 0 AND WHMVTP = 2 AND WHMVDT = {$this->instance->getDate()}";//
+		$sql = "SELECT   whsmvh.whmove   
+FROM  whsmvh
+where whsmvh.whmvtp = 2  AND whsmvh.WHMVST = 1";//
+
+
+
 		        // FETCH FIRST 1 ROWS ONLY";
 
 		$query_result 	= $this->instance->runSQL($sql,true);
 		$filename 		= 'picklist_header';
 	    // move_doc_number | date_completed | time | date_created
-		$header_column 	= array('move_doc_number');
+		$header_column 	= array('move_doc_number' );
 		$custom_column = array('type'=>'store');
 		$this->_export($query_result, $filename, $header_column, __METHOD__, $custom_column);
 	}
 
 	public function pickingDetail()
 	{
-		$sql = "SELECT WHSMVD.WHMOVE, INVUPC.IUPC, WHMFSL, WHMVQR, WHMTLC, WHMVSR, WHSMVH.WHMVDT, WHMVSQ, WVSCNM, WHMVSQ, WVSCNM, WHMVQM
-		        FROM WHSMVH
-		        RIGHT JOIN WHSMVD ON WHSMVD.WHMOVE = WHSMVH.WHMOVE AND WVFZON = 'PZ' AND WVTZON='SZ'
-		        INNER JOIN INVUPC ON WHSMVD.INUMBR = INVUPC.INUMBR
-		        WHERE WHSMVH.WHMVTP = 2 AND WHMVDT = {$this->instance->getDate()}";//
+		$sql = "SELECT  whmove, invupc.IUPC, Whmfsl, WHMVQR, trfhdr.TRFTLC , trfbdt
+from whsmvd
+LEFT join invupc on whsmvd.inumbr = invupc.inumbr
+LEFT JOIN TRFHDR ON WHSMVD.WHMVSR = TRFHDR.TRFBCH";//
+
 		        // AND WHSMVH.WHMCDT = 0
 		        //FETCH FIRST 2 ROWS ONLY
 
@@ -132,7 +135,7 @@ class cronDB2 {
 		$query_result 	= $this->instance->runSQL($sql,true);
 		$filename 		= 'picklist_detail';
 	    // move_doc_number | sku | from_slot_code | quantity_to_pick | store_id | store_order_number | date_created
-		$header_column 	= array('move_doc_number','sku', 'from_slot_code', 'quantity_to_pick', 'store_code', 'so_no', 'date_created', 'sequence_no', 'group_name', 'quantity_moved');
+		$header_column 	= array( 'move_doc_number','sku','from_slot_code','quantity_to_pick', 'store_code', 'created_at');
 		$this->_export($query_result, $filename, $header_column, __METHOD__);
 	}
 
@@ -223,34 +226,41 @@ class cronDB2 {
 // POBON = Back order
 // //POUNTS = total_qty
 // POSHP1 = shipment reference no
-		$sql = "SELECT POMRCH.POVNUM, POMRCH.POMRCV, POMRCH.PONUMB, POMRCH.POLOC, POMHDR.POFOB, POMRCH.POUNTS, POMRCH.POBON, POMHDR.POSHP1, POMRCH.POSTAT
+
+		$sql = "SELECT POMRCH.POMRCV, POMRCH.PONUMB, POMRCH.POUNTS , POMHDR.POSHP1, POEDAT FROM POMRCH 
+		LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB 
+		WHERE POMRCH.POSTAT = 3";
+	/**	$ sql = "SELECT POMRCH.POVNUM, POMRCH.POMRCV, POMRCH.PONUMB, POMRCH.POLOC, POMHDR.POFOB, POMRCH.POUNTS, POMRCH.POBON, POMHDR.POSHP1, POMRCH.POSTAT
 		        FROM POMRCH
-		        LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB AND POMRCH.POBON = POMHDR.POBON
+		        LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.
+			PONUMB AND POMRCH.POBON = POMHDR.POBON
 		        WHERE POMRCH.POSTAT = 3 AND POMRCH.POLOC = 7000"; // get PO with status=3/RELEASE  AND POMRCH.PONUMB IN (3815)
-		        //FETCH FIRST 1 ROWS ONLY";
+		        //FETCH FIRST 1 ROWS ONLY";**/
 
 		$query_result 	= $this->instance->runSQL($sql,true);
 		$filename 		= 'purchase_order_header';
 	    // vendor_id | receiver_no | purchase_order_no | destination | po_status
-		$header_column 	= array('vendor','receiver_no', 'po_no', 'destination', 'carton_id', 'total_qty', 'back_order', 'shipment_reference_no', 'po_status');
+		$header_column 	= array( 'receiver_no', 'po_no',   'total_qty',  'shipment_reference_no', 'entry_date' );
 		$this->_export($query_result, $filename, $header_column, __METHOD__);
 	}
 
 	public function purchaseOrderDetails()
 	{
-		//INVUPC.IUPC
-		$sql = "SELECT POVNUM, POMRCD.POMRCV, INVUPC.IUPC, POMQTY, POMCST
-		        FROM POMRCD
-		        LEFT JOIN POMRCH ON POMRCH.POMRCV = POMRCD.POMRCV
-		        INNER JOIN INVUPC ON POMRCD.INUMBR = INVUPC.INUMBR
-		        WHERE POMRCH.POSTAT = 3 AND POMRCH.POLOC = 7000"; // get PO with status=3/RELEASE  AND POMRCH.PONUMB IN (3815)
+	$sql = "SELECT DISTINCT POMRCD.INUMBR, INVUPC.IUPC, POMRCD.POMRCV,   INVDPT.IDEPT, pomrcd.pomqty, INVDPT.DPTNAM
+FROM POMRCD
+LEFT JOIN INVUPC ON POMRCD.INUMBR = INVUPC.INUMBR
+LEFT JOIN INVMST ON POMRCD.INUMBR = INVMST.INUMBR
+LEFT JOIN INVDPT ON INVMST.IDEPT = INVDPT.IDEPT
+LEFT JOIN POMRCH ON POMRCD.POMRCV = POMRCH.POMRCV
+WHERE POMRCH.POSTAT = 3 AND INVDPT.ISDEPT=0  AND INVDPT.ICLAS=0 AND INVDPT.ISCLAS=0 "; // get PO with status=3/RELEASE  AND POMRCH.PONUMB IN (3815)
 		        //FETCH FIRST 1 ROWS ONLY";
 
 		$query_result 	= $this->instance->runSQL($sql,true);
 		$filename 		= 'purchase_order_detail';
 	    // vendor_id | sku | quantity_ordered | unit_cost
-		$header_column 	= array('vendor', 'receiver_no', 'sku', 'quantity_ordered', 'unit_cost');
+		$header_column 	= array( 'sku', 'upc','receiver_no', 'dept_number', 'quantity_ordered','dept_name');
 		$this->_export($query_result, $filename, $header_column, __METHOD__);
+		
 	}
 
 	public function slots()
@@ -292,12 +302,13 @@ class cronDB2 {
 
 		if(! empty($ids) )
 		{
-			$sql = "SELECT TRFBCH, TRFTLC, TRFSTS, TRFBDT, TRFINS FROM TRFHDR WHERE TRFBCH IN ($ids)";
+			$sql = "SELECT trfbch, tblstr.strnum from trfhdr left join tblstr on trfhdr.trftlc = tblstr.strnum where trfhdr.trfflc = 8001 and trfhdr.trfsts = 'S'
+";
 			$query_result 	= $this->instance->runSQL($sql,true);
 
 			$filename 		= 'store_order_header';
 		    // so_no | store_name | so_status | order_date | created_at
-			$header_column = array('so_no','store_code', 'so_status', 'order_date', 'comments');
+			$header_column = array('move_doc_number, store_code');
 			$this->_export($query_result, $filename, $header_column, __METHOD__);
 		}
 		else {
@@ -389,9 +400,9 @@ class cronDB2 {
 
 	public function storeReturn()
 	{
-		$sql = "SELECT TRFBCH, TRFTLC, TRFSTS
-				FROM TRFHDR
-				WHERE TRFSTS = 'S' AND TRFTLC = 7000";
+		$sql = "SELECT trfbch, trfflc, trftlc
+				FROM trfhdr
+				WHERE trfsts = 'S' and trftlc != 8001 and trftyp =1  ";
 
 		$query_result 	= $this->instance->runSQL($sql,true);
 

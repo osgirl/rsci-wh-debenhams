@@ -2,6 +2,7 @@
 
 return array(
 	'heading_title' 			=> 'Purchase Order',
+	'heading_title_discrp'		=> 'Discrepansy list',
 	'heading_title_assign_po' 	=> 'Assign PO to Stock Piler',
 	'heading_title_po_details'	=> 'PO Details',
 	'heading_title_po_contents'	=> 'PO Contents',
@@ -32,7 +33,8 @@ return array(
 	'label_entry_date'			=> 'Entry Date',
 	'label_back_order'			=> 'Back Order',
 	'label_brand'				=> 'Brand',
-	'label_division'			=> 'Division',
+	'label_division'		=> 'Division :',
+	'label_divisionasdf'		=> 'Division ',
 	'label_shipment_reference_no' => 'Shipment Ref No.',
 
 	'entry_purchase_no'			=> 'PO No.:',
@@ -47,11 +49,12 @@ return array(
 	'col_po_no'					=> 'PO No.',
 	'col_shipment_ref'			=> 'Shipment Ref',
 	'col_receiver_no'			=> 'Receiver No.',
+	'col_variance'				=> 'Variance',
 	'col_total_qty'				=> 'Total Qty.',
 	'col_supplier'				=> 'Supplier',
 	'col_receiving_stock_piler'	=> 'Receiving Stock Piler',
 	'col_delivery_date'			=> 'Delivery Date',
-	'col_invoice_number'		=> 'Invoice Number',
+	'col_stock_piler'		=> 'Piler name',
 	'col_invoice_amount'		=> 'Invoice Amount',
 	'col_status'				=> 'Status',
 	'col_action'				=> 'Action',
@@ -62,7 +65,7 @@ return array(
 	'col_slot'					=> 'Slot',
 	'col_box_code'				=> 'Box No.',
 	'col_sticker_by'			=> 'Sticker By',
-
+	'col_report'				=> 'Unlisted_Item',
 	'col_sku' 					=> 'SKU',
 	'col_upc' 					=> 'UPC',
 	'col_short_name' 			=> 'Short Name',

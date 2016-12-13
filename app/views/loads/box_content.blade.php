@@ -15,7 +15,7 @@
 	      	<div class="span4">
 	        	<div>
 		        	<span class="left-pane">Load Number :</span>
-		        	<span class="left-pane">{{Form::text('loadNumber', $Contentbox->load_code, array('readonly'=>'readonly')) }}
+		        	<span class="left-pane"> 
 		        	
 		        	
 		        </div>
@@ -101,8 +101,7 @@
 						
 					</tr>
 				</thead>
-				
-			
+							
 			@foreach($boxesYong as $boxYong)
 				<tr>
 							<td>{{ $counter++ }}</td>
@@ -110,10 +109,9 @@
 							<td>{{$boxYong->short_description}}</td>
 							<td>{{$boxYong->box_code}}</td>
 							<td>{{$boxYong->moved_qty}}</td>
-				@endforeach
+			@endforeach
 		
-					</tr>
-				
+					</tr>			
 			</table>
 		</div>
 	</div>

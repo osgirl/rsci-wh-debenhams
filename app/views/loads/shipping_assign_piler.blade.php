@@ -7,7 +7,7 @@
 
 <div class="widget">
     <div class="widget-header"> <i class="icon-th-list"></i>
-    	<h3>Assign Load/s to Stock Piler</h3>
+    	<h3>{{$assign_to_stock_piler}}</h3>
     </div>
     <!-- /widget-header -->
 
@@ -17,7 +17,7 @@
             <div class="span3">&nbsp;</div>
             		<div class="span7 add-piler-wrapper">
             			<div class="control-group">
-            				<label class="control-label">Load Code :</label>
+            				<label class="control-label">Pell number :</label>
             				<div class="controls">
             					{{ Form::text('load_code', $load_code, array('id' => 'load_code', 'readonly' => 'readonly')) }}
             				</div> <!-- /controls -->

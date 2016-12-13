@@ -19,6 +19,12 @@ class BoxDetails extends Eloquent {
 	*  add or update box manifest detail
 	*
 	*/
+	public static function getPLTotalqty($boxcode = null)
+	{
+		$query =DB::SELECT(DB::raw("SELECT sum(wms_box_details.moved_qty) as total_qty from wms_box_details where box_code='$boxcode'"));
+
+		return $query;
+	}
 	public static function moveToBox($picklistDetailId, $boxCode,$qtyToMove)
 	{
 		//check if box exists in header
@@ -85,11 +91,20 @@ public static function getboxcontent($id)
     {
         $query= DB::table('box')
         ->select('load.load_code', 'box.created_at')
-
         ->leftJoin('load','box.tl_number','=','load.load_code')
         ->leftJoin('users','users.id','=','assigned_to_user_id')
         ->leftJoin('stores', 'box.store_code','=','stores.store_code')
         ->where('box.box_code','=',$id)
+        ->first();
+        return $query;
+    }
+    
+    public static function gettlposted($id)
+    {
+        $query= DB::table('picklist')
+        ->select('picklist.pl_status','picklist.move_doc_number')
+        ->where('picklist.move_doc_number','=',$id)
+        ->where('picklist.pl_status','=','18')
         ->first();
         return $query;
     }
@@ -135,6 +150,34 @@ public static function getboxcontent($id)
 
 		return $result;
 	}
+public static function getboxnumber($movedoc,$data = array(), $getCount = false)
+	{
+
+		$query = DB::table('box')
+		->SELECT('box_details.box_code','box_details.moved_qty')
+->join ('picklist' ,'box.move_doc_number','=','picklist.move_doc_number','LEFT')
+->join ('box_details','box.box_code', '=','box_details.box_code','LEFT')
+->where ('pl_status', '=','18')
+->where('box.move_doc_number', $movedoc);
+					
+
+		 	
+
+		if( CommonHelper::hasValue($data['limit']) && CommonHelper::hasValue($data['page'])  && !$getCount)  {
+			$query->skip($data['limit'] * ($data['page'] - 1))
+		          ->take($data['limit']);
+		}
+		$result = $query->get();
+		DebugHelper::log(__METHOD__, $result);
+		if($getCount) {
+			$result = count($result);
+		}
+
+
+
+		return $result;
+	}
+
 
 	public static function isBoxEmpty($boxCode)
 	{
@@ -156,6 +199,7 @@ public static function getboxcontent($id)
     		->select(DB::raw('SUM(wms_box_details.moved_qty) moved_qty'))
 			->join('picklist_details', 'picklist_details.id', '=', 'box_details.picklist_detail_id', 'LEFT')
 			->where('box_code', '=', $boxCode);
+			
     		if( CommonHelper::hasValue($data['filter_sku']) ) $boxMovedQty->where('picklist_details.sku', 'LIKE', '%'.$data['filter_sku'].'%');
 		$result = $boxMovedQty->get();
     	return $result[0]->moved_qty;

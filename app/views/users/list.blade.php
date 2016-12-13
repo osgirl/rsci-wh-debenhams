@@ -28,12 +28,12 @@
 					</div>
 
 					<div class="span3">
-						<div>
+						<!-- <div>
 							<span class="search-po-left-pane">{{ $label_filter_barcode }}</span>
 							<span class="search-po-right-pane">
 								{{ Form::text('filter_barcode', $filter_barcode, array('id'=>'filter_barcode', 'placeholder'=>'')) }}
 							</span>
-						</div>
+						</div> -->
 					</div>
 
 					<div class="span3">
@@ -73,9 +73,9 @@
 		@if ( CommonHelper::valueInArray('CanInsertUsers', $permissions) )
 		<a class="btn btn-info  btn-darkblue" href="{{ $url_insert }}">{{ $button_insert }}</a>
 		@endif
-		@if ( CommonHelper::valueInArray('CanExportUsers', $permissions) )
+	<!-- 	@if ( CommonHelper::valueInArray('CanExportUsers', $permissions) )
 		<a class="btn btn-info  btn-darkblue" id="exportList">{{ $button_export }}</a>
-		@endif
+		@endif -->
 		@if ( CommonHelper::valueInArray('CanDeleteUsers', $permissions) )
 		<a class="btn btn-danger" id="removeData">{{ $button_delete }}</a>
 		@endif
@@ -100,11 +100,12 @@
 						@endif
 						<th>{{ $col_id }}</th>
 						<th><a href="{{ $sort_username }}" class="@if( $sort=='username' ) {{ $order }} @endif">{{ $col_username }}</a></th>
-						<th><a href="{{ $sort_barcode }}" class="@if( $sort=='barcode' ) {{ $order }} @endif">{{ $col_barcode }}</a></th>
+					 
 						<th><a href="{{ $sort_name }}" class="@if( $sort=='name' ) {{ $order }} @endif">{{ $col_name }}</a></th>
 						<th><a href="{{ $sort_role }}" class="@if( $sort=='role' ) {{ $order }} @endif">{{ $col_user_role }}</a></th>
-						<th><a href="{{ $sort_brand }}" class="@if( $sort=='brand' ) {{ $order }} @endif">{{ $col_brand }}</a></th>
+					 
 						<th><a href="{{ $sort_date }}" class="@if( $sort=='date' ) {{ $order }} @endif">{{ $col_date }}</a></th>
+						<th>Store Name </th>
 						@if ( CommonHelper::valueInArray('CanUpdateUsers', $permissions) || CommonHelper::valueInArray('CanChangePasswordUsers', $permissions) )
 						<th style="width: 80px;" class="align-center">{{ $col_action }}</th>
 						@endif
@@ -127,11 +128,12 @@
 						@endif
 						<td>{{ $counter++ }}</td>
 						<td>{{ $user->username }}</td>
-						<td>{{ $user->barcode }}</td>
+					 
 						<td>{{ $user->name }}</td>
 						<td>{{ $user->role_name }}</td>
-						<td>{{ $user->brand_name }}</td>
+					 
 						<td>{{ date('M d, Y', strtotime($user->created_at)) }}</td>
+						<td>{{$user->store_name}}</td>
 						@if ( CommonHelper::valueInArray('CanUpdateUsers', $permissions) || CommonHelper::valueInArray('CanChangePasswordUsers', $permissions) )
 						<td class="align-center">
 							@if ( CommonHelper::valueInArray('CanUpdateUsers', $permissions))

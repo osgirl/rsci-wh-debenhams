@@ -28,7 +28,7 @@
 					</div>
 					
 					<div class="span11 control-group collapse-border-top">
-						<a class="btn btn-success" id="submitForm">{{ $button_search }}</a>
+						<a class="btn   btn-success btn-darkblue" id="submitForm">{{ $button_search }}</a>
 						<a class="btn" id="clearForm">{{ $button_clear }}</a>
 					</div>
 				</div>

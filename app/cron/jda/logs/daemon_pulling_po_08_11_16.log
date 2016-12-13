@@ -1,0 +1,104 @@
+cron/ewms_connection: mysql:host=localhost;dbname=db 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=172.16.1.2;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT POMRCH.POMRCV, POMRCH.PONUMB, POMRCH.POUNTS , POMHDR.POSHP1, POEDAT FROM POMRCH 
+		LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB 
+		WHERE POMRCH.POSTAT = 3 
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1470898093.csv 
+
+ db2_dump/purchase_order_header_1470898093.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1470898093.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @purchase_order_no, @total_qty,@shipment_reference_no, @entry_date)
+				set id="", receiver_no=@receiver_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty, shipment_reference_no=@shipment_reference_no, entry_date=@entry_date 
+Loaded a total of 6 records from this csv file.
+Executing SQL: SELECT DISTINCT POMRCD.INUMBR, INVUPC.IUPC, POMRCD.POMRCV,   INVDPT.IDEPT, pomrcd.pomqty, INVDPT.DPTNAM
+FROM POMRCD
+LEFT JOIN INVUPC ON POMRCD.INUMBR = INVUPC.INUMBR
+LEFT JOIN INVMST ON POMRCD.INUMBR = INVMST.INUMBR
+LEFT JOIN INVDPT ON INVMST.IDEPT = INVDPT.IDEPT
+LEFT JOIN POMRCH ON POMRCD.POMRCV = POMRCH.POMRCV
+WHERE POMRCH.POSTAT = 3 AND INVDPT.ISDEPT=0  AND INVDPT.ICLAS=0 AND INVDPT.ISCLAS=0  
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1470898095.csv 
+
+ db2_dump/purchase_order_detail_1470898095.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1470898095.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 16 records from this csv file.
+Closing odbc connection... 
+Closing pdo connection... 
+cron/ewms_connection: mysql:host=localhost;dbname=db 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=172.16.1.2;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT POMRCH.POMRCV, POMRCH.PONUMB, POMRCH.POUNTS , POMHDR.POSHP1, POEDAT FROM POMRCH 
+		LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB 
+		WHERE POMRCH.POSTAT = 3 
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1470904298.csv 
+
+ db2_dump/purchase_order_header_1470904298.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1470904298.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @purchase_order_no, @total_qty,@shipment_reference_no, @entry_date)
+				set id="", receiver_no=@receiver_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty, shipment_reference_no=@shipment_reference_no, entry_date=@entry_date 
+Loaded a total of 76 records from this csv file.
+Executing SQL: SELECT DISTINCT POMRCD.INUMBR, INVUPC.IUPC, POMRCD.POMRCV,   INVDPT.IDEPT, pomrcd.pomqty, INVDPT.DPTNAM
+FROM POMRCD
+LEFT JOIN INVUPC ON POMRCD.INUMBR = INVUPC.INUMBR
+LEFT JOIN INVMST ON POMRCD.INUMBR = INVMST.INUMBR
+LEFT JOIN INVDPT ON INVMST.IDEPT = INVDPT.IDEPT
+LEFT JOIN POMRCH ON POMRCD.POMRCV = POMRCH.POMRCV
+WHERE POMRCH.POSTAT = 3 AND INVDPT.ISDEPT=0  AND INVDPT.ICLAS=0 AND INVDPT.ISCLAS=0  
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1470904309.csv 
+
+ db2_dump/purchase_order_detail_1470904309.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1470904309.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 447 records from this csv file.
+Closing odbc connection... 
+Closing pdo connection... 

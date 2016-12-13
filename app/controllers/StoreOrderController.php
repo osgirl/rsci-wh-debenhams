@@ -2,8 +2,8 @@
 
 class StoreOrderController extends BaseController {
 	private $data = array();
-	protected $layout = "layouts.main";
-
+	//protected $layout = "layouts.main";
+protected $layout = "layouts.StrRcvng_layout";
 	public function __construct() {
     	date_default_timezone_set('Asia/Manila');
 		$this->beforeFilter('csrf', array('on' => 'post'));
@@ -126,7 +126,7 @@ class StoreOrderController extends BaseController {
 
 	public function getSODetails() {
 		// Check Permissions
-		if (Session::has('permissions')) {
+	/*	if (Session::has('permissions')) {
 	    	if (!in_array('CanAccessStoreOrders', unserialize(Session::get('permissions'))))  {
 				return Redirect::to('store_order');
 			} elseif (StoreOrder::find(Input::get('id', NULL))==NULL) {
@@ -134,7 +134,7 @@ class StoreOrderController extends BaseController {
 			}
     	} else {
 			return Redirect::to('users/logout');
-		}
+		}*/
 
 		$this->data['heading_title_so_details'] = Lang::get('store_order.heading_title_so_details');
 		$this->data['heading_title_so_contents'] = Lang::get('store_order.heading_title_so_contents');
@@ -290,7 +290,7 @@ class StoreOrderController extends BaseController {
 		$this->data['sort_dispatched_quantity'] = URL::to('store_order/detail' . $url . '&sort=dispatched_quantity&order=' . $order_dispatched_quantity, NULL, FALSE);
 
 		// Permissions
-		$this->data['permissions'] = unserialize(Session::get('permissions'));
+		//$this->data['permissions'] = unserialize(Session::get('permissions'));
 
 		$this->layout->content = View::make('store_order.detail', $this->data);
 	}

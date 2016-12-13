@@ -11,19 +11,23 @@
 </head>
 <body>
 <div class="table-responsive">
-			<div style="text-align: center">
-				<h1>Casual Clothing Retailers Inc.<br/>Reverse Logistic</h1>
+				<div style="text-align: center">
+				<a class="font-size-02"> RSCI - eWMS<br/>Return to Warehouse Shortage/Overage Report<br/></a>
+				Printed By: {{Auth::user()->username}} <br>
 				Print Date: {{ date('m/d/y h:i A')}}
 			</div>
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
-				<th>{{ $col_so_no }}</th>
-				<th>{{ $col_store }}</th>
+				<th>TL number</th>
+			 
 				<th>{{ $col_store_name }}</th>
+				<th> SKU </th>
+				<th> UPC </th>
+				<th> Short Name </th>
 				<th>{{ $col_order_date }}</th>
-				<th>{{ $col_receiving_stock_piler }}</th>
-				<th>{{ $col_status }}</th>
+				<th> Piler Name</th>
+				<th> Variance</th>
 			</tr>
 		</thead>
 		@if( !CommonHelper::arrayHasValue($results) )
@@ -32,16 +36,21 @@
 		</tr>
 		@else
 			@foreach( $results as $so )
-			<tr class="font-size-13 tblrow" data-id="{{ $so['so_no'] }}">
-				<td>{{ $so['so_no'] }}</td>
-				<td>{{ $so['store_code'] }}</td>
-				<td>{{ $so['store_name'] }}</td>
-				<td>{{ date("M d, Y", strtotime($so['created_at'])) }}</td>
-				<td>{{ $so['fullname'] }}</td>
-				<td>{{ $so['data_display'] }}</td>
+			<tr class="font-size-13 tblrow" data-id="{{ $so->move_doc_number }}">
+				<td> {{ $so->move_doc_number }}</td>
+				<td>{{ $so->store_name }} </td>
+				<td> {{ $so->sku }} </td>
+				<td> {{ $so->upc }} </td>
+				<td> {{ $so->description }}</td>
+				<td> {{ $so->created_at }}</td>
+				<td>{{ $so->firstname.' '. $so->lastname }} </td>
+				<td> {{$so->variance}}</td>
 			</tr>
 			@endforeach
 		@endif
+		<tr>
+			<td>total item:{{count($results) }} </td>
+		</tr>
 	</table>
 </div>
 

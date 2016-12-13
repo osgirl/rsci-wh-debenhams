@@ -37,12 +37,7 @@
 					</div> <!-- /controls -->
 				</div> <!-- /control-group -->
 
-				<div class="control-group" id="barcode-wrapper">
-					<label class="control-label" for="barcode">{{ $entry_barcode }}</label>
-					<div class="controls">
-						{{ Form::text('barcode', null) }}
-					</div> <!-- /controls -->
-				</div> <!-- /control-group -->
+			 
 
 				<div class="control-group">
 					<label class="control-label" for="role_name">{{ $entry_user_role }}</label>
@@ -51,12 +46,14 @@
 					</div> <!-- /controls -->
 				</div> <!-- /control-group -->
 
-				<div class="control-group">
-					<label class="control-label" for="role_name">{{ $entry_brand }}</label>
+				 
+					<div class="control-group">											
+					<label class="control-label" for="filter_store">Store :</label>
 					<div class="controls">
-						{{ Form::select('brand', $brand_options, $user->brand_id) }}
-					</div> <!-- /controls -->
+					{{ Form::select('filter_store', array('' => $text_select) + $stores, $filter_store, array('class'=>'select-width', 'id'=>"filter_store")) }}
+					</div> <!-- /controls -->				
 				</div> <!-- /control-group -->
+				 
 
 				<div class="control-group">
 					<label class="control-label" for=""></label>
@@ -69,8 +66,7 @@
         </div>
         <div class="span2">&nbsp;</div>
         {{ Form::hidden('id', $user->id) }}
-        {{ Form::hidden('filter_username', $filter_username) }}
-        {{ Form::hidden('filter_barcode', $filter_barcode) }}
+        {{ Form::hidden('filter_username', $filter_username) }} 
         {{ Form::hidden('filter_user_role', $filter_user_role) }}
         {{ Form::hidden('sort', $sort) }}
         {{ Form::hidden('order', $order) }}

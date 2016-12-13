@@ -1,0 +1,564 @@
+sql/mysql: mysql:host=localhost;dbname=db
+
+ Getting reference # from db 
+
+ SELECT DISTINCT reference FROM wms_transactions_to_jda trans
+					INNER JOIN wms_picklist_details pick_d ON pick_d.move_doc_number = trans.reference
+					INNER JOIN wms_box_details bd ON bd.picklist_detail_id = pick_d.id
+					WHERE module = 'Picklist' AND jda_action = 'Closing' AND reference = 16 AND trans.sync_status = 0 
+
+ Getting move doc number from db 
+
+ SELECT DISTINCT pl.move_doc_number, pd.store_code, MIN(bd.box_code) box_code
+					FROM wms_box_details bd
+					INNER JOIN wms_picklist_details pd ON bd.picklist_detail_id = pd.id
+                    INNER JOIN wms_picklist pl ON pl.move_doc_number = pd.move_doc_number
+					WHERE pl_status = 18 AND pl.move_doc_number IN (16)
+					GROUP BY pl.move_doc_number
+					ORDER BY pl.move_doc_number, sequence_no ASC 
+Array
+(
+    [0] => Array
+        (
+            [move_doc_number] => 16
+            [0] => 16
+            [store_code] => 80021
+            [1] => 80021
+            [box_code] => 8002100001
+            [2] => 8002100001
+        )
+
+)
+core/jdahelper5250: MMRSTLIB
+Connecting to JDA 
+
+Warning: stream_socket_client(): unable to connect to tcp://172.16.1.1:23/57b5215a1aab7 (A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+) in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 92
+ did not connect 10060,A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+no connectionPicklist 
+0001--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+0002--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+no connectionEntered: Distribution Center Management 
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_socket_client(): unable to connect to tcp://172.16.1.1:23/57b5215a1aab7 (A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+) in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 92
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be 
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+0003--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+no connectionEntered: Picking Menu 
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+0004--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+no connectionEntered: Approve Picks into Cartons 
+Array
+(
+    [document_number] => 16
+    [store_number] => 80021
+    [carton_code] => 8002100001
+)
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+0005--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+no connection0006--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+0007--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+Entered: Update Detail 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+sql/mysql: mysql:host=localhost;dbname=db
+
+ Getting quantity delivered from db 
+
+ SELECT moved_qty FROM wms_picklist_details WHERE move_doc_number = 16
+				ORDER BY sequence_no ASC 
+Closing pdo connection... 
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+
+ Offset: 0 
+
+ count: 1 
+
+ Count: 1 
+
+ value of new_col is: 9 
+value of qtyMoved is: 23 
+0008--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+.resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 81
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+0009--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+Unable to find F7=Accept Qtys
+Entered: Approve Picks Into Cartons Details xxxxxxxxxxxxxxxxxxxxxxx
+
+ F7 not found & tries: 1 
+no connection
+ F7 not found & tries: 2 
+no connection
+ F7 not found & tries: 3 
+no connection
+ F7 not found & tries: 4 
+no connection
+ F7 not found & tries: 5 
+no connectionF1 to return
+0010--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+no connectionF7 to signoff
+0011--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+Warning: fclose() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 843
+               Label  Interval  Interval   Elapsed
+End
+Closing pdo connection... 
+3
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  fclose() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 843
+sql/mysql: mysql:host=localhost;dbname=db
+
+ Getting reference # from db 
+
+ SELECT DISTINCT reference FROM wms_transactions_to_jda trans
+					INNER JOIN wms_picklist_details pick_d ON pick_d.move_doc_number = trans.reference
+					INNER JOIN wms_box_details bd ON bd.picklist_detail_id = pick_d.id
+					WHERE module = 'Picklist' AND jda_action = 'Closing' AND reference = 48 AND trans.sync_status = 0 
+
+ Getting move doc number from db 
+
+ SELECT DISTINCT pl.move_doc_number, pd.store_code, MIN(bd.box_code) box_code
+					FROM wms_box_details bd
+					INNER JOIN wms_picklist_details pd ON bd.picklist_detail_id = pd.id
+                    INNER JOIN wms_picklist pl ON pl.move_doc_number = pd.move_doc_number
+					WHERE pl_status = 18 AND pl.move_doc_number IN (48)
+					GROUP BY pl.move_doc_number
+					ORDER BY pl.move_doc_number, sequence_no ASC 
+Array
+(
+    [0] => Array
+        (
+            [move_doc_number] => 48
+            [0] => 48
+            [store_code] => 80021
+            [1] => 80021
+            [box_code] => 8002100001
+            [2] => 8002100001
+        )
+
+)
+core/jdahelper5250: MMRSTLIB
+Connecting to JDA 
+
+Warning: stream_socket_client(): unable to connect to tcp://172.16.1.1:23/57b52266cf2e2 (A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+) in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 92
+ did not connect 10060,A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+no connectionPicklist 
+0001--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+0002--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+no connectionEntered: Distribution Center Management 
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_socket_client(): unable to connect to tcp://172.16.1.1:23/57b52266cf2e2 (A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+) in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 92
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be 
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+0003--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+no connectionEntered: Picking Menu 
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+0004--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+no connectionEntered: Approve Picks into Cartons 
+Array
+(
+    [document_number] => 48
+    [store_number] => 80021
+    [carton_code] => 8002100001
+)
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+0005--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+no connection0006--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+0007--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+Entered: Update Detail 
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+sql/mysql: mysql:host=localhost;dbname=db
+
+ Getting quantity delivered from db 
+
+ SELECT moved_qty FROM wms_picklist_details WHERE move_doc_number = 48
+				ORDER BY sequence_no ASC 
+Closing pdo connection... 
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+
+ Offset: 0 
+
+ count: 1 
+
+ Count: 1 
+
+ value of new_col is: 9 
+value of qtyMoved is: 83 
+0008--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+.resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 81
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+.
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+
+Warning: stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+0009--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+Unable to find F7=Accept Qtys
+Entered: Approve Picks Into Cartons Details xxxxxxxxxxxxxxxxxxxxxxx
+
+ F7 not found & tries: 1 
+no connection
+ F7 not found & tries: 2 
+no connection
+ F7 not found & tries: 3 
+no connection
+ F7 not found & tries: 4 
+no connection
+ F7 not found & tries: 5 
+no connectionF1 to return
+0010--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+no connectionF7 to signoff
+0011--------------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+Warning: fclose() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 843
+               Label  Interval  Interval   Elapsed
+End
+Closing pdo connection... 
+3
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 813
+PHP Warning:  stream_set_blocking() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 815
+PHP Warning:  fclose() expects parameter 1 to be resource, boolean given in C:\xampp\htdocs\wh-debenhams\app\cron\jda\core\jda5250.php on line 843
