@@ -8,7 +8,7 @@
             <div id="collapseOne" class="accordion-body collapse in" style="padding-top: 20px;">
 	                <div class="span4">
 			        	<div>
-				        	<span class="search-po-left-pane"> TL number </span>
+				        	<span class="search-po-left-pane"> MTS no. </span>
 				        	<span class="search-po-right-pane">{{ Form::text('filter_doc_no', $filter_doc_no, array('class'=>'login', 'placeholder'=>'', 'id'=>"filter_doc_no")) }}
 				        	 
 				        	</span>
@@ -80,7 +80,7 @@
 				<thead>
 					<tr>
 				 		<th>No.</th>
-						<th>TL number </th>
+						<th>MTS no. </th>
 						<th> Store </th>
 						<th>SKU</th>
 						<th>UPC</th>

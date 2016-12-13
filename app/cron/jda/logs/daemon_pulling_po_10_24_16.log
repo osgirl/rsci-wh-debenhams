@@ -1,0 +1,340 @@
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1477033199.csv 
+
+ db2_dump/purchase_order_header_1477033199.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1477033199.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @invoice_no, @purchase_order_no, @total_qty,   @entry_date)
+				set   receiver_no=@receiver_no, invoice_no=@invoice_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty,  entry_date=@entry_date 
+Loaded a total of 71 records from this csv file.
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1477033210.csv 
+
+ db2_dump/purchase_order_detail_1477033210.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1477033210.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 442 records from this csv file.
+Closing pdo connection... 
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1477033199.csv 
+
+ db2_dump/purchase_order_header_1477033199.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1477033199.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @invoice_no, @purchase_order_no, @total_qty,   @entry_date)
+				set   receiver_no=@receiver_no, invoice_no=@invoice_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty,  entry_date=@entry_date 
+Loaded a total of 0 records from this csv file.
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1477033210.csv 
+
+ db2_dump/purchase_order_detail_1477033210.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1477033210.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 442 records from this csv file.
+Closing pdo connection... 
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1477033199.csv 
+
+ db2_dump/purchase_order_header_1477033199.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1477033199.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @invoice_no, @purchase_order_no, @total_qty,   @entry_date)
+				set   receiver_no=@receiver_no, invoice_no=@invoice_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty,  entry_date=@entry_date 
+Loaded a total of 0 records from this csv file.
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1477033210.csv 
+
+ db2_dump/purchase_order_detail_1477033210.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1477033210.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 442 records from this csv file.
+Closing pdo connection... 
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1477033199.csv 
+
+ db2_dump/purchase_order_header_1477033199.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1477033199.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @invoice_no, @purchase_order_no, @total_qty,   @entry_date)
+				set   receiver_no=@receiver_no, invoice_no=@invoice_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty,  entry_date=@entry_date 
+Loaded a total of 0 records from this csv file.
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1477033210.csv 
+
+ db2_dump/purchase_order_detail_1477033210.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1477033210.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 9 records from this csv file.
+Closing pdo connection... 
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1477033199.csv 
+
+ db2_dump/purchase_order_header_1477033199.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1477033199.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @invoice_no, @purchase_order_no, @total_qty,   @entry_date)
+				set   receiver_no=@receiver_no, invoice_no=@invoice_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty,  entry_date=@entry_date 
+Loaded a total of 0 records from this csv file.
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1477033210.csv 
+
+ db2_dump/purchase_order_detail_1477033210.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1477033210.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 0 records from this csv file.
+Closing pdo connection... 
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1477033199.csv 
+
+ db2_dump/purchase_order_header_1477033199.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1477033199.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @invoice_no, @purchase_order_no, @total_qty,   @entry_date)
+				set   receiver_no=@receiver_no, invoice_no=@invoice_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty,  entry_date=@entry_date 
+Loaded a total of 0 records from this csv file.
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1477033210.csv 
+
+ db2_dump/purchase_order_detail_1477033210.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1477033210.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 442 records from this csv file.
+Closing pdo connection... 
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1477033199.csv 
+
+ db2_dump/purchase_order_header_1477033199.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1477033199.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @invoice_no, @purchase_order_no, @total_qty,   @entry_date)
+				set   receiver_no=@receiver_no, invoice_no=@invoice_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty,  entry_date=@entry_date 
+Loaded a total of 0 records from this csv file.
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1477033210.csv 
+
+ db2_dump/purchase_order_detail_1477033210.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1477033210.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 442 records from this csv file.
+Closing pdo connection... 
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1477033199.csv 
+
+ db2_dump/purchase_order_header_1477033199.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1477033199.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @invoice_no, @purchase_order_no, @total_qty,   @entry_date)
+				set   receiver_no=@receiver_no, invoice_no=@invoice_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty,  entry_date=@entry_date 
+Loaded a total of 0 records from this csv file.
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1477033210.csv 
+
+ db2_dump/purchase_order_detail_1477033210.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1477033210.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 442 records from this csv file.
+Closing pdo connection... 
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1477033199.csv 
+
+ db2_dump/purchase_order_header_1477033199.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1477033199.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @invoice_no, @purchase_order_no, @total_qty,   @entry_date)
+				set   receiver_no=@receiver_no, invoice_no=@invoice_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty,  entry_date=@entry_date 
+Loaded a total of 0 records from this csv file.
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1477033210.csv 
+
+ db2_dump/purchase_order_detail_1477033210.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1477033210.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 60 records from this csv file.
+Closing pdo connection... 
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1477033199.csv 
+
+ db2_dump/purchase_order_header_1477033199.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1477033199.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @invoice_no, @purchase_order_no, @total_qty,   @entry_date)
+				set   receiver_no=@receiver_no, invoice_no=@invoice_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty,  entry_date=@entry_date 
+Loaded a total of 0 records from this csv file.
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1477033210.csv 
+
+ db2_dump/purchase_order_detail_1477033210.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1477033210.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 0 records from this csv file.
+Closing pdo connection... 

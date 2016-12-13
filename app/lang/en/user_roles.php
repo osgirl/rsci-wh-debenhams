@@ -25,7 +25,7 @@ return array(
 	'col_password'                  => 'Change Password',
 	'col_archive'                   => 'Archive',
 	'col_jda'                       => 'Pull Data (JDA)',
-	'col_stock_piler'               => 'Assign to Piler',
+	'col_stock_piler'               => 'Assign to Piler / Box',
 	'col_closed_po'                 => 'Close Module',
 	'col_closed_so'                 => 'Close SO',
 	'col_generate_letdown'          => 'Generate Letdown List',

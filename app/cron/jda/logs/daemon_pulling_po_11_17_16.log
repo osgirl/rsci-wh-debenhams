@@ -1,0 +1,1720 @@
+
+
+
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=JDAPROD2.RGOC.COM.PH;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT POMRCH.POMRCV, pomrch.poshpr, POMRCH.PONUMB, POMRCH.POUNTS ,   POMHDR.POEDAT 
+				FROM POMRCH 
+				LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB 
+				WHERE POMRCH.POSTAT = 3 
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1479352818.csv 
+
+ db2_dump/purchase_order_header_1479352818.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1479352818.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @invoice_no, @purchase_order_no, @total_qty,   @entry_date)
+				set   receiver_no=@receiver_no, invoice_no=@invoice_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty,  entry_date=@entry_date 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT DISTINCT POMRCD.INUMBR, INVUPC.IUPC, POMRCD.POMRCV,   INVDPT.IDEPT, pomrcd.pomqty, INVDPT.DPTNAM
+FROM POMRCD
+LEFT JOIN INVUPC ON POMRCD.INUMBR = INVUPC.INUMBR
+LEFT JOIN INVMST ON POMRCD.INUMBR = INVMST.INUMBR
+LEFT JOIN INVDPT ON INVMST.IDEPT = INVDPT.IDEPT
+LEFT JOIN POMRCH ON POMRCD.POMRCV = POMRCH.POMRCV
+WHERE POMRCH.POSTAT = 3 AND INVDPT.ISDEPT=0  AND INVDPT.ICLAS=0 AND INVDPT.ISCLAS=0  
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1479352826.csv 
+
+ db2_dump/purchase_order_detail_1479352826.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1479352826.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT whsmvh.whmove  , whsmvd.whmvsr
+				FROM  whsmvh
+				left join whsmvd on whsmvh.whmove = whsmvd.whmove
+				where whsmvh.whmvtp = 2  AND whsmvh.WHMVST = 1 
+Exporting to CSV 
+
+ Running method cronEWMS::picklist
+
+ CSV FILE: db2_dump/picklist_header_1479352829.csv 
+
+ db2_dump/picklist_header_1479352829.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_header_1479352829.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@move_doc_number, @transfer_no) set move_doc_number=@move_doc_number, transfer_no=@transfer_no 
+Loaded a total of 6 records from this csv file.
+Executing SQL: SELECT  whmove, invupc.IUPC, Whmfsl, WHMVQR, trfhdr.TRFTLC , trfbdt
+from whsmvd
+LEFT join invupc on whsmvd.inumbr = invupc.inumbr
+LEFT JOIN TRFHDR ON WHSMVD.WHMVSR = TRFHDR.TRFBCH 
+Exporting to CSV 
+
+ Running method cronEWMS::picklistDetail
+
+ CSV FILE: db2_dump/picklist_detail_1479352848.csv 
+
+ db2_dump/picklist_detail_1479352848.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_detail_1479352848.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (  @move_doc_number, @sku, @from_slot_code, @quantity_to_pick, @store_code, @created_at )
+				set  move_doc_number=@move_doc_number, sku=@sku, from_slot_code=@from_slot_code,
+					quantity_to_pick=@quantity_to_pick, store_code=@store_code, created_at=@created_at 
+Loaded a total of 739 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfhdr.trfflc, trfhdr.trftlc
+				FROM trfhdr
+				left join tblstr on tblstr.strnum = trfhdr.trftlc 
+				WHERE trfsts = 'S' and trftlc != 8001 and trftyp = 1 and tblstr.strtyp='U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn
+
+ CSV FILE: db2_dump/store_return_header_1479352859.csv 
+
+ db2_dump/store_return_header_1479352859.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_header_1479352859.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @from_store_code, @to_store_code) set so_no=@so_no, from_store_code=@from_store_code, to_store_code=@to_store_code 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfdtl.trfbch, INVUPC.IUPC, trfdtl.trfshp
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR
+				WHERE trfhdr.trfsts = 'S' and trfhdr.trftlc != 8001 and trfhdr.trftyp = 1 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail
+
+ CSV FILE: db2_dump/store_return_detail_1479352871.csv 
+
+ db2_dump/store_return_detail_1479352871.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_detail_1479352871.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_detail`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @sku, @delivered_qty) set so_no=@so_no, sku=@sku, delivered_qty=@delivered_qty 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch
+				from trfhdr
+				left join tblstr on tblstr.strnum = trfhdr.trfflc
+				where trfsts = 'W'and tblstr.strtyp = 'U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn_pick
+
+ CSV FILE: db2_dump/store_return_pickinglist_1479352874.csv 
+
+ db2_dump/store_return_pickinglist_1479352874.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_pickinglist_1479352874.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_pickinglist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no) set move_doc_number=@so_no 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfdtl.trftlc, INVUPC.IUPC, trfdtl.trfflc, trfdtl.trfreq
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				left join tblstr on trfhdr.trfflc = tblstr.strnum
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR 
+				where trfhdr.trfsts = 'W'and tblstr.strtyp = 'U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail_pick
+
+ CSV FILE: db2_dump/store_return_pick_details_1479352906.csv 
+
+ db2_dump/store_return_pick_details_1479352906.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_pick_details_1479352906.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_pick_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @to_store_code, @upc, @from_store_code, @quantity_to_pick) set move_doc_number=@so_no, to_store_code=@to_store_code, sku=@upc, from_store_code=@from_store_code, quantity_to_pick=@quantity_to_pick 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfhdr.trfflc
+				from trfhdr
+				where trfsts = 'S' and trftlc = 8001 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn_return
+
+ CSV FILE: db2_dump/reverse_logistic_1479352916.csv 
+
+ db2_dump/reverse_logistic_1479352916.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/reverse_logistic_1479352916.csv'
+					IGNORE
+			    	INTO TABLE `wms_reverse_logistic`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @from_store_code) set move_doc_number=@so_no,  from_store_code=@from_store_code 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, invupc.iupc, trfdtl.trfshp
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR 
+				where trfhdr.trfsts = 'S' and trfhdr.trftlc = 8001 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail_return
+
+ CSV FILE: db2_dump/reverse_logistic_det_1479352929.csv 
+
+ db2_dump/reverse_logistic_det_1479352929.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/reverse_logistic_det_1479352929.csv'
+					IGNORE
+			    	INTO TABLE `wms_reverse_logistic_det`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no,  @upc, @delivered_qty) set move_doc_number=@so_no,  upc=@upc, delivered_qty=@delivered_qty 
+Loaded a total of 0 records from this csv file.
+Closing odbc connection... 
+Closing pdo connection... 
+
+
+
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=JDAPROD2.RGOC.COM.PH;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT POMRCH.POMRCV, pomrch.poshpr, POMRCH.PONUMB, POMRCH.POUNTS ,   POMHDR.POEDAT 
+				FROM POMRCH 
+				LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB 
+				WHERE POMRCH.POSTAT = 3 
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1479353262.csv 
+
+ db2_dump/purchase_order_header_1479353262.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1479353262.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @invoice_no, @purchase_order_no, @total_qty,   @entry_date)
+				set   receiver_no=@receiver_no, invoice_no=@invoice_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty,  entry_date=@entry_date 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT DISTINCT POMRCD.INUMBR, INVUPC.IUPC, POMRCD.POMRCV,   INVDPT.IDEPT, pomrcd.pomqty, INVDPT.DPTNAM
+FROM POMRCD
+LEFT JOIN INVUPC ON POMRCD.INUMBR = INVUPC.INUMBR
+LEFT JOIN INVMST ON POMRCD.INUMBR = INVMST.INUMBR
+LEFT JOIN INVDPT ON INVMST.IDEPT = INVDPT.IDEPT
+LEFT JOIN POMRCH ON POMRCD.POMRCV = POMRCH.POMRCV
+WHERE POMRCH.POSTAT = 3 AND INVDPT.ISDEPT=0  AND INVDPT.ICLAS=0 AND INVDPT.ISCLAS=0  
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1479353268.csv 
+
+ db2_dump/purchase_order_detail_1479353268.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1479353268.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT whsmvh.whmove  , whsmvd.whmvsr
+				FROM  whsmvh
+				left join whsmvd on whsmvh.whmove = whsmvd.whmove
+				where whsmvh.whmvtp = 2  AND whsmvh.WHMVST = 1 
+Exporting to CSV 
+
+ Running method cronEWMS::picklist
+
+ CSV FILE: db2_dump/picklist_header_1479353270.csv 
+
+ db2_dump/picklist_header_1479353270.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_header_1479353270.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@move_doc_number, @transfer_no) set move_doc_number=@move_doc_number, transfer_no=@transfer_no 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT  whmove, invupc.IUPC, Whmfsl, WHMVQR, trfhdr.TRFTLC , trfbdt
+from whsmvd
+LEFT join invupc on whsmvd.inumbr = invupc.inumbr
+LEFT JOIN TRFHDR ON WHSMVD.WHMVSR = TRFHDR.TRFBCH 
+Exporting to CSV 
+
+ Running method cronEWMS::picklistDetail
+
+ CSV FILE: db2_dump/picklist_detail_1479353287.csv 
+
+ db2_dump/picklist_detail_1479353287.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_detail_1479353287.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (  @move_doc_number, @sku, @from_slot_code, @quantity_to_pick, @store_code, @created_at )
+				set  move_doc_number=@move_doc_number, sku=@sku, from_slot_code=@from_slot_code,
+					quantity_to_pick=@quantity_to_pick, store_code=@store_code, created_at=@created_at 
+Loaded a total of 715 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfhdr.trfflc, trfhdr.trftlc
+				FROM trfhdr
+				left join tblstr on tblstr.strnum = trfhdr.trftlc 
+				WHERE trfsts = 'S' and trftlc != 8001 and trftyp = 1 and tblstr.strtyp='U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn
+
+ CSV FILE: db2_dump/store_return_header_1479353298.csv 
+
+ db2_dump/store_return_header_1479353298.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_header_1479353298.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @from_store_code, @to_store_code) set so_no=@so_no, from_store_code=@from_store_code, to_store_code=@to_store_code 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfdtl.trfbch, INVUPC.IUPC, trfdtl.trfshp
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR
+				WHERE trfhdr.trfsts = 'S' and trfhdr.trftlc != 8001 and trfhdr.trftyp = 1 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail
+
+ CSV FILE: db2_dump/store_return_detail_1479353305.csv 
+
+ db2_dump/store_return_detail_1479353305.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_detail_1479353305.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_detail`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @sku, @delivered_qty) set so_no=@so_no, sku=@sku, delivered_qty=@delivered_qty 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch
+				from trfhdr
+				left join tblstr on tblstr.strnum = trfhdr.trfflc
+				where trfsts = 'W'and tblstr.strtyp = 'U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn_pick
+
+ CSV FILE: db2_dump/store_return_pickinglist_1479353307.csv 
+
+ db2_dump/store_return_pickinglist_1479353307.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_pickinglist_1479353307.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_pickinglist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no) set move_doc_number=@so_no 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfdtl.trftlc, INVUPC.IUPC, trfdtl.trfflc, trfdtl.trfreq
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				left join tblstr on trfhdr.trfflc = tblstr.strnum
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR 
+				where trfhdr.trfsts = 'W'and tblstr.strtyp = 'U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail_pick
+
+ CSV FILE: db2_dump/store_return_pick_details_1479353324.csv 
+
+ db2_dump/store_return_pick_details_1479353324.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_pick_details_1479353324.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_pick_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @to_store_code, @upc, @from_store_code, @quantity_to_pick) set move_doc_number=@so_no, to_store_code=@to_store_code, sku=@upc, from_store_code=@from_store_code, quantity_to_pick=@quantity_to_pick 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfhdr.trfflc
+				from trfhdr
+				where trfsts = 'S' and trftlc = 8001 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn_return
+
+ CSV FILE: db2_dump/reverse_logistic_1479353334.csv 
+
+ db2_dump/reverse_logistic_1479353334.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/reverse_logistic_1479353334.csv'
+					IGNORE
+			    	INTO TABLE `wms_reverse_logistic`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @from_store_code) set move_doc_number=@so_no,  from_store_code=@from_store_code 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, invupc.iupc, trfdtl.trfshp
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR 
+				where trfhdr.trfsts = 'S' and trfhdr.trftlc = 8001 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail_return
+
+ CSV FILE: db2_dump/reverse_logistic_det_1479353346.csv 
+
+ db2_dump/reverse_logistic_det_1479353346.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/reverse_logistic_det_1479353346.csv'
+					IGNORE
+			    	INTO TABLE `wms_reverse_logistic_det`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no,  @upc, @delivered_qty) set move_doc_number=@so_no,  upc=@upc, delivered_qty=@delivered_qty 
+Loaded a total of 0 records from this csv file.
+Closing odbc connection... 
+Closing pdo connection... 
+
+
+
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=JDAPROD2.RGOC.COM.PH;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT POMRCH.POMRCV, pomrch.poshpr, POMRCH.PONUMB, POMRCH.POUNTS ,   POMHDR.POEDAT 
+				FROM POMRCH 
+				LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB 
+				WHERE POMRCH.POSTAT = 3 
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1479363008.csv 
+
+ db2_dump/purchase_order_header_1479363008.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1479363008.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @invoice_no, @purchase_order_no, @total_qty,   @entry_date)
+				set   receiver_no=@receiver_no, invoice_no=@invoice_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty,  entry_date=@entry_date 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT DISTINCT POMRCD.INUMBR, INVUPC.IUPC, POMRCD.POMRCV,   INVDPT.IDEPT, pomrcd.pomqty, INVDPT.DPTNAM
+FROM POMRCD
+LEFT JOIN INVUPC ON POMRCD.INUMBR = INVUPC.INUMBR
+LEFT JOIN INVMST ON POMRCD.INUMBR = INVMST.INUMBR
+LEFT JOIN INVDPT ON INVMST.IDEPT = INVDPT.IDEPT
+LEFT JOIN POMRCH ON POMRCD.POMRCV = POMRCH.POMRCV
+WHERE POMRCH.POSTAT = 3 AND INVDPT.ISDEPT=0  AND INVDPT.ICLAS=0 AND INVDPT.ISCLAS=0  
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1479363016.csv 
+
+ db2_dump/purchase_order_detail_1479363016.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1479363016.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT whsmvh.whmove  , whsmvd.whmvsr
+				FROM  whsmvh
+				left join whsmvd on whsmvh.whmove = whsmvd.whmove
+				where whsmvh.whmvtp = 2  AND whsmvh.WHMVST = 1 
+Error: cronDB2::picking / empty results. 
+
+ Running method cronEWMS::picklist
+
+ CSV FILE: db2_dump/picklist_header_1479353270.csv 
+
+ db2_dump/picklist_header_1479353270.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_header_1479353270.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@move_doc_number, @transfer_no) set move_doc_number=@move_doc_number, transfer_no=@transfer_no 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT  whmove, invupc.IUPC, Whmfsl, WHMVQR, trfhdr.TRFTLC , trfbdt
+from whsmvd
+LEFT join invupc on whsmvd.inumbr = invupc.inumbr
+LEFT JOIN TRFHDR ON WHSMVD.WHMVSR = TRFHDR.TRFBCH 
+Exporting to CSV 
+
+ Running method cronEWMS::picklistDetail
+
+ CSV FILE: db2_dump/picklist_detail_1479363035.csv 
+
+ db2_dump/picklist_detail_1479363035.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_detail_1479363035.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (  @move_doc_number, @sku, @from_slot_code, @quantity_to_pick, @store_code, @created_at )
+				set  move_doc_number=@move_doc_number, sku=@sku, from_slot_code=@from_slot_code,
+					quantity_to_pick=@quantity_to_pick, store_code=@store_code, created_at=@created_at 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfhdr.trfflc, trfhdr.trftlc
+				FROM trfhdr
+				left join tblstr on tblstr.strnum = trfhdr.trftlc 
+				WHERE trfsts = 'S' and trftlc != 8001 and trftyp = 1 and tblstr.strtyp='U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn
+
+ CSV FILE: db2_dump/store_return_header_1479363046.csv 
+
+ db2_dump/store_return_header_1479363046.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_header_1479363046.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @from_store_code, @to_store_code) set so_no=@so_no, from_store_code=@from_store_code, to_store_code=@to_store_code 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfdtl.trfbch, INVUPC.IUPC, trfdtl.trfshp
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR
+				WHERE trfhdr.trfsts = 'S' and trfhdr.trftlc != 8001 and trfhdr.trftyp = 1 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail
+
+ CSV FILE: db2_dump/store_return_detail_1479363054.csv 
+
+ db2_dump/store_return_detail_1479363054.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_detail_1479363054.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_detail`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @sku, @delivered_qty) set so_no=@so_no, sku=@sku, delivered_qty=@delivered_qty 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch
+				from trfhdr
+				left join tblstr on tblstr.strnum = trfhdr.trfflc
+				where trfsts = 'W'and tblstr.strtyp = 'U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn_pick
+
+ CSV FILE: db2_dump/store_return_pickinglist_1479363058.csv 
+
+ db2_dump/store_return_pickinglist_1479363058.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_pickinglist_1479363058.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_pickinglist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no) set move_doc_number=@so_no 
+Loaded a total of 49 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfdtl.trftlc, INVUPC.IUPC, trfdtl.trfflc, trfdtl.trfreq
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				left join tblstr on trfhdr.trfflc = tblstr.strnum
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR 
+				where trfhdr.trfsts = 'W'and tblstr.strtyp = 'U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail_pick
+
+ CSV FILE: db2_dump/store_return_pick_details_1479363078.csv 
+
+ db2_dump/store_return_pick_details_1479363078.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_pick_details_1479363078.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_pick_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @to_store_code, @upc, @from_store_code, @quantity_to_pick) set move_doc_number=@so_no, to_store_code=@to_store_code, sku=@upc, from_store_code=@from_store_code, quantity_to_pick=@quantity_to_pick 
+Loaded a total of 31 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfhdr.trfflc
+				from trfhdr
+				where trfsts = 'S' and trftlc = 8001 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn_return
+
+ CSV FILE: db2_dump/reverse_logistic_1479363088.csv 
+
+ db2_dump/reverse_logistic_1479363088.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/reverse_logistic_1479363088.csv'
+					IGNORE
+			    	INTO TABLE `wms_reverse_logistic`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @from_store_code) set move_doc_number=@so_no,  from_store_code=@from_store_code 
+Loaded a total of 1 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, invupc.iupc, trfdtl.trfshp
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR 
+				where trfhdr.trfsts = 'S' and trfhdr.trftlc = 8001 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail_return
+
+ CSV FILE: db2_dump/reverse_logistic_det_1479363101.csv 
+
+ db2_dump/reverse_logistic_det_1479363101.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/reverse_logistic_det_1479363101.csv'
+					IGNORE
+			    	INTO TABLE `wms_reverse_logistic_det`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no,  @upc, @delivered_qty) set move_doc_number=@so_no,  upc=@upc, delivered_qty=@delivered_qty 
+Loaded a total of 1 records from this csv file.
+Closing odbc connection... 
+Closing pdo connection... 
+
+
+
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=JDAPROD2.RGOC.COM.PH;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT POMRCH.POMRCV, pomrch.poshpr, POMRCH.PONUMB, POMRCH.POUNTS ,   POMHDR.POEDAT 
+				FROM POMRCH 
+				LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB 
+				WHERE POMRCH.POSTAT = 3 
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1479363524.csv 
+
+ db2_dump/purchase_order_header_1479363524.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1479363524.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @invoice_no, @purchase_order_no, @total_qty,   @entry_date)
+				set   receiver_no=@receiver_no, invoice_no=@invoice_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty,  entry_date=@entry_date 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT DISTINCT POMRCD.INUMBR, INVUPC.IUPC, POMRCD.POMRCV,   INVDPT.IDEPT, pomrcd.pomqty, INVDPT.DPTNAM
+FROM POMRCD
+LEFT JOIN INVUPC ON POMRCD.INUMBR = INVUPC.INUMBR
+LEFT JOIN INVMST ON POMRCD.INUMBR = INVMST.INUMBR
+LEFT JOIN INVDPT ON INVMST.IDEPT = INVDPT.IDEPT
+LEFT JOIN POMRCH ON POMRCD.POMRCV = POMRCH.POMRCV
+WHERE POMRCH.POSTAT = 3 AND INVDPT.ISDEPT=0  AND INVDPT.ICLAS=0 AND INVDPT.ISCLAS=0  
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1479363529.csv 
+
+ db2_dump/purchase_order_detail_1479363529.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1479363529.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT whsmvh.whmove  , whsmvd.whmvsr
+				FROM  whsmvh
+				left join whsmvd on whsmvh.whmove = whsmvd.whmove
+				where whsmvh.whmvtp = 2  AND whsmvh.WHMVST = 1 
+Error: cronDB2::picking / empty results. 
+
+ Running method cronEWMS::picklist
+
+ CSV FILE: db2_dump/picklist_header_1479353270.csv 
+
+ db2_dump/picklist_header_1479353270.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_header_1479353270.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@move_doc_number, @transfer_no) set move_doc_number=@move_doc_number, transfer_no=@transfer_no 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT  whmove, invupc.IUPC, Whmfsl, WHMVQR, trfhdr.TRFTLC , trfbdt
+from whsmvd
+LEFT join invupc on whsmvd.inumbr = invupc.inumbr
+LEFT JOIN TRFHDR ON WHSMVD.WHMVSR = TRFHDR.TRFBCH 
+Exporting to CSV 
+
+ Running method cronEWMS::picklistDetail
+
+ CSV FILE: db2_dump/picklist_detail_1479363550.csv 
+
+ db2_dump/picklist_detail_1479363550.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_detail_1479363550.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (  @move_doc_number, @sku, @from_slot_code, @quantity_to_pick, @store_code, @created_at )
+				set  move_doc_number=@move_doc_number, sku=@sku, from_slot_code=@from_slot_code,
+					quantity_to_pick=@quantity_to_pick, store_code=@store_code, created_at=@created_at 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfhdr.trfflc, trfhdr.trftlc
+				FROM trfhdr
+				left join tblstr on tblstr.strnum = trfhdr.trftlc 
+				WHERE trfsts = 'S' and trftlc != 8001 and trftyp = 1 and tblstr.strtyp='U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn
+
+ CSV FILE: db2_dump/store_return_header_1479363561.csv 
+
+ db2_dump/store_return_header_1479363561.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_header_1479363561.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @from_store_code, @to_store_code) set so_no=@so_no, from_store_code=@from_store_code, to_store_code=@to_store_code 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfdtl.trfbch, INVUPC.IUPC, trfdtl.trfshp
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR
+				WHERE trfhdr.trfsts = 'S' and trfhdr.trftlc != 8001 and trfhdr.trftyp = 1 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail
+
+ CSV FILE: db2_dump/store_return_detail_1479363570.csv 
+
+ db2_dump/store_return_detail_1479363570.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_detail_1479363570.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_detail`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @sku, @delivered_qty) set so_no=@so_no, sku=@sku, delivered_qty=@delivered_qty 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch
+				from trfhdr
+				left join tblstr on tblstr.strnum = trfhdr.trfflc
+				where trfsts = 'W'and tblstr.strtyp = 'U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn_pick
+
+ CSV FILE: db2_dump/store_return_pickinglist_1479363573.csv 
+
+ db2_dump/store_return_pickinglist_1479363573.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_pickinglist_1479363573.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_pickinglist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no) set move_doc_number=@so_no 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfdtl.trftlc, INVUPC.IUPC, trfdtl.trfflc, trfdtl.trfreq
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				left join tblstr on trfhdr.trfflc = tblstr.strnum
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR 
+				where trfhdr.trfsts = 'W'and tblstr.strtyp = 'U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail_pick
+
+ CSV FILE: db2_dump/store_return_pick_details_1479363597.csv 
+
+ db2_dump/store_return_pick_details_1479363597.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_pick_details_1479363597.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_pick_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @to_store_code, @upc, @from_store_code, @quantity_to_pick) set move_doc_number=@so_no, to_store_code=@to_store_code, sku=@upc, from_store_code=@from_store_code, quantity_to_pick=@quantity_to_pick 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfhdr.trfflc
+				from trfhdr
+				where trfsts = 'S' and trftlc = 8001 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn_return
+
+ CSV FILE: db2_dump/reverse_logistic_1479363607.csv 
+
+ db2_dump/reverse_logistic_1479363607.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/reverse_logistic_1479363607.csv'
+					IGNORE
+			    	INTO TABLE `wms_reverse_logistic`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @from_store_code) set move_doc_number=@so_no,  from_store_code=@from_store_code 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, invupc.iupc, trfdtl.trfshp
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR 
+				where trfhdr.trfsts = 'S' and trfhdr.trftlc = 8001 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail_return
+
+ CSV FILE: db2_dump/reverse_logistic_det_1479363619.csv 
+
+ db2_dump/reverse_logistic_det_1479363619.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/reverse_logistic_det_1479363619.csv'
+					IGNORE
+			    	INTO TABLE `wms_reverse_logistic_det`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no,  @upc, @delivered_qty) set move_doc_number=@so_no,  upc=@upc, delivered_qty=@delivered_qty 
+Loaded a total of 0 records from this csv file.
+Closing odbc connection... 
+Closing pdo connection... 
+
+
+
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=JDAPROD2.RGOC.COM.PH;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT POMRCH.POMRCV, pomrch.poshpr, POMRCH.PONUMB, POMRCH.POUNTS ,   POMHDR.POEDAT 
+				FROM POMRCH 
+				LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB 
+				WHERE POMRCH.POSTAT = 3 
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1479364575.csv 
+
+ db2_dump/purchase_order_header_1479364575.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1479364575.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @invoice_no, @purchase_order_no, @total_qty,   @entry_date)
+				set   receiver_no=@receiver_no, invoice_no=@invoice_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty,  entry_date=@entry_date 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT DISTINCT POMRCD.INUMBR, INVUPC.IUPC, POMRCD.POMRCV,   INVDPT.IDEPT, pomrcd.pomqty, INVDPT.DPTNAM
+FROM POMRCD
+LEFT JOIN INVUPC ON POMRCD.INUMBR = INVUPC.INUMBR
+LEFT JOIN INVMST ON POMRCD.INUMBR = INVMST.INUMBR
+LEFT JOIN INVDPT ON INVMST.IDEPT = INVDPT.IDEPT
+LEFT JOIN POMRCH ON POMRCD.POMRCV = POMRCH.POMRCV
+WHERE POMRCH.POSTAT = 3 AND INVDPT.ISDEPT=0  AND INVDPT.ICLAS=0 AND INVDPT.ISCLAS=0  
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1479364602.csv 
+
+ db2_dump/purchase_order_detail_1479364602.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1479364602.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT whsmvh.whmove  , whsmvd.whmvsr
+				FROM  whsmvh
+				left join whsmvd on whsmvh.whmove = whsmvd.whmove
+				where whsmvh.whmvtp = 2  AND whsmvh.WHMVST = 1 
+Error: cronDB2::picking / empty results. 
+
+ Running method cronEWMS::picklist
+
+ CSV FILE:  
+
+  
+File not found. Make sure you specified the correct path.Executing SQL: SELECT  whmove, invupc.IUPC, Whmfsl, WHMVQR, trfhdr.TRFTLC , trfbdt
+from whsmvd
+LEFT join invupc on whsmvd.inumbr = invupc.inumbr
+LEFT JOIN TRFHDR ON WHSMVD.WHMVSR = TRFHDR.TRFBCH 
+Exporting to CSV 
+
+ Running method cronEWMS::picklistDetail
+
+ CSV FILE: db2_dump/picklist_detail_1479364643.csv 
+
+ db2_dump/picklist_detail_1479364643.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_detail_1479364643.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (  @move_doc_number, @sku, @from_slot_code, @quantity_to_pick, @store_code, @created_at )
+				set  move_doc_number=@move_doc_number, sku=@sku, from_slot_code=@from_slot_code,
+					quantity_to_pick=@quantity_to_pick, store_code=@store_code, created_at=@created_at 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfhdr.trfflc, trfhdr.trftlc
+				FROM trfhdr
+				left join tblstr on tblstr.strnum = trfhdr.trftlc 
+				WHERE trfsts = 'S' and trftlc != 8001 and trftyp = 1 and tblstr.strtyp='U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn
+
+ CSV FILE: db2_dump/store_return_header_1479364653.csv 
+
+ db2_dump/store_return_header_1479364653.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_header_1479364653.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @from_store_code, @to_store_code) set so_no=@so_no, from_store_code=@from_store_code, to_store_code=@to_store_code 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfdtl.trfbch, INVUPC.IUPC, trfdtl.trfshp
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR
+				WHERE trfhdr.trfsts = 'S' and trfhdr.trftlc != 8001 and trfhdr.trftyp = 1 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail
+
+ CSV FILE: db2_dump/store_return_detail_1479364669.csv 
+
+ db2_dump/store_return_detail_1479364669.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_detail_1479364669.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_detail`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @sku, @delivered_qty) set so_no=@so_no, sku=@sku, delivered_qty=@delivered_qty 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch
+				from trfhdr
+				left join tblstr on tblstr.strnum = trfhdr.trfflc
+				where trfsts = 'W'and tblstr.strtyp = 'U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn_pick
+
+ CSV FILE: db2_dump/store_return_pickinglist_1479364672.csv 
+
+ db2_dump/store_return_pickinglist_1479364672.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_pickinglist_1479364672.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_pickinglist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no) set move_doc_number=@so_no 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfdtl.trftlc, INVUPC.IUPC, trfdtl.trfflc, trfdtl.trfreq
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				left join tblstr on trfhdr.trfflc = tblstr.strnum
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR 
+				where trfhdr.trfsts = 'W'and tblstr.strtyp = 'U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail_pick
+
+ CSV FILE: db2_dump/store_return_pick_details_1479364701.csv 
+
+ db2_dump/store_return_pick_details_1479364701.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_pick_details_1479364701.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_pick_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @to_store_code, @upc, @from_store_code, @quantity_to_pick) set move_doc_number=@so_no, to_store_code=@to_store_code, sku=@upc, from_store_code=@from_store_code, quantity_to_pick=@quantity_to_pick 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfhdr.trfflc
+				from trfhdr
+				where trfsts = 'S' and trftlc = 8001 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn_return
+
+ CSV FILE: db2_dump/reverse_logistic_1479364711.csv 
+
+ db2_dump/reverse_logistic_1479364711.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/reverse_logistic_1479364711.csv'
+					IGNORE
+			    	INTO TABLE `wms_reverse_logistic`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @from_store_code) set move_doc_number=@so_no,  from_store_code=@from_store_code 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, invupc.iupc, trfdtl.trfshp
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR 
+				where trfhdr.trfsts = 'S' and trfhdr.trftlc = 8001 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail_return
+
+ CSV FILE: db2_dump/reverse_logistic_det_1479364727.csv 
+
+ db2_dump/reverse_logistic_det_1479364727.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/reverse_logistic_det_1479364727.csv'
+					IGNORE
+			    	INTO TABLE `wms_reverse_logistic_det`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no,  @upc, @delivered_qty) set move_doc_number=@so_no,  upc=@upc, delivered_qty=@delivered_qty 
+Loaded a total of 0 records from this csv file.
+Closing odbc connection... 
+Closing pdo connection... 
+
+
+
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=JDAPROD2.RGOC.COM.PH;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT whsmvh.whmove  , whsmvd.whmvsr
+				FROM  whsmvh
+				left join whsmvd on whsmvh.whmove = whsmvd.whmove
+				where whsmvh.whmvtp = 2  AND whsmvh.WHMVST = '1' 
+Exporting to CSV 
+
+ Running method cronEWMS::picklist
+
+ CSV FILE: db2_dump/picklist_header_1479377234.csv 
+
+ db2_dump/picklist_header_1479377234.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_header_1479377234.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@move_doc_number, @transfer_no) set move_doc_number=@move_doc_number, transfer_no=@transfer_no 
+Loaded a total of 3 records from this csv file.
+Executing SQL: SELECT  whsmvh.whmove, invupc.IUPC, Whmfsl, WHMVQR, trfhdr.TRFTLC , trfbdt
+from whsmvh
+left join whsmvd on whsmvh.whmove = whsmvd.whmove
+LEFT join invupc on whsmvd.inumbr = invupc.inumbr
+LEFT JOIN TRFHDR ON WHSMVD.WHMVSR = TRFHDR.TRFBCH
+where whsmvh.whmvtp = 2  AND whsmvh.WHMVST = '1' 
+Exporting to CSV 
+
+ Running method cronEWMS::picklistDetail
+
+ CSV FILE: db2_dump/picklist_detail_1479377245.csv 
+
+ db2_dump/picklist_detail_1479377245.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_detail_1479377245.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (  @move_doc_number, @sku, @from_slot_code, @quantity_to_pick, @store_code, @created_at )
+				set  move_doc_number=@move_doc_number, sku=@sku, from_slot_code=@from_slot_code,
+					quantity_to_pick=@quantity_to_pick, store_code=@store_code, created_at=@created_at 
+Loaded a total of 1 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfhdr.trfflc, trfhdr.trftlc
+				FROM trfhdr
+				left join tblstr on tblstr.strnum = trfhdr.trftlc 
+				WHERE trfsts = 'S' and trftlc != 8001 and trftyp = 1 and tblstr.strtyp='U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn
+
+ CSV FILE: db2_dump/store_return_header_1479377255.csv 
+
+ db2_dump/store_return_header_1479377255.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_header_1479377255.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @from_store_code, @to_store_code) set so_no=@so_no, from_store_code=@from_store_code, to_store_code=@to_store_code 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfdtl.trfbch, INVUPC.IUPC, trfdtl.trfshp
+				from TRFHDR
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR
+				WHERE trfhdr.trfsts = 'S' and trfhdr.trftlc != 8001 and trfhdr.trftyp = 1 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail
+
+ CSV FILE: db2_dump/store_return_detail_1479377286.csv 
+
+ db2_dump/store_return_detail_1479377286.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_detail_1479377286.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_detail`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @sku, @delivered_qty) set so_no=@so_no, sku=@sku, delivered_qty=@delivered_qty 
+Loaded a total of 576 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch
+				from trfhdr
+				left join tblstr on tblstr.strnum = trfhdr.trfflc
+				where trfsts = 'W'and tblstr.strtyp = 'U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn_pick
+
+ CSV FILE: db2_dump/store_return_pickinglist_1479377290.csv 
+
+ db2_dump/store_return_pickinglist_1479377290.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_pickinglist_1479377290.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_pickinglist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no) set move_doc_number=@so_no 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfdtl.trftlc, INVUPC.IUPC, trfdtl.trfflc, trfdtl.trfreq
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				left join tblstr on trfhdr.trfflc = tblstr.strnum
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR 
+				where trfhdr.trfsts = 'W'and tblstr.strtyp = 'U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail_pick
+
+ CSV FILE: db2_dump/store_return_pick_details_1479377340.csv 
+
+ db2_dump/store_return_pick_details_1479377340.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_pick_details_1479377340.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_pick_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @to_store_code, @upc, @from_store_code, @quantity_to_pick) set move_doc_number=@so_no, to_store_code=@to_store_code, sku=@upc, from_store_code=@from_store_code, quantity_to_pick=@quantity_to_pick 
+Loaded a total of 767 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfhdr.trfflc
+				from trfhdr
+				where trfsts = 'S' and trftlc = 8001 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn_return
+
+ CSV FILE: db2_dump/reverse_logistic_1479377352.csv 
+
+ db2_dump/reverse_logistic_1479377352.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/reverse_logistic_1479377352.csv'
+					IGNORE
+			    	INTO TABLE `wms_reverse_logistic`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @from_store_code) set move_doc_number=@so_no,  from_store_code=@from_store_code 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, invupc.iupc, trfdtl.trfshp
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR 
+				where trfhdr.trfsts = 'S' and trfhdr.trftlc = 8001 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail_return
+
+ CSV FILE: db2_dump/reverse_logistic_det_1479377372.csv 
+
+ db2_dump/reverse_logistic_det_1479377372.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/reverse_logistic_det_1479377372.csv'
+					IGNORE
+			    	INTO TABLE `wms_reverse_logistic_det`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no,  @upc, @delivered_qty) set move_doc_number=@so_no,  upc=@upc, delivered_qty=@delivered_qty 
+Loaded a total of 216 records from this csv file.
+Closing odbc connection... 
+Closing pdo connection... 
+
+
+
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=JDAPROD2.RGOC.COM.PH;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT POMRCH.POMRCV, pomrch.poshpr, POMRCH.PONUMB, POMRCH.POUNTS ,   POMHDR.POEDAT 
+				FROM POMRCH 
+				LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB 
+				WHERE POMRCH.POSTAT = 3 
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1479378853.csv 
+
+ db2_dump/purchase_order_header_1479378853.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1479378853.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @invoice_no, @purchase_order_no, @total_qty,   @entry_date)
+				set   receiver_no=@receiver_no, invoice_no=@invoice_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty,  entry_date=@entry_date 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT DISTINCT POMRCD.INUMBR, INVUPC.IUPC, POMRCD.POMRCV,   INVDPT.IDEPT, pomrcd.pomqty, INVDPT.DPTNAM
+FROM POMRCD
+LEFT JOIN INVUPC ON POMRCD.INUMBR = INVUPC.INUMBR
+LEFT JOIN INVMST ON POMRCD.INUMBR = INVMST.INUMBR
+LEFT JOIN INVDPT ON INVMST.IDEPT = INVDPT.IDEPT
+LEFT JOIN POMRCH ON POMRCD.POMRCV = POMRCH.POMRCV
+WHERE POMRCH.POSTAT = 3 AND INVDPT.ISDEPT=0  AND INVDPT.ICLAS=0 AND INVDPT.ISCLAS=0  
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1479378858.csv 
+
+ db2_dump/purchase_order_detail_1479378858.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1479378858.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT whsmvh.whmove  , whsmvd.whmvsr
+				FROM  whsmvh
+				left join whsmvd on whsmvh.whmove = whsmvd.whmove
+				where whsmvh.whmvtp = 2  AND whsmvh.WHMVST = '1' 
+Exporting to CSV 
+
+ Running method cronEWMS::picklist
+
+ CSV FILE: db2_dump/picklist_header_1479378861.csv 
+
+ db2_dump/picklist_header_1479378861.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_header_1479378861.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@move_doc_number, @transfer_no) set move_doc_number=@move_doc_number, transfer_no=@transfer_no 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT  whsmvh.whmove, invupc.IUPC, Whmfsl, WHMVQR, trfhdr.TRFTLC , trfbdt
+from whsmvh
+left join whsmvd on whsmvh.whmove = whsmvd.whmove
+LEFT join invupc on whsmvd.inumbr = invupc.inumbr
+LEFT JOIN TRFHDR ON WHSMVD.WHMVSR = TRFHDR.TRFBCH
+where whsmvh.whmvtp = 2  AND whsmvh.WHMVST = '1' 
+Exporting to CSV 
+
+ Running method cronEWMS::picklistDetail
+
+ CSV FILE: db2_dump/picklist_detail_1479378871.csv 
+
+ db2_dump/picklist_detail_1479378871.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_detail_1479378871.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (  @move_doc_number, @sku, @from_slot_code, @quantity_to_pick, @store_code, @created_at )
+				set  move_doc_number=@move_doc_number, sku=@sku, from_slot_code=@from_slot_code,
+					quantity_to_pick=@quantity_to_pick, store_code=@store_code, created_at=@created_at 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfhdr.trfflc, trfhdr.trftlc
+				FROM trfhdr
+				left join tblstr on tblstr.strnum = trfhdr.trftlc 
+				WHERE trfsts = 'S' and trftlc != 8001 and trftyp = 1 and tblstr.strtyp='U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn
+
+ CSV FILE: db2_dump/store_return_header_1479378881.csv 
+
+ db2_dump/store_return_header_1479378881.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_header_1479378881.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @from_store_code, @to_store_code) set so_no=@so_no, from_store_code=@from_store_code, to_store_code=@to_store_code 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfdtl.trfbch, INVUPC.IUPC, trfdtl.trfshp
+				from TRFHDR
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR
+				WHERE trfhdr.trfsts = 'S' and trfhdr.trftlc != 8001 and trfhdr.trftyp = 1 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail
+
+ CSV FILE: db2_dump/store_return_detail_1479378889.csv 
+
+ db2_dump/store_return_detail_1479378889.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_detail_1479378889.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_detail`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @sku, @delivered_qty) set so_no=@so_no, sku=@sku, delivered_qty=@delivered_qty 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch
+				from trfhdr
+				left join tblstr on tblstr.strnum = trfhdr.trfflc
+				where trfsts = 'W'and tblstr.strtyp = 'U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn_pick
+
+ CSV FILE: db2_dump/store_return_pickinglist_1479378891.csv 
+
+ db2_dump/store_return_pickinglist_1479378891.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_pickinglist_1479378891.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_pickinglist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no) set move_doc_number=@so_no 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfdtl.trftlc, INVUPC.IUPC, trfdtl.trfflc, trfdtl.trfreq
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				left join tblstr on trfhdr.trfflc = tblstr.strnum
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR 
+				where trfhdr.trfsts = 'W'and tblstr.strtyp = 'U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail_pick
+
+ CSV FILE: db2_dump/store_return_pick_details_1479378909.csv 
+
+ db2_dump/store_return_pick_details_1479378909.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_pick_details_1479378909.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_pick_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @to_store_code, @upc, @from_store_code, @quantity_to_pick) set move_doc_number=@so_no, to_store_code=@to_store_code, sku=@upc, from_store_code=@from_store_code, quantity_to_pick=@quantity_to_pick 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfhdr.trfflc
+				from trfhdr
+				where trfsts = 'S' and trftlc = 8001 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn_return
+
+ CSV FILE: db2_dump/reverse_logistic_1479378919.csv 
+
+ db2_dump/reverse_logistic_1479378919.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/reverse_logistic_1479378919.csv'
+					IGNORE
+			    	INTO TABLE `wms_reverse_logistic`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @from_store_code) set move_doc_number=@so_no,  from_store_code=@from_store_code 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, invupc.iupc, trfdtl.trfshp
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR 
+				where trfhdr.trfsts = 'S' and trfhdr.trftlc = 8001 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail_return
+
+ CSV FILE: db2_dump/reverse_logistic_det_1479378931.csv 
+
+ db2_dump/reverse_logistic_det_1479378931.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/reverse_logistic_det_1479378931.csv'
+					IGNORE
+			    	INTO TABLE `wms_reverse_logistic_det`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no,  @upc, @delivered_qty) set move_doc_number=@so_no,  upc=@upc, delivered_qty=@delivered_qty 
+Loaded a total of 0 records from this csv file.
+Closing odbc connection... 
+Closing pdo connection... 
+
+
+
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=JDAPROD2.RGOC.COM.PH;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT POMRCH.POMRCV, pomrch.poshpr, POMRCH.PONUMB, POMRCH.POUNTS ,   POMHDR.POEDAT 
+				FROM POMRCH 
+				LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB 
+				WHERE POMRCH.POSTAT = 3 
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1479379046.csv 
+
+ db2_dump/purchase_order_header_1479379046.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1479379046.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @invoice_no, @purchase_order_no, @total_qty,   @entry_date)
+				set   receiver_no=@receiver_no, invoice_no=@invoice_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty,  entry_date=@entry_date 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT DISTINCT POMRCD.INUMBR, INVUPC.IUPC, POMRCD.POMRCV,   INVDPT.IDEPT, pomrcd.pomqty, INVDPT.DPTNAM
+FROM POMRCD
+LEFT JOIN INVUPC ON POMRCD.INUMBR = INVUPC.INUMBR
+LEFT JOIN INVMST ON POMRCD.INUMBR = INVMST.INUMBR
+LEFT JOIN INVDPT ON INVMST.IDEPT = INVDPT.IDEPT
+LEFT JOIN POMRCH ON POMRCD.POMRCV = POMRCH.POMRCV
+WHERE POMRCH.POSTAT = 3 AND INVDPT.ISDEPT=0  AND INVDPT.ICLAS=0 AND INVDPT.ISCLAS=0  
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1479379052.csv 
+
+ db2_dump/purchase_order_detail_1479379052.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1479379052.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT whsmvh.whmove  , whsmvd.whmvsr
+				FROM  whsmvh
+				left join whsmvd on whsmvh.whmove = whsmvd.whmove
+				where whsmvh.whmvtp = 2  AND whsmvh.WHMVST = '1' 
+Exporting to CSV 
+
+ Running method cronEWMS::picklist
+
+ CSV FILE: db2_dump/picklist_header_1479379054.csv 
+
+ db2_dump/picklist_header_1479379054.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_header_1479379054.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@move_doc_number, @transfer_no) set move_doc_number=@move_doc_number, transfer_no=@transfer_no 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT  whsmvh.whmove, invupc.IUPC, Whmfsl, WHMVQR, trfhdr.TRFTLC , trfbdt
+from whsmvh
+left join whsmvd on whsmvh.whmove = whsmvd.whmove
+LEFT join invupc on whsmvd.inumbr = invupc.inumbr
+LEFT JOIN TRFHDR ON WHSMVD.WHMVSR = TRFHDR.TRFBCH
+where whsmvh.whmvtp = 2  AND whsmvh.WHMVST = '1' 
+Exporting to CSV 
+
+ Running method cronEWMS::picklistDetail
+
+ CSV FILE: db2_dump/picklist_detail_1479379064.csv 
+
+ db2_dump/picklist_detail_1479379064.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_detail_1479379064.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (  @move_doc_number, @sku, @from_slot_code, @quantity_to_pick, @store_code, @created_at )
+				set  move_doc_number=@move_doc_number, sku=@sku, from_slot_code=@from_slot_code,
+					quantity_to_pick=@quantity_to_pick, store_code=@store_code, created_at=@created_at 
+Loaded a total of 4 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfhdr.trfflc, trfhdr.trftlc
+				FROM trfhdr
+				left join tblstr on tblstr.strnum = trfhdr.trftlc 
+				WHERE trfsts = 'S' and trftlc != 8001 and trftyp = 1 and tblstr.strtyp='U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn
+
+ CSV FILE: db2_dump/store_return_header_1479379075.csv 
+
+ db2_dump/store_return_header_1479379075.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_header_1479379075.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @from_store_code, @to_store_code) set so_no=@so_no, from_store_code=@from_store_code, to_store_code=@to_store_code 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfdtl.trfbch, INVUPC.IUPC, trfdtl.trfshp
+				from TRFHDR
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR
+				WHERE trfhdr.trfsts = 'S' and trfhdr.trftlc != 8001 and trfhdr.trftyp = 1 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail
+
+ CSV FILE: db2_dump/store_return_detail_1479379080.csv 
+
+ db2_dump/store_return_detail_1479379080.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_detail_1479379080.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_detail`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @sku, @delivered_qty) set so_no=@so_no, sku=@sku, delivered_qty=@delivered_qty 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch
+				from trfhdr
+				left join tblstr on tblstr.strnum = trfhdr.trfflc
+				where trfsts = 'W'and tblstr.strtyp = 'U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn_pick
+
+ CSV FILE: db2_dump/store_return_pickinglist_1479379083.csv 
+
+ db2_dump/store_return_pickinglist_1479379083.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_pickinglist_1479379083.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_pickinglist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no) set move_doc_number=@so_no 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfdtl.trftlc, INVUPC.IUPC, trfdtl.trfflc, trfdtl.trfreq
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				left join tblstr on trfhdr.trfflc = tblstr.strnum
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR 
+				where trfhdr.trfsts = 'W'and tblstr.strtyp = 'U' 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail_pick
+
+ CSV FILE: db2_dump/store_return_pick_details_1479379101.csv 
+
+ db2_dump/store_return_pick_details_1479379101.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/store_return_pick_details_1479379101.csv'
+					IGNORE
+			    	INTO TABLE `wms_store_return_pick_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @to_store_code, @upc, @from_store_code, @quantity_to_pick) set move_doc_number=@so_no, to_store_code=@to_store_code, sku=@upc, from_store_code=@from_store_code, quantity_to_pick=@quantity_to_pick 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfhdr.trfflc
+				from trfhdr
+				where trfsts = 'S' and trftlc = 8001 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturn_return
+
+ CSV FILE: db2_dump/reverse_logistic_1479379111.csv 
+
+ db2_dump/reverse_logistic_1479379111.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/reverse_logistic_1479379111.csv'
+					IGNORE
+			    	INTO TABLE `wms_reverse_logistic`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no, @from_store_code) set move_doc_number=@so_no,  from_store_code=@from_store_code 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, invupc.iupc, trfdtl.trfshp
+				from trfhdr
+				left join trfdtl on trfhdr.trfbch = trfdtl.trfbch
+				INNER JOIN INVUPC ON TRFDTL.INUMBR = INVUPC.INUMBR 
+				where trfhdr.trfsts = 'S' and trfhdr.trftlc = 8001 
+Exporting to CSV 
+
+ Running method cronEWMS::storeReturnDetail_return
+
+ CSV FILE: db2_dump/reverse_logistic_det_1479379123.csv 
+
+ db2_dump/reverse_logistic_det_1479379123.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/reverse_logistic_det_1479379123.csv'
+					IGNORE
+			    	INTO TABLE `wms_reverse_logistic_det`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@so_no,  @upc, @delivered_qty) set move_doc_number=@so_no,  upc=@upc, delivered_qty=@delivered_qty 
+Loaded a total of 0 records from this csv file.
+Closing odbc connection... 
+Closing pdo connection... 

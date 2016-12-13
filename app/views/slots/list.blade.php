@@ -58,7 +58,8 @@
 				<thead>
 					<tr>
 						<th width="10%">{{ $col_id }}</th>
-						<th><a href="{{ $sort_slot_no }}" class="@if( $sort=='slot_code' ) {{ $order }} @endif">{{ $col_slot_no }}</a></th>
+						<th><a href="{{ $sort_slot_no }}" class="@if( $sort=='slot_code' ) {{ $order }} @endif">{{ $col_slot_no }}</a></th> 
+						<th>{{$col_zone_no}}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -71,6 +72,7 @@
 					<tr class="font-size-13">
 						<td>{{ $counter++ }}</td>
 						<td>{{ $slot->slot_code }}</td>
+						<td>{{ $slot->zone_code }}</td> 
 					</tr>
 					@endforeach
 				@endif

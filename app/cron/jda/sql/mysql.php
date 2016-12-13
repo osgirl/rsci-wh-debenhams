@@ -1,6 +1,6 @@
 <?php
-include_once('../../config/config.php');
-
+ 
+ 
 class pdoConnection
 {
 	public static $pdo;
@@ -10,12 +10,17 @@ class pdoConnection
    	public static $host;// 	= 'localhost';		//hostname
 
 	public function __construct(){
-		$creds = mysql_credentials();
-		self::$dbName = $creds['db_name'];
+		//$creds = mysql_credentials();
+		self::$dbName = 'deve';
+		self::$user =  'root';
+		self::$pass = '';
+		self::$host = 'localhost';
+
+	/*	self::$dbName = $creds['db_name'];
 		self::$user = $creds['user'];
 		self::$pass = $creds['password'];
 		self::$host = $creds['hostname'];
-
+*/
 		self::connectDatabase();
 	}
 
@@ -34,7 +39,8 @@ class pdoConnection
 		    );
 
 		    self::$pdo = $pdo;
-		} catch (PDOException $e) {
+		} catch (PDOException $e) { 
+		echo "sql/mysql: mysql:host=".self::$host.";dbname=".self::$dbName."\n";
 		    die("database connection failed: ".$e->getMessage());
 		}
 	}
@@ -96,7 +102,7 @@ class pdoConnection
 		$module 	= $data['module'];
 		$jdaAction 	= $data['jda_action'];
 
-		echo "\n Getting reference # from db \n";
+		echo "\n Getting reference # from database \n";
 
 		if(!empty($data['reference']))
 		{
@@ -107,8 +113,8 @@ class pdoConnection
 					INNER JOIN wms_load_details ld ON ld.pallet_code = pd.pallet_code AND ld.load_code = '{$data['reference']}'
 					WHERE module = '{$module}' AND jda_action = '{$jdaAction}' AND trans.sync_status = 0";*/
 			$sql = "SELECT DISTINCT reference FROM wms_transactions_to_jda trans
-					INNER JOIN wms_picklist_details pick_d ON pick_d.move_doc_number = trans.reference
-					INNER JOIN wms_box_details bd ON bd.picklist_detail_id = pick_d.id
+					left JOIN wms_picklist_details pick_d ON pick_d.move_doc_number = trans.reference
+					 
 					WHERE module = '{$module}' AND jda_action = '{$jdaAction}' AND reference = {$data['reference']} AND trans.sync_status = 0";
 					// INNER JOIN wms_pallet_details pd ON bd.box_code = pd.box_code
 					// INNER JOIN wms_load_details ld ON ld.pallet_code = pd.pallet_code
@@ -116,7 +122,7 @@ class pdoConnection
 		else {
 			$sql = "SELECT DISTINCT reference FROM wms_transactions_to_jda trans
 					INNER JOIN wms_picklist_details pick_d ON pick_d.move_doc_number = trans.reference
-					INNER JOIN wms_box_details bd ON bd.picklist_detail_id = pick_d.id
+				 
 					WHERE module = '{$module}' AND jda_action = '{$jdaAction}' AND trans.sync_status = 0";
 					// INNER JOIN wms_pallet_details pd ON bd.box_code = pd.box_code
 					// INNER JOIN wms_load_details ld ON ld.pallet_code = pd.pallet_code
@@ -271,11 +277,11 @@ class pdoConnection
 		return $result;
 	}
 
-	public function getReceiverNo($poNo) {
-		$poNo = join(',', $poNo);
+	public function getReceiverNo($Rcrno) {
+		$Rcrno = join(',', $Rcrno);
 		echo "\n Getting receiver no from db \n";
-		$sql 	= "SELECT receiver_no, back_order, slot_code, shipment_reference_no FROM wms_purchase_order_lists
-					WHERE purchase_order_no IN ({$poNo})
+		$sql 	= "SELECT receiver_no, purchase_order_no, invoice_no FROM wms_purchase_order_lists
+					WHERE receiver_no IN ({$Rcrno})
 					ORDER BY purchase_order_no ASC";
 		$query 	= self::query($sql);
 
@@ -283,9 +289,8 @@ class pdoConnection
 		foreach ($query as $value ) {
 			$result[] =  array(
 				'receiver_no' => $value['receiver_no'],
-				'back_order' => $value['back_order'],
-				'shipment_reference_no' => (empty($value['shipment_reference_no'])) ? '0' : $value['shipment_reference_no'],
-				'slot_code' => $value['slot_code']);
+				'purchase_order_no' => $value['purchase_order_no'],
+				'invoice_no' 		=> $value['invoice_no']);
 		}
 
 		return $result;
@@ -362,14 +367,10 @@ class pdoConnection
 	{
 		$docNo = join(',', $docNo);
 		echo "\n Getting move doc number from db \n";
-		$sql = "SELECT DISTINCT pl.move_doc_number, pd.store_code, MIN(bd.box_code) box_code
-					FROM wms_box_details bd
-					INNER JOIN wms_picklist_details pd ON bd.picklist_detail_id = pd.id
-                    INNER JOIN wms_picklist pl ON pl.move_doc_number = pd.move_doc_number
-					WHERE pl_status = 18 AND pl.move_doc_number IN ({$docNo})
-					GROUP BY pl.move_doc_number
-					ORDER BY pl.move_doc_number, sequence_no ASC";
-					// GROUP BY picklist_detail_id
+		$sql = "SELECT DISTINCT wms_picklist.move_doc_number
+					FROM wms_picklist  
+					WHERE pl_status = 18 AND wms_picklist.move_doc_number IN ({$docNo})";
+					 
 		$query 	= self::query($sql);
 
 		$result = array();
@@ -434,7 +435,7 @@ class pdoConnection
     * @param  $cmd       string command to execute
     * @return
     */
-    private static function execInBackground($cmd,$source)
+  private static function execInBackground($cmd,$source)
     {
         $cmd = 'php -q' . __DIR__.'/../../jda/' . $cmd;
     	$pidfile = __DIR__.'/../../jda/logs/pidfile.log';
@@ -459,6 +460,7 @@ class pdoConnection
 	}
 
 }
+
 
 /*$pdo = new pdoConnection();
 $pdo->close();*/

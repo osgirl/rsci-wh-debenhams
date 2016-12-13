@@ -44,13 +44,13 @@ return array(
 	'button_clear'				=> 'Clear Filters',
 	'button_export'				=> 'Export to PDF',
 	'button_archive'			=> 'Archive Logs',
-	'button_jda'				=> 'Pull Data (JDA)',
+	'button_jda'				=> 'Pull from Data (JDA)',
 	'button_submit'				=> 'Submit',
 	'button_cancel'				=> 'Cancel',
 	'button_back'				=> 'Back to List',
 	'button_assign'				=> 'Assign',
 
-	'link_view_mts'					=> 'View MTS',
+	'link_view_mts'				=> 'View MTS',
 	'link_edit'					=> 'Edit',
 	'link_change_password'		=> 'Change Password',
 

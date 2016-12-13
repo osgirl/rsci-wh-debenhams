@@ -32,7 +32,30 @@ class PicklistController extends BaseController {
 
 		$this->getList();
 	}
+ public function printPackingList($doc_num)
+    {
+		// Search Filters
+		$filter_doc_no = Input::get('filter_doc_no', NULL);
 
+		$sort = Input::get('sort', 'doc_no');
+		$order = Input::get('order', 'ASC');
+		$page = Input::get('page', 1);
+
+		$this->data['filter_doc_no'] = $filter_doc_no;
+		$this->data['sort'] = $sort;
+		$this->data['order'] = $order;
+		$this->data['page'] = $page;
+
+		$this->data['url_back'] = $this->setURL();
+
+            $this->data['doc_num'] = $doc_num;
+            $this->data['records'] = Picklist::getPackingDetails($doc_num);
+			$this->data['storelocation'] = Picklist::getStoreLocationwarehouse($doc_num);
+            $this->data['permissions'] = unserialize(Session::get('permissions'));
+ 
+            $this->layout = View::make('layouts.print');
+            $this->layout->content = View::make('picking.print_packing_list', $this->data);
+    }
 public function getList()
 	{
 		$this->data                           = Lang::get('picking');
@@ -48,6 +71,7 @@ public function getList()
 		$this->data['url_change_to_store']    = URL::to('picking/change_to_store');
 		$this->data['url_generate_load_code'] = URL::to('picking/new/load');
 		$this->data['url_assign']             = URL::to('picking/assign'). $this->setURL();
+		$this->data['urlshipdate']				= URL::to('picking/updatedate'.$this->setURL());
 		
 
 		
@@ -70,7 +94,7 @@ public function getList()
 		$this->data['pl_type'] = $this->types;
 		$this->data['load_codes']	= $this->getLoadCodes();
 		$this->data['stock_piler_list'] = $this->getStockPilers();
-
+		$this->data['StoreOptions'] 	= $this->getStoreBranches();
 		// Search Filters
 		$filter_type = Input::get('filter_type', NULL);
 		$filter_doc_no = Input::get('filter_doc_no', NULL);
@@ -153,7 +177,30 @@ public function getList()
 	 	$ship_date 				= Input::get('filter_date_entry', null);
 		
 		Picklist::getUpdateDateMod($move_doc_number, $ship_date);
-		return Redirect::to('picking/list?&move_doc_number='.$move_doc_number)->with('message','Ship Date Successfully Update!');
+
+
+		$users = User::getUsersFullname(Input::get('stock_piler'));
+
+
+			$fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $users));
+			// $user = User::find(Input::get('stock_piler'));
+
+			$data_before = '';
+			$data_after = 'MTS no. : ' . $move_doc_number . ', Ship date : '.$ship_date;
+
+			$arrParams = array(
+							'module'		=> Config::get("audit_trail_modules.picking/packing"),
+							'action'		=> Config::get("audit_trail.ship_date_updated"),
+							'reference'		=> 'Ship date : ' . $ship_date,
+							'data_before'	=> $data_before,
+							'data_after'	=> $data_after,
+							'user_id'		=> Auth::user()->id,
+							'created_at'	=> date('Y-m-d H:i:s'),
+							'updated_at'	=> date('Y-m-d H:i:s')
+							);
+			AuditTrail::addAuditTrail($arrParams);
+			
+		return Redirect::to('picking/list?&move_doc_number='.$move_doc_number.'&filter_date_entry='.$ship_date)->with('message','Ship Date Successfully Update!');
 	}
 	/*public function exportexcelCSV()
 	{
@@ -428,6 +475,7 @@ public function getList()
 		$filter_from_slot     = Input::get('filter_from_slot', NULL);
 		$filter_store     = Input::get('filter_store', NULL);
 		$filter_stock_piler     = Input::get('filter_stock_piler', NULL);
+		$filter_transfer_no 	= Input::get('filter_transfer_no', null);
 		// $filter_to_slot    = Input::get('filter_to_slot', NULL);
 		// $filter_status_detail = Input::get('filter_status_detail', NULL);
 
@@ -452,6 +500,7 @@ public function getList()
 						'order'					=> $order_detail,
 						'page'					=> $page_detail,
 						'picklist_doc'			=> $picklistDoc,
+						'filter_transfer_no'	=> $filter_transfer_no,
 						'limit'					=> 30
 					);
 		$results 		= PicklistDetails::getFilteredPicklistDetail($arrParams);
@@ -474,6 +523,7 @@ public function getList()
 									'filter_sku'			=> $filter_sku,
 									'filter_upc'			=> $filter_upc,
 									'filter_so'				=> $filter_so,
+									'filter_transfer_no'	=> $filter_transfer_no,
 									'filter_from_slot'		=> $filter_from_slot,
 									'sort'					=> $sort_detail,
 									'order'					=> $order_detail
@@ -491,6 +541,7 @@ public function getList()
 		$this->data['filter_so']             = $filter_so;
 		$this->data['filter_from_slot']      = $filter_from_slot;
 		$this->data['filter_store']      = $filter_store;
+		$this->data['filter_transfer_no']	= $filter_transfer_no;
 		$this->data['filter_stock_piler']      = $filter_stock_piler;
 		// $this->data['filter_status_detail']  = $filter_status_detail;
 		$this->data['sort_back']             = $sort_back;
@@ -1024,6 +1075,14 @@ public function getList()
 		}
 		return array('' => Lang::get('general.text_select')) + $stock_pilers;
 	}
+	private function getStoreBranches()
+	{
+		$store_name = array();
+		foreach (Store::getStoreBranchesOptions() as $item) {
+			$store_name[$item->store_code] = $item->store_name;
+		}
+		return array('' => Lang::get('general.text_select')) + $store_name;
+	}
 
 	/**
 	* Audit trail for picklist
@@ -1206,7 +1265,7 @@ public function getList()
 			$data_after = 'Picklist MTS no.: ' . $docNo . ' assigned to ' . $fullname;
 
 			$arrParams = array(
-							'module'		=> Config::get('audit_trail_modules.picking'),
+							'module'		=> Config::get('audit_trail_modules.picking/packing'),
 							'action'		=> Config::get('audit_trail.assign_picklist'),
 							'reference'		=> 'MTS no. : ' . $docNo,
 							'data_before'	=> $data_before,
@@ -1241,7 +1300,7 @@ public function getList()
 
 		$status_options = Dataset::where("data_code", "=", "PICKLIST_STATUS_TYPE")->get()->lists("id", "data_value");
 		$picklist = Picklist::updateStatus($docNo, $status_options['closed']);
-		Picklist::getpostedtoStore($docNo,$boxcode);
+		//Picklist::getpostedtoStore($docNo,$boxcode);
 		
 		/*Pic klist::getpos tedtoBo xOrder($ doc No);*/
 		// AuditTrail
@@ -1251,9 +1310,9 @@ public function getList()
 		$data_after = 'Picklist Document No: ' . $docNo . ' posted by ' . $user->username;
 
 		$arrParams = array(
-						'module'		=> Config::get("audit_trail_modules.picking"),
-						'action'		=> Config::get("audit_trail.modify_picklist_status"),
-						'reference'		=> $docNo,
+						'module'		=> Config::get("audit_trail_modules.picking/packing"),
+						'action'		=> Config::get("audit_trail.close_pickilist"),
+						'reference'		=> 'MTS no: '.$docNo,
 						'data_before'	=> $data_before,
 						'data_after'	=> $data_after,
 						'user_id'		=> Auth::user()->id,
@@ -1271,15 +1330,21 @@ public function getList()
 		);
 		//create jda transaction for picklist closing
 		$isSuccess = JdaTransaction::insert($picklistParams);
-		Log::info(__METHOD__ .' dump: '.print_r($docNo,true));
+		Log::info(__METHOD__ .' jda transaction dump: '.print_r($isSuccess,true));
+		//Log::info(__METHOD__ .' dump: '.print_r($docNo,true));
 
 		// run daemon command: php app/cron/jda/classes/picklist.php
+		/*if( $isSuccess )
+		{
+			$daemon = "Picking.php {$docNo}";
+			CommonHelper::execInBackgroundDEB($daemon,'picklist');
+		}*/
+
 		if( $isSuccess )
 		{
 			$daemon = "classes/picklist.php {$docNo}";
 			CommonHelper::execInBackground($daemon,'picklist');
 		}
-
 		return Redirect::to('picking/list' . $this->setURL())->with('message', Lang::get('picking.text_success_posted'));
 	}
 
@@ -1316,6 +1381,31 @@ public function getList()
 
 			$this->layout = View::make('layouts.print');
 			$this->layout->content = View::make('loads.box_list_details', $this->data);
+	}
+	public function printBoxLabelA4size($doc_num)
+	{
+		$this->checkPermissions('CanExportPacking');
+		$this->data = Lang::get('picking');
+		$this->data['text_empty_results']     = Lang::get('general.text_empty_results');
+		$arrParams = array(
+							'filter_type'   => Input::get('filter_type', NULL),
+							'filter_doc_no' => Input::get('filter_doc_no', NULL),
+							'filter_status' => Input::get('filter_status', NULL),
+							'filter_store' 	=> Input::get('filter_store', NULL),
+							'filter_stock_piler' 	=> Input::get('filter_stock_piler', NULL),
+							'sort'          => Input::get('sort', 'doc_no'),
+							'order'         => Input::get('order', 'ASC'),
+							'page'          => NULL,
+							'limit'         => NULL
+						);
+
+		$records = Picklist::getPicklistBoxes($doc_num, $arrParams);
+		$this->data['records'] = $records;
+
+		$pdf = App::make('dompdf');
+		$pdf->loadView('picking.report_list1', $this->data)->setPaper('a7')->setOrientation('landscape');
+		// return $pdf->stream();
+		return $pdf->download('picking_' . date('Ymd') . '.pdf');
 	}
 
 }

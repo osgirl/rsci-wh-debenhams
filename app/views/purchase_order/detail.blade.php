@@ -4,7 +4,7 @@
   
 </div>
 
-  {{ Form::open(array('url'=>'purchase_order/updateqty?filter_po_no='.$filter_po_no.'&filter_stock_piler='.$filter_stock_piler.'&division='.$division.'&filter_shipment_reference_no='.$filter_shipment_reference_no, 'class'=>'form-signin', 'id'=>'form-purchase-order', 'role'=>'form', 'method' => 'get')) }}
+
 <div class="widget widget-table action-table">
     <div class="widget-header"> <i class="icon-th-list"></i>
       <h3>{{ $heading_title_po_details }}</h3>
@@ -77,7 +77,7 @@
                       
                         <th>{{$col_received_quantity}}</th>
                         <th> VARIANCE </th>
-                        <th> NOT IN PO </th>
+                        <th> REMARKS </th>
                     </tr>
                 </thead>
                 @if( !CommonHelper::arrayHasValue($purchase_orders) )
@@ -98,11 +98,11 @@
                         <td>{{ $po->quantity_ordered }}</td> 
                           
 
-                        
-                        @if ( $po->po_status  == 4)
-  
-                        <td  style="text-align:  right;">                          
-                       {{ Form::open(array('url'=>'purchase_order/details', 'class'=>'form-signin', 'id'=>'form-purchase-order', 'role'=>'form', 'method' => 'get')) }}
+               
+                        <td >     
+                    
+                                @if($po->po_status == 4 )                     
+                         {{ Form::open(array('url'=>'purchase_order/updateqty', 'class'=>'form-signin', 'id'=>'form-purchase-order', 'role'=>'form', 'method' => 'get')) }}   
                        {{ Form::hidden('upc', $po->upc) }}
                         {{ Form::hidden('receiver_no',  Input::get('receiver_no', NULL)) }}
                         {{ Form::hidden('division_id', $po->dept_number) }}
@@ -114,10 +114,13 @@
 
                         {{ Form::text('quantity', $po->quantity_delivered, array('class'=>'form-signin', 'placeholder'=>'', 'id'=>"readonly")) }}
                         {{ Form::close() }}
+                                @else 
+                                <input style="text-align: center;" type="" name="" disabled value="{{ $po->quantity_delivered }} ">
+                                @endif
+                      
+
                         </td>
-                         @else
-                        <td style="text-align:  center;"><input type="" name="" disabled value="{{ $po->quantity_delivered }} "></td>
-                        @endif
+                        
 
 
                         <td>{{ $po->quantity_delivered - $po->quantity_ordered  }}</td>

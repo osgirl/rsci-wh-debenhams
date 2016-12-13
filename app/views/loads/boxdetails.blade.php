@@ -70,7 +70,7 @@
 <div class="widget widget-table action-table">
     <div class="widget-header"> <i class="icon-th-list"></i>
       <h3>{{$pell_no_header_contnt}}</h3>
-       <span class="pagination-totalItems"></span>
+       <span class="pagination-totalItems"> </span>
     </div>
     <!-- /widget-header -->
     <div class="widget-content">

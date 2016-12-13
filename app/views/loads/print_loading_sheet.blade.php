@@ -100,11 +100,11 @@ header {margin-bottom: 20px;}
 					    <td><input type=""  value=""  style="border: solid 0px #000;"></td>
 					    </th></tr>
 					    <tr><th style="text-align: right";>Origin :
-					    <td><input type=""  placeholder="8001 - Warehouse "  style="border: solid 0px #000;"></td>
+					    <td style="border: solid 0px #000;">8001 - Warehouse</td>
 					    </th></tr>   
-						<tr><th style="text-align: right";>Destination : 
-					    <td> </td>
-					    </th></tr>
+						<tr><th style="text-align: right";>Destination :
+					    <td   style="border: solid 0px #000;">  {{ Store::getStoreName($storelocationss->destination) }} </td>
+					    </th></tr> 
 				 
 					</table>
 				</td>

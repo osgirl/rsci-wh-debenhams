@@ -97,15 +97,15 @@
 			<table class="table table-bordered">
 				<thead>
 					<tr>
-						<th>{{ $col_no }}</th>
-						<th>{{ $col_store_name }}</th>
+						<th>{{ $col_no }}</th> 
 						<th><a href="{{ $sort_sku }}" class="@if( $sort=='sku' ) {{ $order }} @endif">{{ $col_sku }}</a></th>
 						<th><a href="{{ $sort_upc }}" class="@if( $sort=='upc' ) {{ $order }} @endif">{{ $col_upc }}</a></th>
 						<th>SHORT DESCRIPTION</th>
-						<th><a href="{{ $sort_from_slot_code }}" class="@if( $sort=='from_slot_code' ) {{ $order }} @endif">{{ $col_from_slot_code }}</th>
+						<th><a href="{{ $sort_from_slot_code }}" class="@if( $sort=='from_slot_code' ) {{ $order }} @endif">{{ $col_slot_code }}</th>
 						<th>{{ $col_qty_to_pick }}</th>
 						<th>{{ $col_to_move }}</th>
 						<th>Variance</th>
+						<th>REMARKS</th>
 						<!-- <th>{{ $col_status }}</th> -->
 					</tr>
 				</thead>
@@ -120,8 +120,7 @@
 						style="background-color:#F29F9F"
 					@endif
 					>
-						<td>{{$counter++}}</td>
-						<td>{{$pd['store_name']}}</td>
+						<td>{{$counter++}}</td> 
 						<td>{{$pd['sku']}}</td>
 						<td>{{$pd['upc']}}</td>
 						<td>{{$pd['description']}}</td>
@@ -129,7 +128,17 @@
 						<td>{{$pd['quantity_to_pick']}}</td>
 						<td>{{$pd['moved_qty']}}</td>
 						<td>{{$pd['moved_qty'] - $pd['quantity_to_pick']  }}</td>
+						<td>   
 
+						 @if($pd['quantity_to_pick']  == '0' && $pd['sku'] == '')
+                                    Not in PO and MasterList!
+                                
+                        @elseif ($pd['quantity_to_pick']  == '0' )
+                                    Not in PO
+                        @elseif ( $pd['sku'] == '' )
+                                    Not in MasterList!
+                        @endif
+                        </td>
 					</tr>
 					@endforeach
 				@endif

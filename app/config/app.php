@@ -120,11 +120,10 @@ return array(
 		'Illuminate\Translation\TranslationServiceProvider',
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
-		'Illuminate\Workbench\WorkbenchServiceProvider',
-		'LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider',
-		'LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider',
+		'Illuminate\Workbench\WorkbenchServiceProvider', 
 		'Barryvdh\DomPDF\ServiceProvider',
-		'Milon\Barcode\BarcodeServiceProvider',
+		'Milon\Barcode\BarcodeServiceProvider', 
+		'Maatwebsite\Excel\ExcelServiceProvider',
 	),
 
 	/*
@@ -190,11 +189,11 @@ return array(
 		'Str'               => 'Illuminate\Support\Str',
 		'URL'               => 'Illuminate\Support\Facades\URL',
 		'Validator'         => 'Illuminate\Support\Facades\Validator',
-		'View'              => 'Illuminate\Support\Facades\View',
-		'Authorizer' 		=> 'LucaDegasperi\OAuth2Server\Facades\AuthorizerFacade',
+		'View'              => 'Illuminate\Support\Facades\View', 
 		'PDF'				=> 'Barryvdh\DomPDF\Facade',
     'DNS1D' => 'Milon\Barcode\Facades\DNS1DFacade',
     'DNS2D' => 'Milon\Barcode\Facades\DNS2DFacade',
+    'Excel' => 'Maatwebsite\Excel\Facades\Excel',
 	),
 
 );

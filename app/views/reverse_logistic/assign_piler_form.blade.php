@@ -27,7 +27,7 @@
 		@if(count($params) > 1)
 	
 			<div class="control-group">
-				<label class="control-label"> MTS no. :</label>
+				<label class="control-label"> Stock Piler :</label>
 				<div class="controls">
 			 {{ Form::select('stock_piler[]', $stock_piler_list, '', array('id' => 'stock_piler_select') ) }}
 				<!-- <a class="add-piler-btn"><i class="icon-plus-sign" style="font-size: 1.5em;"></i></a> -->
@@ -101,7 +101,7 @@ $(document).ready(function() {
     	console.log(stockpiler);
 
     	if (stockpiler == '') {
-    		alert('{{ $error_assign }}');
+    	///	alert('{{ $error_assign }}');
     		return false;
     	} else {
     		$('#form-assign').submit();

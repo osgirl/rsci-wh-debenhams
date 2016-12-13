@@ -78,16 +78,34 @@
 		<table>
 			<tr>
 				<th>
-				@if ( CommonHelper::valueInArray('CanExportPurchaseOrders', $permissions) )
-				 
-				      <a href="{{URL::to('purchase_order/export?receiver_no='.$receiver_no.'&po_no='.$filter_po_no)}}"   class="btn btn-info btn-darkblue" title="Shortage/Overage Discrepancy"> Report </a>
-				  @endif
-				      
-			        
+			<!-- 	@if ( CommonHelper::valueInArray('CanExportPurchaseOrders', $permissions) )
+				 <div class="btn-group div-buttons">
+				        <button type="button" class="btn btn-info btn-darkblue " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Report <span class="caret"></span>
+				        </button>
+				
+				         
+				     <a href="{{URL::to('purchase_order/export?receiver_no='.$receiver_no.'&po_no='.$filter_po_no)}}"   class="btn btn-info btn-darkblue" title="Shortage/Overage Discrepancy"> export excel </a> 
+				       
+				     	 
+				  @endif -->
+				
+			  
+					<div class="btn-group div-buttons">
+				        <button type="button" class="btn btn-info btn-darkblue " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Report <span class="caret"></span>
+				        </button>
+				        <ul class="dropdown-menu">
+				          <li>   <a href="{{URL::to('purchase_order/export?receiver_no='.$receiver_no.'&po_no='.$filter_po_no)}}">export pdf </a></li>
+					          <li> <a href="{{URL::to('purchase_order/export123?receiver_no='.$receiver_no.'&po_no='.$filter_po_no.
+					          '&filter_shipment_reference_no='.$filter_shipment_reference_no.
+					          '&filter_invoice_no='.$filter_invoice_no)}}">export excel </a> </li>
+				        </ul>
+			      	</div>
+
+			 
 						@if ( CommonHelper::valueInArray('CanAssignPurchaseOrders', $permissions) || CommonHelper::valueInArray('CanSyncPurchaseOrders', $permissions))
-						
+					 
 							<a role="button" class="btn btn-info btn-darkblue assignPO" title="{{ $button_assign_to_stock_piler }}" data-toggle="modal">{{ $button_assign_to_stock_piler }}</a>
-						
+					 
 						
 						<!-- @if ( CommonHelper::valueInArray('CanExportPurchaseOrders', $permissions) ) -->
 					<!--<a href= {{ $url_export_backorder }} class="btn btn-info btn-darkblue">{{ $button_generate_backorder }}</a> -->
@@ -97,18 +115,12 @@
 						<a class="btn btn-info btn-darkblue" href={{URL::to('purchase_order/pulljda')}}>{{ $button_jda }}</a>
 						@endif 
 					</div>
-				</th>
-				<th>
-					<div class="btn-group div-buttons">
-				        <button type="button" class="btn btn-info btn-darkblue " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Report <span class="caret"></span>
-				        </button>
-				        <ul class="dropdown-menu">
-				          <li><a href={{URL::to('purchase_order/discrepansy')}}>Overage/Shortage Report</a></li>
-					          <li><a href={{URL::to('purchase_order/unlisted')}}>Unlisted Report</a></li>
-				        </ul>
-			      	</div>
-			     </th>--> <a href="{{url::to('purchase_order/sync_to_mobile_division?po_no='.$filter_po_no.'&shipment_no='.$filter_shipment_reference_no.'&total_qty='.$total_qty.'&receiver_no='.$receiver_no)}}"   class="btn btn-info btn-darkblue">Sync To Mobile</a>
+				</th>-->
+			
+
+			 <a href="{{url::to('purchase_order/sync_to_mobile_division?po_no='.$filter_po_no.'&shipment_no='.$filter_shipment_reference_no.'&total_qty='.$total_qty.'&receiver_no='.$receiver_no)}}"   class="btn btn-info btn-darkblue">Sync To Mobile</a>
 			      @endif
+			     
 			</tr>
 		</table>
 	</div>
@@ -349,8 +361,8 @@ $(document).ready(function() {
 	$('.closePO').click(function() {
     	var purchase_no = $(this).data('id');
 
-    	var answer = confirm('Are you sure you want to close this PO?');
-   		if (answer) {
+    	//var answer = confirm('Are you sure you want to close this PO?');
+   		if (purchase_no) {
 	    	$('#closePO_' + purchase_no).submit();
     	} else {
 			return false;
@@ -369,7 +381,7 @@ $(document).ready(function() {
     	stockpiler = $('select[name=\'stock_piler\']').val();
 
     	if (stockpiler == undefined) {
-    		alert('{{ $error_assign_po }}');
+    	//	alert('{{ $error_assign_po }}');
     		return false;
     	} else {
     		$('#form-assign').submit();

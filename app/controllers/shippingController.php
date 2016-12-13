@@ -58,8 +58,8 @@ class shippingController extends \BaseController {
 			'order' 					=> $this->data['order'],
 			'page' 						=> $this->data['page']
 			 );
-		$results = load::getlist($arrparam);
-		$results_total = load::getlist($arrparam,True);
+		$results = Load::getlist($arrparam);
+		$results_total = Load::getlist($arrparam,True);
 
 		$this->data['load_list']       = Paginator::make($results, $results_total, 30);
 		$this->data['list_count']      = $results_total;
@@ -221,6 +221,7 @@ class shippingController extends \BaseController {
 
         $arrBoxCode = explode(',', Input::get("load_code"));
 
+		$box_codes 			= Input::get('load_code', null);
 		
         foreach ($arrBoxCode as $codes) {
             $arrParams = array(
@@ -232,18 +233,18 @@ class shippingController extends \BaseController {
             load::assignToStockPiler($codes, $arrParams);
 
             // AuditTrail
-            /**
+           
             $users = User::getUsersFullname(Input::get('stock_piler'));
 
             $fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $users));
 
             $data_before = '';
-            $data_after = 'Box Code: ' . $box_codes . ' assigned to ' . $fullname;
+            $data_after = 'Pell number : ' . $box_codes . ', assigned to :' . $fullname;
 
             $arrParams = array(
-                'module'		=> Config::get('audit_trail_modules.boxing'),
-                'action'		=> Config::get('audit_trail.update_box'),
-                'reference'		=> $box_codes,
+                'module'		=> Config::get('audit_trail_modules.loading/shipping'),
+                'action'		=> Config::get('audit_trail.assign_load'),
+                'reference'		=> 'Pell number '. $box_codes. ', ',
                 'data_before'	=> $data_before,
                 'data_after'	=> $data_after,
                 'user_id'		=> Auth::user()->id,
@@ -251,10 +252,12 @@ class shippingController extends \BaseController {
                 'updated_at'	=> date('Y-m-d H:i:s')
                
             );
-            //AuditTrail::addAuditTrail($arrParams);
-            // AuditTrail
-             **/
+
         }
+            AuditTrail::addAuditTrail($arrParams);
+            // AuditTrail
+             
+        
 
 		
 

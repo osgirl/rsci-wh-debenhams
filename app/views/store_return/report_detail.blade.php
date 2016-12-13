@@ -19,7 +19,7 @@
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr> 
-				<th>TL number </th>
+				<th> MTS no.</th>
 				<th>from subloc</th>
 				<th>to subloc</th>
 				<th> SKU </th>

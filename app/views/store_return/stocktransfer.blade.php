@@ -68,7 +68,7 @@
                         <button type="button" class="btn btn-info btn-darkblue " data-toggle="dropdown">Report <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu"> 
-                          <li><a href={{url::to('stock_transfer/discrepansymts')}}>Overage/Shortage Report</a></li>
+                          <li><a href={{url::to('stock_transfer/discrepansymts')}}>Over/Short Report</a></li>
                        <!--     <li><a href={{URL::to('stock_transfer/exportCSVunlisted')}}>Unlisted Report</a></li>  -->
                         </ul>
                     </div>  
@@ -124,9 +124,9 @@
 
                             <td>{{ date("M d, Y", strtotime($value['date_entry'])) }} </td>
                         
-                            <td >{{$value['store_name']}} </td> 
+                            <td >{{ Store::getStoreName($value['from_store_code']) }} </td> 
 
-                            <td >{{$value['to_store_code']}} </td> 
+                            <td >{{ Store::getStoreName($value['to_store_code']) }} </td> 
                             <td>{{ $value['firstname'].' '. $value['lastname'] }}</td> 
                             <td>                            
                             @if($value['so_status'] === 23)

@@ -29,7 +29,7 @@ class odbcConnection{
     {
         echo "Connecting to DB2... \n";
 		// $dsn_link = "DRIVER=iSeries Access ODBC Driver;SYSTEM=172.16.1.1;DBQ={$this->jdaLib}";
-		$dsn_link = "DRIVER=iSeries Access ODBC Driver;SYSTEM=172.16.1.2;DBQ={$this->jdaLib}";
+		$dsn_link = "DRIVER=iSeries Access ODBC Driver;SYSTEM=JDAPROD2.RGOC.COM.PH;DBQ={$this->jdaLib}";
         echo "$dsn_link \n";
         $handle = @odbc_connect($dsn_link,$this->user,$this->pass,SQL_CUR_USE_DRIVER) or die("Error! Couldn't Connect To Database. Error Code:  ".odbc_error());
         $this->connHandle = $handle;

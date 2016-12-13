@@ -12,10 +12,32 @@ class eWMS
 	public function GetPendingPO()
 	{
 		$db = $this->db;
-		$result = $db->query("SELECT * FROM jda_connections");
+		$result = $db->query("SELECT * FROM wms_purchase_order_lists ");
+		if($result === false) 
+		{
+			return false;
+		} 
+		else 
+		{	
+			//return mysqli_fetch_assoc($result);
+			$result1 = array();
+			foreach ($result as $value ) {
+				$result1[] = $value['receiver_no'];
+			}
+
+		return $result1;		
+		}
+	}
+
+
+	public function UpdatePOQty()
+	{
+		$db = $this->db;
+		$result = $db->query("SELECT * FROM death where id=7 or id=8");
 		if($result === false) {
 			return false;
-		} else {			
+		} else {	
+		return mysqli_fetch_assoc($result);		
 		}
 	}
 

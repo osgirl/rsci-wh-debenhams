@@ -131,38 +131,39 @@
 							<td><a href="{{$url_detail}}&picklist_doc={{$asdf['move_doc_number']}}&filter_stock_piler={{ $asdf['firstname'].' '.$asdf['lastname'] }}"> {{$asdf['move_doc_number']}}</a></td>
 
 							<td>
-						  
+						  	@if($asdf['data_display'] === 'Posted')
+						  	<input style="text-align: center;" type="" disabled="" name="" value="{{$asdf['ship_date']}}">
+						  	@else
 							{{ Form::open(array('url'=>'store_return/pickingstock', 'class'=>'form-signin', 'id'=>'form-pick-list', 'role'=>'form', 'method' => 'get')) }}
 							{{ Form::hidden('move_doc_number', $asdf['move_doc_number']) }}
                        
                              {{ Form::text('filter_date_entry',  ($asdf['ship_date']), array('class'=>'form-signin', 'placeholder'=>'', 'id'=>"readonly"), ['size' => '1x1']) }}
                           
 							{{ Form::close() }} 
+
+							@endif
                             <td>   {{ Store::getStoreName($asdf['from_store_code']) }}</td> 
                             <td> {{ Store::getStoreName($asdf['to_store_code']) }}</td> 
 							<td> {{$asdf['firstname'].' '.$asdf['lastname']}} </td> 
 							<td class="align-center">
 								@if($asdf['data_display'] === 'Posted')
-									<a style="width: 60px;" disabled="disabled" class="btn btn-info">{{ $text_posted }}</a>  
-<a style="width: 140px;"   class="btn btn-danger" href={{URL('picking/printboxlabelstock/'.$asdf['move_doc_number'])}}>{{$print_pagkaging_slip}}</a> 	 
-								@elseif ( $asdf['data_display'] === 'Done' )
-								
-							<a style="width: 80px;" class="btn btn-success " data-id="{{ $asdf['move_doc_number'] }}" href={{URL::TO('stock_transfer/closetlnumberpick?tl_number='.$asdf['move_doc_number'])}}>{{ $button_close_picklist }}</a>  
-<a style="width: 140px;"   disabled class="btn btn-danger">{{$print_pagkaging_slip}}</a>
+									<a style="font-size: 12px; width: 50px;" disabled="disabled" class="btn btn-info">{{ $text_posted }}</a>  
+									<a style="font-size: 10px; width: 90px;"  class="btn btn-danger" href={{URL('picking/printboxlabelstock/'.$asdf['move_doc_number'])}}>{{$print_pagkaging_slip}}</a>
+									<a style="font-size: 11px; width: 80px;"  href="{{URL('picking/printpacklist/'.$asdf['move_doc_number'])}}" class="btn btn-danger">{{$col_mts_rep}}</a> 	 
+								@elseif ( $asdf['data_display'] === 'Done'  && $asdf['ship_date']  != 0000-00-00 )
+									
+							<a style="font-size: 12px; width: 50px;" class="btn btn-success" data-id="{{ $asdf['move_doc_number'] }}" href={{URL::TO('stock_transfer/closetlnumberpick?tl_number='.$asdf['move_doc_number'])}}>{{ $btn_close_Str_pl }}</a>   
 									 
 									 
 								@elseif ( $asdf['data_display'] === 'Assigned' )
 
-								<a style="width: 70px;" disabled="disabled" class="btn btn-danger">Assigned</a>
-<a style="width: 140px;"   disabled class="btn btn-danger">{{$print_pagkaging_slip}}</a>
+								
+								<a style="font-size: 12px; width: 50px;" disabled="disabled" class="btn btn-danger">Assigned</a>
 								@elseif ( $asdf['data_display'] === 'In Process' )
 
-								<a style="width: 78px;" disabled="disabled" class="btn btn-danger">In Process</a>
-<a style="width: 140px;"   disabled class="btn btn-danger">{{$print_pagkaging_slip}}</a>
+								<a style="font-size: 11px; width: 60px;"  disabled="disabled" class="btn btn-info">In Process</a> 
 								@else
-									<a style="width: 60px;" disabled="disabled" class="btn">{{ $button_close_picklist }}</a>
-									
-<a style="width: 140px;"   disabled class="btn btn-danger">{{$print_pagkaging_slip}}</a>
+									<a style="font-size: 12px; width: 50px;"  disabled="disabled" class="btn btn-warning"> Open </a>  
 								
 								@endif
 
@@ -176,7 +177,16 @@
 
 	 
 </div>
-
+<div class="clear">
+	<div class="div-paginate">
+		@if(CommonHelper::arrayHasValue($picklist) )
+		    <h6 class="paginate">
+				<span>{{ $picklist->appends($arrFilters)->links() }}&nbsp;</span>
+			</h6>
+		@else
+			&nbsp;
+		@endif
+	</div>
 
 
 <script type="text/javascript">

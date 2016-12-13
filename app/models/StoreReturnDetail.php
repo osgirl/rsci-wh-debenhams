@@ -10,9 +10,9 @@ class StoreReturnDetail extends Eloquent {
 public static function getFilteredPicklistDetailasdf($picklistDoc, $data = array(), $getCount= false)
 
 	{
-		$query = StoreReturnDetail::SELECT('store_return_detail.sku as upc', 'product_lists.sku', 'product_lists.description',
-		'store_return_detail.delivered_qty', 'store_return_detail.received_qty')
-		->join('product_lists','store_return_detail.sku','=','product_lists.upc')
+		$query = StoreReturnDetail::SELECT('store_return_detail.sku as upc', 
+		'store_return_detail.delivered_qty', 'store_return_detail.received_qty', DB::RAW("COALESCE(wms_product_lists.sku, 'No Result Found') as sku,COALESCE(wms_product_lists.description, 'No Result Found') as description "))
+		->join('product_lists','store_return_detail.sku','=','product_lists.upc', 'left')
 		 ->WHERE('store_return_detail.so_no','=', $picklistDoc);
 
 

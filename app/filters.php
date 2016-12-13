@@ -39,16 +39,16 @@ Route::filter('auth', function()
 	{
 		if (Request::ajax())
 		{
-			return Response::make('Unauthorized', 401);
+			return Response::make('unauthorized', 401);
 		}
-		return Redirect::guest('login');
+		return Redirect::guest('/');
 	}
 });
 
 
 Route::filter('auth.basic', function()
 {
-	return Auth::basic();
+	return Auth::basic('username');
 });
 
 /*
@@ -62,9 +62,10 @@ Route::filter('auth.basic', function()
 |
 */
 
-Route::filter('guest', function()
+Route::filter('/', function()
 {
-	if (Auth::check()) return Redirect::to('/');
+	if (Auth::check()) 
+		return Redirect::to('/');
 });
 
 /*
@@ -78,7 +79,7 @@ Route::filter('guest', function()
 |
 */
 
-Route::filter('csrf', function()
+Route::filter('users/logout', function()
 {
 	if (Session::token() !== Input::get('_token'))
 	{

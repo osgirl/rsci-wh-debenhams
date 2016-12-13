@@ -100,6 +100,8 @@ class SlotListController extends BaseController {
 
 		$this->data['col_id'] = Lang::get('slot_list.col_id');
 		$this->data['col_slot_no'] = Lang::get('slot_list.col_slot_no');
+		$this->data['col_store_no'] = Lang::get('slot_list.col_store_no');
+		$this->data['col_zone_no'] = Lang::get('slot_list.col_zone_no');
 
 		$this->data['button_search'] = Lang::get('general.button_search');
 		$this->data['button_clear'] = Lang::get('general.button_clear');

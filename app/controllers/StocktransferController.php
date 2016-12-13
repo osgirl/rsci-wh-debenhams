@@ -193,6 +193,7 @@ class StocktransferController extends \BaseController {
 		$filter_sku           = Input::get('filter_sku', NULL);
 		$filter_upc           = Input::get('filter_upc', NULL);
 		$filter_so            = Input::get('filter_so', NULL);
+		$filter_entry_date 		= Input::get('filter_entry_date', null);
 		$filter_from_slot     = Input::get('filter_from_slot', NULL);
 		$filter_store     		= Input::get('filter_store', NULL);
 		$filter_stock_piler     = Input::get('filter_stock_piler', NULL);
@@ -214,6 +215,7 @@ class StocktransferController extends \BaseController {
 						'filter_upc'			=> $filter_upc,
 						'filter_so'				=> $filter_so,
 						'filter_from_slot'		=> $filter_from_slot,
+						'filter_entry_date'		=> $filter_entry_date,
 						// 'filter_to_slot'		=> $filter_to_slot,
 						// 'filter_status_detail'	=> $filter_status_detail,
 						'sort'					=> $sort_detail,
@@ -234,6 +236,7 @@ class StocktransferController extends \BaseController {
 									'filter_doc_no'			=> $filter_doc_no,
 									'filter_status'			=> $filter_status,
 									'filter_store'			=> $filter_store,
+									'filter_entry_date'		=> $filter_entry_date,
 									'filter_stock_piler'	=> $filter_stock_piler,
 									'sort_back'				=> $sort_back,
 									'order_back'			=> $order_back,
@@ -255,6 +258,7 @@ class StocktransferController extends \BaseController {
 		$this->data['filter_type']           = $filter_type;
 		$this->data['filter_doc_no']         = $filter_doc_no;
 		$this->data['filter_status']         = $filter_status;
+		$this->data['filter_entry_date']		= $filter_entry_date;
 		$this->data['filter_sku']            = $filter_sku;
 		$this->data['filter_upc']            = $filter_upc;
 		$this->data['filter_so']             = $filter_so;
@@ -272,7 +276,7 @@ class StocktransferController extends \BaseController {
 		$this->data['page']  = $page_detail;
 
 		$url = '?filter_sku=' . $filter_sku . '&filter_upc=' . $filter_upc . '&filter_so=' . $filter_so;
-		$url .= '&filter_from_slot=' . $filter_from_slot . '&picklist_doc=' . $picklistDoc;
+		$url .= '&filter_from_slot=' . $filter_from_slot . '&picklist_doc=' . $picklistDoc.'&filter_entry_date='.$filter_entry_date;
 		$url .= '&page=' . $page_detail;
 
 		 
@@ -953,6 +957,26 @@ class StocktransferController extends \BaseController {
 
 			Box::assignToTLstock($assignTL, $loadnumber);
 			Box::assignToTLnumberboxstock($assignTL, $loadnumber);
+
+
+		/*	$users = User::getUsersFullname(Input::get('stock_piler')); 
+
+			$fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $users));
+*/
+			$data_before = '';
+			$data_after ='Box no. : ' . $tlnumber . ', Assigned to Pell no. : ' . $loadnumber;
+
+			$arrParams = array(
+							'module'		=> Config::get("audit_trail_modules.subloc_loading"),
+							'action'		=> Config::get('audit_trail.assign_load'),
+							'reference'		=> 'Box no. : '. $tlnumber,
+							'data_before'	=> $data_before,
+							'data_after'	=> $data_after,
+							'user_id'		=> Auth::user()->id,
+							'created_at'	=> date('Y-m-d H:i:s'),
+							'updated_at'	=> date('Y-m-d H:i:s')
+							);
+			AuditTrail::addAuditTrail($arrParams);
  			}
 
 			return Redirect::to('stocktransfer/stocktranferload'. $this->setURL())->with('message', "Succefully Assigned in Load Number!");
@@ -1099,8 +1123,24 @@ class StocktransferController extends \BaseController {
 
 			Box::getremovedTLUpdatestock($assignTL, $loadnumber);
 			Box::getremovedTLstock($assignTL, $loadnumber);
- 			}
+ 			
+ 			$data_before = '';
+            $data_after = 'Box number : ' . $tlnumber .', Pell number : '. $loadnumber; // ', assign by : ' . Auth::user()->username;
 
+            $arrParams = array(
+                'module'		=> Config::get('audit_trail_modules.subloc_loading'),
+                'action'		=> Config::get('audit_trail.assign_remove'),
+                'reference'		=> 'Remove Box no. : '. $tlnumber. ', ',
+                'data_before'	=> $data_before,
+                'data_after'	=> $data_after,
+                'user_id'		=> Auth::user()->id,
+                'created_at'	=> date('Y-m-d H:i:s'),
+                'updated_at'	=> date('Y-m-d H:i:s')
+               
+            );
+
+        }
+            AuditTrail::addAuditTrail($arrParams);
 			return Redirect::to('stocktransfer/stocktranferload'. $this->setURL())->with('message', "Succefully Remove Box Number!");
 
 	}

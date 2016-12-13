@@ -115,8 +115,8 @@
 							<a style="width: 60px;" class="btn btn-info" href="{{URL::to('load/shipLoad?loadnumber='.$lo->load_code)}}">Ship</a>
 						    		<a disabled class="btn btn-info">{{$col_A_loNum}}</a>
 									<a disabled class="btn btn-danger">{{$col_load_sheet}}</a> 
-									<a disabled  class="btn btn-danger">{{$col_mts_report}}</a>
-							@endif
+						<!-- 			<a disabled  class="btn btn-danger">{{$col_mts_report}}</a>
+							 -->@endif
 
 					
 					@endif
@@ -125,8 +125,8 @@
 					<a disabled class="btn btn-info">Shipped</a>
 					<a class="btn btn-info" disabled>{{$col_A_loNum}}</a>
 					<a href="{{url('load/printloadingsheet/' . $lo->load_code)}}" target="_blank" class="btn btn-danger">{{$col_load_sheet}}</a> 
-					 <a href="{{url('load/printpacklist/' . $lo->load_code)}}" target="_blank" class="btn btn-danger">{{$col_mts_report}}</a>
-
+					 <!-- <a href="{{url('load/printpacklist/' . $lo->load_code)}}" target="_blank" class="btn btn-danger">{{$col_mts_report}}</a>
+ -->
 
 					 @endif
 			 
@@ -143,7 +143,7 @@
 							@endif
 							
 					<a disabled class="btn btn-danger">{{$col_load_sheet}}</a> 
-					<a disabled  class="btn btn-danger">{{$col_mts_report}}</a>
+				<!-- 	<a disabled  class="btn btn-danger">{{$col_mts_report}}</a> -->
 				
 				 
 						@endif  

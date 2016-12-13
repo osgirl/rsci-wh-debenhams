@@ -29,6 +29,7 @@ CREATE TABLE `wms_purchase_order_lists` (
   `vendor_id` int(11) NOT NULL,
   `receiver_no` int(11) NOT NULL,
   `purchase_order_no` int(11) NOT NULL,
+  `inovoice_no` int(11) NOT NULL,
   `total_qty` int(11) NOT NULL,
   `po_status` tinyint(4) NOT NULL,
   `shipment_reference_no` varchar(30) COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',

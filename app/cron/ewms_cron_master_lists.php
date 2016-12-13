@@ -10,16 +10,16 @@ $ewms 		= new cronEWMS();
 
 
 //$products 	= $db2->products();
-$ewms->products(); 
-/**$slots 		= $db2->slots();		
+//$ewms->products(); 
+//$slots 		= $db2->slots();		
+
 $ewms->slots(); 	sleep(2);
-$department = $db2->department();	
+/*$department = $db2->department();	
 $ewms->department(); 	sleep(2);
 $vendors 	= $db2->vendors();	
 $ewms->vendors(); 	sleep(2);
 $stores 	= $db2->stores();		
-$ewms->stores(); 	sleep(2);**/
-
-
+$ewms->stores(); 	sleep(2);
+*/
 //$db2->close();
 $ewms->close();

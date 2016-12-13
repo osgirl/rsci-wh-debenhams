@@ -1927,9 +1927,9 @@ background-repeat:no-repeat;
   *background-color: #bd2b1f;
 }
 .btn-danger:hover, .btn-danger:active, .btn-danger.active, .btn-danger.disabled, .btn-danger[disabled] {
-	background-color: #bd2b1f;
+	background-color: #a7261c;
   color: white;
-  *background-color: #a7261c;
+  *background-color: #bd2b1f;
 }
 .btn-danger:active, .btn-danger.active {
 	background-color: #912118 \9;

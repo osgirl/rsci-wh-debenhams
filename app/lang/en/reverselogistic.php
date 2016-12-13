@@ -7,7 +7,7 @@ return array(
 	'heading_title_assign_store_return' 	=> 'Assign Store Return/s to Stock Piler',
 
 	'text_success_close_so'		=> 'Successfully closed the SO!',
-	'reverse_text_successfully'		=> 'Successfully closed the Reverse TL Number!',
+	'reverse_text_successfully'		=> 'Successfully closed the MTS number!',
 	'text_closed_so'			=> 'Closed',
 	'text_warning'				=> 'Close Store Order',
 	'text_generate_letdown'     => 'Generate Letdown list',
@@ -69,7 +69,7 @@ return array(
 	'entry_so_no'			=> 'Store Return No.:',
 	'entry_stock_piler'			=> 'Stock Piler:',
 
-	'text_success_assign'		=> 'Successfully assigned the Store Return/s!',
+	'text_success_assign'		=> 'Successfully assigned the Return to Warehouse!',
 	'text_posted'			=> 'Posted',
 	'text_success_posted'		=> 'Successfully closed store return!',
 );

@@ -19,7 +19,7 @@
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
-				<th>TL number</th>
+				<th>MTS no.</th>
 			 
 				<th>{{ $col_store_name }}</th>
 				<th> SKU </th>

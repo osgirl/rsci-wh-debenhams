@@ -106,7 +106,7 @@ $(document).ready(function() {
     	console.log(stockpiler);
 
     	if (stockpiler == '') {
-    		alert('{{ $error_assign }}');
+    		///alert('{{ $error_assign }}');
     		return false;
     	} else {
     		$('#form-assign').submit();

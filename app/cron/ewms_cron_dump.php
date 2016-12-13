@@ -1,6 +1,6 @@
 <?php
 
-// include_once("ewms_connection.php");
+ include_once("ewms_connection.php");
 chdir(dirname(__FILE__));
 include_once('ewms_cron_class.php');
 
@@ -16,23 +16,26 @@ sleep(10);
 $ewms->vendors();
 sleep(10);
 $ewms->stores();
-sleep(10);
+sleep(10);*/
 $ewms->purchaseOrder();
 sleep(10);
-$ewms->purchaseOrderDetails();
-sleep(10);
-$ewms->storeOrder();
+/*$ewms->purchaseOrderDetails();
+sleep(10);*/
+
+/*$ewms->storeOrder();
 sleep(10);
 $ewms->storeOrderDetails();
 sleep(10);
 $ewms->storeReturn();
 sleep(10);
-$ewms->storeReturnDetail();*/
-$ewms->picklist();
+$ewms->storeReturnDetail();
+*/
+/*$ewms->picklist();
 sleep(10);
 $ewms->picklistDetail();
 $ewms->close();
-sleep(10);
+sleep(10);*/
+
 /*$ewms->inventory();
 sleep(10);
 $ewms->letdown();

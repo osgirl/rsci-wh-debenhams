@@ -1,0 +1,69 @@
+
+Warning: include_once(config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+
+Warning: include_once(): Failed opening 'config/config.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+sql/mysql: mysql:host=localhost;dbname=deve
+
+ Getting reference # from database 
+
+ SELECT DISTINCT reference FROM wms_transactions_to_jda trans
+					INNER JOIN wms_picklist_details pick_d ON pick_d.move_doc_number = trans.reference
+					INNER JOIN wms_box_details bd ON bd.picklist_detail_id = pick_d.id
+					WHERE module = 'Picklist' AND jda_action = 'Closing' AND reference = 22 AND trans.sync_status = 0 
+Closing pdo connection... 
+PHP Warning:  include_once(config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+PHP Warning:  include_once(): Failed opening 'config/config.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+
+Fatal error: Cannot redeclare mysql_credentials() (previously declared in C:\xampp\htdocs\rsci-wh-ewms\app\cron\config\config.php:7) in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\config\config.php on line 12
+PHP Fatal error:  Cannot redeclare mysql_credentials() (previously declared in C:\xampp\htdocs\rsci-wh-ewms\app\cron\config\config.php:7) in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\config\config.php on line 12
+
+Parse error: syntax error, unexpected ''config/config.php'' (T_CONSTANT_ENCAPSED_STRING) in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+PHP Parse error:  syntax error, unexpected ''config/config.php'' (T_CONSTANT_ENCAPSED_STRING) in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+
+Parse error: syntax error, unexpected ''/config/config.php'' (T_CONSTANT_ENCAPSED_STRING) in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+PHP Parse error:  syntax error, unexpected ''/config/config.php'' (T_CONSTANT_ENCAPSED_STRING) in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+sql/mysql: mysql:host=locahost;dbname=deve
+
+Warning: PDO::__construct(): php_network_getaddresses: getaddrinfo failed: No such host is known.  in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 39
+database connection failed: SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo failed: No such host is known. PHP Warning:  PDO::__construct(): php_network_getaddresses: getaddrinfo failed: No such host is known.  in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 39
+sql/mysql: mysql:host=locahost;dbname=deve
+
+Warning: PDO::__construct(): php_network_getaddresses: getaddrinfo failed: No such host is known.  in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 40
+sql/mysql: mysql:host=locahost;dbname=deve
+database connection failed: SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo failed: No such host is known. PHP Warning:  PDO::__construct(): php_network_getaddresses: getaddrinfo failed: No such host is known.  in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 40
+sql/mysql: mysql:host=localhost;dbname=deve
+
+ Getting reference # from database 
+
+ SELECT DISTINCT reference FROM wms_transactions_to_jda trans
+					INNER JOIN wms_picklist_details pick_d ON pick_d.move_doc_number = trans.reference
+					INNER JOIN wms_box_details bd ON bd.picklist_detail_id = pick_d.id
+					WHERE module = 'Picklist' AND jda_action = 'Closing' AND reference = 62 AND trans.sync_status = 0 
+Closing pdo connection... 
+sql/mysql: mysql:host=localhost;dbname=deve
+
+ Getting reference # from database 
+
+ SELECT DISTINCT reference FROM wms_transactions_to_jda trans
+					INNER JOIN wms_picklist_details pick_d ON pick_d.move_doc_number = trans.reference
+					INNER JOIN wms_box_details bd ON bd.picklist_detail_id = pick_d.id
+					WHERE module = 'Picklist' AND jda_action = 'Closing' AND reference = 64 AND trans.sync_status = 0 
+Closing pdo connection... 
+sql/mysql: mysql:host=localhost;dbname=deve
+
+ Getting reference # from database 
+
+ SELECT DISTINCT reference FROM wms_transactions_to_jda trans
+					INNER JOIN wms_picklist_details pick_d ON pick_d.move_doc_number = trans.reference
+					INNER JOIN wms_box_details bd ON bd.picklist_detail_id = pick_d.id
+					WHERE module = 'Picklist' AND jda_action = 'Closing' AND reference = 16 AND trans.sync_status = 0 
+Closing pdo connection... 
+sql/mysql: mysql:host=localhost;dbname=deve
+
+ Getting reference # from database 
+
+ SELECT DISTINCT reference FROM wms_transactions_to_jda trans
+					INNER JOIN wms_picklist_details pick_d ON pick_d.move_doc_number = trans.reference
+					INNER JOIN wms_box_details bd ON bd.picklist_detail_id = pick_d.id
+					WHERE module = 'Picklist' AND jda_action = 'Closing' AND reference = 64 AND trans.sync_status = 0 
+Closing pdo connection... 

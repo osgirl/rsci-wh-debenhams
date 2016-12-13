@@ -1,0 +1,101 @@
+ 
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=JDAPROD2.RGOC.COM.PH;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT POMRCH.POMRCV, pomrch.poshpr, POMRCH.PONUMB, POMRCH.POUNTS ,   POMHDR.POEDAT 
+FROM POMRCH 
+LEFT JOIN POMHDR ON POMHDR.PONUMB = POMRCH.PONUMB 
+WHERE POMRCH.POSTAT = 3 
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrder
+
+ CSV FILE: db2_dump/purchase_order_header_1480661349.csv 
+
+ db2_dump/purchase_order_header_1480661349.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_header_1480661349.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_lists`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES ( @receiver_no, @invoice_no, @purchase_order_no, @total_qty,   @entry_date)
+				set   receiver_no=@receiver_no, invoice_no=@invoice_no, purchase_order_no=@purchase_order_no,    
+					total_qty=@total_qty,  entry_date=@entry_date 
+Loaded a total of 49 records from this csv file.
+Executing SQL: SELECT DISTINCT POMRCD.INUMBR, INVUPC.IUPC, POMRCD.POMRCV,   INVDPT.IDEPT, pomrcd.pomqty, INVDPT.DPTNAM
+FROM POMRCD
+LEFT JOIN INVUPC ON POMRCD.INUMBR = INVUPC.INUMBR
+LEFT JOIN INVMST ON POMRCD.INUMBR = INVMST.INUMBR
+LEFT JOIN INVDPT ON INVMST.IDEPT = INVDPT.IDEPT
+LEFT JOIN POMRCH ON POMRCD.POMRCV = POMRCH.POMRCV
+WHERE POMRCH.POSTAT = 3 AND INVDPT.ISDEPT=0  AND INVDPT.ICLAS=0 AND INVDPT.ISCLAS=0  
+Exporting to CSV 
+
+ Running method cronEWMS::purchaseOrderDetails
+
+ CSV FILE: db2_dump/purchase_order_detail_1480661354.csv 
+
+ db2_dump/purchase_order_detail_1480661354.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/purchase_order_detail_1480661354.csv'
+					IGNORE
+			    	INTO TABLE `wms_purchase_order_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@sku, @upc, @receiver_no, @dept_number, @quantity_ordered,@dept_name) set sku=@sku, upc=@upc, receiver_no=@receiver_no,dept_number=@dept_number,quantity_ordered=@quantity_ordered,division=@dept_name,po_status="1" 
+Loaded a total of 1 records from this csv file.
+Executing SQL: SELECT whsmvh.whmove  , whsmvd.whmvsr
+				FROM  whsmvh
+				left join whsmvd on whsmvh.whmove = whsmvd.whmove
+				where whsmvh.whmvtp = 2  AND whsmvh.WHMVST = '1' 
+Exporting to CSV 
+
+ Running method cronEWMS::picklist
+
+ CSV FILE: db2_dump/picklist_header_1480661358.csv 
+
+ db2_dump/picklist_header_1480661358.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_header_1480661358.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (@move_doc_number, @transfer_no) set move_doc_number=@move_doc_number, transfer_no=@transfer_no 
+Loaded a total of 2 records from this csv file.
+Executing SQL: SELECT  whsmvh.whmove, invupc.IUPC, Whmfsl, WHMVQR, trfhdr.TRFTLC , trfbdt
+from whsmvh
+left join whsmvd on whsmvh.whmove = whsmvd.whmove
+LEFT join invupc on whsmvd.inumbr = invupc.inumbr
+LEFT JOIN TRFHDR ON WHSMVD.WHMVSR = TRFHDR.TRFBCH
+where whsmvh.whmvtp = 2  AND whsmvh.WHMVST = '1' 
+Exporting to CSV 
+
+ Running method cronEWMS::picklistDetail
+
+ CSV FILE: db2_dump/picklist_detail_1480661369.csv 
+
+ db2_dump/picklist_detail_1480661369.csv 
+LOAD DATA LOCAL INFILE 'db2_dump/picklist_detail_1480661369.csv'
+					IGNORE
+			    	INTO TABLE `wms_picklist_details`
+			    	FIELDS TERMINATED BY ','
+			    		   ENCLOSED BY '\"'
+			    		   ESCAPED BY ''
+			    	LINES TERMINATED BY '\n'
+			    	IGNORE 1 LINES (  @move_doc_number, @sku, @from_slot_code, @quantity_to_pick, @store_code, @created_at )
+				set  move_doc_number=@move_doc_number, sku=@sku, from_slot_code=@from_slot_code,
+					quantity_to_pick=@quantity_to_pick, store_code=@store_code, created_at=@created_at 
+Loaded a total of 0 records from this csv file.
+Executing SQL: SELECT trfhdr.trfbch, trfhdr.trfflc, trfhdr.trftlc
+				FROM trfhdr
+				left join tblstr on tblstr.strnum = trfhdr.trftlc 
+				WHERE trfsts = 'S' and trftlc != 8001 and trftyp = 1 and tblstr.strtyp='U' 
+Error! Couldn't Run Query. Error Code:  08S01

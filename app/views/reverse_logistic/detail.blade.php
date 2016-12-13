@@ -86,7 +86,8 @@
 					 
 						<th>{{ $col_qty_to_pick }}</th>
 						<th>{{ $col_to_move }}</th>
-						<th>Variance</th> 
+						<th>Variance</th>
+						<th>remarks</th> 
 					</tr>
 				</thead>
 				@if( !CommonHelper::arrayHasValue($reversecountdetail) )
@@ -107,7 +108,16 @@
 				 		<td>{{$pd['quantity_to_pick']}}</td>
 						<td>{{$pd['moved_qty']}}</td>
 						<td>{{$pd['moved_qty'] - $pd['quantity_to_pick']}}</td>
-
+						<td>
+						@if($pd['quantity_to_pick']  == '0' && $pd['sku'] == '')
+                                    Not in PO and MasterList!
+                                
+                        @elseif ($pd['quantity_to_pick']  == '0' )
+                                    Not in PO
+                        @elseif ( $pd['sku'] == '' )
+                                    Not in MasterList!
+                        @endif
+						</td>
 					</tr>
 					@endforeach
 				@endif

@@ -7,7 +7,7 @@ return array(
 	'heading_title_po_details'	=> 'PO Details',
 	'heading_title_po_contents'	=> 'PO Contents',
 
-	'text_success_assign'		=> 'Successfully assigned the PO!',
+	'text_success_assign'		=> 'Successfully assigned per Division!',
 	'text_success_close_po'		=> 'Successfully closed the PO!',
 	'text_success_reopen'		=> 'Successfully reopen Purchase Order # :purchaseOrderNo.',
 	'text_success_pull'		    => 'Successfully pulled from JDA!',

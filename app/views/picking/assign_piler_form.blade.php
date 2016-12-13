@@ -25,7 +25,7 @@
 
 		@if(count($params) > 1)
 			<div class="control-group">
-				<label class="control-label">{{ $entry_doc_no }}</label>
+				<label class="control-label"> Stock piler :</label>
 				<div class="controls">
 					{{ Form::select('stock_piler[]', $stock_piler_list, '', array('id' => 'stock_piler_select') ) }}
 				<!-- <a class="add-piler-btn"><i class="icon-plus-sign" style="font-size: 1.5em;"></i></a> -->
@@ -56,7 +56,7 @@
         	<div class="control-group">
 				<label class="control-label" for=""></label>
 				<div class="controls">
-					<a class="btn btn-info" id="btn-assign">{{ $button_assign }}</a>
+					<a class="btn btn-info" id="btn-assign">{{ $button_assign }} </a>
 					<a class="btn" href="{{ $url_back }}">{{ $button_cancel }}</a>
 				</div> <!-- /controls -->
 			</div> <!-- /control-group -->
@@ -104,13 +104,13 @@ $(document).ready(function() {
 	});
 
 	// Submit Assign
-    $('#btn-assign').click(function() {
+    $('#btn-assign').click(function(e) {
     	// stockpiler = $('select[name=\'stock_piler\']').val();
     	var stockpiler = $('#stock_piler_select').val();
     	console.log(stockpiler);
 
     	if (stockpiler == '') {
-    		alert('{{ $error_assign }}');
+    		//alert('Alert Dialog' + );
     		return false;
     	} else {
     		$('#form-assign').submit();

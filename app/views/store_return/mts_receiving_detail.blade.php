@@ -91,7 +91,7 @@
 						<th>{{ $col_qty_to_pick }}</th>
 						<th>{{ $col_to_move }}</th>
 						<th>Variance</th>
-					 
+					 	<th>remarks</th>
 					</tr>
 				</thead>
 			 
@@ -110,7 +110,16 @@
 						<td>{{$pd['delivered_qty']}} </td>
 						<td> {{$pd['received_qty']}} </td>
 						<td>{{$pd['received_qty'] - $pd['delivered_qty']  }} </td>
+						<td>	
 
+						@if($pd['delivered_qty']  == '0' && $pd['sku'] == '')
+                                    Not in PO and MasterList!
+                                
+                        @elseif ($pd['delivered_qty']  == '0' )
+                                    Not in PO
+                        @elseif ( $pd['sku'] == '' )
+                                    Not in MasterList!
+                        @endif</td>
 					</tr>
 					@endforeach
 			 

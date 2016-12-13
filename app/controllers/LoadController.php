@@ -361,6 +361,7 @@ echo '<img src="data:image/png;base64,' . DNS1D::getBarcodePNG("1", "C128",3,33)
         // try {
 		// Search Filters
 		$filter_load_code = Input::get('filter_load_code', NULL);
+		$store_code 		= Input::get('store_code', null);
 
 		$sort = Input::get('sort', 'doc_no');
 		$order = Input::get('order', 'ASC');
@@ -369,6 +370,7 @@ echo '<img src="data:image/png;base64,' . DNS1D::getBarcodePNG("1", "C128",3,33)
 		/*$asdf 			= Input::get('load_code', null);
 		$this->data['po_info'] 		=Load::getStoreLocation($asdf);*/
 
+		$this->data['store_code'] = $store_code;
 		$this->data['filter_load_code'] = $filter_load_code;
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
@@ -378,6 +380,8 @@ echo '<img src="data:image/png;base64,' . DNS1D::getBarcodePNG("1", "C128",3,33)
 
             $this->data['loadCode'] = $loadCode;
             $this->data['records'] = Load::getLoadingDetails($loadCode);
+            $this->data['storelocationss'] = Load::getLoadingDetails123($loadCode);
+
             $this->data['permissions'] = unserialize(Session::get('permissions'));
 
             $this->layout = View::make('layouts.print');

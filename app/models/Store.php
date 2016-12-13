@@ -5,7 +5,8 @@ class Store extends Eloquent {
 	protected $table = 'stores';
 
 	public static function getStoreList($data = array()) {
-		$query = DB::table('stores');
+		$query = DB::table('stores')
+		->where('store_code', '>', 1000);
 
 
 		//if( CommonHelper::hasValue($data['filter_store_code']) ) $query->where('store_code', 'LIKE', '%'.$data['filter_store_code'].'%');
@@ -42,7 +43,18 @@ class Store extends Eloquent {
 				
 		return $result;
 	}
+	public static function getStoreBranchesOptions()
+	{
 
+
+		$query = DB::SELECT(DB::RAW("SELECT * from wms_stores where store_code >= 100 and store_code <=1000"));
+/*		$query = DB::table('stores')->whereIn('store_code','>=','100', 'and' ,'store_code','<=','1000');*/
+
+		 
+
+		return $query;
+ 
+	}
 	public static function getCountstoreLists($data = array())
 	{
 		$query = DB::table('stores');

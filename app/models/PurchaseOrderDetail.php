@@ -234,6 +234,7 @@ public static function getPOInfoDetail($receiver_no = NULL,$quantity_delivered =
 
 	public static function getScannedPODetails($receiver_no = NULL) {
 		$query = DB::table('purchase_order_lists')
+					->select('purchase_order_details.*','purchase_order_lists.*')
 					->join('purchase_order_details', 'purchase_order_lists.receiver_no', '=', 'purchase_order_details.receiver_no', 'RIGHT')
 					->join('product_lists', 'purchase_order_details.sku', '=', 'product_lists.upc')
 					->where('purchase_order_details.receiver_no', '=', $receiver_no)

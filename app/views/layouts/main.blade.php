@@ -125,8 +125,7 @@
         <span>  {{$menu_store_return}}</span>
         <b class="caret"></b>
       </a>
-  
-            
+              
       <ul class="dropdown-menu">
  
           
@@ -135,19 +134,12 @@
             <li><a href="{{ URL('stocktransfer/PickAndPackStore')}}">Picking / Packing</a></li>
           
             <li><a href="{{URL('stocktransfer/stocktranferload')}} ">Loading / Shipping</a></li>
-         
-       
-
 
       </ul>
      
     </li>
           
-       
-      
-         
-
-          @endif
+    @endif
 
     @if ( CommonHelper::valueInArray('CanAccessStoreReturn', $permissions))
     <li class="@if (Route::currentRouteUses('ReverseLogisticController@getreverselist') || Route::currentRouteUses('ReverseLogisticController@getSODetails') || Route::currentRouteUses('ReverseLogisticController@assignPilerFormReverse')) active @endif dropdown">
@@ -158,14 +150,16 @@
       </a>
 
       <ul class="dropdown-menu">
-          @if ( CommonHelper::valueInArray('CanAccessStoreOrders', $permissions) )
           
-          <li> <a tabindex="-1" href="{{ URL::to('reverse_logistic/reverse_list') }}">Return to Warehouse</a> </li>
+          
+          <li> 
+          @if ( CommonHelper::valueInArray('CanAccessPurchaseOrders', $permissions) || CommonHelper::valueInArray('CanAccessStoreReturn', $permissions))
+          <a tabindex="-1" href="{{ URL::to('reverse_logistic/reverse_list') }}">Return to Warehouse</a> </li>
   
-          
+             @endif
          
           </li>
-          @endif
+       
           
       </ul>
     </li>
@@ -210,9 +204,9 @@
           <li><a href="{{ URL::to('products') }}">{{ $menu_product_master_list }}</a></li>
 
         @endif
-       <!--  @if ( CommonHelper::valueInArray('CanAccessSlotMasterList', $permissions) )
+        @if ( CommonHelper::valueInArray('CanAccessSlotMasterList', $permissions) )
 				  <li><a href="{{ URL::to('slots') }}">{{ $menu_slot_master_list }}</a></li>
-        @endif -->
+        @endif
      <!--    @if ( CommonHelper::valueInArray('CanAccessVendorMasterList', $permissions) )
         <li><a href="{{ URL::to('vendors') }}">{{ $menu_vendor_master_list }}</a></li>
         @endif -->

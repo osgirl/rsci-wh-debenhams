@@ -3,6 +3,8 @@ class PurchaseOrderController extends BaseController {
 	private $data = array();
 	protected $layout = "layouts.main";
 
+	private $load;
+
 	public function __construct() {
 		$this->beforeFilter('csrf', array('on' => 'post'));
 		$this->beforeFilter('auth', array('only'=> array('Dashboard')));
@@ -89,6 +91,7 @@ protected function getListdivision() {
 		$filter_brand       = Input::get('filter_brand', NULL);
 		$filter_division    = Input::get('filter_division', NULL);
 		$filter_shipment_reference_no = Input::get('filter_shipment_reference_no', NULL);
+		$filter_invoice_no = Input::get('filter_invoice_no', NULL);
 		$total_qty 					= Input::get('total_qty', null);
 
 		$sort               = Input::get('sort', 'po_no');
@@ -109,6 +112,7 @@ protected function getListdivision() {
 						'filter_brand'       => $filter_brand,
 						'filter_division'	 => $filter_division,
 						'filter_shipment_reference_no' => $filter_shipment_reference_no,
+						'filter_invoice_no' => $filter_invoice_no,
 						'receiver_no'		 => $receiver_no,
 						'sort'               => $sort,
 						'order'              => $order,
@@ -135,6 +139,7 @@ protected function getListdivision() {
 									'filter_status'      => $filter_status,
 									'filter_brand'       => $filter_brand,
 									'filter_division'	 => $filter_division,
+									'filter_invoice_no'		=> $filter_invoice_no,
 									'sort'               => $sort,
 									'order'              => $order
 								);
@@ -151,6 +156,7 @@ protected function getListdivision() {
 		$this->data['filter_back_order']     	= $filter_back_order;
 		$this->data['filter_brand']          	= $filter_brand;
 		$this->data['filter_division']  		= $filter_division;
+		$this->data['filter_invoice_no'] 		= $filter_invoice_no;
 		$this->data['total_qty'] 				= $total_qty;
 		$this->data['sort']                  	= $sort;
 		$this->data['order']                 	= $order;
@@ -160,6 +166,7 @@ protected function getListdivision() {
 		$url                                 .= '&filter_entry_date=' . $filter_entry_date;
 		$url                                 .= '&filter_status=' . $filter_status;
 		$url 								.= '&total_qty' .$total_qty;
+		$url 								.'&filter_invoice_no' .$filter_invoice_no;
 		$url                                 .= '&page=' . $page;
 
 		$order_po_no                         = ($sort=='po_no' && $order=='ASC') ? 'DESC' : 'ASC';
@@ -188,7 +195,7 @@ protected function getListdivision() {
 		return Redirect::to('purchase_order')->with('message','Sync To Mobile Successfully');
 	}
 
-	public function synctdivision()
+/*	public function synctdivision()
 	{  
 		$po_no 					= Input::get('po_no', null);
 		$shipment_no 					= Input::get('shipment_no', null);
@@ -199,7 +206,7 @@ protected function getListdivision() {
 		//purchaseorder::getsynctomobiledivision($receiver_no, $division_id);
 		return Redirect::to('purchase_order/division?receiver_no=' .$receiver_no .'&filter_po_no='.$po_no.'&filter_shipment_reference_no='.$shipment_no .'&total_qty='. $total_qty)->with('message','Sync To Mobile Successfully');
  
-	}
+	}*/
 	public function synctomobiledivision()
 	{  
 		$po_no 					= Input::get('po_no', null);
@@ -207,8 +214,26 @@ protected function getListdivision() {
 		$total_qty 					= Input::get('total_qty', null);
 
 		$division_id  			= Input::get('division_id', null);
+		$division 				= Input::get('division',null);
 		$receiver_no 			= Input::get('receiver_no', null);
 		purchaseorder::getsynctomobiledivision();
+
+
+			$data_before = 'Assigned';
+			$data_after =  ' Sync to mobile Division no.: '. $division_id.', Recvr no.: '. $receiver_no;
+
+			$arrParams = array(
+							'module'		=> Config::get("audit_trail_modules.purchaseorder"),
+							'action'		=> Config::get("audit_trail.sync_to_mobile"),
+							'reference'		=>  'Division :'.$division_id,
+							'data_before'	=> $data_before,
+							'data_after'	=> $data_after,
+							'user_id'		=> Auth::user()->id,
+							'created_at'	=> date('Y-m-d H:i:s'),
+							'updated_at'	=> date('Y-m-d H:i:s')
+							);
+			AuditTrail::addAuditTrail($arrParams);
+
 
 		return Redirect::to('purchase_order/division?receiver_no=' .$receiver_no .'&filter_po_no='.$po_no.'&filter_shipment_reference_no='.$shipment_no .'&total_qty='. $total_qty)->with('message','Sync To Mobile Successfully');
  
@@ -243,7 +268,26 @@ protected function getListdivision() {
 
 		PurchaseOrderDetail::updateqty($quantity_delivered, $receiver_no, $division_id, $upc);
 
+			
+			$users = User::getUsersFullname(Input::get('stock_piler'));
 
+			$fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $users));
+			// $user = User::find(Input::get('stock_piler'));
+
+			$data_before = '';
+			$data_after =  'UPC : '. $upc. ', Po no.: '. $filter_po_no.', Recvr no.: '. $receiver_no;
+
+			$arrParams = array(
+							'module'		=> Config::get("audit_trail_modules.purchaseorder"),
+							'action'		=> Config::get("audit_trail.Update_Quantity"),
+							'reference'		=>  'Quantity : ' . $quantity_delivered . ', UPC : '.$upc,
+							'data_before'	=> $data_before,
+							'data_after'	=> $data_after,
+							'user_id'		=> Auth::user()->id,
+							'created_at'	=> date('Y-m-d H:i:s'),
+							'updated_at'	=> date('Y-m-d H:i:s')
+							);
+			AuditTrail::addAuditTrail($arrParams);
  	
 		return Redirect::to('purchase_order/detail?&receiver_no='.$receiver_no.'&division_id='.$division_id.'&upc='.$upc.'&filter_po_no='.$filter_po_no.'&filter_stock_piler='.$filter_stock_piler.'&division='.$division.'&filter_shipment_reference_no='. $filter_shipment_reference_no )->with('message','Successfully Update Quantity');
 	}
@@ -256,6 +300,28 @@ protected function getListdivision() {
 	 
 		
 		PurchaseOrder::getMShipmentRef($purchase_order_no, $receiver_no, $shipment_ref);
+		
+		$users = User::getUsersFullname(Input::get('stock_piler'));
+
+
+			$fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $users));
+			// $user = User::find(Input::get('stock_piler'));
+
+			$data_before = '';
+			$data_after = 'Shipment Referrence no : ' . $shipment_ref . ', PO no. : '.$purchase_order_no. ' Rcr no. : '.$receiver_no;
+
+			$arrParams = array(
+							'module'		=> Config::get("audit_trail_modules.purchaseorder"),
+							'action'		=> Config::get("audit_trail.Update_shipment"),
+							'reference'		=> 'Shipment Referrence no : ' . $shipment_ref,
+							'data_before'	=> $data_before,
+							'data_after'	=> $data_after,
+							'user_id'		=> Auth::user()->id,
+							'created_at'	=> date('Y-m-d H:i:s'),
+							'updated_at'	=> date('Y-m-d H:i:s')
+							);
+			AuditTrail::addAuditTrail($arrParams);
+
 		return Redirect::to('purchase_order')->with('message','Successfully Update Shipment Reference number!');
 	}
 
@@ -751,9 +817,9 @@ public function getPODetails() {
 		$data_after = 'Po no.: ' . $purchase_order_no .'Rcr no. : '.$receiver_no. ' Partial Received by ' . $user->username;
 
 		$arrParams = array(
-						'module'		=>  Config::get("audit_trail_modules.PO_partial"),
+						'module'		=>  Config::get("audit_trail_modules.purchaseorder"),
 						'action'		=> Config::get("audit_trail.partial_received"),
-						'reference'		=> $purchase_order_no,
+						'reference'		=> 'Parital Received no.: '.$purchase_order_no,
 						'data_before'	=> $data_before,
 						'data_after'	=> $data_after,
 						'user_id'		=> Auth::user()->id,
@@ -787,6 +853,90 @@ public function getPODetails() {
 		PurchaseOrderDetail::updateDivisionStatus($receiver_no);
 
 
+	/*	$skus = PurchaseOrderDetail::getScannedPODetails($receiver_no);
+
+		foreach($skus as $sku){
+			$data = array(
+				'sku' => $sku->upc,
+				'quantity_delivered' => $sku->quantity_delivered,
+				'quantity_remaining' => $sku->quantity_delivered
+			);
+			SkuOnDock::insertData($data);
+		}*/
+
+		// AuditTrail
+		$user = User::find(Auth::user()->id);
+
+		$data_before = '';
+		$data_after = 'PO No: ' . $purchase_order_no . ' Rcr no.'.$receiver_no.' closed by ' . $user->username;
+
+		$arrParams = array(
+						'module'		=> 'Purchase Order',
+						'action'		=> 'Closed PO',
+						'reference'		=> 'Purchase Order no. : '.$purchase_order_no,
+						'data_before'	=> $data_before,
+						'data_after'	=> $data_after,
+						'user_id'		=> Auth::user()->id,
+						'created_at'	=> date('Y-m-d H:i:s'),
+						'updated_at'	=> date('Y-m-d H:i:s')
+						);
+		AuditTrail::addAuditTrail($arrParams);
+		// AuditTrail
+
+		// Add transaction for jda syncing
+		$isSuccess = JdaTransaction::insert(array(
+			'module' 		=> Config::get('transactions.module_purchase_order'),
+			'jda_action'	=> Config::get('transactions.jda_action_po_closing'),
+			'reference'		=>  $receiver_no,
+
+		));
+		Log::info(__METHOD__ .' jda transaction dump: '.print_r($isSuccess,true));
+		// run daemon command: php app/cron/jda/classes/receive_po.php
+		if( $isSuccess )
+		{
+			$daemonReceivingClosingPo = "classes/receive_po.php {$receiver_no}"; 
+			 
+			CommonHelper::execInBackground($daemonReceivingClosingPo,'receive_po');
+		}
+
+		if (Input::get('module') == 'purchase_order_detail') {
+			$url = $this->setURL();
+			$url .= '&receiver_no=' . Input::get('receiver_no');
+			$url .= '&sort_back=' . Input::get('sort_back').'&order_back=' . Input::get('order_back') . '&page_back=' . Input::get('page_back');
+
+			return Redirect::to('purchase_order/detail' . $url)->with('message', Lang::get('purchase_order.text_success_close_po'));
+		} else {
+
+			return Redirect::to('purchase_order'. $this->setURL())->with('message', Lang::get('purchase_order.text_success_close_po'));
+		}
+	}
+
+
+
+
+	public function closePODebenhams()
+	{
+		// Check Permissions
+		// echo "<pre>"; print_r(Session::get('permissions')); die();
+		if (Session::has('permissions')) {
+	    	if (!in_array('CanClosePurchaseOrders', unserialize(Session::get('permissions'))))  {
+				return Redirect::to('user/profile');
+			}
+    	} else {
+			return Redirect::to('users/logout');
+		}
+
+		$receiver_no       = Input::get("receiver_no");
+		$purchase_order_no = Input::get("po_no");
+		$invoice_no 	   = Input::get("invoice_no");
+
+		$status            = 'closed'; // closed
+		$date_updated      = date('Y-m-d H:i:s');
+
+		PurchaseOrder::updatePO($receiver_no, $purchase_order_no, $status, $date_updated, '');
+		PurchaseOrderDetail::updateDivisionStatus($receiver_no);
+
+
 		$skus = PurchaseOrderDetail::getScannedPODetails($receiver_no);
 
 		foreach($skus as $sku){
@@ -807,7 +957,7 @@ public function getPODetails() {
 		$arrParams = array(
 						'module'		=> 'Purchase Order',
 						'action'		=> 'Closed PO',
-						'reference'		=> $purchase_order_no,
+						'reference'		=> 'PO number'.$purchase_order_no,
 						'data_before'	=> $data_before,
 						'data_after'	=> $data_after,
 						'user_id'		=> Auth::user()->id,
@@ -818,30 +968,18 @@ public function getPODetails() {
 		// AuditTrail
 
 		// Add transaction for jda syncing
-		$isSuccess = JdaTransaction::insert(array(
-			'module' 		=> Config::get('transactions.module_purchase_order'),
-			'jda_action'	=> Config::get('transactions.jda_action_po_closing'),
-			'reference'		=> $purchase_order_no, $receiving,
-
-		));
-		Log::info(__METHOD__ .' jda transaction dump: '.print_r($isSuccess,true));
+	 
+/*		Log::info(__METHOD__ .' jda transaction dump: '.print_r($isSuccess,true));
 		// run daemon command: php app/cron/jda/classes/receive_po.php
-		if( $isSuccess )
-		{
-			$daemonReceivingClosingPo = "classes/receive_po.php {$purchase_order_no}";
-			CommonHelper::execInBackground($daemonReceivingClosingPo,'receive_po');
-		}
+		 
+			$daemon = "jda4r4/jda po_receiving {$receiver_no}"; 
+			CommonHelper::execInBackground($daemon,'po_receiving');
+		 
 
-		if (Input::get('module') == 'purchase_order_detail') {
-			$url = $this->setURL();
-			$url .= '&receiver_no=' . Input::get('receiver_no');
-			$url .= '&sort_back=' . Input::get('sort_back').'&order_back=' . Input::get('order_back') . '&page_back=' . Input::get('page_back');
+	 */
 
-			return Redirect::to('purchase_order/detail' . $url)->with('message', Lang::get('purchase_order.text_success_close_po'));
-		} else {
-
-			return Redirect::to('purchase_order'. $this->setURL())->with('message', Lang::get('purchase_order.text_success_close_po'));
-		}
+		return Redirect::to('purchase_order'. $this->setURL())->with('message', Lang::get('purchase_order.text_success_close_po'));
+		 
 	}
 
 	
@@ -857,7 +995,7 @@ public function getPODetails() {
 
 		
 
-		$filter_po_no 			= Input::get('filter_po_no', null);
+		$po_no 			= Input::get('po_no', null);
 		$receiver_no 			= Input::get('receiver_no', null);
 
 		$arrParams = array(
@@ -874,22 +1012,22 @@ public function getPODetails() {
 							'limit'					=> NULL
 						);
 
-		$results = PurchaseOrder::getPoLists1($receiver_no, $arrParams);
- 
-
-		$output = Lang::get('purchase_order.col_po_no'). ',';
+		$results = PurchaseOrder::getPoLists1($receiver_no, $po_no, $arrParams);
+   
+		$output =  Lang::get('purchase_order.col_po_no'). "\n";
+		$output .=  Lang::get('purchase_order.col_po_no'). ',';
 		$output .= Lang::get('purchase_order.col_receiver_no'). ',';  
 		$output .= Lang::get('purchase_order.col_shipment_ref'). ',';
 		$output .= Lang::get('purchase_order.col_sku'). ',';
 		$output .= Lang::get('purchase_order.col_upc'). ',';
 	 	$output .= Lang::get('purchase_order.col_short_name'). ',';
-	 	$output .= Lang::get('purchase_order.label_divisionasdf'). ',';
-
+	 	$output .= Lang::get('purchase_order.label_divisionasdf'). ','; 
 	 	$output .= Lang::get('purchase_order.col_stock_piler'). ',';
 		$output .= Lang::get('purchase_order.col_entry_date'). ',';
-			 	$output .= Lang::get('purchase_order.col_variance'). "\n";
+		$output .= Lang::get('purchase_order.col_variance'). "\n";
 
-	    foreach ($results as $key => $value) {
+	    foreach ($results as $key => $value) 
+	    {
 	    	
 	   
 	    	$exportData = array(
@@ -898,20 +1036,17 @@ public function getPODetails() {
 	    						'"' . $value->receiver_no . '"',
 	    						'"' . $value->shipment_reference_no . '"',
 	    						'"' . $value->sku . '"',
-	    						'"' . $value->upc . '"',
-	    						'"' . $value->shortname . '"',
-	    						'"' . $value->division . '"',
-	    						'"' . $value->fullname . '"',
+	    						'"' . $value->upc . '"',   
 	    					  
-	    					
-	    						'"' . date("M d, Y", strtotime($value->created_at)) . '"',
-	    						'"' . $value->variance. '"',
+	    					  
 	    					 
 	    					);
-
 	      	$output .= implode(",", $exportData);
 	      	$output .= "\n";
 	  	}
+
+	  	$this->data['po_no']		= $po_no;
+	  	$this->data['receiver_no']	= $receiver_no;
 
 		$headers = array(
 			'Content-Type' => 'text/csv',
@@ -919,7 +1054,493 @@ public function getPODetails() {
 		);
 
 		return Response::make(rtrim($output, "\n"), 200, $headers);
+
+		
 	}
+
+public function getExcelFile()
+{
+ 
+	$po_no 			 	= Input::get('po_no', null);
+	$receiver_no 		= Input::get('receiver_no', null);
+
+
+ 
+    Excel::create('division_'. date('Ymd'), function($excel)   use ( $receiver_no, $po_no){
+	 
+    	$filter_shipment_reference_no 			= Input::get('filter_shipment_reference_no');
+    	$filter_invoice_no 			= Input::get('filter_invoice_no');
+
+     $arrParams  = array(
+
+     				'filter_shipment_reference_no' =>  $filter_shipment_reference_no,
+     				'filter_invoice_no'				=> $filter_invoice_no,
+
+
+
+     				);
+
+	       $query = PurchaseOrder::getPoLists1($receiver_no, $po_no, $arrParams);
+       
+
+
+
+       $this->data['filter_shipment_reference_no'] 		 	= $filter_shipment_reference_no;
+       $this->data['filter_invoice_no'] 		 	= $filter_invoice_no;
+
+ 
+   	      // foreach ($query as $keyvalue) 
+	       {
+	     
+	       	$excel->sheet( $receiver_no, function($sheet) use ($query, $receiver_no, $po_no , $filter_shipment_reference_no, $filter_invoice_no) 
+	       	{ 
+           		$sheet->setStyle(array(
+                        'font' => array(
+                            'name'      =>  'Calibri',
+                            'size'      =>  11,
+                            'bold'      =>  false,
+                            'border'	=>  0
+                        )
+                    ));
+
+                    $sheet->setPageMargin(array(
+                        0.25, 1, 0.25, 1
+                    ));
+
+					$sheet->mergeCells('A1:I1');
+                    $sheet->setCellValue('A1', 'RSCI - Shortage/Overage Report');
+                    $sheet->setBorder('A1:I1', 'thin');
+                    $sheet->cell('A1', function($cell){
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                    });
+                    $sheet->setWidth("C", 20);
+                    $sheet->setWidth("A", 20);
+                    $sheet->setWidth("B", 10);
+                    $sheet->setWidth("E", 10);
+                    $sheet->mergeCells('A2:C3');
+                    $sheet->mergeCells('A4:C5');
+                    $sheet->mergeCells('G2:I3');
+                    $sheet->mergeCells('D2:F5');
+
+                    $sheet->mergeCells('G4:I5'); 
+
+                    $sheet->cell("A2", function($cell) {
+                        $cell->setAlignment('LEFT');
+                        $cell->setValignment('center');
+                        $cell->setFontWeight('bold');
+                    });
+                    $sheet->cell("A4", function($cell) {
+                        $cell->setAlignment('LEFT');
+                        $cell->setValignment('center');
+                        $cell->setFontWeight('bold');
+                    });
+                  
+                    $sheet->cell("D2", function($cell) {
+                        $cell->setAlignment('LEFT');
+                        $cell->setValignment('center');
+                        $cell->setFontWeight('bold');
+                    });
+                    $sheet->mergeCells('G2:I3');
+                    $sheet->cell("G2", function($cell) {
+                        $cell->setAlignment('LEFT');
+                        $cell->setValignment('center');
+                        $cell->setFontWeight('bold');
+                    });
+                     $sheet->mergeCells('G4:I5');
+                    $sheet->cell("G4", function($cell) {
+                        $cell->setAlignment('LEFT');
+                        $cell->setValignment('center');
+                        $cell->setFontWeight('bold');
+                    });
+              
+      
+                    $sheet->setCellValue('A2', 'Shipment ref no. :'.$filter_shipment_reference_no);
+                    $sheet->setCellValue('A4', 'Invoice no. : '.$filter_invoice_no );
+                    $sheet->setCellValue('G2', 'Purchase Order no. :'. $po_no);
+                    $sheet->setCellValue('G4',  'Rcr no. :'. $receiver_no);
+
+
+
+                    $header = array();
+                    $header['A'] = 'Dept No.';
+                    $header['B'] = 'Style No.';
+                    $header['C'] = 'SKU';
+                    $header['D'] = "UPC";
+                    $header['E'] = "Advised Per RA";
+                    $header['F'] = "Actual Receipt";
+                    $header['G'] = "Discrepansy";
+                    $header['H'] = "Remarks"; 
+
+                    $start = 6;
+                    foreach ($header as $key => $head)
+                    {
+                        $sheet->setCellValue($key.$start, $head);
+                        $sheet->cell($key.$start, function($cell) {
+                            $cell->setAlignment('center');
+                            $cell->setValignment('center');
+                            $cell->setFontWeight('bold');
+                        });
+                    }
+
+                    $_start = 7;
+                    $keys = array("A", "B", "C", "D", "E", "F", "G", "H", "I");
+
+                $total=0;
+			 	$qty_ord=0; 
+			 	$qty_rcv=0;
+ 					foreach ($query as $list)
+                    {
+                        
+                        $sheet->setCellValue('A'.$_start, $list->dept_number); 
+                        $sheet->setCellValue('B'.$_start, $list->short_description); 
+                        $sheet->setCellValue('C'.$_start, $list->upc); 
+                        $sheet->setCellValue('D'.$_start, $list->sku);
+                        $sheet->setCellValue('E'.$_start, $list->quantity_ordered); 
+                        $sheet->setCellValue('F'.$_start, $list->qty);
+                        $sheet->setCellValue('G'.$_start, $list->qty - $list->quantity_ordered);
+                        $sheet->setCellValue('H'.$_start, "_____________");
+               
+                        $_start++;
+                        $whpurchase = count($query)+ 1;
+
+                     			$qty_ord =$list->quantity_ordered;  
+						 	$sheet->setCellValue("E$whpurchase", $qty_ord);
+
+
+                    }
+
+
+   					
+
+                 	$ttl_result = count($query) + 9;
+                    $for_remarks = $ttl_result + 1;
+            		$whpurchase = count($query)+ 1;
+
+
+            		$sheet->setCellValue("E$whpurchase", "asdfasdf");
+   					$sheet->setCellValue("A$for_remarks", "______________________________");
+                    $sheet->mergeCells("A$for_remarks:C$for_remarks");
+                    $sheet->setCellValue("A$ttl_result", "Prepared by");
+                    // 
+                    $sheet->setCellValue("F$for_remarks", "______________________________");
+                    $sheet->mergeCells("F$for_remarks:I$for_remarks");
+                    $sheet->setCellValue("F$ttl_result", "Noted by");
+                    //
+            
+           });
+	       	  }
+      })->export('xlsx');
+
+
+/*	print_r($excel);
+	exit();
+*/
+ 
+  }
+	/*public function exportCSVexcelfiledap() {
+		// Check Permissions
+	if (Session::has('permissions')) {
+	    	if (!in_array('CanExportPurchaseOrders', unserialize(Session::get('permissions'))))  {
+				return Redirect::to('purchase_order' . $this->setURL());
+			}
+    	} else {
+			return Redirect::to('users/logout'); 	
+		}
+
+	      
+
+        Excel::create('loading-sheet'.time(), function($excel) use ($load_list, $load_no, $intertransfer, $others) {
+
+            foreach ($load_list as $load)
+            {
+                $result = $this->load->getLoadingSheet($load_no, $load->to_location);
+                $excel->sheet($load->to_location_name, function ($sheet) use ($result, $load, $intertransfer, $others) {
+
+                    $sheet->setStyle(array(
+                        'font' => array(
+                            'name'      =>  'Calibri',
+                            'size'      =>  11,
+                            'bold'      =>  false
+                        )
+                    ));
+
+                    $sheet->setPageMargin(array(
+                        0.25, 1, 0.25, 1
+                    ));
+
+                    $sheet->mergeCells('A1:K1');
+                    $sheet->setCellValue('A1', 'FSRI WAREHOUSE LOADING SHEET');
+                    $sheet->setBorder('A1:K5', 'thin');
+                    $sheet->cell('A1', function($cell){
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                    });
+                    $sheet->setWidth("A", 20);
+                    $sheet->setWidth("D", 10);
+                    $sheet->setWidth("E", 10);
+                    $sheet->mergeCells('A2:C4');
+                    $sheet->mergeCells('D2:E3');
+                    $sheet->cell("D2", function($cell) {
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                        $cell->setFontWeight('bold');
+                    });
+                    $sheet->mergeCells('D4:E4');
+                    $sheet->cell("D4", function($cell) {
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                        $cell->setFontWeight('bold');
+                    });
+                    $sheet->mergeCells('F2:K3');
+                    $sheet->cell("F2", function($cell) {
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                        $cell->setFontWeight('bold');
+                    });
+                    $sheet->mergeCells('F4:K4');
+                    $sheet->cell("F4", function($cell) {
+                        $cell->setAlignment('center');
+                        $cell->setValignment('center');
+                        $cell->setFontWeight('bold');
+                    });
+
+                    $sheet->setCellValue('D2', 'TO LOCATION :');
+                    $sheet->setCellValue('F2', $load->to_location_name);
+                    $sheet->setCellValue('D4', 'DELIVERY DATE :');
+                    $sheet->setCellValue('F4', CustomHelper::fdate($load->created_at));
+
+
+
+                    $header = array();
+                    $header['A'] = 'CATEGORY';
+                    $header['B'] = 'LOT #';
+                    $header['C'] = 'MTS NO.';
+                    $header['D'] = "SKU";
+                    $header['E'] = "QTY";
+                    $header['F'] = "TTL BOX";
+                    $header['G'] = "";
+                    $header['H'] = "";
+                    $header['I'] = "";
+                    $header['J'] = "";
+                    $header['K'] = "";
+
+                    $start = 5;
+                    foreach ($header as $key => $head)
+                    {
+                        $sheet->setCellValue($key.$start, $head);
+                        $sheet->cell($key.$start, function($cell) {
+                            $cell->setAlignment('center');
+                            $cell->setValignment('center');
+                            $cell->setFontWeight('bold');
+                        });
+                    }
+
+                    $_start = 6;
+                    $keys = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K");
+
+                    $_category = "";
+                    $_mts = "";
+                    foreach ($result as $list)
+                    {
+                        foreach ($keys as $key)
+                        {
+                            $sheet->cell($key.$_start, function($cell) {
+                                $cell->setAlignment('center');
+                                $cell->setValignment('center');
+                            });
+                            $sheet->setBorder("A$_start:K$_start", 'thin');
+                        }
+                        if ($list->category == $_category && $list->tl_number == $_mts)
+                        {
+                            $category = "";
+                            $_category = $list->category;
+
+                            $mts = "";
+                            $_mts = $list->tl_number;
+                        }
+                        else
+                        {
+                            $category = $list->category;
+                            $_category = $list->category;
+
+                            $mts = $list->tl_number;
+                            $_mts = $list->tl_number;
+                        }
+
+                        $sheet->setCellValue('A'.$_start, $category);
+                        $sheet->setCellValue('B'.$_start, $list->lot_no);
+                        $sheet->setCellValue('C'.$_start, $mts);
+                        $sheet->setCellValue('D'.$_start, $list->sku);
+                        $sheet->setCellValue('E'.$_start, $list->qty_picked);
+                        $sheet->setCellValue('F'.$_start, $list->ttl_box);
+                        $_start++;
+                    }
+
+                    $ttl_result = count($result) + 6;
+                    $for_remarks = $ttl_result + 1;
+                    $end_remarks = $ttl_result + 6;
+                    $driver = $for_remarks + 2;
+                    $check_by = $driver + 2;
+                    $signature_over = $check_by + 1;
+
+
+                    $sheet->mergeCells("A$ttl_result:K$ttl_result");
+                    $sheet->setcellValue("A$ttl_result", "INTERTRANSFER");
+                    $sheet->setBorder("A$ttl_result:K$ttl_result", 'thin');
+                    $sheet->cell("A$ttl_result", function($cell) {
+                        $cell->setAlignment('center');
+                        $cell->setFontWeight('bold');
+                    });
+
+                    $header = $ttl_result + 1;
+                    $start_intertransfer = $header+1;
+
+                    $sheet->setBorder("A$header:K$header", 'thin','thin','thin','thin');
+                    $key = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K");
+                    foreach ($key as $key) {
+                        $sheet->cell("$key$header", function ($cell) {
+                            $cell->setAlignment('center');
+                            $cell->setValignment('center');
+                            $cell->setFontWeight('bold');
+                        });
+                    }
+                    $sheet->mergeCells("A$header:B$header");
+                    $sheet->setcellValue("A$header", "TL Number");
+
+                    $sheet->mergeCells("C$header:D$header");
+                    $sheet->setcellValue("C$header", "Quantity");
+
+                    $sheet->mergeCells("E$header:G$header");
+                    $sheet->setcellValue("E$header", "Unit of Measurement");
+
+                    $sheet->mergeCells("H$header:K$header");
+                    $sheet->setcellValue("H$header", "Unit Description");
+
+                    foreach ($intertransfer as $fields)
+                    {
+                        $sheet->setBorder("A$start_intertransfer:K$start_intertransfer", 'thin');
+
+                        $sheet->mergeCells("A$start_intertransfer:B$start_intertransfer");
+                        $sheet->setcellValue("A$start_intertransfer", $fields->tl_number);
+
+                        $sheet->mergeCells("C$start_intertransfer:D$start_intertransfer");
+                        $sheet->setcellValue("C$start_intertransfer", $fields->quantity);
+
+                        $sheet->mergeCells("E$start_intertransfer:G$start_intertransfer");
+                        $sheet->setcellValue("E$start_intertransfer", $fields->uom);
+
+                        $sheet->mergeCells("H$start_intertransfer:K$start_intertransfer");
+                        $sheet->setcellValue("H$start_intertransfer", $fields->unit_desc);
+
+                        $start_intertransfer++;
+                    }
+
+                    $others_start = $header + count($intertransfer) + 1;
+                    $others_header = $others_start+1;
+                    $sheet->mergeCells("A$others_start:K$others_start");
+                    $sheet->setcellValue("A$others_start", "OTHERS");
+                    $sheet->setBorder("A$others_start:K$others_start", 'thin');
+                    $sheet->cell("A$others_start", function($cell) {
+                        $cell->setAlignment('center');
+                        $cell->setFontWeight('bold');
+                    });
+
+                    $sheet->setBorder("A$others_header:K$others_header", 'thin');
+                    $key = array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K");
+                    foreach ($key as $key) {
+                        $sheet->cell("$key$others_header", function ($cell) {
+                            $cell->setAlignment('center');
+                            $cell->setFontWeight('bold');
+                        });
+                    }
+
+                    $sheet->mergeCells("A$others_header:B$others_header");
+                    $sheet->setcellValue("A$others_header", "TSN");
+
+                    $sheet->mergeCells("C$others_header:D$others_header");
+                    $sheet->setcellValue("C$others_header", "Quantity");
+
+                    $sheet->mergeCells("E$others_header:G$others_header");
+                    $sheet->setcellValue("E$others_header", "Unit of Measurement");
+
+                    $sheet->mergeCells("H$others_header:K$others_header");
+                    $sheet->setcellValue("H$others_header", "Unit Description");
+
+                    $otherstart = $others_header+1;
+                    foreach ($others as $fields)
+                    {
+                        $sheet->setBorder("A$otherstart:K$otherstart", 'thin');
+
+                        $sheet->mergeCells("A$otherstart:B$otherstart");
+                        $sheet->setcellValue("A$otherstart", $fields->tsn);
+
+                        $sheet->mergeCells("C$otherstart:D$otherstart");
+                        $sheet->setcellValue("C$otherstart", $fields->quantity);
+
+                        $sheet->mergeCells("E$otherstart:G$otherstart");
+                        $sheet->setcellValue("E$otherstart", $fields->uom);
+
+                        $sheet->mergeCells("H$otherstart:K$otherstart");
+                        $sheet->setcellValue("H$otherstart", $fields->unit_desc);
+
+                        $otherstart++;
+                    }
+
+
+                    $remarks = $others_header + count($others) + 1;
+                    $sheet->mergeCells("A$remarks:K$remarks");
+                    $sheet->setCellValue('A'.$remarks, "Remarks:");
+                    $sheet->setBorder("A$remarks:K$remarks", 'thin');
+                    $sheet->cell("A$remarks:K$remarks", function($cell){
+                        $cell->setBorder('thin','thin','thin','thin');
+                    });
+
+                    $startborder = $remarks +1;
+                    $endborder = $remarks + 7;
+                    $sheet->cell("A$startborder:K$endborder", function($cell){
+                        $cell->setBorder('thin','thin','thin','thin');
+                    });
+
+                    $for_remarks    = $remarks + 2;
+                    $driver         = $for_remarks+2;
+                    $check_by       = $driver+2;
+                    $signature_over = $check_by+1;
+
+                    $sheet->setCellValue("A$for_remarks", "SEAL NO.");
+                    $sheet->mergeCells("B$for_remarks:D$for_remarks");
+                    $sheet->setCellValue("B$for_remarks", "______________________________");
+                    //
+                    $sheet->mergeCells("F$for_remarks:G$for_remarks");
+                    $sheet->setCellValue("F$for_remarks", "HELPER -");
+                    $sheet->mergeCells("H$for_remarks:J$for_remarks");
+                    $sheet->setCellValue("H$for_remarks", "______________________________");
+                    //
+                    $sheet->setCellValue("A$driver", "DRIVER - ");
+                    $sheet->mergeCells("B$driver:D$driver");
+                    $sheet->setCellValue("B$driver", ucfirst($load->driver_name));
+
+                    $sheet->mergeCells("F$driver:G$driver");
+                    $sheet->setCellValue("F$driver", "VAN PLATE NO -");
+                    $sheet->mergeCells("H$driver:J$driver");
+                    $sheet->setCellValue("H$driver", ucwords($load->plate_no));
+                    //
+                    $sheet->setCellValue("A$check_by", "Checked by :");
+                    $sheet->mergeCells("B$check_by:D$check_by");
+                    $sheet->setCellValue("B$check_by", "______________________________");
+
+                    $sheet->mergeCells("F$check_by:G$check_by");
+                    $sheet->setCellValue("F$check_by", "Validated by:");
+                    $sheet->mergeCells("H$check_by:J$check_by");
+                    $sheet->setCellValue("H$check_by", "______________________________");
+                    //
+                    $sheet->setCellValue("B$signature_over", "Signature over printed name");
+                    $sheet->setCellValue("H$signature_over", "Signature over printed name");
+                });
+            }
+        })->export('xlsx');
+		
+	}*/
 	
 
 	public function exportCSV() {
@@ -933,31 +1554,32 @@ public function getPODetails() {
 			return Redirect::to('users/logout');
 		}
 
-		$this->data['col_id'] = Lang::get('purchase_order.col_id');
-		$this->data['col_po_no'] = Lang::get('purchase_order.col_po_no');
-		$this->data['col_box_code'] = Lang::get('purchase_order.col_box_code');
-		$this->data['col_sticker_by'] = Lang::get('purchase_order.col_sticker_by');
-		$this->data['col_receiver_no'] = Lang::get('purchase_order.col_receiver_no');
-		$this->data['col_supplier'] = Lang::get('purchase_order.col_supplier');
-		$this->data['col_receiving_stock_piler'] = Lang::get('purchase_order.col_receiving_stock_piler');
-		$this->data['col_shipment_ref'] = Lang::get('purchase_order.col_shipment_ref');
-		$this->data['col_invoice_number'] = Lang::get('purchase_order.col_invoice_number');
-		$this->data['col_invoice_amount'] = Lang::get('purchase_order.col_invoice_amount');
-		$this->data['col_entry_date'] = Lang::get('purchase_order.col_entry_date');
-		$this->data['col_status'] = Lang::get('purchase_order.col_status');
-		$this->data['col_action'] = Lang::get('purchase_order.col_action');
-		$this->data['col_back_order'] = Lang::get('purchase_order.col_back_order');
-		$this->data['col_carton_id'] = Lang::get('purchase_order.col_carton_id');
-		$this->data['col_total_qty'] = Lang::get('purchase_order.col_total_qty');
-		$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
-		$this->data['text_posted_po'] = Lang::get('purchase_order.text_posted_po');
+		$this->data['col_id'] 						= Lang::get('purchase_order.col_id');
+		$this->data['col_po_no'] 					= Lang::get('purchase_order.col_po_no');
+		$this->data['col_box_code'] 				= Lang::get('purchase_order.col_box_code');
+		$this->data['col_sticker_by'] 				= Lang::get('purchase_order.col_sticker_by');
+		$this->data['col_receiver_no'] 				= Lang::get('purchase_order.col_receiver_no');
+		$this->data['col_supplier'] 				= Lang::get('purchase_order.col_supplier');
+		$this->data['col_receiving_stock_piler'] 	= Lang::get('purchase_order.col_receiving_stock_piler');
+		$this->data['col_shipment_ref'] 			= Lang::get('purchase_order.col_shipment_ref');
+		$this->data['col_invoice_number'] 			= Lang::get('purchase_order.col_invoice_number');
+		$this->data['col_invoice_amount'] 			= Lang::get('purchase_order.col_invoice_amount');
+		$this->data['col_entry_date'] 				= Lang::get('purchase_order.col_entry_date');
+		$this->data['col_status'] 					= Lang::get('purchase_order.col_status');
+		$this->data['col_action'] 					= Lang::get('purchase_order.col_action');
+		$this->data['col_back_order'] 				= Lang::get('purchase_order.col_back_order');
+		$this->data['col_carton_id'] 				= Lang::get('purchase_order.col_carton_id');
+		$this->data['col_total_qty'] 				= Lang::get('purchase_order.col_total_qty');
+		$this->data['text_empty_results'] 			= Lang::get('general.text_empty_results');
+		$this->data['text_posted_po'] 				= Lang::get('purchase_order.text_posted_po');
  	
  		$filter_po_no 					= Input::get('filter_po_no', null);
  		$filter_shipment_reference_no	= Input::get('shipment_reference_no', null);
 	 	$filter_entry_date				= Input::get('filter_entry_date', null);
 	 	$filter_stock_piler				= Input::get('filter_stock_piler', null);
 	 	$receiver_no 					= Input::get('receiver_no', null);
-	 	$po_no 							= Input::get('po_no', null);
+	 	$po_no 							= Input::get('po_no', null);	
+	 	$filter_dept_code				= Input::get('filter_dept_code', null);
 
  
 		$this->data['po_info'] = PurchaseOrder::getPOInfodiv($receiver_no);
@@ -971,6 +1593,7 @@ public function getPODetails() {
 							'filter_back_order'  => Input::get('filter_back_order', NULL),
 							'filter_brand'       => Input::get('filter_brand', NULL),
 							'filter_division'    => Input::get('filter_division', NULL),
+							'filter_dept_code'		=> Input::get('filter_dept_code', null),
 							'filter_shipment_reference_no' => Input::get('filter_shipment_reference_no', NULL),
 							'sort'               => Input::get('sort', 'po_no'),
 							'order'              => Input::get('order', 'ASC'),
@@ -989,12 +1612,13 @@ public function getPODetails() {
  		$this->data['po_no']										= $po_no;
  		$this->data['filter_shipment_reference_no']					= $filter_shipment_reference_no;
  		$this->data['filter_stock_piler']							= $filter_stock_piler;
-
+ 		$this->data['filter_dept_code']								= $filter_dept_code;
 
   
 
  		$pdf = App::make('dompdf');
 		$pdf->loadView('purchase_order.report_list', $this->data)->setPaper('a4')->setOrientation('landscape');
+ 
 		/*return $pdf->stream();*/
 		return $pdf->download('purchase_order_' . date('Ymd') . '.pdf');
 	}
@@ -1287,6 +1911,7 @@ public function getPODetails() {
 		$filter_receiver_no = Input::get('filter_receiver_no', NULL);
 		$filter_entry_date  = Input::get('filter_entry_date', NULL);
 		$filter_stock_piler = Input::get('filter_stock_piler', NULL);
+		$filter_invoice_no 	= Input::get('filter_invoice_no', null);
 		$filter_status      = Input::get('filter_status', NULL);
 		$filter_back_order  = Input::get('filter_back_order', NULL);
 		$filter_brand       = Input::get('filter_brand', NULL);
@@ -1303,6 +1928,7 @@ public function getPODetails() {
 						'filter_receiver_no' => $filter_receiver_no,
 						'filter_entry_date'  => $filter_entry_date,
 						'filter_stock_piler' => $filter_stock_piler,
+						'filter_invoice_no'		=> $filter_invoice_no,
 						'filter_back_order'  => $filter_back_order,
 						'filter_status'      => $filter_status,
 						'filter_brand'       => $filter_brand,
@@ -1328,6 +1954,7 @@ public function getPODetails() {
 									'filter_shipment_reference_no'	=> $filter_shipment_reference_no,
 									'filter_entry_date'  => $filter_entry_date,
 									'filter_stock_piler' => $filter_stock_piler,
+									'filter_invoice_no'		=> $filter_invoice_no,
 									'filter_back_order'  => $filter_back_order,
 									'filter_status'      => $filter_status,
 									'filter_brand'       => $filter_brand,
@@ -1345,6 +1972,7 @@ public function getPODetails() {
 		$this->data['filter_entry_date']     = $filter_entry_date;
 		$this->data['filter_stock_piler']    = $filter_stock_piler;
 		$this->data['filter_status']         = $filter_status;
+		$this->data['filter_invoice_no']	 = $filter_invoice_no;
 		$this->data['filter_back_order']     = $filter_back_order;
 		$this->data['filter_brand']          = $filter_brand;
 		$this->data['filter_division']       = $filter_division;
@@ -1358,6 +1986,7 @@ public function getPODetails() {
 		$url                                 .= '&filter_status=' . $filter_status;
 		$url 								.=	'&filter_shipment_reference_no=' . $filter_shipment_reference_no;
 		$url 								.= '&total_qty=' .$total_qty;
+		$url 								.= '&filter_invoice_no=' .$filter_invoice_no;
 		$url                                 .= '&page=' . $page;
 
 		$order_po_no                         = ($sort=='po_no' && $order=='ASC') ? 'DESC' : 'ASC';
@@ -1388,6 +2017,7 @@ public function getPODetails() {
 		$url .= '&filter_brand=' . Input::get('filter_brand', NULL);
 		$url .= '&filter_division=' . Input::get('filter_division', NULL);
 		$url .= '&filter_shipment_reference_no=' . Input::get('filter_shipment_reference_no', NULL);
+		$url .= '&filter_invoice_no=' . Input::get('filter_invoice_no', NULL);
 		if($forDetail) {
 			$url .= '&sort_back=' . Input::get('sort', 'po_no');
 			$url .= '&order_back=' . Input::get('order', 'DESC');
@@ -1563,8 +2193,8 @@ public function getPODetails() {
 			$this->data['url_back']                = URL::to('purchase_order/division'). $this->setURL(true).'&receiver_no='. Input::get('receiver_no', NULL);
 		$this->data['error_assign_po']         = Lang::get('purchase_order.error_assign_po');
 
-		$this->data['params']                  	= explode(',', Input::get('po_no'));
-		$this->data['division']           		= Input::get('division');
+		$this->data['params']                  	= explode(',', Input::get('dept_code'));
+		$this->data['dept_code']           		= Input::get('dept_code');
 		$this->data['receiver_num']           	= Input::get('receiver_num');
 		$this->data['po_info']                 	= PurchaseOrder::getPOInfoByPoNos($this->data['params'],$this->data['receiver_num']);
 

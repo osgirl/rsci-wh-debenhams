@@ -19,7 +19,7 @@
 			<div class="control-group">
 				<label class="control-label">Division :</label>
 				<div class="controls">
-					{{ Form::text('po_no', $po_no, array('id' => 'po_no', 'readonly' => 'readonly')) }}
+					{{ Form::text('filter_division', $filter_division, array('id' => 'filter_division', 'readonly' => 'readonly')) }}
 					{{ Form::hidden('receiver_num', Input::get('receiver_no'), array('id' => 'po_no', 'readonly' => 'readonly')) }}
 				
 				</div> <!-- /controls -->
@@ -99,7 +99,7 @@ $(document).ready(function() {
     	console.log(stockpiler);
 
     	if (stockpiler == '') {
-    		alert('{{ $error_assign_po }}');
+    		///alert('{{ $error_assign_po }}');
     		return false;
     	} else {
     		$('#form-assign').submit();

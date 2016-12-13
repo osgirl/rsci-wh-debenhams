@@ -17,7 +17,7 @@
 		        	<span class="left-pane">Load Number :</span>
 		        	<span class="left-pane"> 
 		        	
-		        	
+
 		        </div>
 		 
 	        	<div>

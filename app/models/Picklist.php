@@ -18,6 +18,37 @@ class Picklist extends Eloquent {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+    public static function getStoreLocationwarehouse ($doc_num)
+    {
+            
+     
+
+            $query= DB::table('picklist_details')
+                ->SELECT( 'picklist_details.store_code','picklist.transfer_no','product_lists.dept_code','product_lists.description')
+          		->join('picklist','picklist_details.move_doc_number','=','picklist.move_doc_number','LEFT')
+          		->join('product_lists','picklist_details.sku','=','product_lists.upc','left')
+                ->WHERE('picklist.move_doc_number', '=', $doc_num)
+                ->first();
+        
+
+            return $query;
+    }
+public static function getPackingDetails($doc_num)
+    {
+        // get load date
+        
+
+            $rs = DB::SELECT(DB::raw("SELECT wms_picklist.move_doc_number, wms_picklist_details.sku, wms_picklist.transfer_no, wms_box_details.moved_qty, wms_box_details.box_code, wms_product_lists.description, wms_product_lists.short_description
+FROm wms_picklist
+left join wms_picklist_details on wms_picklist.move_doc_number = wms_picklist_details.move_doc_number
+left join wms_box_details on wms_box_details.picklist_detail_id = wms_picklist_details.id 
+left join wms_product_lists on wms_picklist_details.sku = wms_product_lists.upc
+where wms_picklist.move_doc_number = '$doc_num'   ORDER BY wms_picklist_details.move_doc_number, wms_box_details.box_code ASC  "));
+
+
+        return $rs;
+    }
 	public static  function getPRINTMTS($picklist_doc)
 	{
 			$query = DB::select(DB::raw("SELECT SUM(wms_box_details.moved_qty) as total_qty, wms_stores.store_name, wms_stores.store_code, wms_box.move_doc_number as picklist_doc
@@ -25,7 +56,7 @@ FROM wms_box
 LEFT JOIN wms_stores on wms_box.store_code = wms_stores.store_code
 LEFT JOIN wms_box_details on wms_box.box_code = wms_box_details.box_code
 LEFT join wms_picklist_details on wms_box_details.picklist_detail_id = wms_picklist_details.id
-WHERE wms_box.move_doc_number='$picklist_doc' AND wms_picklist_details.move_doc_number='$picklist_doc' GROUP BY wms_box.box_code"));
+WHERE wms_box.move_doc_number='$picklist_doc' GROUP BY wms_box.box_code"));
  
 		return $query;
 	}
@@ -46,9 +77,9 @@ WHERE wms_box.move_doc_number='$picklist_doc' AND wms_picklist_details.move_doc_
 	public static function getTLnumbersync()
     {
          
-        $query=DB::table('Picklist')
+        $query=DB::table('picklist')
             ->where('picklist.pl_status', 15)
-            ->where('Picklist.assigned_to_user_id','!=', 0)
+            ->where('picklist.assigned_to_user_id','!=', 0)
             ->update(['picklist.pl_status' =>'16']);
     }
 	public static function getpostedtoStore($doc_num, $boxcode)
@@ -249,7 +280,7 @@ WHERE wms_box.move_doc_number='$picklist_doc' AND wms_picklist_details.move_doc_
 	}
 	public static function getInfoByDocNos($data)
 	{
-		return Picklist::whereIn('move_doc_number', $data)->get()->toArray();
+		return Picklist::select('transfer_no')->where('move_doc_number','=', $data)->get()->toArray();
 	}
 	public static function getTlnumberPosted($data)
 	{
@@ -259,7 +290,7 @@ WHERE wms_box.move_doc_number='$picklist_doc' AND wms_picklist_details.move_doc_
 
 	public static function assignToStockPiler($docNo = '', $data = array())
 	{
-		$query = Picklist::where('move_doc_number', '=', $docNo)->update($data);
+		$query = Picklist::select('transfer_no')->where('move_doc_number', '=', $docNo)->update($data);
 	}
 
 	/***************************Methods for API only*********************************/
@@ -330,7 +361,7 @@ WHERE wms_box.move_doc_number='$picklist_doc' AND wms_picklist_details.move_doc_
 			->groupBy('box_details.box_code')
 			->get();*/
 
-				$box= DB::SELECT(DB::raw("SELECT GROUP_CONCAT(DISTINCT(wms_picklist_details.move_doc_number) SEPARATOR ', ' ) as MASTER_EDU,wms_box_details.box_code,sum(wms_box_details.moved_qty) as qty, ship_date, wms_stores.store_code, wms_stores.store_name
+				$box= DB::SELECT(DB::raw("SELECT GROUP_CONCAT(DISTINCT(wms_picklist.move_doc_number) SEPARATOR ', ' ) as MASTER_EDU, wms_box_details.box_code,sum(wms_box_details.moved_qty) as qty, ship_date, wms_stores.store_code, wms_stores.store_name
 					from wms_picklist
 					INNER JOIN wms_box ON wms_picklist.move_doc_number=wms_box.move_doc_number
 					inner join wms_box_details on wms_box.box_code=wms_box_details.box_code

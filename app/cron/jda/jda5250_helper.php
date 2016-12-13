@@ -18,11 +18,13 @@ class jdaCustomClass
 		self::$lastTime = microtime(true);
 
 		echo "Connecting to JDA \n";
-		self::$jda = new jdatelnet("172.16.1.9",3);
+		self::$jda = new jdatelnet("jdaprod2.rgoc.com.ph",3);
 		self::$jda->screenWait("Password");
-		self::$jda->login("STRATPGMR","PASSWORD","MMFMTLIB");
+		self::$jda->login("DEBSPGMR","PASSWORD","MMFMTLIB");
 	}
 
+			
+		 
 	public static function display($screen,$width=132){
 		self::$scrCounter;
 		self::$scrCounter++;

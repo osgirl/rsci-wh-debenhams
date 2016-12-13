@@ -191,20 +191,20 @@
                     <tr>
 						<td class="align-center font-12">{{ $module_shipping }}</td>
 						<td class="align-center">
-							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessPacking', Input::old('permissions'))) || CommonHelper::valueInArray('CanAccessPacking', json_decode($user_role->permissions)))
-								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessPacking" checked="checked" />
+							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessShipping', Input::old('permissions'))) || CommonHelper::valueInArray('CanAccessShipping', json_decode($user_role->permissions)))
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessShipping" checked="checked" />
 							@else
-								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessPacking" />
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessShipping" />
 							@endif
 						</td>
 						<td class="align-center">--</td>
 						<td class="align-center">--</td>
 						<td class="align-center">--</td>
 						<td class="align-center">  
-						@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessPacking', Input::old('permissions'))) || CommonHelper::valueInArray('CanAccessPacking', json_decode($user_role->permissions)))
-								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessPacking" checked="checked" />
+						@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessBoxingLoading', Input::old('permissions'))) || CommonHelper::valueInArray('CanAccessBoxingLoading', json_decode($user_role->permissions)))
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessBoxingLoading" checked="checked" />
 							@else
-								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessPacking" />
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessBoxingLoading" />
 							@endif 
 						</td>
 						<td class="align-center">--</td>
@@ -212,13 +212,19 @@
 						<td class="align-center">--</td>
                     	<td class="align-center">--</td>
 						<td class="align-center">
-							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAssignPacking', Input::old('permissions'))) || CommonHelper::valueInArray('CanAssignPacking', json_decode($user_role->permissions)))
-								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAssignPacking" checked="checked" />
+							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessBoxingLoading', Input::old('permissions'))) || CommonHelper::valueInArray('CanAccessBoxingLoading', json_decode($user_role->permissions)))
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessBoxingLoading" checked="checked" />
 							@else
-								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAssignPacking" />
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessBoxingLoading" />
 							@endif
 						</td>
-						<td class="align-center">--</td> 
+						<<td class="align-center">
+							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessShipping', Input::old('permissions'))) || CommonHelper::valueInArray('CanAccessShipping', json_decode($user_role->permissions)))
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessShipping" checked="checked" />
+							@else
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessShipping" />
+							@endif
+						</td> 
                     </tr>
 
                     <!-- <tr>
@@ -389,23 +395,23 @@
 
 
 
-                    <tr>
-						<td class="align-center font-12">{{ $module_subloc_loading }}</td> <!-- subloc transfer loading -->
+                 <tr>
+						<td class="align-center font-12">{{ $module_shipping }}</td>
 						<td class="align-center">
-							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessPacking', Input::old('permissions'))) || CommonHelper::valueInArray('CanAccessPacking', json_decode($user_role->permissions)))
-								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessPacking" checked="checked" />
+							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessShipping', Input::old('permissions'))) || CommonHelper::valueInArray('CanAccessShipping', json_decode($user_role->permissions)))
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessShipping" checked="checked" />
 							@else
-								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessPacking" />
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessShipping" />
 							@endif
 						</td>
 						<td class="align-center">--</td>
 						<td class="align-center">--</td>
 						<td class="align-center">--</td>
 						<td class="align-center">  
-						@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessPacking', Input::old('permissions'))) || CommonHelper::valueInArray('CanAccessPacking', json_decode($user_role->permissions)))
-								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessPacking" checked="checked" />
+						@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessBoxingLoading', Input::old('permissions'))) || CommonHelper::valueInArray('CanAccessBoxingLoading', json_decode($user_role->permissions)))
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessBoxingLoading" checked="checked" />
 							@else
-								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessPacking" />
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessBoxingLoading" />
 							@endif 
 						</td>
 						<td class="align-center">--</td>
@@ -413,13 +419,19 @@
 						<td class="align-center">--</td>
                     	<td class="align-center">--</td>
 						<td class="align-center">
-							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAssignPacking', Input::old('permissions'))) || CommonHelper::valueInArray('CanAssignPacking', json_decode($user_role->permissions)))
-								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAssignPacking" checked="checked" />
+							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessBoxingLoading', Input::old('permissions'))) || CommonHelper::valueInArray('CanAccessBoxingLoading', json_decode($user_role->permissions)))
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessBoxingLoading" checked="checked" />
 							@else
-								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAssignPacking" />
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessBoxingLoading" />
 							@endif
 						</td>
-						<td class="align-center">--</td> 
+						<<td class="align-center">
+							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanAccessShipping', Input::old('permissions'))) || CommonHelper::valueInArray('CanAccessShipping', json_decode($user_role->permissions)))
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessShipping" checked="checked" />
+							@else
+								<input type="checkbox" class="checkbox" name="permissions[]" value="CanAccessShipping" />
+							@endif
+						</td> 
                     </tr>
 
 
@@ -853,13 +865,13 @@
 							@endif
 						</td>
 						<td class="align-center">--</td>
-						<td class="align-center">
+						<!-- <td class="align-center">
 							@if((CommonHelper::arrayHasValue(Input::old('permissions')) && CommonHelper::valueInArray('CanArchiveAuditTrail', Input::old('permissions'))) || CommonHelper::valueInArray('CanArchiveAuditTrail', json_decode($user_role->permissions)))
 								<input type="checkbox" class="checkbox" name="permissions[]" value="CanArchiveAuditTrail" checked="checked" />
 							@else
 								<input type="checkbox" class="checkbox" name="permissions[]" value="CanArchiveAuditTrail" />
 							@endif
-						</td>
+						</td> -->
                     	<td class="align-center">--</td>
 						<td class="align-center">--</td>
 						<td class="align-center">--</td> 

@@ -63,7 +63,9 @@
 				<div class="control-group">											
 					<label class="control-label" for="filter_store">Store :</label>
 					<div class="controls">
-					{{ Form::select('filter_store', array('' => $text_select) + $stores, $filter_store, array('class'=>'select-width', 'id'=>"filter_store")) }}
+
+
+ 			{{ Form::select('filter_store', array('' => $text_select) + $stores, $filter_store, array('class'=>'select-width', 'id'=>"filter_store")) }} 
 					</div> <!-- /controls -->				
 				</div> <!-- /control-group -->
 			 		

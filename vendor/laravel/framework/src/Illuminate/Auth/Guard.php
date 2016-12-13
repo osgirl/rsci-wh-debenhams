@@ -270,7 +270,7 @@ class Guard {
 	 * @param  \Symfony\Component\HttpFoundation\Request  $request
 	 * @return \Symfony\Component\HttpFoundation\Response|null
 	 */
-	public function basic($field = 'email', Request $request = null)
+	public function basic($field = 'username', Request $request = null)
 	{
 		if ($this->check()) return;
 
@@ -291,7 +291,7 @@ class Guard {
 	 * @param  \Symfony\Component\HttpFoundation\Request  $request
 	 * @return \Symfony\Component\HttpFoundation\Response|null
 	 */
-	public function onceBasic($field = 'email', Request $request = null)
+	public function onceBasic($field = 'username', Request $request = null)
 	{
 		$request = $request ?: $this->getRequest();
 

@@ -234,8 +234,8 @@ public static function getBoxesWithFilters1($data= array(), $getCount = FALSE)
           $query  = Box::select('box.*','stores.*','store_return_pick_details.*',DB::raw('GROUP_CONCAT(DISTINCT(wms_store_return_pick_details.move_doc_number) SEPARATOR ", "  )  as MASTER_EDU'))
                         ->join('store_return_pick_details','box.tl_number','=','store_return_pick_details.move_doc_number','LEFT')
                         ->join('stores','store_return_pick_details.to_store_code','=','stores.store_code','LEFT')
-                        ->where('assign_to_load','=', 0)
-                        ->where('box.in_use','=',0)
+                        ->where('box.assign_to_load','=',  0)
+                        ->where('box.in_use','=', 0)
                         ->where('box.move_doc_number','=', "")
                         ->groupBy('box_code');
          
@@ -269,8 +269,10 @@ public static function getBoxesWithFilters1($data= array(), $getCount = FALSE)
  public static function getLoadNumber(  $data= array(), $getCount=false)
     {
         // $query = Picklist::select(DB::raw('wms_picklist.*, sum(wms_picklist_details.move_to_shipping_area) as sum_moved, sum(wms_picklist_details.assigned_user_id) as sum_assigned, store_code' ))
-        $query  = Box::select('box.*','stores.*',DB::raw('GROUP_CONCAT(DISTINCT(wms_picklist_details.move_doc_number) SEPARATOR ", "  )  as MASTER_EDU'))
+        $query  = Box::select('box.*','stores.*',DB::raw('GROUP_CONCAT(DISTINCT(wms_picklist.move_doc_number) SEPARATOR ", "  )  as MASTER_EDU'))
+
                         ->join('picklist_details','box.move_doc_number','=','picklist_details.move_doc_number','LEFT')
+                        ->join('picklist','picklist_details.move_doc_number','=','picklist.move_doc_number','LEFT')
                         ->join('stores','picklist_details.store_code','=','stores.store_code','LEFT')
                         ->where('assign_to_load','=', 0)
                         ->where('box.in_use','=',0)

@@ -1,0 +1,225 @@
+sql/mysql: mysql:host=localhost;dbname=deve
+
+ Getting reference # from db 
+
+ SELECT reference FROM wms_transactions_to_jda
+					WHERE module = 'Purchase Order' AND jda_action='Receiving' AND reference = '10869' AND sync_status = 0 
+ 
+ No rows found!. Proceed to Closing of PO...
+php -qC:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/../../jda/classes/close_po.php 10869Closing pdo connection... 
+sql/mysql: mysql:host=localhost;dbname=deve
+
+ Getting reference # from db 
+
+ SELECT reference FROM wms_transactions_to_jda
+					WHERE module = 'Purchase Order' AND jda_action='Receiving' AND reference = '16610' AND sync_status = 0 
+ 
+ No rows found!. Proceed to Closing of PO...
+php -qC:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/../../jda/classes/close_po.php 16610Closing pdo connection... 
+Could not open input file: C:\xampp\htdocs\rsci-wh-ewms\app\helpers/../../app/jda4r4/jda4r4/POReceiving.php
+Could not open input file: C:\xampp\htdocs\rsci-wh-ewms\app\helpers/../../app/jda4r4/jda4r4/POReceiving.php
+Could not open input file: C:\xampp\htdocs\rsci-wh-ewms\app\helpers/../../app/jda4r4/jda4r4/POReceiving.php
+Could not open input file: C:\xampp\htdocs\rsci-wh-ewms\app\helpers/../app/jda4r4/jda4r4/POReceiving.php
+Could not open input file: C:\xampp\htdocs\rsci-wh-ewms\app\helpersapp/jda4r4/jda4r4/POReceiving.php
+Could not open input file: C:\xampp\htdocs\rsci-wh-ewms\app\helpersapp/jda4r4/jda4r4/POReceiving.php
+Could not open input file: C:\xampp\htdocs\rsci-wh-ewms\app\helpersapp/jda4r4/jda4r4/POReceiving.php
+Could not open input file: C:\xampp\htdocs\rsci-wh-ewms\app\helpers/app/jda4r4/jda4r4/POReceiving.php
+Could not open input file: C:\xampp\htdocs\rsci-wh-ewms\app\helpers/../../app/jda4r4/jda4r4/POReceiving.php
+Could not open input file: C:\xampp\htdocs\rsci-wh-ewms\app\helpers/../../app/jda4r4/jda4r4/POReceiving.php
+Could not open input file: C:\xampp\htdocs\rsci-wh-ewms\app\helpers/app/jda4r4/POReceiving.php
+Could not open input file: C:\xampp\htdocs\rsci-wh-ewms\app\helpers/app/jda4r4/POReceiving.php
+Could not open input file: C:\xampp\htdocs\rsci-wh-ewms\app\helpers/app/jda4r4/POReceiving.php
+
+Parse error: syntax error, unexpected '}', expecting ')' in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 288
+PHP Parse error:  syntax error, unexpected '}', expecting ')' in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 288
+
+Parse error: syntax error, unexpected ';', expecting ')' in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 286
+PHP Parse error:  syntax error, unexpected ';', expecting ')' in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 286
+sql/mysql: mysql:host=localhost;dbname=deve
+
+ Getting reference # from db 
+
+ SELECT reference FROM wms_transactions_to_jda
+					WHERE module = 'Purchase Order' AND jda_action='Receiving' AND reference = '16544' AND sync_status = 0 
+ 
+ No rows found!. Proceed to Closing of PO...
+php -qC:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/../../jda/classes/close_po.php 16544Closing pdo connection... 
+
+Parse error: syntax error, unexpected ''invoice_no'' (T_CONSTANT_ENCAPSED_STRING), expecting ')' in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 287
+PHP Parse error:  syntax error, unexpected ''invoice_no'' (T_CONSTANT_ENCAPSED_STRING), expecting ')' in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 287
+sql/mysql: mysql:host=localhost;dbname=deve
+
+ Getting reference # from db 
+
+ SELECT reference FROM wms_transactions_to_jda
+					WHERE module = 'Purchase Order' AND jda_action='Receiving' AND reference = '16542' AND sync_status <> 1 
+
+ Getting reference # from db 
+
+ SELECT reference FROM wms_transactions_to_jda
+					WHERE module = 'Purchase Order' AND jda_action='Closing' AND reference = '16542' AND sync_status = 0 
+ 
+ No rows found!. 
+Closing pdo connection... 
+
+Warning: require_once(library/jdatelnet.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\classes\close_po.php on line 3
+
+Fatal error: require_once(): Failed opening required 'library/jdatelnet.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\classes\close_po.php on line 3
+PHP Warning:  require_once(library/jdatelnet.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\classes\close_po.php on line 3
+PHP Fatal error:  require_once(): Failed opening required 'library/jdatelnet.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\classes\close_po.php on line 3
+
+Warning: require_once(/app/jda4r4/library/jdatelnet.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\classes\close_po.php on line 3
+
+Fatal error: require_once(): Failed opening required '/app/jda4r4/library/jdatelnet.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\classes\close_po.php on line 3
+PHP Warning:  require_once(/app/jda4r4/library/jdatelnet.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\classes\close_po.php on line 3
+PHP Fatal error:  require_once(): Failed opening required '/app/jda4r4/library/jdatelnet.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\classes\close_po.php on line 3
+
+Warning: require_once(jda4r4/library/jdatelnet.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\classes\close_po.php on line 3
+
+Fatal error: require_once(): Failed opening required 'jda4r4/library/jdatelnet.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\classes\close_po.php on line 3
+PHP Warning:  require_once(jda4r4/library/jdatelnet.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\classes\close_po.php on line 3
+PHP Fatal error:  require_once(): Failed opening required 'jda4r4/library/jdatelnet.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\classes\close_po.php on line 3
+
+Warning: include_once(jda4r4/library/jdatelnet.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\classes\close_po.php on line 4
+
+Warning: include_once(): Failed opening 'jda4r4/library/jdatelnet.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\classes\close_po.php on line 4
+PHP Warning:  include_once(jda4r4/library/jdatelnet.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\classes\close_po.php on line 4
+PHP Warning:  include_once(): Failed opening 'jda4r4/library/jdatelnet.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\classes\close_po.php on line 4
+
+Warning: include_once(../../config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: include_once(): Failed opening '../../config/config.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  include_once(../../config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  include_once(): Failed opening '../../config/config.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: include_once(../../config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: include_once(): Failed opening '../../config/config.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  include_once(../../config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  include_once(): Failed opening '../../config/config.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: include_once(jda4r4/config/db.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: include_once(): Failed opening 'jda4r4/config/db.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  include_once(jda4r4/config/db.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  include_once(): Failed opening 'jda4r4/config/db.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: include_once(app/jda4r4/config/db.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: include_once(): Failed opening 'app/jda4r4/config/db.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  include_once(app/jda4r4/config/db.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  include_once(): Failed opening 'app/jda4r4/config/db.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: include_once(../../config/confiafg.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: include_once(): Failed opening '../../config/confiafg.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  include_once(../../config/confiafg.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  include_once(): Failed opening '../../config/confiafg.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: include_once(../../config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: include_once(): Failed opening '../../config/config.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  include_once(../../config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  include_once(): Failed opening '../../config/config.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Fatal error: Call to undefined function required_once() in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Fatal error:  Call to undefined function required_once() in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: require_once(../../config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Fatal error: require_once(): Failed opening required '../../config/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  require_once(../../config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Fatal error:  require_once(): Failed opening required '../../config/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Parse error: syntax error, unexpected 'class' (T_CLASS) in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 4
+PHP Parse error:  syntax error, unexpected 'class' (T_CLASS) in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 4
+
+Parse error: syntax error, unexpected 'public' (T_PUBLIC) in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 4
+PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 4
+
+Parse error: syntax error, unexpected 'public' (T_PUBLIC) in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 4
+PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 4
+
+Warning: require_once(C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Fatal error: require_once(): Failed opening required 'C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  require_once(C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Fatal error:  require_once(): Failed opening required 'C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: require_once(C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Fatal error: require_once(): Failed opening required 'C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/config/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  require_once(C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Fatal error:  require_once(): Failed opening required 'C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/config/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+sql/mysql: mysql:host=localhost;dbname=deve
+Closing pdo connection... 
+
+Warning: require_once(C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/../../../../config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Fatal error: require_once(): Failed opening required 'C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/../../../../config/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  require_once(C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/../../../../config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Fatal error:  require_once(): Failed opening required 'C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/../../../../config/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: require_once(C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Fatal error: require_once(): Failed opening required 'C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/config/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  require_once(C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Fatal error:  require_once(): Failed opening required 'C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/config/config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+sql/mysql: mysql:host=localhost;dbname=deve
+Closing pdo connection... 
+
+Warning: require_once(C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sqlconfig.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Fatal error: require_once(): Failed opening required 'C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sqlconfig.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  require_once(C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sqlconfig.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Fatal error:  require_once(): Failed opening required 'C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sqlconfig.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: require_once(C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/../config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Fatal error: require_once(): Failed opening required 'C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/../config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  require_once(C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/../config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Fatal error:  require_once(): Failed opening required 'C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql/../config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+sql/mysql: mysql:host=localhost;dbname=deve
+Closing pdo connection... 
+
+Warning: require_once(C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Fatal error: require_once(): Failed opening required 'C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  require_once(C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Fatal error:  require_once(): Failed opening required 'C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\config.php' (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: include_once(../../config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: include_once(): Failed opening '../../config/config.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  include_once(../../config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  include_once(): Failed opening '../../config/config.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: include_once(/../config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: include_once(): Failed opening '/../config/config.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  include_once(/../config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  include_once(): Failed opening '/../config/config.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: include_once(../../config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: include_once(): Failed opening '../../config/config.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  include_once(../../config/config.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+PHP Warning:  include_once(): Failed opening '../../config/config.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 2
+
+Warning: include_once(/jda4r4/config/db.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+
+Warning: include_once(): Failed opening '/jda4r4/config/db.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+PHP Warning:  include_once(/jda4r4/config/db.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+PHP Warning:  include_once(): Failed opening '/jda4r4/config/db.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+
+Warning: include_once(/../jda4r4/config/db.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+
+Warning: include_once(): Failed opening '/../jda4r4/config/db.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+PHP Warning:  include_once(/../jda4r4/config/db.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+PHP Warning:  include_once(): Failed opening '/../jda4r4/config/db.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+
+Warning: include_once(/app/jda4r4/config/db.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+
+Warning: include_once(): Failed opening '/app/jda4r4/config/db.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+PHP Warning:  include_once(/app/jda4r4/config/db.php): failed to open stream: No such file or directory in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3
+PHP Warning:  include_once(): Failed opening '/app/jda4r4/config/db.php' for inclusion (include_path='C:\xampp\php\PEAR') in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\sql\mysql.php on line 3

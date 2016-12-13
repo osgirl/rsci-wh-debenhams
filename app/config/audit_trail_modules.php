@@ -4,12 +4,12 @@ return array(
 	/*"boxing"         => "Box Manifest",*/
 	// "letdown"     => "Letdown",/*
 	"purchaseorder"  => "Purchase Order",
-	"picking/packing"        => "Picking",
-	"loading/shipping"       => "Shipping",
+	"picking/packing"        => "Picking / Packing",
+	"loading/shipping"       => "Loading / Shipping",
 	"subloc_receiving"   => "Subloc MTS Receiving",
 	"subloc_picking"   => "Subloc Picking ",
 	"subloc_loading"   => "Subloc Loading ", 
-	
+	"return_wrhouse"	=> "Return to Warehouse",
 	/*"reservezone"    => "Picking Location",*/
 	/*"slotmaster"     => "Slots"*/
 

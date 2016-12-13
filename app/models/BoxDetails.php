@@ -19,9 +19,10 @@ class BoxDetails extends Eloquent {
 	*  add or update box manifest detail
 	*
 	*/
+
 	public static function getPLTotalqty($boxcode = null)
 	{
-		$query =DB::SELECT(DB::raw("SELECT sum(wms_box_details.moved_qty) as total_qty from wms_box_details where box_code='$boxcode'"));
+		$query =DB::SELECT(DB::raw("SELECT sum(wms_box_details.moved_qty) as total_qty from wms_box_details where box_code='$boxcode' "));
 
 		return $query;
 	}

@@ -70,6 +70,8 @@ if( CommonHelper::hasValue($data['filter_doc_no']) ) $query->where('store_return
 
 		DebugHelper::log(__METHOD__, $result);
 		return $result;
+
+		
 	}
 	public static function getStocktransferPickUnlistedReport()
 		{
@@ -120,7 +122,7 @@ delivered_qty = 0 and wms_store_return.assigned_to_user_id != 0 and wms_store_re
     {
       
 		// echo "<pre>"; print_r($data); die();
-    	  $query = StoreReturn::select('store_return.to_store_code','store_return.date_entry','store_return.so_no','store_return.so_status','store_return.updated_at','dataset.*','stores.store_name','users.firstname','users.lastname','store_return_detail.delivered_qty as quantity_to_pick','store_return_detail.received_qty as moved_qty')
+    	  $query = StoreReturn::select('store_return.to_store_code','store_return.from_store_code','store_return.date_entry','store_return.so_no','store_return.so_status','store_return.updated_at','dataset.*','stores.store_name','users.firstname','users.lastname','store_return_detail.delivered_qty as quantity_to_pick','store_return_detail.received_qty as moved_qty')
     	  	->join('store_return_detail','store_return.so_no','=','store_return_detail.so_no', 'LEFT')
         	->join('users','store_return.assigned_to_user_id','=','users.id','LEFT')
            ->join('stores', 'store_return.from_store_code','=','stores.store_code','LEFT')
@@ -134,8 +136,7 @@ delivered_qty = 0 and wms_store_return.assigned_to_user_id != 0 and wms_store_re
 		if( CommonHelper::hasValue($data['filter_stock_piler']) ) $query->whereRaw('find_in_set('. $data['filter_stock_piler'] . ',assigned_to_user_id) > 0'); 
 
         
-		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  {
-			if($data['sort'] == 'doc_no') $data['sort'] = 'store_return.so_no';
+		if( CommonHelper::hasValue($data['sort']) && CommonHelper::hasValue($data['order']))  { 
 			$query->orderBy($data['sort'], $data['order']);
 		}
 

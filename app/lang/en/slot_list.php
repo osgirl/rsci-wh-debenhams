@@ -7,4 +7,6 @@ return array(
 	
 	'col_id' 					=> 'No.',
 	'col_slot_no'				=> 'Slot No.',
+	'col_zone_no' 				=> 'Zone No.',
+	'col_store_no' 				=> 'Store Code',
 );

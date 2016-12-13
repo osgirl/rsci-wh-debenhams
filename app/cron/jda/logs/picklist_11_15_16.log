@@ -1,0 +1,56 @@
+sql/mysql: mysql:host=localhost;dbname=deve
+
+ Getting reference # from database 
+
+ SELECT DISTINCT reference FROM wms_transactions_to_jda trans
+					INNER JOIN wms_picklist_details pick_d ON pick_d.move_doc_number = trans.reference
+				 
+					WHERE module = 'Picklist' AND jda_action = 'Closing' AND trans.sync_status = 0 
+
+ Getting move doc number from db 
+
+ SELECT DISTINCT wms_picklist.move_doc_number
+					FROM wms_picklist  
+					WHERE pl_status = 18 AND wms_picklist.move_doc_number IN (45,48,54,61,62,64) 
+Array
+(
+    [0] => Array
+        (
+            [move_doc_number] => 45
+            [0] => 45
+        )
+
+    [1] => Array
+        (
+            [move_doc_number] => 48
+            [0] => 48
+        )
+
+    [2] => Array
+        (
+            [move_doc_number] => 54
+            [0] => 54
+        )
+
+    [3] => Array
+        (
+            [move_doc_number] => 61
+            [0] => 61
+        )
+
+    [4] => Array
+        (
+            [move_doc_number] => 62
+            [0] => 62
+        )
+
+    [5] => Array
+        (
+            [move_doc_number] => 64
+            [0] => 64
+        )
+
+)
+
+Fatal error: Call to a member function screenCheck() on a non-object in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\core\jda5250_helper.php on line 192
+PHP Fatal error:  Call to a member function screenCheck() on a non-object in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\core\jda5250_helper.php on line 192

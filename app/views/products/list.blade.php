@@ -100,7 +100,7 @@
 						<th><a href="{{ $sort_full_name }}" class="@if( $sort=='full_name' ) {{ $order }} @endif">{{ $col_prod_full_name }}</a></th>
 						<th><a href="{{ $sort_short_name }}" class="@if( $sort=='short_name' ) {{ $order }} @endif">{{ $col_prod_short_name }}</a></th>
 						<th><a href="{{ $sort_dept }}" class="@if( $sort=='dept' ) {{ $order }} @endif">{{ $col_department }}</a></th>
-						<th><a href="{{ $sort_sub_dept }}" class="@if( $sort=='sub_dept' ) {{ $order }} @endif">{{ $col_sub_department }}</a></th>
+						<!-- <th><a href="{{ $sort_sub_dept }}" class="@if( $sort=='sub_dept' ) {{ $order }} @endif">{{ $col_sub_department }}</a></th> -->
 					</tr>
 				</thead>
 				<tbody>
@@ -116,8 +116,8 @@
 						<td>{{ $product->upc }}</td>
 						<td>{{ $product->description }}</td>
 						<td>{{ $product->short_description }}</td>
-						<td> </td>
-						<td>  </td>
+						<td> {{$product->dept_code}}</td>
+					 
 					</tr>
 					@endforeach
 				@endif

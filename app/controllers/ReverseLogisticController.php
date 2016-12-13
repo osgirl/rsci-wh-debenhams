@@ -195,7 +195,7 @@ protected $layout = "layouts.main";
 
 		 
 			
-		$results = Reverselogistic::getRLVarianceReport($arrParams);
+			$results = Reverselogistic::getRLVarianceReport($arrParams);
 
 			$this->data['results'] = $results;
 
@@ -205,7 +205,135 @@ protected $layout = "layouts.main";
 			return $pdf->download('return_to_warehouse_' . date('Ymd') . '.pdf');
 		 
 	}
+	public function getReportNewExcel()
+	{
+		 
+		 
+ 
+    Excel::create('Return_Warehouse'. date('Ymd'), function($excel){
+	 	
 
+	 	$filter_so_no = Input::get('filter_so_no', NULL);
+			$filter_store_name = Input::get('filter_store_name', NULL);
+			$filter_created_at = Input::get('filter_created_at', NULL);
+			$filter_status = Input::get('filter_status', NULL);
+			$filter_doc_no 	= Input::get('filter_doc_no', null);
+			$filter_entry_date = Input::get('filter_entry_date', null);
+			//for back
+			$sort_back  = Input::get('sort_back', 'so_no');
+			$order_back = Input::get('order_back', 'ASC');
+			$page_back  = Input::get('page_back', 1);
+
+			// Details
+			$sort_detail  = Input::get('sort', 'sku');
+			$order_detail = Input::get('order', 'ASC');
+			$page_detail  = Input::get('page', 1);
+
+			//Data
+			$so_id = Input::get('id', NULL);
+			$so_no = Input::get('so_no', NULL);
+
+
+			$this->data = Lang::get('store_return'); 
+			$this->data['text_empty_results'] = Lang::get('general.text_empty_results');
+
+			$arrParams = array(
+					'id'             	=> $so_id,
+					'sort'              => $sort_detail,
+					'order'             => $order_detail,
+					'page'              => $page_detail,
+					'so_no'             => $so_no,
+					'filter_so_no'      => $filter_so_no,
+		 			'filter_doc_no'		=> $filter_doc_no,
+		 			'filter_entry_date'	=> $filter_entry_date,
+		 			'filter_created_at' => $filter_created_at,
+					'filter_status'     => $filter_status,
+					'limit' => NULL
+				);
+
+		 
+			
+			$results = Reverselogistic::getRLVarianceReport($arrParams);
+ 
+   	      // foreach ($query as $keyvalue) 
+	       {
+	     
+	       	$excel->sheet('MTS Receiving', function($sheet) use ($results) 
+	       	{ 
+           		$sheet->setStyle(array(
+                        'font' => array(
+                            'name'      =>  'Calibri',
+                            'size'      =>  11,
+                            'bold'      =>  false,
+                            'border'	=>  0
+                        )
+                    ));
+
+                    $sheet->setPageMargin(array(
+                        0.25, 1, 0.25, 1
+                    ));
+
+					$sheet->mergeCells('A1:I2');
+                    $sheet->setCellValue('A1', 'RSCI - Return Warehouse Report');
+                    $sheet->setBorder('A1:I2', 'thin');
+                    $sheet->cell('A1', function($cell){
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                    });
+                    $sheet->setWidth("C", 20);
+                    $sheet->setWidth("B", 10);
+                    $sheet->setWidth("E", 10);
+ 
+                    $header = array();
+                    $header['A'] = 'MTS no.'; 
+                    $header['B'] = 'Store';
+                    $header['C'] = "SKU";
+                    $header['D'] = "UPC";
+                    $header['E'] = "Short Name";
+                    $header['F'] = "Quantity Ordered";
+                    $header['G'] = "Piler Name"; 
+                    $header['H'] = "Date Entry"; 
+                    $header['I'] = "Variance";  
+					 
+
+                    $start = 3;
+                    foreach ($header as $key => $head)
+                    {
+                        $sheet->setCellValue($key.$start, $head);
+                        $sheet->cell($key.$start, function($cell) {
+                            $cell->setAlignment('center');
+                            $cell->setValignment('center');
+                            $cell->setFontWeight('bold');
+                        });
+                    }
+
+                    $_start = 4;
+                    $keys = array("A", "B", "C", "D", "E", "F", "G", "H", "I");
+ 
+                  	foreach ($results as $doc_no)
+                    {
+                        
+                        $sheet->setCellValue('A'.$_start, $doc_no['move_doc_number']); 
+                        $sheet->setCellValue('B'.$_start, $doc_no['store_name']); 
+                        $sheet->setCellValue('C'.$_start, $$doc_no['sku']); 
+                        $sheet->setCellValue('D'.$_start, $doc_no['upc']);
+                        $sheet->setCellValue('E'.$_start, $doc_no['description']); 
+                        $sheet->setCellValue('F'.$_start, $doc_no['delivered_qty']);
+                        $sheet->setCellValue('G'.$_start,  $doc_no['firstname']. ' '.$doc_no['lastname']);
+                        $sheet->setCellValue('H'.$_start, $doc_no['updated_at']);
+                        $sheet->setCellValue('I'.$_start, $doc_no['moved_qty'] - $doc_no['delivered_qty']);
+               
+                        $_start++;
+                
+
+                    }
+ 
+     
+           });
+	       	  }
+      })->export('xlsx');
+	}
+ 
 	public function exportCSVexcelfile()
 	{ 
  
@@ -223,7 +351,7 @@ protected $layout = "layouts.main";
 
  
 	 
-		$output = Lang::get('picking.col_doc_no'). ',';
+		$output = Lang::get('picking.col_doc_no1'). ',';
 		$output .= Lang::get('picking.col_store_name'). ',';
 		$output .= Lang::get('picking.col_sku'). ',';
 		$output .= Lang::get('picking.col_upc'). ',';
@@ -629,7 +757,7 @@ protected $layout = "layouts.main";
 		$this->data['button_cancel']    = Lang::get('general.button_cancel');
 		$this->data['url_back']         = URL::to('reverse_logistic/reverse_list');
 		$this->data['params']           = explode(',', Input::get('so_no'));
-		$this->data['info']             = Reverselogistic::getInfoBySoNo($this->data['params']);
+		$this->data['info']             = ReverseLogisticControllerogistic::getInfoBySoNo($this->data['params']);
 
 		$this->layout->content    = View::make('reverse_logistic.assign_piler_form', $this->data);
 	}
@@ -654,6 +782,24 @@ protected $layout = "layouts.main";
 		ReverseLogistic::assignToStockPilerReverse($soNo, $arrParams);
 
 			// AuditTrail
+			$users = User::getUsersFullname(Input::get('stock_piler')); 
+
+			$fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $users));
+
+			$data_before = '';
+			$data_after = 'MTS no. : ' . $soNo . ' assigned to :' . $fullname;
+
+			$arrParams = array(
+							'module'		=> Config::get("audit_trail_modules.return_wrhouse"),
+							'action'		=> Config::get('audit_trail.assign_return'),
+							'reference'		=> 'MTS no.: '. $soNo,
+							'data_before'	=> $data_before,
+							'data_after'	=> $data_after,
+							'user_id'		=> Auth::user()->id,
+							'created_at'	=> date('Y-m-d H:i:s'),
+							'updated_at'	=> date('Y-m-d H:i:s')
+							);
+			AuditTrail::addAuditTrail($arrParams);
 	 }
 
 

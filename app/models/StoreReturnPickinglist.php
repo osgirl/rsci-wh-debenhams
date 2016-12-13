@@ -47,7 +47,7 @@ class StoreReturnPickinglist extends Eloquent {
 		return $box;*/
 
 
-		$query= DB::SELECT(DB::raw("SELECT GROUP_CONCAT(DISTINCT(wms_store_return_pick_details.move_doc_number) SEPARATOR ', ' ) as move_doc_number ,wms_box_details.box_code,sum(wms_box_details.moved_qty) as total_qty, sku, ship_date, from_store_code, to_store_code, wms_stores.store_code, wms_stores.store_name
+		$query= DB::SELECT(DB::raw("SELECT GROUP_CONCAT(DISTINCT(wms_store_return_pick_details.move_doc_number) SEPARATOR ', ' ) as MASTER_EDU  ,wms_box_details.box_code,sum(wms_box_details.moved_qty) as qty, sku, ship_date, from_store_code, to_store_code, wms_stores.store_code, wms_stores.store_name
 					from wms_store_return_pickinglist
 					INNER JOIN wms_box ON wms_store_return_pickinglist.move_doc_number=wms_box.tl_number
 					inner join wms_box_details on wms_box.box_code=wms_box_details.box_code
@@ -134,7 +134,7 @@ class StoreReturnPickinglist extends Eloquent {
 	public static function getStocktransferPickingListv2($data= array(), $getCount=false)
 	{
 
- $query = StoreReturnPickinglist::select('store_return_pickinglist.*','store_return_pickinglist.move_doc_number', 'users.firstname','users.lastname','dataset.*','stores.store_name','store_return_pick_details.from_store_code','stores.store_code','store_return_pick_details.to_store_code','dataset.data_value')
+ $query = StoreReturnPickinglist::select('store_return_pickinglist.move_doc_number','store_return_pickinglist.ship_date', 'users.firstname','users.lastname','dataset.*','stores.store_name','store_return_pick_details.from_store_code','stores.store_code','store_return_pick_details.to_store_code','dataset.data_value')
  			->join('store_return_pick_details','store_return_pickinglist.move_doc_number','=','store_return_pick_details.move_doc_number','LEFT')	
             ->join('users','store_return_pickinglist.assigned_to_user_id','=','users.id','left')
        		->join('stores','store_return_pick_details.to_store_code','=','stores.store_code','left')
@@ -187,8 +187,9 @@ class StoreReturnPickinglist extends Eloquent {
          
         $query=DB::table('store_return_pickinglist')
         	->where('store_return_pickinglist.move_doc_number',$tl_number)
-            ->where('store_return_pickinglist.pl_status', 17)
+            ->where('store_return_pickinglist.pl_status', '=', 17)
             ->where('store_return_pickinglist.assigned_to_user_id','!=', 0)
+            ->where('store_return_pickinglist.ship_date','!=', 0000-00-00)
             ->update(['store_return_pickinglist.pl_status' =>'18']);
     }
 	public static function getInfoBySoNo($data)

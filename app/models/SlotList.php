@@ -5,7 +5,8 @@ class SlotList extends Eloquent {
 	protected $table = 'slot_lists';
 
 	public static function getSlotLists($data = array()) {
-		$query = DB::table('slot_lists');
+		$query = DB::table('slot_lists')
+						->select('slot_lists.*');
 
 		if( CommonHelper::hasValue($data['filter_slot_no']) ) $query->where('slot_code', 'LIKE', '%'.$data['filter_slot_no'].'%');
 

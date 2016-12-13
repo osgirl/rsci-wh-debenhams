@@ -5,12 +5,13 @@
 	"license": "MIT",
 	"type": "project",
 	"require": {
-		"laravel/framework": "4.2.*",
-		"lucadegasperi/oauth2-server-laravel": "3.*",
+		"laravel/framework": "4.2.*", 
 		"barryvdh/laravel-dompdf": "0.4.*",
 		"doctrine/dbal": "~2.3",
 		"picoprime/barcodegen": "@dev",
-		"milon/barcode": "^4.2"
+		"milon/barcode": "^4.2",
+		"maatwebsite/excel": "~1.2.1"
+	 
 	},
 	"autoload": {
 		"classmap": [

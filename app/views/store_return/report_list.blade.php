@@ -12,7 +12,7 @@
 <body>
 <div class="table-responsive">
 			<div style="text-align: center">
-				<a class="font-size-02"> RSCI - eWMS<br/>SUBLOC TRANSFER MTS RECEIVING SHORTAGE/OVERAGE REPORT<br/></a>
+				<a class="font-size-02"> RSCI - eWMS<br/>MTS RECEIVING SHORTAGE/OVERAGE REPORT<br/></a>
 				Printed By: {{Auth::user()->username}} <br>
 				Print Date: {{ date('m/d/y h:i A')}}
 			</div>

@@ -309,6 +309,117 @@ class StoreReturnController extends BaseController {
 
 		$this->layout->content = View::make('store_return.detail', $this->data);
 	}
+	public function getReportNewExcel()
+	{
+		 
+ 
+    Excel::create('MTS_Receiving'. date('Ymd'), function($excel){
+	 	
+
+	 	$filter_doc_no 				= Input::get('filter_doc_no', null);
+
+		$arrParams = array(
+							'filter_so_no' 			=> Input::get('filter_so_no', NULL),
+							'filter_doc_no' 			=> Input::get('filter_doc_no', NULL),
+							'filter_store_name' 			=> Input::get('filter_store_name', NULL),
+							'filter_created_at' 	=> Input::get('filter_created_at',NULL),
+							'filter_status' 		=> Input::get('filter_status', NULL),
+							'sort'					=> Input::get('sort', 'so_no'),
+							'order'					=> Input::get('order', 'ASC'),
+							'page'					=> NULL,
+							'limit'					=> NULL
+						);
+
+		$results = StoreReturn::getSOListReport($arrParams);
+
+		$this->data['results'] = $results;
+ 
+   	      // foreach ($query as $keyvalue) 
+	       {
+	     
+	       	$excel->sheet('MTS Receiving', function($sheet) use ($results) 
+	       	{ 
+           		$sheet->setStyle(array(
+                        'font' => array(
+                            'name'      =>  'Calibri',
+                            'size'      =>  11,
+                            'bold'      =>  false,
+                            'border'	=>  0
+                        )
+                    ));
+
+                    $sheet->setPageMargin(array(
+                        0.25, 1, 0.25, 1
+                    ));
+
+					$sheet->mergeCells('A1:I2');
+                    $sheet->setCellValue('A1', 'RSCI - MTS Receiving Report');
+                    $sheet->setBorder('A1:I2', 'thin');
+                    $sheet->cell('A1', function($cell){
+                        $cell->setFontWeight('bold');
+                        $cell->setAlignment('center');
+                    });
+                    $sheet->setWidth("C", 20);
+                    $sheet->setWidth("B", 10);
+                    $sheet->setWidth("E", 10);
+               
+              
+      
+             
+
+                    $header = array();
+                    $header['A'] = 'MTS no.'; 
+                    $header['B'] = 'SKU';
+                    $header['C'] = "UPC";
+                    $header['D'] = "Description";
+                    $header['E'] = "From ";
+                    $header['F'] = "To";
+                    $header['G'] = "Delivery Date"; 
+                    $header['H'] = "Stock Piler"; 
+                    $header['I'] = "Variance";  
+
+                    $start = 3;
+                    foreach ($header as $key => $head)
+                    {
+                        $sheet->setCellValue($key.$start, $head);
+                        $sheet->cell($key.$start, function($cell) {
+                            $cell->setAlignment('center');
+                            $cell->setValignment('center');
+                            $cell->setFontWeight('bold');
+                        });
+                    }
+
+                    $_start = 4;
+                    $keys = array("A", "B", "C", "D", "E", "F", "G", "H", "I","J" );
+ 
+                  	foreach ($results as $list)
+                    {
+                        
+                        $sheet->setCellValue('A'.$_start, $list->so_no); 
+                        $sheet->setCellValue('B'.$_start, $list->sku); 
+                        $sheet->setCellValue('C'.$_start, $list->upc); 
+                        $sheet->setCellValue('D'.$_start, $list->short_name);
+                        $sheet->setCellValue('E'.$_start, Store::getStoreName($list['from_store_code'])); 
+                        $sheet->setCellValue('F'.$_start, Store::getStoreName($list['to_store_code']));
+                        $sheet->setCellValue('G'.$_start,  date("M d, Y",strtotime($list->created_at)));
+                        $sheet->setCellValue('H'.$_start, $list->firstname.' '.$list->lastname );
+                        $sheet->setCellValue('H'.$_start, $list->variance);
+               
+                        $_start++;
+                
+                    }
+
+
+	     
+            	
+ 
+              
+                  
+     
+           });
+	       	  }
+      })->export('xlsx');
+	}
 	public function getexportCVSmtsdiscrepancyexelfile()
 	{
 		$filter_po_no 			= Input::get('filter_po_no', null);
@@ -330,7 +441,7 @@ class StoreReturnController extends BaseController {
 
 		$results = StoreReturn::getSOListReport($arrParams);
 
-		$output = Lang::get('store_return.col_tl_number'). ',';
+		$output = Lang::get('store_return.col_tl_number1'). ',';
 		$output .= Lang::get('store_return.col_from_store_name'). ',';
 		$output .= Lang::get('store_return.col_to_store_name'). ',';
 		$output .= Lang::get('store_return.col_sku'). ',';
@@ -676,9 +787,24 @@ class StoreReturnController extends BaseController {
 			StoreReturnPickinglist::assignToStockPilerPickingmodel($docNo, $arrParams);
 
 			// AuditTrail
-			$users = User::getUsersFullname(Input::get('stock_piler'));
+			$users = User::getUsersFullname(Input::get('stock_piler')); 
 
-		 
+			$fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $users));
+
+			$data_before = '';
+			$data_after = 'MTS no. : ' . $docNo . ' assigned to :' . $fullname;
+
+			$arrParams = array(
+							'module'		=> Config::get("audit_trail_modules.subloc_picking"),
+							'action'		=> Config::get('audit_trail.assign_subloc_pick'),
+							'reference'		=> 'MTS no.: '. $docNo,
+							'data_before'	=> $data_before,
+							'data_after'	=> $data_after,
+							'user_id'		=> Auth::user()->id,
+							'created_at'	=> date('Y-m-d H:i:s'),
+							'updated_at'	=> date('Y-m-d H:i:s')
+							);
+			AuditTrail::addAuditTrail($arrParams);
 			// AuditTrail
 		}
 
@@ -721,7 +847,7 @@ class StoreReturnController extends BaseController {
 			$fullname = implode(', ', array_map(function ($entry) { return $entry['name']; }, $users));
 
 			$data_before = '';
-			$data_after = 'Subloc MTS Receiving : ' . $soNo . ' assigned to :' . $fullname;
+			$data_after = 'Subloc MTS no. : ' . $soNo . ' assigned to :' . $fullname;
 
 			$arrParams = array(
 							'module'		=> Config::get("audit_trail_modules.subloc_receiving"),

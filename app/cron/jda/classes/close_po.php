@@ -9,8 +9,7 @@ class poClosing extends jdaCustomClass
 
 	public static $user = 'SYS';
 	public static $warehouseNo = "7000 ";
-
-
+ 
 /*
 	08
 	02
@@ -76,7 +75,7 @@ user: STRATPGMR pass: PASSWORD
 
 		$formValues = array();//values to enter to form
 		$formValues[] = array(sprintf("%10d", $receiver_no),8,45);
-		$formValues[] = array(sprintf("%2d", $back_order),14,45);
+	 
 
 		parent::$jda->write5250($formValues,ENTER,true);
 
@@ -160,14 +159,14 @@ user: STRATPGMR pass: PASSWORD
 		$db = new pdoConnection();
 
 		echo "\n Getting invoice number and amount from db \n";
-		$sql 	= "SELECT invoice_no, invoice_amount FROM wms_purchase_order_lists WHERE receiver_no = {$receiver_no}";
+		$sql 	= "SELECT invoice_no,  FROM wms_purchase_order_lists WHERE receiver_no = {$receiver_no}";
 		$query 	= $db->query($sql);
 
 		$result = array();
 
 		foreach ($query as $value ) {
 			$result['invoice_no'] = $value['invoice_no'];
-			$result['invoice_amount'] = $value['invoice_amount'];
+		 
 		}
 
 		if(!empty($result))
@@ -177,11 +176,7 @@ user: STRATPGMR pass: PASSWORD
 				self::$formMsg = "Invoice no is empty.";
 				parent::logError(self::$formMsg, __METHOD__);
 			}
-			if( empty($result['invoice_amount']) )
-			{
-				self::$formMsg = "Invoice no is amount.";
-				parent::logError(self::$formMsg, __METHOD__);
-			}
+		 
 		}
 
 		$db->close();
@@ -193,13 +188,14 @@ user: STRATPGMR pass: PASSWORD
 		$db = new pdoConnection();
 
 		echo "\n Getting quantity delivered from db \n";
-		$sql = "SELECT prod.sku, po_lists.slot_code, po_details.quantity_delivered
+		$sql = "SELECT prod.sku, po_details.slot_code, po_details.quantity_delivered
 				FROM `wms_transactions_to_jda` trans
 				INNER JOIN wms_purchase_order_lists po_lists ON po_lists.purchase_order_no = trans.reference
 				INNER JOIN wms_purchase_order_details po_details ON po_lists.receiver_no = po_details.receiver_no
 				INNER JOIN wms_product_lists prod ON po_details.sku = prod.upc
 				WHERE module = 'Purchase Order' AND jda_action='Closing' AND trans.sync_status = 0 AND po_details.quantity_ordered = 0 AND po_lists.receiver_no = {$receiver_no} AND quantity_delivered <> 0
 				ORDER BY convert(prod.sku, decimal) ASC";
+				
  // AND po_details.quantity_ordered <> 0
 		$query 	= $db->query($sql);
 
@@ -224,9 +220,9 @@ user: STRATPGMR pass: PASSWORD
 		echo "\n Getting quantity delivered from db \n";
 		$sql = "SELECT prod.sku, po_lists.slot_code, po_details.quantity_delivered
 				FROM `wms_transactions_to_jda` trans
-				INNER JOIN wms_purchase_order_lists po_lists ON po_lists.purchase_order_no = trans.reference
-				INNER JOIN wms_purchase_order_details po_details ON po_lists.receiver_no = po_details.receiver_no
-				LEFT JOIN wms_product_lists prod ON po_details.sku = prod.upc
+				left JOIN wms_purchase_order_lists po_lists ON po_lists.receiver_no = trans.reference
+				left JOIN wms_purchase_order_details po_details ON po_lists.receiver_no = po_details.receiver_no
+				LEFT JOIN wms_product_lists prod ON po_details.upc = prod.upc
 				WHERE module = 'Purchase Order' AND jda_action='Closing' AND trans.sync_status = 0 AND po_details.quantity_ordered = 0 AND po_lists.receiver_no = {$receiver_no}
 				ORDER BY prod.sku ASC";
 

@@ -1,0 +1,22 @@
+
+Parse error: syntax error, unexpected '$db2' (T_VARIABLE) in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\daemon_pulling_po.php on line 54
+PHP Parse error:  syntax error, unexpected '$db2' (T_VARIABLE) in C:\xampp\htdocs\rsci-wh-ewms\app\cron\jda\daemon_pulling_po.php on line 54
+
+
+
+cron/ewms_connection: mysql:host=localhost;dbname=deve 
+DEBSPGMR 
+PASSWORD 
+Connecting to DB2... 
+DRIVER=iSeries Access ODBC Driver;SYSTEM=JDAPROD2.RGOC.COM.PH;DBQ=MMRSTLIB 
+Resource id #10 
+Executing SQL: SELECT STRNUM, STRNAM, STADD1, STADD2, STADD3, STCITY FROM TBLSTR 
+Exporting to CSV 
+
+ Running method cronEWMS::storeOrder
+
+ CSV FILE:  
+
+  
+File not found. Make sure you specified the correct path.Closing odbc connection... 
+Closing pdo connection... 

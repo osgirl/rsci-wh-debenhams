@@ -21,16 +21,18 @@ class Load extends Eloquent {
     {
          
         $query=DB::table('load')
-            ->join('load_details','load.load_code','=','load_details.load_code','RIGHT')
-            ->where('load.data_value', 0)
+            ->join('load_details','load.load_code','=','load_details.load_code','left')
+            ->where('load.data_value', '=',0)
             ->where('load.assigned_to_user_id','!=', 0)
+            ->where('load.assigned_by','!=', 0)
+            ->where('load.tagging_load','=', 1)
             ->update(['load.data_value' =>'1']);
     }
      public static function getLoadNumbersyncstockmodel()
     {
          
         $query=DB::table('load')
-            ->join('load_details','load.load_code','=','load_details.load_code','RIGHT')
+            ->join('load_details','load.load_code','=','load_details.load_code','left')
             ->where('load.data_value', 0)
             ->where('load.assigned_to_user_id','!=', 0)
             ->update(['load.data_value' =>'1']);
@@ -73,19 +75,27 @@ class Load extends Eloquent {
 
 
     }*/
-    public static function getInsertToSelect($loadnumber)
+    public static function getInsertToSelectStrHdr($loadnumber)
     {     
-        $query = DB::select(DB::raw("INSERT INTO wms_store_order (load_code, so_no, store_code, delivery_date)
-            SELECT wms_load_details.load_code, wms_picklist_details.move_doc_number, wms_picklist_details.store_code, wms_load.ship_at
+        $query = DB::select(DB::raw("INSERT INTO wms_store_order (store_code, load_code,  delivery_date)
+            SELECT wms_box.store_code, wms_load_details.load_code,  wms_load.ship_at
             FROM wms_load_details
-            left join wms_picklist_details on wms_load_details.move_doc_number = wms_picklist_details.move_doc_number
+            left join wms_box on wms_load_details.box_number = wms_box.box_code
             left join wms_load on wms_load_details.load_code = wms_load.load_code
             where wms_load_details.load_code = '$loadnumber' "));
-}
+
+        $query = DB::select(DB::raw("INSERT INTO wms_store_order_detail (load_code, box_number,  ordered_qty, packed_qty, so_no, sku)
+        SELECT wms_load_details.load_code, wms_box.box_code, wms_picklist_details.quantity_to_pick, wms_picklist_details.moved_qty, wms_picklist_details.move_doc_number, wms_picklist_details.sku
+        FROM wms_load_details
+        left join wms_box on wms_load_details.box_number = wms_box.box_code 
+        left join wms_box_details on wms_box.box_code = wms_box_details.box_code
+        left join wms_picklist_details on wms_box_details.picklist_detail_id = wms_picklist_details.id
+        where wms_load_details.load_code = '$loadnumber'"));
+    }
     public static function getSOboxstatus($loadnumber)
     {     
     
-        $query = DB::select(DB::raw("INSERT INTO wms_store_detail_box (move_doc_number, box_code, upc, quantity_packed,  box_status, quantity_pick)
+        $query = DB::select(DB::raw("INSERT INTO wms_store_order_detail (move_doc_number, box_code, upc, quantity_packed,  box_status, quantity_pick)
       
       SELECT  wms_picklist_details.move_doc_number,  wms_box_details.box_code, wms_picklist_details.sku, wms_box_details.moved_qty,  wms_box.boxstatus_unload as box_status , '0'
 FROM wms_load_details
@@ -153,16 +163,17 @@ public static function assignToStockPiler($Box_code = '', $data = array())
      public static function getLoadList2($load_code, $data = array(), $getCount = false)
     {
         $query = DB::table('load_details')
-        ->select('load_details.box_number','load.*',DB::raw('GROUP_CONCAT(DISTINCT(wms_picklist_details.move_doc_number) SEPARATOR ", "  )  as MASTER_EDU'),'stores.store_code','store_name','stores.address1')
+        ->select('load_details.box_number','load.*',DB::raw('GROUP_CONCAT(DISTINCT(wms_picklist.move_doc_number) SEPARATOR ", "  )  as MASTER_EDU'),'stores.store_code','store_name','stores.address1')
         ->join('load','load_details.load_code','=','load.load_code','left')
         ->join('box','load_details.box_number','=','box.box_code','left')
          ->join('picklist_details','box.move_doc_number','=','picklist_details.move_doc_number','LEFT')
+         ->join('picklist','picklist_details.move_doc_number','=','picklist.move_doc_number','LEFT')
         ->join('stores','box.store_code','=','stores.store_code','LEFT')
          ->where('load_details.load_code', $load_code)
          ->groupBy('box.box_code');
              
         if( CommonHelper::hasValue($data['filter_box_code']) ) $query->where('load_details.box_number', 'LIKE', '%'. $data['filter_box_code'] . '%' );
-        if( CommonHelper::hasValue($data['filter_doc_no']) ) $query->where('picklist_details.move_doc_number', 'LIKE', '%'. $data['filter_doc_no'] . '%' ); 
+        if( CommonHelper::hasValue($data['filter_doc_no']) ) $query->where('picklist.transfer_no', 'LIKE', '%'. $data['filter_doc_no'] . '%' ); 
 
     
        if( CommonHelper::hasValue($data['limit']) && CommonHelper::hasValue($data['page']))  {
@@ -421,7 +432,7 @@ public static function getCommentsByLoadCode($loadCode)
             }
 
 */
-public static function getPackingDetails($loadCode)
+/*public static function getPackingDetails($loadCode)
     {
         // get load date
         
@@ -436,7 +447,7 @@ where wms_load_details.load_code='$loadCode'   ORDER BY wms_picklist_details.mov
 
 
         return $rs;
-    }
+    }*/
 public static function getPackingDetailsstock($loadCode)
     {
         // get load date
@@ -451,7 +462,7 @@ where `wms_load_details`.`load_code` = '$loadCode'  ORDER BY wms_load_details.mo
 $rescue = DB::SELECT(DB::RAW("SELECT wms_box_details.box_code, wms_store_return_pick_details.move_doc_number, wms_store_return_pick_details.sku, wms_box_details.moved_qty, description
 from `wms_load_details` 
 LEFT join wms_box on wms_load_details.box_number = wms_box.box_code
-INNER JOIN wms_box_details on wms_box.box_code = wms_box_details.box_code
+left JOIN wms_box_details on wms_box.box_code = wms_box_details.box_code
 LEFT JOIN wms_store_return_pick_details on wms_box_details.subloc_transfer_id = wms_store_return_pick_details.id
 LEFT join wms_product_lists on wms_store_return_pick_details.sku = wms_product_lists.upc 
 where `wms_load_details`.`load_code` = '$loadCode' ORDER BY wms_store_return_pick_details.move_doc_number, wms_box_details.box_code ASC "));
@@ -474,7 +485,7 @@ where `wms_load_details`.`load_code` = '$loadCode' ORDER BY wms_store_return_pic
 
             return $query;
     }
-    public static function getStoreLocationwarehouse ($loadCode)
+/*    public static function getStoreLocationwarehouse ($loadCode)
     {
             
      
@@ -489,7 +500,7 @@ where `wms_load_details`.`load_code` = '$loadCode' ORDER BY wms_store_return_pic
         
 
             return $query;
-    }
+    }*/
     public static function getLoadingDetails($loadCode)
     {
         // get load date
@@ -502,14 +513,31 @@ GROUP BY wms_box_details.box_code;"));
 
         return $query;
 */
-        $box= DB::SELECT(DB::raw("SELECT wms_load_details.load_code, GROUP_CONCAT(DISTINCT(wms_picklist_details.move_doc_number) SEPARATOR ',' ) as move_doc_number, wms_box_details.box_code, sum(wms_box_details.moved_qty) as total_qty 
+        $box= DB::SELECT(DB::raw("SELECT wms_load_details.load_code, GROUP_CONCAT(DISTINCT(wms_picklist_details.move_doc_number) SEPARATOR ',' ) as move_doc_number, wms_box_details.box_code, sum(wms_box_details.moved_qty) as total_qty, wms_box.store_code
 FROM wms_load_details
-LEFT join wms_box_details on wms_load_details.box_number = wms_box_details.box_code
+left join  wms_box on wms_load_details.box_number = wms_box.box_code
+LEFT join wms_box_details on wms_box.box_code = wms_box_details.box_code
 LEFT join wms_picklist_details on wms_picklist_details.id = wms_box_details.picklist_detail_id
 WHERE wms_load_details.load_code='$loadCode'
  GROUP by wms_box_details.box_code"));
 
                                     return $box;
+    }
+    public static function getLoadingDetails123($loadCode)
+    {
+
+ 
+
+
+         $query = DB::table('load')
+            ->select('box.store_code as destination')
+            ->join('load_details','load.load_code','=','load_details.load_code','left')
+            ->join('box','load_details.box_number','=','box.box_code','left')
+            ->join('stores','box.store_code','=','stores.store_code','left')
+            ->where('load.load_code','=',$loadCode)
+             ->first();
+        return $query;
+ 
     }
     public static function getLoadingDetailsstock($loadCode)
     {

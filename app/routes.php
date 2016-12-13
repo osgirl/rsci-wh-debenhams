@@ -85,7 +85,7 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::get('purchase_order', 'PurchaseOrderController@showIndex');
 	Route::get('purchase_order/discrepansy', 'PurchaseOrderController@getlist1');
 	Route::post('purchase_order/assign_to_piler', 'PurchaseOrderController@assignToStockPiler');
-	Route::post('purchase_order/close_po', 'PurchaseOrderController@closePO');
+	Route::post('purchase_order/close_po', 'PurchaseOrderController@closePODebenhams');
 
 	Route::post('purchase_order/partialreceivebtn', [
 		'as' 		=> 'purchase_order/partialreceivebtn',
@@ -97,10 +97,19 @@ Route::group(array("before"=>"auth.basic"), function()
 		'as'	=> 'purchase_order/partial_received',
 		'uses'  => 'PurchaseorderController@getPartialReceiveButton',]);*/
 
-	route::get('purchase_order/export_excel_file',[
+/*	route::get('purchase_order/export_excel_file',[
 		'as'	=> 'purchase_order/export_excel_file',
-		'uses'	=> 'PurchaseorderController@exportCSVexcelfile',]);
+		'uses'	=> 'PurchaseorderController@exportCSVexcelfile',]);*/
 
+	Route::get('purchase_order/export123', array('uses' => 'PurchaseorderController@getExcelFile', 'as' => 'purchase_order/export123'));
+
+
+ 
+
+/*	route::get('purchase_order/export_excel_file',[
+		'as'	=> 'purchase_order/export_excel_file',
+		'uses'	=> 'PurchaseorderController@exportCSVexcelfiledap',]);
+*/
 	Route::get('purchase_order/export_detail', 'PurchaseOrderController@exportDetailsCSV');
 	Route::get('purchase_order/export_backorder', 'PurchaseOrderController@exportBackorder');
 	Route::post('purchase_order/reopen', 'PurchaseOrderController@reopen');
@@ -155,7 +164,7 @@ Route::group(array("before"=>"auth.basic"), function()
 
 	route::get('stock_transfer/discrepansyExcelfile',[
 		'as' 	=> 'stock_transfer/discrepansyExcelfile',
-		'uses'	=> 'StoreReturnController@getexportCVSmtsdiscrepancyexelfile']);
+		'uses'	=> 'StoreReturnController@getReportNewExcel']);
 
 
 	Route::get('store_return/export', 'StoreReturnController@exportCSV');
@@ -179,6 +188,7 @@ Route::group(array("before"=>"auth.basic"), function()
 		'uses'	=> 'StocktransferController@getUpdateDate']);
 	
 /***********asdfasdf dd*******/
+
 	Route::get('stocktransfer/assignedstockload',[
 		'as'	=> 'stocktransfer/assignedstockload',
 		'uses'	=> 'StocktransferController@getstockloadassign']);
@@ -186,7 +196,9 @@ Route::group(array("before"=>"auth.basic"), function()
 	Route::post('stocktransfer/assignedstockloadpost',[
 		'as'	=> 'stocktransfer/assignedstockloadpost',
 		'uses'	=> 'StocktransferController@getstockloadassignpost']);
+
 /**********asdfasdfasf  d d d dd********/
+
 	Route::get('stock_transfer/removed', [
     	'as' => 'stock_transfer/removed', 
     	'uses'=> 'StocktransferController@getremoved']); 
@@ -269,7 +281,7 @@ Route::get('reverse_logistic/exportCSV', [
 
 Route::get('reverse_logistic/exportCSVexcelfile',[
 	'as'	=> 'reverse_logistic/exportCSVexcelfile',
-	'uses'	=> 'ReverseLogisticController@exportCSVexcelfile']);
+	'uses'	=> 'ReverseLogisticController@getReportNewExcel']);
 
  Route::get('reverse_logistic/exportCSVunlisted', [
 	'as' 	=> 'reverse_logistic/exportCSVunlisted',
@@ -366,7 +378,11 @@ Route::get('reverse_logistic/export_detail',[
 	Route::get('picking/assign', 'PicklistController@assignPilerForm');
 	Route::post('picking/assign_to_piler', 'PicklistController@assignToStockPiler');
 	Route::post('picking/close', 'PicklistController@closePicklist');
-    Route::get('picking/printboxlabel/{doc_num}', 'PicklistController@printBoxLabel');
+
+    Route::get('picking/printpacklist/{doc_num}', 'PicklistController@printPackingList');
+/*
+    Route::get('picking/printboxlabel/{doc_num}', 'PicklistController@printBoxLabel');*/
+    Route::get('picking/printboxlabel/{doc_num}','PicklistController@printBoxLabelA4size');
     Route::get('picking/printboxlabelstock/{doc_num}', 'StocktransferController@printBoxLabelstock');
 
 	Route::get('inventory', 'InventoryController@showIndex');
@@ -382,7 +398,7 @@ Route::get('reverse_logistic/export_detail',[
 	Route::get('products/export', 'ProductListController@exportCSV');
 	Route::get('products/department', 'ProductListController@getSubDepartments');
 
-	/*Route::get('slots', 'SlotListController@showIndex');*/
+	Route::get('slots', 'SlotListController@showIndex');
 	Route::get('slots/export', 'SlotListController@exportCSV');
 		
 	Route::get('stores', 'StoreController@showIndex');
@@ -427,8 +443,8 @@ Route::get('reverse_logistic/export_detail',[
 	Route::get('load/export', 'LoadController@exportCSV');
 	Route::post('load/ship', 'LoadController@shipLoad');
 	Route::get('load/print/{loadCode}', 'LoadController@printLoad');
-	Route::get('load/print/update/{loadCode}', 'LoadController@updatePrintLoad');
-    Route::get('load/printpacklist/{loadCode}', 'LoadController@printPackingList');
+	Route::get('load/print/update/{loadCode}', 'LoadController@updatePrintLoad');/*
+    Route::get('load/printpacklist/{loadCode}', 'LoadController@printPackingList');*/
     Route::get('load/printpackliststock/{loadCode}', 'LoadController@printPackingListstock');
     Route::get('load/printpacklist/update/{loadCode}', 'LoadController@updatePrintPackingList');
     Route::get('load/printloadingsheet/{loadCode}', 'LoadController@printLoadingSheet');
