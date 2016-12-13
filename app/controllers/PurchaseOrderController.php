@@ -251,7 +251,7 @@ protected function getListdivision() {
 
 		return Redirect::to('purchase_order/division?&receiver_no='.$receiver_no.'&division_id='.$division_id.'&filter_shipment_reference_no='.$filter_shipment_reference_no.'&filter_po_no='.$filter_po_no.'&total_qty='.$total_qty)->with('message','P.O. Successfully Received!');
 	}
-	public function updateqty()
+		public function updateqty()
 	{
 	 
 		$quantity_delivered 	    = 	Input::get('quantity', NULL);
@@ -288,8 +288,8 @@ protected function getListdivision() {
 							'updated_at'	=> date('Y-m-d H:i:s')
 							);
 			AuditTrail::addAuditTrail($arrParams);
- 			 
-		return Redirect::to('purchase_order/detail?&upc='.$upc.'&receiver_no='.$receiver_no.'&filter_po_no='.$filter_po_no.'&filter_stock_piler='.$filter_stock_piler.'&filter_shipment_reference_no='.$filter_shipment_reference_no.'&total_qty='. $total_qty.'division='.$division )->with('message','Successfully Update Quantity');
+ 	
+		return Redirect::to('purchase_order/detail?&receiver_no='.$receiver_no.'&division_id='.$division_id.'&upc='.$upc.'&filter_po_no='.$filter_po_no.'&filter_stock_piler='.$filter_stock_piler.'&division='.$division.'&filter_shipment_reference_no='. $filter_shipment_reference_no )->with('message','Successfully Update Quantity');
 	}
 	public function getShipmentInput()
 	{
@@ -2196,7 +2196,7 @@ public function getExcelFile()
 		$this->data['params']                  	= explode(',', Input::get('po_no'));
 		$this->data['dept_code']           		= Input::get('dept_code');
 		$this->data['receiver_num']           	= Input::get('receiver_num');
-		
+
 		$this->data['po_info']                 	= PurchaseOrder::getPOInfoByPoNos($this->data['params'],$this->data['receiver_num']);
 
 		$this->layout->content                 = View::make('purchase_order.assign_piler_form', $this->data);

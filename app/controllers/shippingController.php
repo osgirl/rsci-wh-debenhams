@@ -116,8 +116,8 @@ class shippingController extends \BaseController {
 			'order' 					=> $this->data['order'],
 			'page' 						=> $this->data['page']
 			);
-		$results = load::getliststock($arrparam);
-		$results_total = load::getliststock($arrparam,True);
+		$results = Load::getliststock($arrparam);
+		$results_total = Load::getliststock($arrparam,True);
 
 		$this->data['load_list']       = Paginator::make($results, $results_total, 30);
 		$this->data['list_count']      = $results_total;

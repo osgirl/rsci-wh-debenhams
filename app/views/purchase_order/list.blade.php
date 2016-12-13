@@ -457,8 +457,8 @@ $(document).ready(function() {
 	$('.closePO').click(function() {
     	var purchase_no = $(this).data('id');
 
-    	var answer = confirm('Are you sure you want to close this PO?');
-   		if (answer) {
+    	//var answer = confirm('Are you sure you want to close this PO?');
+   		if (purchase_no) {
 	    	$('#closePO_' + purchase_no).submit();
     	} else {
 			return false;
@@ -468,8 +468,8 @@ $(document).ready(function() {
     $('.partialReceived').click(function() {
     	var purchase_no = $(this).data('id');
 
-    	var answer = confirm('Partial Receive confirm?');
-   		if (answer) {
+    	///var answer = confirm('Partial Receive confirm?');
+   		if (purchase_no) {
 	    	$('#partialReceived_' + purchase_no).submit();
     	} else {
 			return false;

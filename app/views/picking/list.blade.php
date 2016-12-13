@@ -455,7 +455,7 @@ $(document).ready(function() {
 				return false;
 			}
 		} else {
-			alert('{{ $error_assign }}');
+			/*alert('{{ $error_assign }}');*/
 			return false;
 		}
     });

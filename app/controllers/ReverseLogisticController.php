@@ -757,7 +757,7 @@ protected $layout = "layouts.main";
 		$this->data['button_cancel']    = Lang::get('general.button_cancel');
 		$this->data['url_back']         = URL::to('reverse_logistic/reverse_list');
 		$this->data['params']           = explode(',', Input::get('so_no'));
-		$this->data['info']             = ReverseLogisticControllerogistic::getInfoBySoNo($this->data['params']);
+		$this->data['info']             = ReverseLogistic::getInfoBySoNo($this->data['params']);
 
 		$this->layout->content    = View::make('reverse_logistic.assign_piler_form', $this->data);
 	}

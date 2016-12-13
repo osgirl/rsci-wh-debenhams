@@ -71,7 +71,7 @@ public static function getPOInfoDetail($receiver_no = NULL,$quantity_delivered =
 		->where('upc','=', $upc)
 		->update(['quantity_delivered'=> $quantity_delivered]);*/
 
-		 $query = DB::update(DB::raw("UPDATE `wms_purchase_order_details` SET quantity_delivered='$quantity_delivered' where receiver_no='$receiver_no' and dept_number='$division_id' and upc='$upc'"));
+		 $query = DB::select(DB::raw("UPDATE `wms_purchase_order_details` SET quantity_delivered='$quantity_delivered' where receiver_no='$receiver_no' and dept_number='$division_id' and upc='$upc'"));
 	}
 
 		public function getPOnumberupdate($receiver_no)

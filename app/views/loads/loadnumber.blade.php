@@ -254,8 +254,8 @@ $('.assignTLnumber').click(function() {
    
 
     if (count>0) {
-        var answer = confirm('Assign Selected Box number?');
-        if (answer) {
+       /// var answer = confirm('Assign Selected Box number?');
+        if (count) {
             var boxes = new Array();
             
             $.each($("input[name='selected[]']:checked"), function() {
@@ -271,7 +271,7 @@ $('.assignTLnumber').click(function() {
             return false;
         }
     } else {
-        alert('Please Choose Box number ');
+         
         return false;
     }
     });

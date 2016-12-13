@@ -280,7 +280,7 @@ WHERE wms_box.move_doc_number='$picklist_doc' GROUP BY wms_box.box_code"));
 	}
 	public static function getInfoByDocNos($data)
 	{
-		return Picklist::select('transfer_no')->where('move_doc_number','=', $data)->get()->toArray();
+		return Picklist::where('move_doc_number','=', $data)->get()->toArray();
 	}
 	public static function getTlnumberPosted($data)
 	{

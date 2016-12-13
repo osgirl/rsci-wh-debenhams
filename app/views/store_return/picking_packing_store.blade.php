@@ -276,7 +276,7 @@ $(document).ready(function() {
 				return false;
 			}
 		} else {
-			alert('{{ $error_assign }}');
+			///alert('{{ $error_assign }}');
 			return false;
 		}
     });
@@ -284,8 +284,8 @@ $(document).ready(function() {
     $('.closePicklist').click(function() {
     	var doc_no = $(this).data('id');
 
-    	var answer = confirm('Are you sure you want to close this Picklist?');
-   		if (answer) {
+    	///var answer = confirm('Are you sure you want to close this Picklist?');
+   		if (doc_no) {
 	    	$('#closePicklist_' + doc_no).submit();
     	} else {
 			return false;

@@ -323,9 +323,9 @@ $(document).ready(function() {
     			location = "{{ $url_assign }}" + '&receiver_no='+{{Input::get('receiver_no')}} + '&po_no='+  encodeURIComponent(division.join(','));
 			} else {
 				return false;
-			}
+			} 
 		} else {
-			alert('{{ $error_assign }}');
+			 
 			return false;
 		}
     });

@@ -194,7 +194,7 @@ $('.removebutton').click(function() {
             return false;
         }
     } else {
-        alert('Please Choose Box number');
+        
         return false;
     }
     });

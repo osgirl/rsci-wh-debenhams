@@ -180,8 +180,8 @@ public function loadnumber()
 
 			foreach ($arrPO as $assignTL) {
 
-			picklist::assignToTL($assignTL, $loadnumber);
-			picklist::assignToTLnumber($assignTL, $loadnumber);
+			Picklist::assignToTL($assignTL, $loadnumber);
+			Picklist::assignToTLnumber($assignTL, $loadnumber);
  			}
 
 			return Redirect::to('load/shipping'. $this->setURL())->with('message', "Succefully Assigned in Load Number!");
@@ -266,13 +266,13 @@ public function loadnumber()
 	}
 	public function loadnumbersync()
 	{
-			load::getLoadNumbersync();
+			Load::getLoadNumbersync();
 		return Redirect::to('load/shipping'.$this->setURL())->with('message','Sync To Mobile Successfully');
 	}
 
 	public function getloadnumbersyncstock()
 	{
-			load::getLoadNumbersyncstockmodel();
+			Load::getLoadNumbersyncstockmodel();
 		return Redirect::to('stocktransfer/stocktranferload'.$this->setURL())->with('message','Sync To Mobile Successfully');
 	}
 	public function shippedload()
@@ -281,7 +281,7 @@ public function loadnumber()
 		$upc 	= Input::get('upc', null);
 		$loadnumber =Input::get('loadnumber',null);
 	 
-			load::getLoadShipped($loadnumber);
+			Load::getLoadShipped($loadnumber);
 			//load::getInsertToSelectStrHdr($loadnumber);
 			//load::getSOboxstatus($loadnumber);
 		return Redirect::to('load/shipping'.$this->setURL())->with('message','Successfully Shipped by Pell number!!');
@@ -293,7 +293,7 @@ public function loadnumber()
 		$upc 	= Input::get('upc', null);
 		$loadnumber =Input::get('loadnumber',null);
 	 
-			load::getLoadShipped($loadnumber);
+			Load::getLoadShipped($loadnumber);
 			
 			//load::getInsertToSelect($loadnumber);
 			//load::getSOboxstatus($loadnumber);
@@ -493,7 +493,7 @@ public function boxnumber() {
 		}
 
 		$box_code = Input::get('box_code', NULL);
-		$this->data['Contentbox'] = box::getboxcontent($box_code);
+		$this->data['Contentbox'] = Box::getboxcontent($box_code);
 		// Search Filters
 		$filter_sku = Input::get('filter_sku', NULL);
 		$filter_store = Input::get('filter_store', NULL);
@@ -615,7 +615,7 @@ public function getBoxDetails() {
 		}
 
 		$box_code = Input::get('box_code', NULL);
-		$this->data['Contentbox'] = box::getboxcontent($box_code);
+		$this->data['Contentbox'] = Box::getboxcontent($box_code);
 		// Search Filters
 		$filter_sku = Input::get('filter_sku', NULL);
 		$filter_store = Input::get('filter_store', NULL);
@@ -658,9 +658,9 @@ public function getBoxDetails() {
 					);
 
 		 
-		$results 		= load::getLoadList2($loadnumber, $arrParams);
+		$results 		= Load::getLoadList2($loadnumber, $arrParams);
 	//	DebugHelper::log(__METHOD__, $results);
-		$results_total 	= load::getLoadList2($loadnumber, $arrParams, true);
+		$results_total 	= Load::getLoadList2($loadnumber, $arrParams, true);
 		$this->data['total_moved_qty'] 	= BoxDetails::getTotalMovedQty($box_code, $arrParams);
 		// Pagination
 		$this->data['arrFilters'] = array(
